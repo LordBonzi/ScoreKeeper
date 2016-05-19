@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.i(TAG, "game size = " + getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size());
 
-        gameID = getNewestGame(ScoreDBAdapter.KEY_ROWID);
+        gameID = Integer.valueOf(getNewestGame(ScoreDBAdapter.KEY_ROWID));
 
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
@@ -118,16 +118,16 @@ public class MainActivity extends AppCompatActivity
             textViewP2.setText(String.valueOf(P2Score));
 
         }
-        tv.setText(String.valueOf(dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID)) + " , " +
-                String.valueOf(dbHelper.getNewestGame(ScoreDBAdapter.KEY_PLAYERS)) + " , " +
-                String.valueOf(dbHelper.getNewestGame(ScoreDBAdapter.KEY_SCORE)) + " , ");
+
+        tv.setText(getNewestGame(ScoreDBAdapter.KEY_ROWID) + " , " +
+                getNewestGame(ScoreDBAdapter.KEY_SCORE) + " , " +
+                getNewestGame(ScoreDBAdapter.KEY_PLAYERS) + " , ");
     }
 
-    public int getNewestGame(String request) {
+    public String getNewestGame(String request) {
         int index = dbHelper.getNewestGame(request).getColumnIndex(request);
         String valueStr = dbHelper.getNewestGame(request).getString(index);
-        gameID = Integer.valueOf(valueStr);
-        return gameID;
+        return valueStr;
     }
 
     public ArrayList<String> getDBCursor(String request, int id){

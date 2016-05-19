@@ -13,34 +13,43 @@
     tools:showIn="@layout/app_bar_home">
 
     <Button
+        android:id="@+id/buttonNewGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Game"
-        android:id="@+id/buttonNewGame"
-        android:nestedScrollingEnabled="true"
         android:layout_below="@+id/editTextPlayer"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="124dp" />
+        android:layout_marginTop="124dp"
+        android:nestedScrollingEnabled="true"
+        android:text="New Game" />
 
     <EditText
+        android:id="@+id/editTextPlayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextPlayer"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:hint="Player's name" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/playerList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/playerList"
+        android:layout_alignEnd="@+id/editTextPlayer"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/buttonNewGame"
         android:layout_alignRight="@+id/editTextPlayer"
-        android:layout_alignEnd="@+id/editTextPlayer" />
+        android:layout_below="@+id/buttonNewGame" />
+
+    <Button
+        android:id="@+id/buttonAddPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/playerList"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="51dp"
+        android:text="Add Player" />
 
 </RelativeLayout>

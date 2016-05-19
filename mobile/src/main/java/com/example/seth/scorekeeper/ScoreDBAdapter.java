@@ -56,9 +56,7 @@ public class ScoreDBAdapter {
         initialValues.put(request, String.valueOf(array));
 
         int index = getNewestGame(KEY_ROWID).getColumnIndex(KEY_ROWID);
-        Log.i(TAG, String.valueOf(index));
         String valueStr = getNewestGame(KEY_ROWID).getString(index);
-        Log.i(TAG, valueStr);
 
         Log.i(TAG, "updateGame successful" + array + " , " + request);
 

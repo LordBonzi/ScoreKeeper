@@ -18,19 +18,10 @@ public class ScoreDBAdapter {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_SCORE = "_score";
     public static final String KEY_PLAYERS = "_players";
-
-    private String[] allColumns = {KEY_ROWID, KEY_SCORE, KEY_PLAYERS};
-
     private static final String TAG = "ScoreDBAdapter";
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
     private static final String DATABASE_NAME = "ScoreKeeper";
     private static final String SQLITE_TABLE = "score";
     private static final int DATABASE_VERSION = 1;
-
-    private final Context mCtx;
-
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
                     KEY_ROWID + " integer PRIMARY KEY autoincrement," +
@@ -38,27 +29,10 @@ public class ScoreDBAdapter {
                     KEY_PLAYERS +
 
                     " );";
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            Log.w(TAG, DATABASE_CREATE);
-            db.execSQL(DATABASE_CREATE);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-            onCreate(db);
-        }
-    }
+    private final Context mCtx;
+    private String[] allColumns = {KEY_ROWID, KEY_SCORE, KEY_PLAYERS};
+    private DatabaseHelper mDbHelper;
+    private SQLiteDatabase mDb;
 
     public ScoreDBAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -81,7 +55,7 @@ public class ScoreDBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(request, String.valueOf(array));
 
-        int index = getNewestGame(KEY_ROWID).getColumnIndex(request);
+        int index = getNewestGame(KEY_ROWID).getColumnIndex(KEY_ROWID);
         Log.i(TAG, String.valueOf(index));
         String valueStr = getNewestGame(KEY_ROWID).getString(index);
         Log.i(TAG, valueStr);
@@ -146,6 +120,27 @@ public class ScoreDBAdapter {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    private static class DatabaseHelper extends SQLiteOpenHelper {
+
+        DatabaseHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            Log.w(TAG, DATABASE_CREATE);
+            db.execSQL(DATABASE_CREATE);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                    + newVersion + ", which will destroy all old data");
+            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
+            onCreate(db);
+        }
     }
 
 

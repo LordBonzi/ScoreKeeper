@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     Button buttonP1, buttonP2;
     TextView textViewP1, textViewP2, tv;
     int P1Score, P2Score;
-    int amountItems, gameID;
+    int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
 
     private RecyclerView.Adapter mAdapter;
@@ -54,10 +54,9 @@ public class MainActivity extends AppCompatActivity
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
-        if (getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size() > 3){
+        if (getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size() > 2) {
             big.setVisibility(View.VISIBLE);
         }else{
-            setContentView(R.layout.activity_main);
             normal.setVisibility(View.VISIBLE);
 
         }
@@ -121,6 +120,8 @@ public class MainActivity extends AppCompatActivity
 
         tv.setText(getNewestGame(ScoreDBAdapter.KEY_ROWID) + " , " +
                 getNewestGame(ScoreDBAdapter.KEY_SCORE) + " , " +
+                String.valueOf(gameSize) + " , " +
+                getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size() + " , " +
                 getNewestGame(ScoreDBAdapter.KEY_PLAYERS) + " , ");
     }
 
@@ -128,6 +129,14 @@ public class MainActivity extends AppCompatActivity
         int index = dbHelper.getNewestGame(request).getColumnIndex(request);
         String valueStr = dbHelper.getNewestGame(request).getString(index);
         return valueStr;
+    }
+
+    public String getDBCursorStringArray(String request, int id) {
+        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
+
+        String value = dbHelper.fetchAllGames().getString(index);
+
+        return value;
     }
 
     public ArrayList<String> getDBCursor(String request, int id){

@@ -1,8 +1,8 @@
 package com.example.seth.scorekeeper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,11 +20,12 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    Context context;
     String TAG = "Home";
     EditText editTextPlayer;
-    Button buttonNewGame;
+    Button buttonNewGame, buttonAddPlayer;
     RecyclerView playerList;
     String player;
     Intent mainActivity;
@@ -48,24 +49,14 @@ public class Home extends AppCompatActivity
 
         mainActivity = new Intent(this, MainActivity.class);
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
-        editTextPlayer = (EditText)findViewById(R.id.editTextPlayer);
+        buttonNewGame.setOnClickListener(this);
+
+        buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
+        buttonAddPlayer.setOnClickListener(this);
+
+
+        editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
         playerList = (RecyclerView) findViewById(R.id.playerList);
-
-        buttonNewGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(mainActivity);
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addPlayers();
-            }
-        });
 
         //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,12 +77,13 @@ public class Home extends AppCompatActivity
             dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS);
 
         }else{
-            dbHelper.createGame(players, null, false);
+            dbHelper.createGame(players, null);
         }
         i +=1;
         editTextPlayer.setText("");
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -151,5 +143,25 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.buttonNewGame:
+                Log.i(TAG, "clicked buttonNewGame");
+                startActivity(mainActivity);
+
+            case R.id.buttonAddPlayer:
+                Log.i(TAG, "clicked buttonAddPlayer");
+                addPlayers();
+
+        }
     }
 }

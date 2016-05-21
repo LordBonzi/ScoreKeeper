@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -50,26 +51,52 @@ public class ScoreDBAdapter {
         }
     }
 
-    public long updateGame(ArrayList array, String request) {
+    public String[] convertToStringArray(ArrayList<String> arrayList) {
 
+        String[] str = new String[arrayList.size()];
+        str = arrayList.toArray(str);
+
+        Log.i(TAG + "strarray", Arrays.toString(str));
+
+        return str;
+    }
+
+    public ArrayList<String> convertToArrayList(String[] str) {
+
+        ArrayList<String> stringList = new ArrayList<String>(Arrays.asList(str));
+
+        for (int i = 0; i < stringList.size(); i++) {
+            String s = stringList.get(i);
+            Log.i(TAG, s);
+        }
+        return stringList;
+    }
+
+    long updateGame(ArrayList array, String request) {
+        array = new ArrayList();
         ContentValues initialValues = new ContentValues();
-        initialValues.put(request, String.valueOf(array));
+        initialValues.put(request, Arrays.toString(convertToStringArray(array)));
 
         int index = getNewestGame(KEY_ROWID).getColumnIndex(KEY_ROWID);
         String valueStr = getNewestGame(KEY_ROWID).getString(index);
 
-        Log.i(TAG, "updateGame successful" + array + " , " + request);
+        Log.i(TAG, "updateGame successful" + Arrays.toString(convertToStringArray(array)) + " , " + request);
 
         return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + Integer.valueOf(valueStr) , null);
     }
 
-    public long createGame(ArrayList<String> players,ArrayList<String> scoreArray, boolean biggame) {
+    long createGame(ArrayList<String> players, ArrayList scoreArray) {
+
+        players = new ArrayList<String>();
+        scoreArray = new ArrayList<>();
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_SCORE, String.valueOf(scoreArray));
-        initialValues.put(KEY_PLAYERS, String.valueOf(players));
+        initialValues.put(KEY_SCORE, Arrays.toString(convertToStringArray(scoreArray)));
+        initialValues.put(KEY_PLAYERS, Arrays.toString(convertToStringArray(players)));
 
-        Log.e(TAG, "createGame successful" + players + " , " + scoreArray + " , " + biggame);
+        Log.i(TAG, String.valueOf(convertToStringArray(players)));
+
+        Log.e(TAG, "createGame successful" + convertToStringArray(players) + " , " + convertToStringArray(scoreArray));
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

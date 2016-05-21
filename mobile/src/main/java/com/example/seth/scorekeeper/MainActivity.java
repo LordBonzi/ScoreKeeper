@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
     ArrayList players;
+    CursorHelper cursorHelper;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -54,14 +55,16 @@ public class MainActivity extends AppCompatActivity
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
+        cursorHelper = new CursorHelper();
+
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
         gameID = Integer.valueOf(getID());
 
-        gameSize = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS).size();
+        gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
 
         players = new ArrayList();
-        players = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS);
+        players = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
 
 
 
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity
             saveInfo();
             settings.edit().putBoolean("my_first_time", false).commit();
         }else {
-            SharedPreferences sharedPref = getSharedPreferences("TTscorekeeper"
+            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
                     , Context.MODE_PRIVATE);
 
         }
@@ -108,46 +111,9 @@ public class MainActivity extends AppCompatActivity
         return value;
     }
 
-    public String convertToString(ArrayList arrayList) {
-
-        arrayList = new ArrayList<>();
-        String str = TextUtils.join(",", arrayList);
-
-        return str;
-    }
-
-    public ArrayList convertToArray(String string) {
-
-        String[] strValues = string.split(",");
-        ArrayList array = new ArrayList<String>(Arrays.asList(strValues));
-
-        return array;
-    }
-
-
-    public ArrayList getDBCursorArray(String request) {
-
-        int index = dbHelper.getNewestGame(request).getColumnIndex(request);
-        String value = dbHelper.getNewestGame(request).getString(index);
-
-        return convertToArray(value);
-
-    }
-
-    public String getDBCursorString(String request) {
-
-        int index = dbHelper.fetchGamesById(gameID).getColumnIndex(request);
-        String value = dbHelper.fetchAllGames().getString(index);
-        return value;
-    }
-
     public void saveInfo(){
-        SharedPreferences sharedPref = getSharedPreferences("TTscorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putInt("p1score", P1Score);
-        editor.putInt("p2score", P2Score);
-        editor.putInt("amountitems", amountItems);
 
         editor.apply();
     }

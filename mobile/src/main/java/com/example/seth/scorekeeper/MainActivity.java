@@ -51,9 +51,11 @@ public class MainActivity extends AppCompatActivity
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP2 = (Button) findViewById(R.id.buttonP2);
+        normal = (RelativeLayout)findViewById(R.id.layoutNormal);
+        big = (RelativeLayout)findViewById(R.id.layoutBig);
+
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-
         gameID = Integer.valueOf(getID());
 
         gameSize = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS).size();
@@ -61,11 +63,7 @@ public class MainActivity extends AppCompatActivity
         players = new ArrayList();
         players = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS);
 
-        Log.i(TAG, String.valueOf(getDBCursorString(ScoreDBAdapter.KEY_PLAYERS)));
 
-        Log.i(TAG, "game size = " + getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS).size());
-        normal = (RelativeLayout)findViewById(R.id.layoutNormal);
-        big = (RelativeLayout)findViewById(R.id.layoutBig);
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -131,7 +129,6 @@ public class MainActivity extends AppCompatActivity
 
         int index = dbHelper.getNewestGame(request).getColumnIndex(request);
         String value = dbHelper.getNewestGame(request).getString(index);
-        textViewP1.setText(value);
 
         return convertToArray(value);
 

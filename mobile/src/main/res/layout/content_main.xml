@@ -16,7 +16,7 @@
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
 
@@ -28,7 +28,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/buttonP1"
             android:text="3"
-            android:textAppearance="@android:style/TextAppearance.Material.Display4" />
+            android:textAppearance="@style/LargeText" />
 
         <Button
             android:id="@+id/buttonP1"

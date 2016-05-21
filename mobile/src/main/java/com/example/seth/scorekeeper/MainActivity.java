@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity
 
     String TAG = "MainActivity.class";
     Button buttonP1, buttonP2;
-    TextView textViewP1, textViewP2;
     int P1Score, P2Score;
     int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
@@ -48,8 +47,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
-        textViewP1 = (TextView) findViewById(R.id.textViewP1);
-        textViewP2 = (TextView) findViewById(R.id.textViewP2);
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-        gameID = Integer.valueOf(getID());
+        gameID = Integer.valueOf(cursorHelper.getGameID(dbHelper));
 
         gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
 
@@ -104,12 +101,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public String getID() {
 
-        int index = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getColumnIndex(ScoreDBAdapter.KEY_ROWID);
-        String value = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getString(index);
-        return value;
-    }
 
     public void saveInfo(){
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);

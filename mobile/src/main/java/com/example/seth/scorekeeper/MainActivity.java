@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
 
     String TAG = "MainActivity.class";
     Button buttonP1, buttonP2;
-    TextView textViewP1, textViewP2, tv;
+    TextView textViewP1, textViewP2;
     int P1Score, P2Score;
     int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
-        tv = (TextView) findViewById(R.id.textView4);
         textViewP1 = (TextView) findViewById(R.id.textViewP1);
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
         buttonP1 = (Button) findViewById(R.id.buttonP1);
@@ -117,12 +116,6 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        tv.setText(gameID + " , " +
-                gameSize + " , " +
-                players
-
-        );
-
     }
 
     public String getID() {
@@ -132,12 +125,10 @@ public class MainActivity extends AppCompatActivity
         return value;
     }
 
-
     public String convertToString(ArrayList arrayList) {
 
         arrayList = new ArrayList<>();
         String str = TextUtils.join(",", arrayList);
-        Log.i(TAG, str);
 
         return str;
     }

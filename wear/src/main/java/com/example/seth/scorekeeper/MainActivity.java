@@ -1,4 +1,4 @@
-package com.example.seth.scorekeeper;
+package io.github.sdsstudios.ScoreKeeper;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;

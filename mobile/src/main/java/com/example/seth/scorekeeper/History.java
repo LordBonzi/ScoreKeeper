@@ -26,7 +26,8 @@ public class History extends AppCompatActivity
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
-
+    CursorHelper cursorHelper;
+    int gameID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,9 @@ public class History extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
+
+        gameID = Integer.valueOf(cursorHelper.getGameID(dbHelper));
+        cursorHelper = new CursorHelper();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,16 +71,9 @@ public class History extends AppCompatActivity
         displayRecyclerView();
     }
 
-    public ArrayList<String> getDBCursor(String request){
-        int index = dbHelper.fetchAllGames().getColumnIndex(request);
-        String valueStr = dbHelper.fetchAllGames().getString(index);
-        ArrayList<String> value = new ArrayList<String>(Arrays.asList(valueStr.split(",")));
-
-        return value;
-    }
 
     public void displayRecyclerView(){
-        historyAdapter = new HistoryAdapter(getDBCursor(ScoreDBAdapter.KEY_SCORE));
+        historyAdapter = new HistoryAdapter(cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper));
         recyclerViewHistory.setAdapter(historyAdapter);
 
     }

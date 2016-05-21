@@ -14,7 +14,7 @@
     </style>
 
     <style name="LargeText" >
-        <item name="android:textSize">112dp</item>
+        <item name="android:textSize">112sp</item>
         <item name="android:textColor">@color/secondary_text</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">normal</item>

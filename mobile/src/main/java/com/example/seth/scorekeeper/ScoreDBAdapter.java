@@ -57,7 +57,7 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String request) {
+    public long updateGame(ArrayList array, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(request, convertToString(array));

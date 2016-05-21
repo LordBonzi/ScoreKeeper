@@ -19,7 +19,6 @@
         android:layout_below="@+id/editTextPlayer"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="124dp"
-        android:nestedScrollingEnabled="true"
         android:text="@string/new_game" />
 
     <EditText

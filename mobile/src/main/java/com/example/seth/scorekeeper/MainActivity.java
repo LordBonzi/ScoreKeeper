@@ -1,5 +1,6 @@
 package com.example.seth.scorekeeper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,16 +28,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     String TAG = "MainActivity.class";
-    Button buttonP1, buttonP2;
     int P1Score, P2Score;
     int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
     ArrayList players;
     CursorHelper cursorHelper;
 
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<String> scoreDataSet;
+
     private ScoreDBAdapter dbHelper;
 
     @Override
@@ -47,8 +45,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
-        buttonP1 = (Button) findViewById(R.id.buttonP1);
-        buttonP2 = (Button) findViewById(R.id.buttonP2);
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
@@ -62,8 +58,6 @@ public class MainActivity extends AppCompatActivity
 
         players = new ArrayList();
         players = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
-
-
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -88,8 +82,6 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
         if (settings.getBoolean("my_first_time", true)) {
-            //the app is being launched for first time, do something
-            Log.d("Comments", "First time");
 
             saveInfo();
             settings.edit().putBoolean("my_first_time", false).commit();
@@ -101,23 +93,25 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-
     public void saveInfo(){
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
+
 
         editor.apply();
     }
 
     @Override
     public void onBackPressed() {
+        moveTaskToBack(true);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -167,5 +161,60 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+}
+
+class BigLayout extends  Activity{
+    private RecyclerView playerList = (RecyclerView)findViewById(R.id.playerList);
+
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<String> scoreDataSet;
+    public void onCreate(){
+    }
+
+    public void game(Button button){
+
+
+
+    }
+}
+
+class SmallLayout extends Activity implements View.OnClickListener{
+    private Button buttonP1 = (Button)findViewById(R.id.buttonP1);
+    private Button buttonP2 = (Button)findViewById(R.id.buttonP1);
+
+    public void onCreate(){
+        buttonP1 = (Button) findViewById(R.id.buttonP1);
+        buttonP1.setOnClickListener(this);
+
+        buttonP2 = (Button) findViewById(R.id.buttonP2);
+        buttonP2.setOnClickListener(this);
+        buttonP1.setText("0");
+        buttonP2.setText("0");
+    }
+
+    public void game(Button button){
+
+
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonP1:
+
+
+                break;
+
+            case R.id.buttonP2:
+
+
+                break;
+        }
     }
 }

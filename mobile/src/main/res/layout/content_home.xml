@@ -50,6 +50,6 @@
         android:layout_above="@+id/playerList"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="51dp"
-        android:text="Add Player" />
+        android:text="@string/add_player" />
 
 </RelativeLayout>

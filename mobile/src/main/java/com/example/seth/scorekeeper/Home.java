@@ -10,12 +10,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -45,18 +49,29 @@ public class Home extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        players= new ArrayList<String>();
-
+        players = new ArrayList<>();
         mainActivity = new Intent(this, MainActivity.class);
+
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
 
         buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
         buttonAddPlayer.setOnClickListener(this);
 
-
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
         playerList = (RecyclerView) findViewById(R.id.playerList);
+
+        editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    addPlayers();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -67,6 +82,7 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     public void addPlayers(){
@@ -75,15 +91,18 @@ public class Home extends AppCompatActivity
 
         if (i >= 1) {
             dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS);
+            String str = TextUtils.join(",", players);
+            Log.i(TAG, str);
 
         }else{
             dbHelper.createGame(players, null);
+            String str = TextUtils.join(",", players);
+            Log.i(TAG, str);
         }
         i +=1;
         editTextPlayer.setText("");
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -145,23 +164,19 @@ public class Home extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case R.id.buttonNewGame:
-                Log.i(TAG, "clicked buttonNewGame");
-                startActivity(mainActivity);
-
-            case R.id.buttonAddPlayer:
-                Log.i(TAG, "clicked buttonAddPlayer");
+            case R.id.buttonAddPlayer: {
                 addPlayers();
+                break;
+            }
 
+            case R.id.buttonNewGame: {
+                startActivity(mainActivity);
+                break;
+            }
+
+            //.... etc
         }
     }
 }

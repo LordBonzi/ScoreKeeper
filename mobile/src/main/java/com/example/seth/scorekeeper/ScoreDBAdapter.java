@@ -6,10 +6,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -26,12 +26,11 @@ public class ScoreDBAdapter {
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
                     KEY_ROWID + " integer PRIMARY KEY autoincrement," +
-                    KEY_SCORE + "," +
-                    KEY_PLAYERS +
+                    KEY_PLAYERS + "," +
+                    KEY_SCORE +
 
                     " );";
     private final Context mCtx;
-    private String[] allColumns = {KEY_ROWID, KEY_SCORE, KEY_PLAYERS};
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -51,60 +50,37 @@ public class ScoreDBAdapter {
         }
     }
 
-    public String[] convertToStringArray(ArrayList<String> arrayList) {
+    public String convertToString(ArrayList array) {
 
-        String[] str = new String[arrayList.size()];
-        str = arrayList.toArray(str);
-
-        Log.i(TAG + "strarray", Arrays.toString(str));
+        String str = TextUtils.join(",", array);
 
         return str;
     }
 
-    public ArrayList<String> convertToArrayList(String[] str) {
+    public long updateGame(ArrayList array, String request) {
 
-        ArrayList<String> stringList = new ArrayList<String>(Arrays.asList(str));
-
-        for (int i = 0; i < stringList.size(); i++) {
-            String s = stringList.get(i);
-            Log.i(TAG, s);
-        }
-        return stringList;
-    }
-
-    long updateGame(ArrayList array, String request) {
-        array = new ArrayList();
         ContentValues initialValues = new ContentValues();
-        initialValues.put(request, Arrays.toString(convertToStringArray(array)));
+        initialValues.put(request, convertToString(array));
 
         int index = getNewestGame(KEY_ROWID).getColumnIndex(KEY_ROWID);
         String valueStr = getNewestGame(KEY_ROWID).getString(index);
 
-        Log.i(TAG, "updateGame successful" + Arrays.toString(convertToStringArray(array)) + " , " + request);
-
-        return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + Integer.valueOf(valueStr) , null);
+        return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + valueStr, null);
     }
 
-    long createGame(ArrayList<String> players, ArrayList scoreArray) {
-
-        players = new ArrayList<String>();
-        scoreArray = new ArrayList<>();
+    public long createGame(ArrayList players, ArrayList scoreArray) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_SCORE, Arrays.toString(convertToStringArray(scoreArray)));
-        initialValues.put(KEY_PLAYERS, Arrays.toString(convertToStringArray(players)));
-
-        Log.i(TAG, String.valueOf(convertToStringArray(players)));
-
-        Log.e(TAG, "createGame successful" + convertToStringArray(players) + " , " + convertToStringArray(scoreArray));
+        initialValues.put(KEY_PLAYERS, convertToString(players));
+        initialValues.put(KEY_SCORE, convertToString(players));
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
     public Cursor getNewestGame(String request){
-        Cursor cursor = mDb.query(SQLITE_TABLE, allColumns, null, null, null, null, null);
-        cursor.moveToPosition(cursor.getCount() - 1);
-        Log.i(TAG, "getNewestGame successful");
+
+        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
+        cursor.moveToLast();
 
         return cursor;
     }
@@ -115,35 +91,35 @@ public class ScoreDBAdapter {
         doneDelete = mDb.delete(SQLITE_TABLE, null , null);
         Log.w(TAG, Integer.toString(doneDelete));
         return doneDelete > 0;
-
     }
 
     public Cursor fetchGamesById(int id) throws SQLException {
         Log.w(TAG, String.valueOf(id));
-        Cursor mCursor;
+        Cursor mCursor = null;
+        if (id == 0) {
+            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE},
+                    null, null, null, null, null);
 
-            mCursor = mDb.query(true, SQLITE_TABLE, allColumns,
+        } else {
+            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS},
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
-
+        }
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
-
-        Log.i(TAG, "fetchGamesBYId successful");
-
-
         return mCursor;
     }
 
     public Cursor fetchAllGames() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE, allColumns,
+        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS},
                 null, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
+
         return mCursor;
     }
 

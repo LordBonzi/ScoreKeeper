@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,10 +28,11 @@ public class MainActivity extends AppCompatActivity
 
     String TAG = "MainActivity.class";
     Button buttonP1, buttonP2;
-    TextView textViewP1, textViewP2, tv;
+    TextView textViewP1, textViewP2;
     int P1Score, P2Score;
     int amountItems, gameID, gameSize;
     RelativeLayout normal, big;
+    ArrayList players;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -43,43 +43,35 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
-        Log.i(TAG, "game size = " + getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size());
-
-        gameID = Integer.valueOf(getNewestGame(ScoreDBAdapter.KEY_ROWID));
-
-        normal = (RelativeLayout)findViewById(R.id.layoutNormal);
-        big = (RelativeLayout)findViewById(R.id.layoutBig);
-
-        if (getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size() > 2) {
-            big.setVisibility(View.VISIBLE);
-        }else{
-            normal.setVisibility(View.VISIBLE);
-
-        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
-        tv = (TextView) findViewById(R.id.textView4);
         textViewP1 = (TextView) findViewById(R.id.textViewP1);
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP2 = (Button) findViewById(R.id.buttonP2);
+        dbHelper = new ScoreDBAdapter(this);
+        dbHelper.open();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+        gameID = Integer.valueOf(getID());
+
+        gameSize = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS).size();
+
+        players = new ArrayList();
+        players = getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS);
+
+        Log.i(TAG, String.valueOf(getDBCursorString(ScoreDBAdapter.KEY_PLAYERS)));
+
+        Log.i(TAG, "game size = " + getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS).size());
+        normal = (RelativeLayout)findViewById(R.id.layoutNormal);
+        big = (RelativeLayout)findViewById(R.id.layoutBig);
+
+        if (gameSize > 2) {
+            big.setVisibility(View.VISIBLE);
+        }else{
+            normal.setVisibility(View.VISIBLE);
+
         }
 
         //navigation drawer stuff
@@ -101,48 +93,54 @@ public class MainActivity extends AppCompatActivity
             //the app is being launched for first time, do something
             Log.d("Comments", "First time");
 
-            textViewP1.setText(String.valueOf(P1Score));
-            textViewP2.setText(String.valueOf(P2Score));
-
             saveInfo();
             settings.edit().putBoolean("my_first_time", false).commit();
         }else {
             SharedPreferences sharedPref = getSharedPreferences("TTscorekeeper"
                     , Context.MODE_PRIVATE);
 
-            P1Score = sharedPref.getInt("p1score", P1Score);
-            P2Score = sharedPref.getInt("p2score", P2Score);
-
-            textViewP1.setText(String.valueOf(P1Score));
-            textViewP2.setText(String.valueOf(P2Score));
-
         }
 
-        tv.setText(getNewestGame(ScoreDBAdapter.KEY_ROWID) + " , " +
-                getNewestGame(ScoreDBAdapter.KEY_SCORE) + " , " +
-                String.valueOf(gameSize) + " , " +
-                getDBCursor(ScoreDBAdapter.KEY_PLAYERS, gameID).size() + " , " +
-                getNewestGame(ScoreDBAdapter.KEY_PLAYERS) + " , ");
     }
 
-    public String getNewestGame(String request) {
-        int index = dbHelper.getNewestGame(request).getColumnIndex(request);
-        String valueStr = dbHelper.getNewestGame(request).getString(index);
-        return valueStr;
-    }
+    public String getID() {
 
-    public String getDBCursorStringArray(String request, int id) {
-        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
-
-        String value = dbHelper.fetchAllGames().getString(index);
-
+        int index = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getColumnIndex(ScoreDBAdapter.KEY_ROWID);
+        String value = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getString(index);
         return value;
     }
 
-    public ArrayList<String> getDBCursor(String request, int id){
-        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
-        String valueStr = dbHelper.fetchAllGames().getString(index);
-        ArrayList<String> value = new ArrayList<String>(Arrays.asList(valueStr.split(",")));
+    public String convertToString(ArrayList arrayList) {
+
+        arrayList = new ArrayList<>();
+        String str = TextUtils.join(",", arrayList);
+
+        return str;
+    }
+
+    public ArrayList convertToArray(String string) {
+
+        String[] strValues = string.split(",");
+        ArrayList array = new ArrayList<String>(Arrays.asList(strValues));
+
+        return array;
+    }
+
+
+    public ArrayList getDBCursorArray(String request) {
+
+        int index = dbHelper.getNewestGame(request).getColumnIndex(request);
+        String value = dbHelper.getNewestGame(request).getString(index);
+        textViewP1.setText(value);
+
+        return convertToArray(value);
+
+    }
+
+    public String getDBCursorString(String request) {
+
+        int index = dbHelper.fetchGamesById(gameID).getColumnIndex(request);
+        String value = dbHelper.fetchAllGames().getString(index);
         return value;
     }
 

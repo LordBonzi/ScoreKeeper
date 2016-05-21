@@ -10,18 +10,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static TextView textView;
     Context context;
     String TAG = "Home";
     EditText editTextPlayer;
@@ -30,6 +33,7 @@ public class Home extends AppCompatActivity
     String player;
     Intent mainActivity;
     ArrayList<String> players;
+    ArrayList<String> debug;
     int i = 0;
 
     private ScoreDBAdapter dbHelper;
@@ -45,15 +49,30 @@ public class Home extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        players= new ArrayList<String>();
+        players = new ArrayList<>();
 
+        textView = (TextView) findViewById(R.id.textViewDebug);
         mainActivity = new Intent(this, MainActivity.class);
+
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
-        buttonNewGame.setOnClickListener(this);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "clicked buttonNewGame");
+                startActivity(mainActivity);
+            }
+        };
+        buttonNewGame.setOnClickListener(onClickListener);
 
         buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
-        buttonAddPlayer.setOnClickListener(this);
-
+        View.OnClickListener onClickListener2 = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "clicked buttonAddPlayer");
+                addPlayers();
+            }
+        };
+        buttonAddPlayer.setOnClickListener(onClickListener2);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
         playerList = (RecyclerView) findViewById(R.id.playerList);
@@ -67,6 +86,8 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     public void addPlayers(){
@@ -75,15 +96,18 @@ public class Home extends AppCompatActivity
 
         if (i >= 1) {
             dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS);
+            String str = TextUtils.join(",", players);
+            Log.i(TAG, str);
 
         }else{
             dbHelper.createGame(players, null);
+            String str = TextUtils.join(",", players);
+            Log.i(TAG, str);
         }
         i +=1;
         editTextPlayer.setText("");
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -145,23 +169,4 @@ public class Home extends AppCompatActivity
         return true;
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.buttonNewGame:
-                Log.i(TAG, "clicked buttonNewGame");
-                startActivity(mainActivity);
-
-            case R.id.buttonAddPlayer:
-                Log.i(TAG, "clicked buttonAddPlayer");
-                addPlayers();
-
-        }
-    }
 }

@@ -54,15 +54,5 @@
         android:layout_marginBottom="51dp"
         android:text="@string/add_player" />
 
-    <TextView
-        android:id="@+id/textViewDebug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/playerList"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="12dp"
-        android:text="TextView" />
-
 
 </RelativeLayout>

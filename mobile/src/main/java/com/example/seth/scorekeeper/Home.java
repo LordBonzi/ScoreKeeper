@@ -24,9 +24,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    public static TextView textView;
     Context context;
     String TAG = "Home";
     EditText editTextPlayer;
@@ -35,7 +34,6 @@ public class Home extends AppCompatActivity
     String player;
     Intent mainActivity;
     ArrayList<String> players;
-    ArrayList<String> debug;
     int i = 0;
 
     private ScoreDBAdapter dbHelper;
@@ -52,29 +50,13 @@ public class Home extends AppCompatActivity
         dbHelper.open();
 
         players = new ArrayList<>();
-
-        textView = (TextView) findViewById(R.id.textViewDebug);
         mainActivity = new Intent(this, MainActivity.class);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "clicked buttonNewGame");
-                startActivity(mainActivity);
-            }
-        };
-        buttonNewGame.setOnClickListener(onClickListener);
+        buttonNewGame.setOnClickListener(this);
 
         buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
-        View.OnClickListener onClickListener2 = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "clicked buttonAddPlayer");
-                addPlayers();
-            }
-        };
-        buttonAddPlayer.setOnClickListener(onClickListener2);
+        buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
         playerList = (RecyclerView) findViewById(R.id.playerList);
@@ -182,4 +164,19 @@ public class Home extends AppCompatActivity
         return true;
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonAddPlayer: {
+                addPlayers();
+                break;
+            }
+
+            case R.id.buttonNewGame: {
+                startActivity(mainActivity);
+                break;
+            }
+
+            //.... etc
+        }
+    }
 }

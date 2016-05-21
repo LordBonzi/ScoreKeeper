@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -26,16 +27,17 @@ import java.util.ArrayList;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    Context context;
     String TAG = "Home";
     EditText editTextPlayer;
     Button buttonNewGame, buttonAddPlayer;
     RecyclerView playerList;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     String player;
     Intent mainActivity;
     ArrayList<String> players;
+    PlayerListAdapter playerListAdapter;
     int i = 0;
-
     private ScoreDBAdapter dbHelper;
 
     @Override
@@ -51,6 +53,7 @@ public class Home extends AppCompatActivity
 
         players = new ArrayList<>();
         mainActivity = new Intent(this, MainActivity.class);
+        playerList = (RecyclerView)findViewById(R.id.historyList);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
@@ -82,6 +85,20 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        //RecyclerView Stuff
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        playerList.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        displayRecyclerView();
+    }
+
+    public void displayRecyclerView(){
+        playerListAdapter = new PlayerListAdapter(players);
+        playerList.setAdapter(playerListAdapter);
 
     }
 

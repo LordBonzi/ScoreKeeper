@@ -35,13 +35,6 @@ public class CursorHelper {
         return str;
     }
 
-    public String getGameID(ScoreDBAdapter dbHelper) {
-
-        int index = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getColumnIndex(ScoreDBAdapter.KEY_ROWID);
-        String value = dbHelper.getNewestGame(ScoreDBAdapter.KEY_ROWID).getString(index);
-        return value;
-    }
-
     public ArrayList convertToArray(String string) {
 
         String[] strValues = string.split(",");
@@ -52,10 +45,7 @@ public class CursorHelper {
 
     public ArrayList getDBCursorArray(String request, ScoreDBAdapter dbHelper) {
 
-        int index = dbHelper.getNewestGame(request).getColumnIndex(request);
-        String value = dbHelper.getNewestGame(request).getString(index);
-
-        return convertToArray(value);
+        return convertToArray(dbHelper.getNewestGame());
 
     }
 

@@ -1,6 +1,5 @@
 package com.example.seth.scorekeeper;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -107,7 +106,7 @@ public class Home extends AppCompatActivity
         players.add(i, player);
 
         if (i >= 1) {
-            dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS);
+            dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS, Integer.valueOf(dbHelper.getNewestGame()));
             String str = TextUtils.join(",", players);
             Log.i(TAG, str);
 

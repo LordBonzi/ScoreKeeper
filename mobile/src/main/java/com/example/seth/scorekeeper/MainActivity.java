@@ -25,15 +25,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     String TAG = "MainActivity.class";
-    int P1Score, P2Score;
-    int amountItems, gameID, gameSize;
+    Integer P1Score =0 , P2Score =0;
+    int gameSize;
+    public static int gameID;
     RelativeLayout normal, big;
-    ArrayList players;
+    ArrayList playersArray, scoresArray;
     CursorHelper cursorHelper;
-
+    public static Button buttonP1;
+    public static Button buttonP2;
+    SmallLayout smallLayout;
+    BigLayout bigLayout;
 
     private ScoreDBAdapter dbHelper;
 
@@ -45,6 +49,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
+        buttonP1 = (Button) findViewById(R.id.buttonP1);
+        buttonP1.setOnClickListener(this);
+
+        buttonP2 = (Button) findViewById(R.id.buttonP2);
+        buttonP2.setOnClickListener(this);
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
@@ -52,17 +61,33 @@ public class MainActivity extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-        gameID = Integer.valueOf(cursorHelper.getGameID(dbHelper));
+
+        smallLayout = new SmallLayout();
+        smallLayout.onCreate();
+        bigLayout = new BigLayout();
+        bigLayout.onCreate();
+
+        gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
 
-        players = new ArrayList();
-        players = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
+        playersArray= new ArrayList();
+        playersArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
+
+        scoresArray = new ArrayList();
+        scoresArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper);
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
         }else{
             normal.setVisibility(View.VISIBLE);
+
+        }
+
+        if (P1Score == null || P2Score == null){
+            P1Score = 0;
+            P2Score = 0;
+        }else{
 
         }
 
@@ -91,6 +116,21 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonP1:
+                    smallLayout.game(buttonP1, P1Score, dbHelper, scoresArray, gameID);
+
+                break;
+
+            case R.id.buttonP2:
+                smallLayout.game(buttonP2, P2Score, dbHelper, scoresArray, gameID);
+
+                break;
+        }
     }
 
     public void saveInfo(){
@@ -167,11 +207,7 @@ public class MainActivity extends AppCompatActivity
 }
 
 class BigLayout extends  Activity{
-    private RecyclerView playerList = (RecyclerView)findViewById(R.id.playerList);
 
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<String> scoreDataSet;
     public void onCreate(){
     }
 
@@ -182,39 +218,20 @@ class BigLayout extends  Activity{
     }
 }
 
-class SmallLayout extends Activity implements View.OnClickListener{
-    private Button buttonP1 = (Button)findViewById(R.id.buttonP1);
-    private Button buttonP2 = (Button)findViewById(R.id.buttonP1);
+class SmallLayout extends Activity{
 
     public void onCreate(){
-        buttonP1 = (Button) findViewById(R.id.buttonP1);
-        buttonP1.setOnClickListener(this);
 
-        buttonP2 = (Button) findViewById(R.id.buttonP2);
-        buttonP2.setOnClickListener(this);
-        buttonP1.setText("0");
-        buttonP2.setText("0");
+        MainActivity.buttonP1.setText("0");
+        MainActivity.buttonP2.setText("0");
     }
 
-    public void game(Button button){
-
-
-
+    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, ArrayList arrayList, int id){
+        score += 1;
+        button.setText(String.valueOf(score));
+        dbHelper.updateGame(arrayList, ScoreDBAdapter.KEY_SCORE, id);
     }
 
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonP1:
 
-
-                break;
-
-            case R.id.buttonP2:
-
-
-                break;
-        }
-    }
 }

@@ -62,10 +62,7 @@ public class ScoreDBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(request, convertToString(array));
 
-        int index = getNewestGame(KEY_ROWID).getColumnIndex(KEY_ROWID);
-        String valueStr = getNewestGame(KEY_ROWID).getString(index);
-
-        return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + valueStr, null);
+        return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
     }
 
     public long createGame(ArrayList players, ArrayList scoreArray) {
@@ -77,12 +74,15 @@ public class ScoreDBAdapter {
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
-    public Cursor getNewestGame(String request){
+    public String getNewestGame(){
 
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
         cursor.moveToLast();
 
-        return cursor;
+        int index = cursor.getColumnIndex(KEY_ROWID);
+        String value = cursor.getString(index);
+
+        return value;
     }
 
     public boolean deleteAllgames() {

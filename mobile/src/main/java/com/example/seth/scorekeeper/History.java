@@ -39,7 +39,7 @@ public class History extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        gameID = Integer.valueOf(cursorHelper.getGameID(dbHelper));
+        gameID = Integer.valueOf(dbHelper.getNewestGame());
         cursorHelper = new CursorHelper();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -57,15 +56,6 @@ public class ScoreDBAdapter {
 
         return str;
     }
-
-    public ArrayList convertToArray(String string) {
-
-        String[] strValues = string.split(",");
-        ArrayList array = new ArrayList<String>(Arrays.asList(strValues));
-
-        return array;
-    }
-
 
     public long updateGame(ArrayList array, String request) {
 

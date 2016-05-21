@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="124dp"
         android:nestedScrollingEnabled="true"
-        android:text="@string/new_game" />
+        android:text="New Game" />
 
     <EditText
         android:id="@+id/editTextPlayer"
@@ -31,7 +31,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:hint="@string/player_s_name" />
+        android:hint="Player's name" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/playerList"

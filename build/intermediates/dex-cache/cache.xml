@@ -2,235 +2,235 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="debf30ce0a7560396b6235edef77e447006454c2">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-23.3.0_074a6a42f246a8ed656227c3f36750388f2c23fb.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-8.4.0_a8edc55692dee31b030238d2224450f136d0f7b4.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.3.0\jars\libs\internal_impl-23.3.0.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\internal_impl-23.3.0_779d12cc9838978d9c25845da369ae5408c3805b.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-23.3.0_ed9ab4c7fc95e73787b80238bae8dcc94d7f7e68.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-games-8.4.0_61379e154f2378c447397d63c6a003f17134e839.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.4.0_e89542eaad5d8c066cccdb29dfdc7d9b6ff739dd.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appinvite-8.4.0_d56a914123007394904de59a9414c59f05692941.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-nearby-8.4.0_b9975f93caad9c570edfa947c81e56eee67a4b68.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-gcm-8.4.0_5140c612f3c859827257e70bef39d6f279db9db5.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-ads-8.4.0_70b23812c4cb6f559123e0195578bdf9a212e481.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-safetynet-8.4.0_da845c6b75ab7fa5bffd3f2e8e13eb076aeb2b4c.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.3.0_3f759b41e9f35195e4d0713543e510a270883db6.jar" />
-    </item>
-    <item
-        jar="C:\Android\sdk2\extras\android\m2repository\com\android\support\support-annotations\23.3.0\support-annotations-23.3.0.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\support-annotations-23.3.0_a2621e170232d80b1f06d965e652f21256ec900b.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="04de44f90606c77f3b28cf44861f306290505aac">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-8.4.0_37743f4f6d3050215d4fae25d6fe72da7c1de0a1.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.4.0_6b0967dde0319f7cfda15ace6ccaf29290ffacd5.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-fitness-8.4.0_92782343019b1e9349cae9e9a0d57a23f57d0108.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-drive-8.4.0_fd4beb5d21c97c19ec203b1908e5bf3f530c0a3f.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.3.0_0f6a1ca12597893bae868b58da0f16534f097520.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wallet-8.4.0_f1cf0101fa7ad8c775973c19fe2070e733dd8490.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\design\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-design-23.3.0_d7b272585db65d6d2af87479e49cf3428b32ffa0.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-panorama-8.4.0_01de05d86c25d1f3416e644d82e22f1d8fd7896e.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.3.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-23.3.0_bba3edf42297459665a88128228357d15a270e15.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-plus-8.4.0_cbcc0af910792dcde618108e45ed983d6997694a.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\8.4.0\jars\classes.jar"
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.3"
         sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-analytics-8.4.0_273cbac9479a52cc23439e4e7b18bdd8621b36b2.jar" />
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-analytics-8.4.0_216a45aa1ce1e46798ef340d40f3328e7cc81879.jar" />
     </item>
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-measurement\8.4.0\jars\classes.jar"
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.3"
-        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-measurement-8.4.0_20cc7082f5cdf28a560e05bf25d666967a19731d.jar" />
+        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-appinvite-8.4.0_5f1fc21dfca3dd246bbe891bee218c2817583505.jar" />
     </item>
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\8.4.0\jars\classes.jar"
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.3"
-        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-identity-8.4.0_e8ecea208a692487e9719922006937160d9bc36b.jar" />
+        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-plus-8.4.0_a640cd6b133ee36648aa3fd5c2ab2010798ed043.jar" />
     </item>
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.android.support-mediarouter-v7-23.0.0_ccd41eb06eb0eaf53a12bdc0160a8cf0d5bf4d28.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-auth-8.4.0_02156b1434a0e42f88ceddfbf3fe5fc08154c381.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-cast-8.4.0_a7bd93f90a181b7341b4111ab020c8b59b1d2a73.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.3"
-        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-8.4.0_deeecd657d64845a18f0eaab737af8b017ddf2b1.jar" />
-    </item>
-    <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\8.4.0\jars\classes.jar"
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.3"
         sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wearable-8.4.0_431178213ad533e0b8e29c7516e01dc47a987c8a.jar" />
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-wearable-8.4.0_0148caaa57a49daf62f5bb348ae568c750d20524.jar" />
     </item>
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jar="/home/alfie/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/support-annotations-23.3.0_8357a8cd40d969de67cd7e8433c8f9bd5ec850a0.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-23.3.0_801d8cada4983222d8f5b04681a3ec928d76939d.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.3.0_d887e91a8d4d23c41a7065e854269ac7e2e6de41.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-gcm-8.4.0_4d5c49d6bae1a1fd5a594794c66ad580feef723c.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-maps-8.4.0_a81b9e07526edaea99f0d7d70084f65dd8e925c4.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-basement-8.4.0_7ff15770030f59b02ec613494329dcc417fb3383.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-nearby-8.4.0_eaee63b4f61a85458de3ee400af6af7042b514ea.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-measurement-8.4.0_2a4b978c98c9bb077be5cd60b4e02934fe2c3481.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-base-8.4.0_397cda5b6f972976700475b95d847972811e218b.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-safetynet-8.4.0_b176051b2f8f9b3afd05cc66c8324105e38a8f0e.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-wallet-8.4.0_7103305c7475839ac1d7a4ea97c062d2c594799f.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-location-8.4.0_4cb19cd8b1006b966dd8968a00cefd0cfc733ea3.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/libs/internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.3"
         sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\internal_impl-23.0.0_7ab12ca32386988bccdcbea0f5c0cbed2442c871.jar" />
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/internal_impl-23.0.0_48dd253f188bc3a653f2a456d4c679a80a0589a7.jar" />
     </item>
     <item
-        jar="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.4.0\jars\classes.jar"
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-fitness-8.4.0_d564b8a44d740aa2cd5615262220dc408312d1c8.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-identity-8.4.0_d374d494637269f7dc593e6d3b74aeadbe0e46da.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-mediarouter-v7-23.0.0_3a65ed7c5480f8ee32821a9bc425a2d5e6f76fde.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-auth-8.4.0_e1c581141ed3a3f443c1241de501b6efce76fec7.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-23.3.0_032ea7973b9e45403c7afc0f22e9e6e8f9bbe3d8.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-23.3.0_537759271a248d62b9255d6207708296f5207135.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-appindexing-8.4.0_6c28010fe695b1efc9f7664c4ea4f5e473f54df2.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-design-23.3.0_2db634da37842666e97313ad4f4d1ea6def4fb01.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-drive-8.4.0_db89351679766bbee9d35003636d261de69d1a61.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-ads-8.4.0_9cafca8f4cf12f9a9f98531f68b8a33af426d0c0.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/8.4.0/jars/classes.jar"
         jumboMode="false"
         revision="23.0.3"
         sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\Score_Keeper\mobile\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-vision-8.4.0_5c5e93d8430fa8d2cc263ccd4c36dde8fd06564b.jar" />
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-vision-8.4.0_c3f2b1c3cefc14d87e7dc99a19dfc35b0dc8d454.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-panorama-8.4.0_d2005c11b7943322df46ca3783f232c58c2bcf00.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-cast-8.4.0_65f4762752bca2f35b19592487832653c884b91d.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/internal_impl-23.3.0_7608b6591888cb1fab5cd860d512cc90a24cf247.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.3.0_b82b8eae628829300d1b0b9cb6b8713c0c33f66d.jar" />
+    </item>
+    <item
+        jar="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="/home/alfie/NEWNEWScoreKeeper/mobile/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-games-8.4.0_406a2e5bf4752fd410b744a5a8d20b9487e50358.jar" />
     </item>
 
 </items>

@@ -9,12 +9,10 @@
     <string name="player_s_name">Player\'s name</string>
     <string name="add_player">Add Player/s</string>
     <string name="_0">0</string>
-    <string name="__0">0</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
     <string name="loser">Loser:</string>
     <string name="https_github_com_sds_studios_scorekeeper">https://github.com/SDS-Studios/ScoreKeeper</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
-    <string name="_scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
 </resources>

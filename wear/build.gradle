@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.example.seth.scorekeeper"
+        applicationId "io.github.sdsstudios.ScoreKeeper"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1

@@ -10,34 +10,29 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    String TAG = "MainActivity.class";
     public static Integer P1Score =0 , P2Score =0;
-    int gameSize;
     public static int gameID;
-    RelativeLayout normal, big;
-    ArrayList playersArray;
-    public static ArrayList scoresArray;
-    CursorHelper cursorHelper;
     public static Button buttonP1;
     public static Button buttonP2;
+    String TAG = "MainActivity.class";
+    int gameSize;
+    RelativeLayout normal, big;
+    ArrayList playersArray;
+    ArrayList scoresArray;
+    CursorHelper cursorHelper;
     SmallLayout smallLayout;
     BigLayout bigLayout;
 
@@ -50,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
+
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
@@ -65,21 +61,27 @@ public class MainActivity extends AppCompatActivity
         dbHelper.open();
 
         scoresArray = new ArrayList();
-        scoresArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper);
 
         smallLayout = new SmallLayout();
-        smallLayout.onCreate();
         bigLayout = new BigLayout();
-        bigLayout.onCreate();
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
 
-        playersArray= new ArrayList();
+        P1Score = 0;
+        P2Score = 0;
+        scoresArray.add(0, String.valueOf(P1Score));
+        scoresArray.add(1, String.valueOf(P2Score));
+        updateScores();
+
+        buttonP1.setText(String.valueOf(P1Score));
+        buttonP2.setText(String.valueOf(P2Score));
+
+
+        playersArray = new ArrayList();
         playersArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
-
-
+        Log.i(TAG, String.valueOf(playersArray));
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -87,8 +89,6 @@ public class MainActivity extends AppCompatActivity
             normal.setVisibility(View.VISIBLE);
 
         }
-
-
 
         //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -117,19 +117,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonP1:
-                    smallLayout.game(buttonP1, P1Score, dbHelper, scoresArray, gameID);
-
+                P1Score += 1;
+                buttonP1.setText(String.valueOf(P1Score));
+                updateScores();
                 break;
 
             case R.id.buttonP2:
-                smallLayout.game(buttonP2, P2Score, dbHelper, scoresArray, gameID);
-
+                P2Score += 1;
+                buttonP2.setText(String.valueOf(P2Score));
+                updateScores();
                 break;
         }
     }
@@ -204,8 +204,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, ArrayList arrayList, int id) {
+        score += 1;
+        button.setText(String.valueOf(score));
+        updateScores();
+    }
 
+    public void updateScores() {
+
+        scoresArray.set(0, String.valueOf(P1Score));
+        scoresArray.set(1, String.valueOf(P2Score));
+
+        dbHelper.updateGame(scoresArray, ScoreDBAdapter.KEY_SCORE, gameID);
+    }
 }
+
+
 
 class BigLayout extends  Activity{
 
@@ -237,14 +251,9 @@ class SmallLayout extends Activity{
     public void updateScores(){
         if (MainActivity.P1Score == null || MainActivity.P2Score == null){
             MainActivity.P1Score = 0;
-            MainActivity.scoresArray.add(0, String.valueOf(MainActivity.P1Score));
             MainActivity.P2Score = 0;
-            MainActivity.scoresArray.add(1, String.valueOf(MainActivity.P2Score));
 
         }else{
-
-            MainActivity.P1Score = Integer.valueOf(MainActivity.scoresArray.get(0).toString());
-            MainActivity.P2Score = Integer.valueOf(MainActivity.scoresArray.get(1).toString());
 
 
         }

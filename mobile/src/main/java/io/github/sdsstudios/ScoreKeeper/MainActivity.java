@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.INotificationSideChannel;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     public static Button buttonP1;
     public static Button buttonP2;
     String TAG = "MainActivity.class";
+    Intent historyIntent;
+    Intent settingsIntent;
     int gameSize;
     RelativeLayout normal, big;
     ArrayList playersArray;
@@ -45,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
-
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity
         buttonP1.setText(String.valueOf(P1Score));
         buttonP2.setText(String.valueOf(P2Score));
 
-
         playersArray = new ArrayList();
         playersArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
         Log.i(TAG, String.valueOf(playersArray));
@@ -87,7 +88,6 @@ public class MainActivity extends AppCompatActivity
             big.setVisibility(View.VISIBLE);
         }else{
             normal.setVisibility(View.VISIBLE);
-
         }
 
         //navigation drawer stuff
@@ -171,6 +171,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            settingsIntent = new Intent(this, Settings.class);
+            startActivity(settingsIntent);
+
             return true;
         }
 

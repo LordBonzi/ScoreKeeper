@@ -33,9 +33,10 @@ public class Home extends AppCompatActivity
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     String player;
-    Intent mainActivity;
     ArrayList<String> players;
     PlayerListAdapter playerListAdapter;
+    Intent mainActivityIntent;
+    Intent settingsIntent;
     int i = 0;
     private ScoreDBAdapter dbHelper;
 
@@ -51,7 +52,6 @@ public class Home extends AppCompatActivity
         dbHelper.open();
 
         players = new ArrayList<>();
-        mainActivity = new Intent(this, MainActivity.class);
         playerList = (RecyclerView)findViewById(R.id.historyList);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
@@ -147,6 +147,8 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            settingsIntent = new Intent(this, Settings.class);
+            startActivity(settingsIntent);
             return true;
         }
 
@@ -188,7 +190,8 @@ public class Home extends AppCompatActivity
             }
 
             case R.id.buttonNewGame: {
-                startActivity(mainActivity);
+                mainActivityIntent = new Intent(this, MainActivity.class);
+                startActivity(mainActivityIntent);
                 break;
             }
         }

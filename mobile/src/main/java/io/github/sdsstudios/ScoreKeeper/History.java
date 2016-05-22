@@ -27,9 +27,10 @@ public class History extends AppCompatActivity
     Intent homeIntent;
     Intent settingsIntent;
     Intent aboutIntent;
-    ArrayList players;
-    ArrayList score;
-    ArrayList time;
+    String winner;
+    String loser;
+    String date;
+    int numGames;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
@@ -83,20 +84,17 @@ public class History extends AppCompatActivity
 
     public void displayRecyclerView(){
 
-        for (int i = 0; i < gameID; i++) {
+        winner = "sdfe";
+        loser = "sfd";
+        date = "12/5";
+        numGames = Integer.valueOf(dbHelper.getNewestGame())-1;
 
-            players = new ArrayList();
-            score = new ArrayList();
-            time = new ArrayList();
+        ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, winner, loser, date);
 
-            players = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper);
-            score = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
-            time = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_TIME, dbHelper);
+        historyAdapter = new HistoryAdapter(gameModel);
+        recyclerViewHistory.setAdapter(historyAdapter);
 
-            historyAdapter = new HistoryAdapter(players, score, time);
-            recyclerViewHistory.setAdapter(historyAdapter);
 
-        }
 
     }
 

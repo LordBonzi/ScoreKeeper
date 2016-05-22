@@ -21,6 +21,7 @@ public class ScoreDBAdapter {
     public static final String KEY_PLAYERS = "_players";
     public static final String KEY_TIME = "_time";
 
+
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
     private static final String SQLITE_TABLE = "score";

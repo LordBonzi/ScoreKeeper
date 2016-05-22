@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="io.github.sdsstudios.ScoreKeeper">
+    package="io.github.sdsstudios.ScoreKeeper">
 
-<uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-<application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
-    android:supportsRtl="true" android:theme="@style/AppTheme">
-    <activity android:name=".NewGame" android:label="New Game"
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+        android:name=".Home"
+        android:label="@string/title_activity_home"
         android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
-
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-
     </activity>
-    <activity android:name=".MainActivity" android:label="@string/app_name" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".NewGame"
+            android:label="@string/new_game"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
-    </activity>
-    <activity android:name=".History" android:label="History" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".History"
+            android:label="@string/action_history"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Settings"
+            android:label="@string/action_settings"
+            android:parentActivityName="io.github.sdsstudios.ScoreKeeper.Home"
+            android:theme="@style/AppTheme">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="io.github.sdsstudios.ScoreKeeper.Home" />
+        </activity>
 
-    </activity>
 
-    <activity android:name=".Settings" android:label="Settings" android:theme="@style/AppTheme">
+    </application>
 
-    </activity>
-
-
-</application>
 
 </manifest>

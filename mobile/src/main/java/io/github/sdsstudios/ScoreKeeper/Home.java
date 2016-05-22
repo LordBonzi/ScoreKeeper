@@ -4,58 +4,43 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class History extends AppCompatActivity
+public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    RecyclerView recyclerViewHistory;
-    CursorHelper cursorHelper;
-    int gameID;
-    Intent homeIntent;
+    Intent newGameIntent;
+    Intent historyIntent;
     Intent settingsIntent;
     Intent aboutIntent;
-    private RecyclerView.Adapter historyAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ScoreDBAdapter dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
-        gameID = Integer.valueOf(dbHelper.getNewestGame());
-        cursorHelper = new CursorHelper();
-
+        newGameIntent = new Intent(this, NewGame.class);
+        historyIntent = new Intent(this, History.class);
         settingsIntent = new Intent(this, Settings.class);
-        aboutIntent = new Intent(this, Settings.class);
-        homeIntent = new Intent(this, Home.class);
+        aboutIntent = new Intent(this, NewGame.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(newGameIntent);
             }
         });
 
-        //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -64,22 +49,6 @@ public class History extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        recyclerViewHistory = (RecyclerView)findViewById(R.id.historyList);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerViewHistory.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        displayRecyclerView();
-    }
-
-
-    public void displayRecyclerView(){
-        historyAdapter = new HistoryAdapter(cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper));
-        recyclerViewHistory.setAdapter(historyAdapter);
-
     }
 
     @Override
@@ -108,7 +77,6 @@ public class History extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
             return true;
         }
 
@@ -121,18 +89,16 @@ public class History extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            startActivity(homeIntent);
+        if (id == R.id.nav_history) {
+            startActivity(historyIntent);
 
         } else if (id == R.id.nav_settings) {
             startActivity(settingsIntent);
 
 
         } else if (id == R.id.nav_about) {
-            startActivity(aboutIntent);
 
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

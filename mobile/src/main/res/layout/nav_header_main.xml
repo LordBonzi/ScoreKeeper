@@ -30,6 +30,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/https_github_com_sds_studios_scorekeeper" />
+        android:text="@string/git_link" />
 
 </LinearLayout>

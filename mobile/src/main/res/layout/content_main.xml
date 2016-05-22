@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.seth.scorekeeper.MainActivity"
+    tools:context="io.github.sdsstudios.ScoreKeeper.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <RelativeLayout
@@ -18,43 +18,26 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
-            android:id="@+id/textViewP1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
-            android:id="@+id/textViewP2"
-            android:layout_alignBottom="@+id/textViewP1"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Player 1"
-            android:id="@+id/buttonP1"
-            android:layout_below="@+id/textViewP1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Player 2"
             android:id="@+id/buttonP2"
-            android:layout_alignTop="@+id/buttonP1"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignTop="@+id/buttonP1"
+            android:text="3"
+            android:textAppearance="@style/LargeText" />
+
+        <Button
+            android:id="@+id/buttonP1"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:text="5"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display4" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/layoutBig"
@@ -63,22 +46,13 @@
         android:visibility="gone"
         >
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/playerList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/playerList"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView4"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="38dp" />
 
 </RelativeLayout>
 

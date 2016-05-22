@@ -44,6 +44,8 @@
             android:label="@string/About"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+
     </application>
 
 

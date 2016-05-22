@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class History extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,6 +27,9 @@ public class History extends AppCompatActivity
     Intent homeIntent;
     Intent settingsIntent;
     Intent aboutIntent;
+    ArrayList players;
+    ArrayList score;
+    ArrayList time;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
@@ -77,8 +82,21 @@ public class History extends AppCompatActivity
 
 
     public void displayRecyclerView(){
-        historyAdapter = new HistoryAdapter(cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper));
-        recyclerViewHistory.setAdapter(historyAdapter);
+
+        for (int i = 0; i < gameID; i++) {
+
+            players = new ArrayList();
+            score = new ArrayList();
+            time = new ArrayList();
+
+            players = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper);
+            score = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
+            time = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_TIME, dbHelper);
+
+            historyAdapter = new HistoryAdapter(players, score, time);
+            recyclerViewHistory.setAdapter(historyAdapter);
+
+        }
 
     }
 

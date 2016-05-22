@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
@@ -30,9 +31,9 @@ public class NewGame extends AppCompatActivity
     RecyclerView playerList;
     String player;
     ArrayList<String> players;
+    ArrayList time;
     PlayerListAdapter playerListAdapter;
     Intent mainActivityIntent;
-    Intent settingsIntent;
     int i = 0;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -78,8 +79,6 @@ public class NewGame extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
-        displayRecyclerView();
     }
 
     public void displayRecyclerView(){
@@ -98,12 +97,33 @@ public class NewGame extends AppCompatActivity
             Log.i(TAG, str);
 
         }else{
-            dbHelper.createGame(players, null);
+            Calendar calendar = Calendar.getInstance();
+
+            int mins = calendar.get(Calendar.MINUTE);
+            int hrs = calendar.get(Calendar.HOUR);
+            int date = calendar.get(Calendar.DATE);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+
+            time = new ArrayList();
+            time.add(0, mins);
+            time.add(1, hrs);
+            time.add(2, date);
+            time.add(3, month + 1);
+            time.add(4, year);
+
+            Log.i(TAG, String.valueOf(time));
+
+            dbHelper.createGame(players, null, time);
             String str = TextUtils.join(",", players);
             Log.i(TAG, str);
         }
+
         i +=1;
         editTextPlayer.setText("");
+
+        // specify an adapter (see also next example)
+        displayRecyclerView();
 
     }
 

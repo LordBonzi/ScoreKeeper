@@ -1,13 +1,14 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by seth on 08/05/16.
@@ -20,11 +21,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private String loser = null;
     private String biggestScore = null;
 
+    private List<GameModel> mGameModel;
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(ArrayList<String> scoreArrayList, ArrayList<String> playersArrayList, ArrayList<String> timeArrayList) {
-        score = scoreArrayList;
-        players = playersArrayList;
-        time = timeArrayList;
+    public HistoryAdapter(List<GameModel> gameModel) {
+        mGameModel = gameModel;
     }
 
     // Create new views (invoked by the layout manager)
@@ -45,19 +46,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        biggestScore = Collections.max(score);
-        score.indexOf(biggestScore);
+        GameModel gameModel = mGameModel.get(position);
+        Log.i("HistoryAdapter", gameModel.getWinner());
 
-        holder.textViewWinner.setText(players.get(0));
-        holder.textViewLoser.setText(score.get(0));
-        holder.textViewDate.setText(time.get(0));
+        holder.textViewWinner.setText(gameModel.getWinner());
+        holder.textViewLoser.setText(gameModel.getLoser());
+        holder.textViewDate.setText(gameModel.getDate());
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return players.size();
+        return mGameModel.size();
     }
 
     // Provide a reference to the views for each data item

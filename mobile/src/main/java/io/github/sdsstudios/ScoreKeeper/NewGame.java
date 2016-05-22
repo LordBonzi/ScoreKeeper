@@ -134,8 +134,7 @@ public class NewGame extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            settingsIntent = new Intent(this, Settings.class);
-            startActivity(settingsIntent);
+
             return true;
         }
 

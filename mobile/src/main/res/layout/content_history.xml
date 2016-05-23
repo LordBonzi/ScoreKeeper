@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/recyerViewBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="io.github.sdsstudios.ScoreKeeper.History"
     tools:showIn="@layout/app_bar_history">

@@ -27,9 +27,7 @@ public class History extends AppCompatActivity
     Intent homeIntent;
     Intent settingsIntent;
     Intent aboutIntent;
-    String winner;
-    String loser;
-    String date;
+
     int numGames;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;

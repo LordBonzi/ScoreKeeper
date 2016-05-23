@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         GameModel gameModel = mGameModel.get(position);
-        Log.i("HistoryAdapter", gameModel.getWinner());
 
         holder.textViewWinner.setText(gameModel.getWinner());
         holder.textViewLoser.setText(gameModel.getLoser());

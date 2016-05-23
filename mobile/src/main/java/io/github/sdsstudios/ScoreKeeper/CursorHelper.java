@@ -1,5 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.database.Cursor;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -19,6 +20,16 @@ public class CursorHelper {
         return str;
     }
 
+    public ArrayList getArrayById(String request, int i, ScoreDBAdapter dbHelper){
+        Cursor cursor = dbHelper.fetchGamesById(i);
+        int index = cursor.getColumnIndex(request);
+        String s = cursor.getString(index);
+        String[] strValues = s.split(",");
+        ArrayList array = new ArrayList<>(Arrays.asList(strValues));
+
+        return array;
+    }
+
     public ArrayList convertToArray(String string) {
 
         String[] strValues = string.split(",");
@@ -33,18 +44,4 @@ public class CursorHelper {
 
     }
 
-    public ArrayList getDBCursorArrayBYId(String request, int id, ScoreDBAdapter dbHelper) {
-
-        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
-        String value = dbHelper.fetchAllGames().getString(index);
-        return convertToArray(value);
-
-    }
-
-    public String getDBCursorString(String request, int id, ScoreDBAdapter dbHelper) {
-
-        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
-        String value = dbHelper.fetchAllGames().getString(index);
-        return value;
-    }
 }

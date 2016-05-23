@@ -17,13 +17,20 @@ public class GameModel {
         mDate = date;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, String w, String l, String d) {
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) {
+        String w = null;
+        String l = null;
+        String d = null;
+
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
 
         for (int i = 1; i <= numGames; i++) {
+            w = String.valueOf(i);
+            l = String.valueOf(i);
+            d = String.valueOf(i);
+
             gameModelArrayList.add(new GameModel(w , l , d));
         }
-
         return gameModelArrayList;
     }
 

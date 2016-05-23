@@ -81,15 +81,11 @@ public class History extends AppCompatActivity
         displayRecyclerView();
     }
 
-
     public void displayRecyclerView(){
 
-        winner = "sdfe";
-        loser = "sfd";
-        date = "12/5";
-        numGames = Integer.valueOf(dbHelper.getNewestGame())-1;
+        numGames = Integer.valueOf(dbHelper.getNewestGame());
 
-        ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, winner, loser, date);
+        ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
 
         historyAdapter = new HistoryAdapter(gameModel);
         recyclerViewHistory.setAdapter(historyAdapter);

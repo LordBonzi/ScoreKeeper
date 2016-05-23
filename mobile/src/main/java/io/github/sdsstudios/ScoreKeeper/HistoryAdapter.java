@@ -7,19 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by seth on 08/05/16.
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private ArrayList<String> score;
-    private ArrayList<String> players;
-    private ArrayList<String> time;
-    private String winner = null;
-    private String loser = null;
-    private String biggestScore = null;
 
     private List<GameModel> mGameModel;
 

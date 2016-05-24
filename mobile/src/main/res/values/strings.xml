@@ -20,5 +20,10 @@
     <string name="website">https://sds-studios.github.io/</string>
     <string name="title_activity_home" >Home</string>
     <string name="About">About</string>
+
+    <string name="two_player_game">2 Player Game</string>
+    <string name="three_player_game">3 Player Game</string>
+    <string name="group_game">Group Game</string>
+    <string name="big_group_game">Big Group Game</string>
 </resources>
 

@@ -10,21 +10,24 @@ import java.util.Collections;
  */
 
 public class GameModel {
-    private String mWinner;
-    private String mLoser;
+    private String mPlayers;
+    private String mScore;
+    private String mType;
     private String mDate;
 
-    public GameModel(String winner, String loser, String date) {
-        mWinner = winner;
-        mLoser = loser;
+    public GameModel(String players, String score, String date, String type) {
+        mPlayers = players;
+        mScore = score;
         mDate = date;
+        mType = type;
     }
 
     public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) {
         CursorHelper cursorHelper = new CursorHelper();
-        String w = null;
-        String l = null;
+        String p = null;
+        String s = null;
         String d = null;
+        String t = null;
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
         ArrayList arrayListDate;
@@ -37,8 +40,6 @@ public class GameModel {
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
             arrayListDate = cursorHelper.getArrayById(ScoreDBAdapter.KEY_TIME, i, dbHelper);
 
-            //TODO delete log tags in GameModel
-
             Object objWinner = Collections.max(arrayListScore);
             int winnerIndex = arrayListScore.indexOf(objWinner);
 
@@ -47,29 +48,40 @@ public class GameModel {
 
             d = String.valueOf(arrayListDate.get(2) + ":" + arrayListDate.get(1));
 
-            w = String.valueOf(arrayListPlayer.get(winnerIndex));
-            l = String.valueOf(arrayListPlayer.get(loserIndex));
+            p = String.valueOf(arrayListPlayer.get(winnerIndex));
+            s = String.valueOf(arrayListPlayer.get(loserIndex));
 
-            Log.i("GameModel", w + " , " + l + " , " + d);
+            if (arrayListPlayer.size() == 2){
 
+            }else if (arrayListPlayer.size() == 3){
 
-            gameModelArrayList.add(new GameModel(w , l , d));
+            }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
+
+            }else if (arrayListPlayer.size() > 10){
+
+            }
+
+            gameModelArrayList.add(new GameModel(p , s , d, t));
         }
         return gameModelArrayList;
     }
 
-    public String getWinner() {
-        return mWinner;
+    public String getPlayers() {
+        return mPlayers;
     }
 
 
 
-    public String getLoser() {
-        return mLoser;
+    public String getScore() {
+        return mScore;
     }
 
     public String getDate() {
         return mDate;
+    }
+
+    public String getType() {
+        return mType;
     }
 
 }

@@ -40,9 +40,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         // - replace the contents of the view with that element
         GameModel gameModel = mGameModel.get(position);
 
-        holder.textViewWinner.setText(gameModel.getWinner());
-        holder.textViewLoser.setText(gameModel.getLoser());
-        holder.textViewDate.setText(gameModel.getDate());
+        holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+        holder.textViewHistoryScore.setText(gameModel.getScore());
+        holder.textViewHistoryDate.setText(gameModel.getDate());
+        holder.textViewHistoryType.setText(gameModel.getType());
 
     }
 
@@ -57,15 +58,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView textViewWinner;
-        public TextView textViewLoser;
-        public TextView textViewDate;
+        public TextView textViewHistoryPlayers;
+        public TextView textViewHistoryScore;
+        public TextView textViewHistoryDate;
+        public TextView textViewHistoryType;
 
         public ViewHolder(View v) {
             super(v);
-            textViewWinner = (TextView)v.findViewById(R.id.textViewWinner);
-            textViewLoser = (TextView)v.findViewById(R.id.textViewLoser);
-            textViewDate = (TextView)v.findViewById(R.id.textViewDate);
+            textViewHistoryPlayers = (TextView)v.findViewById(R.id.textViewHistoryPlayers);
+            textViewHistoryDate = (TextView)v.findViewById(R.id.textViewHistoryDate);
+            textViewHistoryScore = (TextView)v.findViewById(R.id.textViewHistoryScore);
+            textViewHistoryType = (TextView)v.findViewById(R.id.textViewHistoryType);
 
         }
     }

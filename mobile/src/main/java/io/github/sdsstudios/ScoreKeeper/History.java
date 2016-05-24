@@ -88,8 +88,6 @@ public class History extends AppCompatActivity
         historyAdapter = new HistoryAdapter(gameModel);
         recyclerViewHistory.setAdapter(historyAdapter);
 
-
-
     }
 
     @Override

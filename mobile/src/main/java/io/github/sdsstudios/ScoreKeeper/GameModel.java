@@ -52,7 +52,7 @@ public class GameModel {
 
             }else if (arrayListPlayer.size() == 3){
                 t = "3 Player Game";
-                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1) + " vs " + arrayListPlayer.get(2);
 
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
                 t = "Group Game";
@@ -60,11 +60,12 @@ public class GameModel {
                 s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() > 10){
-                t = "Big Group Game";
+                t = "Huge Game";
                 p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
                 s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+
             }else if (arrayListPlayer.size() == 1){
-                t = "Game is too small. How did you make it this small. it is a bug.";
+                t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
                 p = String.valueOf(arrayListPlayer.get(0));
                 s = String.valueOf(arrayListScore.get(0));
             }

@@ -46,10 +46,5 @@ public class CursorHelper {
         return array;
     }
 
-    public ArrayList getDBCursorArray(String request, ScoreDBAdapter dbHelper) {
-
-        return convertToArray(dbHelper.getNewestGame());
-
-    }
 
 }

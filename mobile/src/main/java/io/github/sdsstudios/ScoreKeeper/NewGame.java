@@ -2,13 +2,13 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -19,22 +19,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
 
+    public static CoordinatorLayout newGameCoordinatorLayout;
+    CursorHelper cursorHelper;
+    SimpleDateFormat simpleDateFormat;
+    String time;
     String TAG = "Home";
     EditText editTextPlayer;
     Button buttonNewGame, buttonAddPlayer;
     RecyclerView playerList;
     String player;
     ArrayList<String> players;
-    ArrayList time;
+    ArrayList<String> score = new ArrayList<>();
     PlayerListAdapter playerListAdapter;
     Intent mainActivityIntent;
-    int i = 0;
+    Integer gameID;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
@@ -44,14 +49,25 @@ public class NewGame extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Log.i(TAG, "created Home activity");
         setSupportActionBar(toolbar);
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
+        cursorHelper = new CursorHelper();
+
+        gameID = Integer.valueOf(dbHelper.getNewestGame());
+        //TODO delete LOGS
+        Log.i(TAG, "Game ID = " + String.valueOf(gameID));
+
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        time = simpleDateFormat.format(now);
+
         players = new ArrayList<>();
         playerList = (RecyclerView)findViewById(R.id.historyList);
+
+        newGameCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.newGameLayout);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
@@ -81,45 +97,35 @@ public class NewGame extends AppCompatActivity
 
     }
 
+    public void updateArray(){
+        players = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+    }
+
     public void displayRecyclerView(){
-        playerListAdapter = new PlayerListAdapter(players);
+        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID);
         playerList.setAdapter(playerListAdapter);
 
     }
 
     public void addPlayers(){
         player = editTextPlayer.getText().toString();
-        players.add(i, player);
+        Log.i(TAG, String.valueOf(players.size()));
 
-        if (i >= 1) {
-            dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS, Integer.valueOf(dbHelper.getNewestGame()));
-            String str = TextUtils.join(",", players);
-            Log.i(TAG, str);
+        if (players.size() >= 1) {
+            players.add(players.size(), player);
+            dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
+            dbHelper.updateGame(score, time , ScoreDBAdapter.KEY_SCORE, gameID);
 
         }else{
-            Calendar calendar = Calendar.getInstance();
-
-            int mins = calendar.get(Calendar.MINUTE);
-            int hrs = calendar.get(Calendar.HOUR);
-            int date = calendar.get(Calendar.DATE);
-            int month = calendar.get(Calendar.MONTH);
-            int year = calendar.get(Calendar.YEAR);
-
-            time = new ArrayList();
-            time.add(0, mins);
-            time.add(1, hrs);
-            time.add(2, date);
-            time.add(3, month + 1);
-            time.add(4, year);
-
-            Log.i(TAG, String.valueOf(time));
-
-            dbHelper.createGame(players, null, time);
-            String str = TextUtils.join(",", players);
-            Log.i(TAG, str);
+            players.add(players.size(), player);
+            for (int i = 0; i < players.size(); i ++){
+                score.add(i, "0");
+            }
+            dbHelper.createGame(players, time, score);
+            gameID = Integer.valueOf(dbHelper.getNewestGame());
         }
 
-        i +=1;
+        updateArray();
         editTextPlayer.setText("");
 
         // specify an adapter (see also next example)
@@ -136,7 +142,6 @@ public class NewGame extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

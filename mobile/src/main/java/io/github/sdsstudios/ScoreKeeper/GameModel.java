@@ -1,9 +1,9 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.util.Log;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
+
 
 /**
  * Created by Seth Schroeder on 22/05/2016.
@@ -22,45 +22,56 @@ public class GameModel {
         mType = type;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) {
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper){
         CursorHelper cursorHelper = new CursorHelper();
-        String p = null;
-        String s = null;
-        String d = null;
-        String t = null;
+        Calendar calendar = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm d/M/yyyy");
+        String p, s ,d ,t = null;
+
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
-        ArrayList arrayListDate;
 
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
 
         for (int i = 1; i <= numGames; i++) {
+            p = null;
+            s = null;
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
-            arrayListDate = cursorHelper.getArrayById(ScoreDBAdapter.KEY_TIME, i, dbHelper);
 
-            Object objWinner = Collections.max(arrayListScore);
-            int winnerIndex = arrayListScore.indexOf(objWinner);
-
-            Object objLoser = Collections.min(arrayListScore);
-            int loserIndex = arrayListScore.indexOf(objLoser);
-
-            d = String.valueOf(arrayListDate.get(2) + ":" + arrayListDate.get(1));
-
-            p = String.valueOf(arrayListPlayer.get(winnerIndex));
-            s = String.valueOf(arrayListPlayer.get(loserIndex));
+            d = String.valueOf(i);
 
             if (arrayListPlayer.size() == 2){
+                t = "2 Player Game";
+                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() == 3){
+                t = "3 Player Game";
+                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+
+                if (arrayListScore.size() != arrayListPlayer.size()){
+                    s = arrayListScore.get(0) + ":" + arrayListScore.get(0);
+                }else{
+                    s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+
+                }
 
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
+                t = "Group Game";
+                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() > 10){
-
+                t = "Big Group Game";
+                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+            }else if (arrayListPlayer.size() == 1){
+                t = "Game is too small. How did you make it this small. it is a bug.";
+                p = String.valueOf(arrayListPlayer.get(0));
+                s = String.valueOf(arrayListScore.get(0));
             }
-
             gameModelArrayList.add(new GameModel(p , s , d, t));
         }
         return gameModelArrayList;

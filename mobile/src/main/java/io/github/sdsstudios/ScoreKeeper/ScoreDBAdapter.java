@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -29,8 +30,6 @@ public class ScoreDBAdapter {
                     KEY_PLAYERS + "," +
                     KEY_SCORE + " , " +
                     KEY_TIME +
-
-
                     " );";
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
@@ -59,31 +58,43 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String request, int id) {
+    public long updateGame(ArrayList array, String time, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(request, convertToString(array));
 
+        if (request == KEY_TIME){
+            initialValues.put(request, time);
+
+        }else {
+            initialValues.put(request, convertToString(array));
+        }
         return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
     }
 
-    public long createGame(ArrayList players, ArrayList scoreArray, ArrayList time) {
+    public long createGame(ArrayList players, String time, ArrayList score) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PLAYERS, convertToString(players));
-        initialValues.put(KEY_SCORE, convertToString(players));
-        initialValues.put(KEY_TIME, convertToString(time));
+        initialValues.put(KEY_SCORE, convertToString(score));
+        initialValues.put(KEY_TIME, time);
+        //TODO delete log in ScoreDBAdapter
+        Log.i(TAG, time);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
     public String getNewestGame(){
 
+        String value;
+
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
         cursor.moveToLast();
 
         int index = cursor.getColumnIndex(KEY_ROWID);
-        String value = cursor.getString(index);
+
+        Log.i(TAG, String.valueOf(index));
+
+        value = cursor.getString(index);
 
         return value;
     }

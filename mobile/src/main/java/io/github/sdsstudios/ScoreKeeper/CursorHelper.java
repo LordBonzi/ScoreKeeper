@@ -20,14 +20,22 @@ public class CursorHelper {
         return str;
     }
 
-    public ArrayList getArrayById(String request, int i, ScoreDBAdapter dbHelper){
-        Cursor cursor = dbHelper.fetchGamesById(i);
+    public ArrayList getArrayById(String request, int gameID, ScoreDBAdapter dbHelper){
+        Cursor cursor = dbHelper.fetchGamesById(gameID);
         int index = cursor.getColumnIndex(request);
         String s = cursor.getString(index);
         String[] strValues = s.split(",");
         ArrayList array = new ArrayList<>(Arrays.asList(strValues));
 
         return array;
+    }
+
+    public String getTimeById(int i, ScoreDBAdapter dbHelper){
+        Cursor cursor = dbHelper.fetchGamesById(i);
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_TIME);
+        String s = cursor.getString(index);
+
+        return s;
     }
 
     public ArrayList convertToArray(String string) {

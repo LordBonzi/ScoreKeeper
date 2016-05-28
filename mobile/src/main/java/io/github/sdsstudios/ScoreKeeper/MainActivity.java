@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity
         smallLayout = new SmallLayout();
         bigLayout = new BigLayout();
 
-
         gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
@@ -247,7 +246,7 @@ class SmallLayout extends Activity{
         scoresArray.set(0, String.valueOf(P1Score));
         scoresArray.set(1, String.valueOf(P2Score));
 
-        dbHelper.updateGame(scoresArray, ScoreDBAdapter.KEY_SCORE, id);
+        dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
     }
 
 }

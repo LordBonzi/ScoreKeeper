@@ -27,19 +27,19 @@ public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
 
     public static CoordinatorLayout newGameCoordinatorLayout;
-    CursorHelper cursorHelper;
-    SimpleDateFormat simpleDateFormat;
-    String time;
-    String TAG = "Home";
-    EditText editTextPlayer;
-    Button buttonNewGame, buttonAddPlayer;
-    RecyclerView playerList;
-    String player;
-    ArrayList<String> players;
-    ArrayList<String> score = new ArrayList<>();
-    PlayerListAdapter playerListAdapter;
-    Intent mainActivityIntent;
-    Integer gameID;
+    public static PlayerListAdapter playerListAdapter;
+    private CursorHelper cursorHelper;
+    private SimpleDateFormat simpleDateFormat;
+    private String time;
+    private String TAG = "Home";
+    private EditText editTextPlayer;
+    private Button buttonNewGame, buttonAddPlayer;
+    private RecyclerView playerList;
+    private String player;
+    private ArrayList<String> players;
+    private ArrayList<String> score = new ArrayList<>();
+    private Intent mainActivityIntent;
+    private Integer gameID;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
@@ -50,15 +50,13 @@ public class NewGame extends AppCompatActivity
         setContentView(R.layout.activity_new_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //TODO delete LOGS
+
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
         cursorHelper = new CursorHelper();
-
-        gameID = Integer.valueOf(dbHelper.getNewestGame());
-        //TODO delete LOGS
-        Log.i(TAG, "Game ID = " + String.valueOf(gameID));
 
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
@@ -113,23 +111,21 @@ public class NewGame extends AppCompatActivity
 
         if (players.size() >= 1) {
             players.add(players.size(), player);
+
             dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
-            dbHelper.updateGame(score, time , ScoreDBAdapter.KEY_SCORE, gameID);
 
         }else{
             players.add(players.size(), player);
-            for (int i = 0; i < players.size(); i ++){
-                score.add(i, "0");
-            }
+
             dbHelper.createGame(players, time, score);
             gameID = Integer.valueOf(dbHelper.getNewestGame());
         }
 
-        updateArray();
         editTextPlayer.setText("");
 
         // specify an adapter (see also next example)
         displayRecyclerView();
+        updateArray();
 
     }
 
@@ -141,6 +137,8 @@ public class NewGame extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        finish();
+
     }
 
     @Override
@@ -175,6 +173,12 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
+                updateArray();
+
+                for (int i = 0; i < players.size(); i ++){
+                    score.add(i, "0");
+                }
+                dbHelper.updateGame(score, time, ScoreDBAdapter.KEY_SCORE, gameID);
                 startActivity(mainActivityIntent);
                 break;
             }

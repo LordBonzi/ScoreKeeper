@@ -237,8 +237,15 @@ class SmallLayout extends Activity{
     }
 
     public void onClick(Button button, ScoreDBAdapter dbHelper, int id){
-        P1Score += 1;
-        button.setText(String.valueOf(P1Score));
+
+        if (button == MainActivity.buttonP1){
+            P1Score += 1;
+            button.setText(String.valueOf(P1Score));
+        }else {
+            P2Score += 1;
+            button.setText(String.valueOf(P2Score));
+        }
+
         updateScores(dbHelper, id);
     }
 

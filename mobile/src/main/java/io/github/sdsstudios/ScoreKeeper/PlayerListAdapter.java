@@ -2,7 +2,6 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,15 @@ import java.util.ArrayList;
  * Created by seth on 08/05/16.
  */
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>{
+    Snackbar snackbar = null;
     private String backup;
     private int backupIndex;
     private ArrayList<String> mDataset;
     private ScoreDBAdapter mDbHelper;
     private int mGameID;
 
-        // Provide a suitable constructor (depends on the kind of dataset)
+
+    // Provide a suitable constructor (depends on the kind of dataset)
         public PlayerListAdapter(ArrayList<String> myDataset, ScoreDBAdapter dbHelper, int gameID) {
             mDataset = myDataset;
             mDbHelper = dbHelper;
@@ -47,13 +48,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         public void onBindViewHolder(final ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
+
             holder.textViewPlayer.setText(mDataset.get(position));
             holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     removeAt(holder.getAdapterPosition());
-                    Log.i("PlayerListAdapter", String.valueOf(mDataset));
-                    mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
                 }
             });
 
@@ -66,23 +66,37 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
 
     public void removeAt(int position) {
-        final View.OnClickListener clickListener = new View.OnClickListener() {
-            public void onClick(View v) {
-                undoPlayerRemoval();
-            }
-        };
 
         if (mDataset.size() >= 3) {
+
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    undoPlayerRemoval();
+                }
+            };
+
             backup = mDataset.get(mDataset.size() - 1 );
             backupIndex = mDataset.indexOf(backup);
             mDataset.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, mDataset.size());
+            mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
             Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", clickListener);
+                    .setAction("Undo", onClickListener);
             snackbar.show();
         }else{
-            undoPlayerRemoval();
+            View.OnClickListener onClickListener = null;
+
+            onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            };
+            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Must have more than 2 players", Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            snackbar.show();
         }
     }
 
@@ -90,7 +104,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         mDataset.add(backupIndex, backup);
         notifyItemRemoved(backupIndex);
         notifyItemRangeChanged(backupIndex, mDataset.size());
-        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo Complete for removal of " + backup, Snackbar.LENGTH_SHORT);
+        mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+
+        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo Complete for removal of " + backup, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 

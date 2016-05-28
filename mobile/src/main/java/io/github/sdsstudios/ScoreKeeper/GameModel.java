@@ -51,13 +51,6 @@ public class GameModel {
                 t = "3 Player Game";
                 p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
 
-                if (arrayListScore.size() != arrayListPlayer.size()){
-                    s = arrayListScore.get(0) + ":" + arrayListScore.get(0);
-                }else{
-                    s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
-
-                }
-
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
                 t = "Group Game";
                 p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);

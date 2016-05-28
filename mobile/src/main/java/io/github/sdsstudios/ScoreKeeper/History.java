@@ -44,6 +44,7 @@ public class History extends AppCompatActivity
         dbHelper.open();
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
+
         cursorHelper = new CursorHelper();
 
         settingsIntent = new Intent(this, Settings.class);

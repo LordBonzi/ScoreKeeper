@@ -77,8 +77,6 @@ public class ScoreDBAdapter {
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_SCORE, convertToString(score));
         initialValues.put(KEY_TIME, time);
-        //TODO delete log in ScoreDBAdapter
-        Log.i(TAG, time);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

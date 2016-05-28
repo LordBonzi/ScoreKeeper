@@ -1,8 +1,8 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import java.text.SimpleDateFormat;
+import android.util.Log;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 /**
@@ -24,12 +24,12 @@ public class GameModel {
 
     public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper){
         CursorHelper cursorHelper = new CursorHelper();
-        Calendar calendar = null;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm d/M/yyyy");
+        DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t = null;
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
+        String date;
 
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
 
@@ -39,8 +39,11 @@ public class GameModel {
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
+            date = cursorHelper.getTimeById( i, dbHelper);
 
-            d = String.valueOf(i);
+            Log.i("Gamemodel", String.valueOf(date));
+
+            d = dateHelper.gameDate(date);
 
             if (arrayListPlayer.size() == 2){
                 t = "2 Player Game";
@@ -65,6 +68,7 @@ public class GameModel {
                 p = String.valueOf(arrayListPlayer.get(0));
                 s = String.valueOf(arrayListScore.get(0));
             }
+
             gameModelArrayList.add(new GameModel(p , s , d, t));
         }
         return gameModelArrayList;

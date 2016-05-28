@@ -29,7 +29,6 @@ public class NewGame extends AppCompatActivity
     public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
     private CursorHelper cursorHelper;
-    private SimpleDateFormat simpleDateFormat;
     private String time;
     private String TAG = "Home";
     private EditText editTextPlayer;
@@ -52,15 +51,14 @@ public class NewGame extends AppCompatActivity
         setSupportActionBar(toolbar);
         //TODO delete LOGS
 
-
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
         cursorHelper = new CursorHelper();
 
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
-        time = simpleDateFormat.format(now);
+        time = sdfDate.format(now);
 
         players = new ArrayList<>();
         playerList = (RecyclerView)findViewById(R.id.historyList);

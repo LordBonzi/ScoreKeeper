@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity
     public static int gameID;
     public static Button buttonP1;
     public static Button buttonP2;
+    TextView textViewP1;
+    TextView textViewP2;
     String TAG = "MainActivity.class";
     int gameSize;
     RelativeLayout normal, big;
@@ -59,6 +62,10 @@ public class MainActivity extends AppCompatActivity
 
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         buttonP2.setOnClickListener(this);
+
+        textViewP1 = (TextView)findViewById(R.id.textViewP1);
+        textViewP2 = (TextView)findViewById(R.id.textViewP2);
+
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
@@ -72,20 +79,21 @@ public class MainActivity extends AppCompatActivity
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
 
-        gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
+        playersArray = new ArrayList();
+        playersArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+
+        gameSize = playersArray.size();
 
         smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
-
-
-        playersArray = new ArrayList();
-        playersArray = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper);
-        Log.i(TAG, String.valueOf(playersArray));
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
         }else{
             normal.setVisibility(View.VISIBLE);
         }
+
+        textViewP1.setText(String.valueOf(playersArray.get(0)));
+        textViewP2.setText(String.valueOf(playersArray.get(1)));
 
         //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

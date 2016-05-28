@@ -44,6 +44,7 @@ public class History extends AppCompatActivity
         dbHelper.open();
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
+
         cursorHelper = new CursorHelper();
 
         settingsIntent = new Intent(this, Settings.class);
@@ -85,7 +86,7 @@ public class History extends AppCompatActivity
 
         ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
 
-        historyAdapter = new HistoryAdapter(gameModel);
+        historyAdapter = new HistoryAdapter(gameModel, dbHelper);
         recyclerViewHistory.setAdapter(historyAdapter);
 
     }

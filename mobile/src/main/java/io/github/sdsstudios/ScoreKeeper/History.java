@@ -85,7 +85,7 @@ public class History extends AppCompatActivity
 
         ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
 
-        historyAdapter = new HistoryAdapter(gameModel);
+        historyAdapter = new HistoryAdapter(gameModel, dbHelper);
         recyclerViewHistory.setAdapter(historyAdapter);
 
     }

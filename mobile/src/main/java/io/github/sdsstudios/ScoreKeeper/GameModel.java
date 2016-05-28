@@ -74,8 +74,6 @@ public class GameModel {
         return mPlayers;
     }
 
-
-
     public String getScore() {
         return mScore;
     }

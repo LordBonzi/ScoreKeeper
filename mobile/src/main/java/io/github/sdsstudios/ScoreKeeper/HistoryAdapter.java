@@ -13,11 +13,13 @@ import java.util.List;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
+    private ScoreDBAdapter mdbHelper;
     private List<GameModel> mGameModel;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel) {
+    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper) {
         mGameModel = gameModel;
+        mdbHelper = dbHelper;
     }
 
     // Create new views (invoked by the layout manager)
@@ -38,7 +40,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        GameModel gameModel = mGameModel.get(position);
+        GameModel gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
 
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
         holder.textViewHistoryScore.setText(gameModel.getScore());

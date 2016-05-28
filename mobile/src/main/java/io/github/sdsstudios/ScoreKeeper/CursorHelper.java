@@ -1,22 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.database.Cursor;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +20,24 @@ public class CursorHelper {
         return str;
     }
 
+    public ArrayList getArrayById(String request, int gameID, ScoreDBAdapter dbHelper){
+        Cursor cursor = dbHelper.fetchGamesById(gameID);
+        int index = cursor.getColumnIndex(request);
+        String s = cursor.getString(index);
+        String[] strValues = s.split(",");
+        ArrayList array = new ArrayList<>(Arrays.asList(strValues));
+
+        return array;
+    }
+
+    public String getTimeById(int i, ScoreDBAdapter dbHelper){
+        Cursor cursor = dbHelper.fetchGamesById(i);
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_TIME);
+        String s = cursor.getString(index);
+
+        return s;
+    }
+
     public ArrayList convertToArray(String string) {
 
         String[] strValues = string.split(",");
@@ -49,10 +52,4 @@ public class CursorHelper {
 
     }
 
-    public String getDBCursorString(String request, int id, ScoreDBAdapter dbHelper) {
-
-        int index = dbHelper.fetchGamesById(id).getColumnIndex(request);
-        String value = dbHelper.fetchAllGames().getString(index);
-        return value;
-    }
 }

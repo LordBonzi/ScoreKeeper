@@ -16,15 +16,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class History extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RecyclerView recyclerViewHistory;
+    CursorHelper cursorHelper;
+    int gameID;
+    Intent homeIntent;
+    Intent settingsIntent;
+    Intent aboutIntent;
+
+    int numGames;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
-    CursorHelper cursorHelper;
-    int gameID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,10 @@ public class History extends AppCompatActivity
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
         cursorHelper = new CursorHelper();
+
+        settingsIntent = new Intent(this, Settings.class);
+        aboutIntent = new Intent(this, Settings.class);
+        homeIntent = new Intent(this, Home.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +79,13 @@ public class History extends AppCompatActivity
         displayRecyclerView();
     }
 
-
     public void displayRecyclerView(){
-        historyAdapter = new HistoryAdapter(cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_SCORE, dbHelper));
+
+        numGames = Integer.valueOf(dbHelper.getNewestGame());
+
+        ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
+
+        historyAdapter = new HistoryAdapter(gameModel);
         recyclerViewHistory.setAdapter(historyAdapter);
 
     }
@@ -101,6 +116,7 @@ public class History extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
@@ -113,21 +129,18 @@ public class History extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_history) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        if (id == R.id.nav_home) {
+            startActivity(homeIntent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_settings) {
+            startActivity(settingsIntent);
 
-        } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
+            startActivity(aboutIntent);
 
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

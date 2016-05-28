@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">ScoreKeeper</string>
+    <string name="app_name">Score Keeper</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
     <string name="player_s_name">Player\'s name</string>
@@ -12,6 +12,12 @@
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
     <string name="loser">Loser:</string>
-    <string name="https_github_com_sds_studios_scorekeeper">https://github.com/SDS-Studios/ScoreKeeper</string>
+    <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
+    <string name="about_page_info">This is the info page of ScoreKeeper. \n If you encounter any problems, feel free to submit them to our github. \n https://github.com/SDS-Studios/ScoreKeeper</string>
+    <string name="github">Our Github</string>
+    <string name="website">https://sds-studios.github.io/</string>
+    <string name="title_activity_home" >Home</string>
+    <string name="About">About</string>
 </resources>
+

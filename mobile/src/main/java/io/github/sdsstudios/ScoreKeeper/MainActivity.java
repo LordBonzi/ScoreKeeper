@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    public static Integer P1Score =0 , P2Score =0;
     public static int gameID;
     public static Button buttonP1;
     public static Button buttonP2;
@@ -31,10 +30,14 @@ public class MainActivity extends AppCompatActivity
     int gameSize;
     RelativeLayout normal, big;
     ArrayList playersArray;
-    ArrayList scoresArray;
     CursorHelper cursorHelper;
     SmallLayout smallLayout;
     BigLayout bigLayout;
+
+    Intent historyIntent;
+    Intent settingsIntent;
+    Intent aboutIntent;
+    Intent homeIntent;
 
     private ScoreDBAdapter dbHelper;
 
@@ -46,6 +49,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Log.e("MainActivity", "Started mainactivity");
 
+        historyIntent = new Intent(this, History.class);
+        settingsIntent = new Intent(this, Settings.class);
+        aboutIntent = new Intent(this, Settings.class);
+        homeIntent = new Intent(this, Home.class);
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
@@ -60,8 +67,6 @@ public class MainActivity extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        scoresArray = new ArrayList();
-
         smallLayout = new SmallLayout();
         bigLayout = new BigLayout();
 
@@ -69,14 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         gameSize = cursorHelper.getDBCursorArray(ScoreDBAdapter.KEY_PLAYERS, dbHelper).size();
 
-        P1Score = 0;
-        P2Score = 0;
-        scoresArray.add(0, String.valueOf(P1Score));
-        scoresArray.add(1, String.valueOf(P2Score));
-        updateScores();
-
-        buttonP1.setText(String.valueOf(P1Score));
-        buttonP2.setText(String.valueOf(P2Score));
+        smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
 
 
         playersArray = new ArrayList();
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity
             big.setVisibility(View.VISIBLE);
         }else{
             normal.setVisibility(View.VISIBLE);
-
         }
 
         //navigation drawer stuff
@@ -121,15 +118,12 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonP1:
-                P1Score += 1;
-                buttonP1.setText(String.valueOf(P1Score));
-                updateScores();
+                smallLayout.onClick(buttonP1, dbHelper, gameID);
                 break;
 
             case R.id.buttonP2:
-                P2Score += 1;
-                buttonP2.setText(String.valueOf(P2Score));
-                updateScores();
+                smallLayout.onClick(buttonP2, dbHelper, gameID);
+
                 break;
         }
     }
@@ -171,6 +165,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
@@ -184,19 +179,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
-            Intent intent = new Intent(this, History.class);
-            startActivity(intent);
+            startActivity(historyIntent);
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_settings) {
+            startActivity(settingsIntent);
 
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_about) {
+            startActivity(aboutIntent);
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_home){
+            startActivity(homeIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -204,19 +197,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, ArrayList arrayList, int id) {
-        score += 1;
-        button.setText(String.valueOf(score));
-        updateScores();
-    }
-
-    public void updateScores() {
-
-        scoresArray.set(0, String.valueOf(P1Score));
-        scoresArray.set(1, String.valueOf(P2Score));
-
-        dbHelper.updateGame(scoresArray, ScoreDBAdapter.KEY_SCORE, gameID);
-    }
 }
 
 
@@ -234,29 +214,46 @@ class BigLayout extends  Activity{
 }
 
 class SmallLayout extends Activity{
+    public static Integer P1Score =0 , P2Score =0;
+    ArrayList scoresArray;
 
-    public void onCreate(){
-        updateScores();
-        MainActivity.buttonP1.setText("0");
-        MainActivity.buttonP2.setText("0");
+
+    public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int id){
+        scoresArray = new ArrayList();
+        P1Score = 0;
+        P2Score = 0;
+        scoresArray.add(0, String.valueOf(P1Score));
+        scoresArray.add(1, String.valueOf(P2Score));
+        updateScores(dbHelper, id);
+
+        b1.setText(String.valueOf(P1Score));
+        b2.setText(String.valueOf(P2Score));
     }
 
-    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, ArrayList arrayList, int id){
+    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, int id){
         score += 1;
         button.setText(String.valueOf(score));
-        dbHelper.updateGame(arrayList, ScoreDBAdapter.KEY_SCORE, id);
-        updateScores();
+        updateScores(dbHelper, id);
     }
 
-    public void updateScores(){
-        if (MainActivity.P1Score == null || MainActivity.P2Score == null){
-            MainActivity.P1Score = 0;
-            MainActivity.P2Score = 0;
+    public void onClick(Button button, ScoreDBAdapter dbHelper, int id){
 
-        }else{
-
-
+        if (button == MainActivity.buttonP1){
+            P1Score += 1;
+            button.setText(String.valueOf(P1Score));
+        }else {
+            P2Score += 1;
+            button.setText(String.valueOf(P2Score));
         }
+
+        updateScores(dbHelper, id);
+    }
+
+    public void updateScores(ScoreDBAdapter dbHelper, int id){
+        scoresArray.set(0, String.valueOf(P1Score));
+        scoresArray.set(1, String.valueOf(P2Score));
+
+        dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
     }
 
 }

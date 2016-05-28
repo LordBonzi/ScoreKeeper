@@ -2,80 +2,45 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    String TAG = "Home";
-    EditText editTextPlayer;
-    Button buttonNewGame, buttonAddPlayer;
-    RecyclerView playerList;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    String player;
-    Intent mainActivity;
-    ArrayList<String> players;
-    PlayerListAdapter playerListAdapter;
-    int i = 0;
-    private ScoreDBAdapter dbHelper;
+    Intent newGameIntent;
+    Intent historyIntent;
+    Intent settingsIntent;
+    Intent aboutIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Log.i(TAG, "created Home activity");
         setSupportActionBar(toolbar);
 
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
+        newGameIntent = new Intent(this, NewGame.class);
+        historyIntent = new Intent(this, History.class);
+        settingsIntent = new Intent(this, Settings.class);
+        aboutIntent = new Intent(this, About.class);
 
-        players = new ArrayList<>();
-        mainActivity = new Intent(this, MainActivity.class);
-        playerList = (RecyclerView)findViewById(R.id.historyList);
-
-        buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
-        buttonNewGame.setOnClickListener(this);
-
-        buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
-        buttonAddPlayer.setOnClickListener(this);
-
-        editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
-        playerList = (RecyclerView) findViewById(R.id.playerList);
-
-        editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addPlayers();
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                startActivity(newGameIntent);
             }
         });
 
-        //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -84,40 +49,6 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        //RecyclerView Stuff
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        playerList.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        displayRecyclerView();
-    }
-
-    public void displayRecyclerView(){
-        playerListAdapter = new PlayerListAdapter(players);
-        playerList.setAdapter(playerListAdapter);
-
-    }
-
-    public void addPlayers(){
-        player = editTextPlayer.getText().toString();
-        players.add(i, player);
-
-        if (i >= 1) {
-            dbHelper.updateGame(players, ScoreDBAdapter.KEY_PLAYERS, Integer.valueOf(dbHelper.getNewestGame()));
-            String str = TextUtils.join(",", players);
-            Log.i(TAG, str);
-
-        }else{
-            dbHelper.createGame(players, null);
-            String str = TextUtils.join(",", players);
-            Log.i(TAG, str);
-        }
-        i +=1;
-        editTextPlayer.setText("");
-
     }
 
     @Override
@@ -129,7 +60,6 @@ public class Home extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -160,37 +90,18 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
-            Intent intent = new Intent(this, History.class);
-            startActivity(intent);
+            startActivity(historyIntent);
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_settings) {
+            startActivity(settingsIntent);
 
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_about) {
+            startActivity(aboutIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonAddPlayer: {
-                addPlayers();
-                break;
-            }
-
-            case R.id.buttonNewGame: {
-                startActivity(mainActivity);
-                break;
-            }
-        }
     }
 }

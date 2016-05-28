@@ -19,16 +19,17 @@ public class ScoreDBAdapter {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_SCORE = "_score";
     public static final String KEY_PLAYERS = "_players";
+    public static final String KEY_TIME = "_time";
+    public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
-    private static final String SQLITE_TABLE = "score";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
                     KEY_ROWID + " integer PRIMARY KEY autoincrement," +
                     KEY_PLAYERS + "," +
-                    KEY_SCORE +
-
+                    KEY_SCORE + " , " +
+                    KEY_TIME +
                     " );";
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
@@ -57,30 +58,43 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String request, int id) {
+    public long updateGame(ArrayList array, String time, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(request, convertToString(array));
 
+        if (request == KEY_TIME){
+            initialValues.put(request, time);
+
+        }else {
+            initialValues.put(request, convertToString(array));
+        }
         return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
     }
 
-    public long createGame(ArrayList players, ArrayList scoreArray) {
+    public long createGame(ArrayList players, String time, ArrayList score) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PLAYERS, convertToString(players));
-        initialValues.put(KEY_SCORE, convertToString(players));
+        initialValues.put(KEY_SCORE, convertToString(score));
+        initialValues.put(KEY_TIME, time);
+        //TODO delete log in ScoreDBAdapter
+        Log.i(TAG, time);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
     public String getNewestGame(){
 
+        String value;
+
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
         cursor.moveToLast();
 
         int index = cursor.getColumnIndex(KEY_ROWID);
-        String value = cursor.getString(index);
+
+        Log.i(TAG, String.valueOf(index));
+
+        value = cursor.getString(index);
 
         return value;
     }
@@ -89,19 +103,17 @@ public class ScoreDBAdapter {
 
         int doneDelete = 0;
         doneDelete = mDb.delete(SQLITE_TABLE, null , null);
-        Log.w(TAG, Integer.toString(doneDelete));
         return doneDelete > 0;
     }
 
     public Cursor fetchGamesById(int id) throws SQLException {
-        Log.w(TAG, String.valueOf(id));
         Cursor mCursor = null;
         if (id == 0) {
-            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE},
+            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME},
                     null, null, null, null, null);
 
         } else {
-            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS},
+            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME},
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
         }
@@ -113,7 +125,7 @@ public class ScoreDBAdapter {
 
     public Cursor fetchAllGames() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS},
+        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME},
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -131,14 +143,11 @@ public class ScoreDBAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.w(TAG, DATABASE_CREATE);
             db.execSQL(DATABASE_CREATE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
             onCreate(db);
         }

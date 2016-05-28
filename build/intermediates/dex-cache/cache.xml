@@ -3,6 +3,15 @@
 
     <item
         is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.4.0_e43c43eaa6474c463c13d417473c0c3d5787904b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
@@ -21,84 +30,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.3.0\jars\libs\internal_impl-23.3.0.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.3.0_151b3f5f827e1eba142401f812c477c6f760639c\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="2c5bc0ebbe69c9fab587c2216b36ec44ab8f0704">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-games-9.0.0_2488578ac9c13be563d64b3e55cf75659a37acac\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
         sha1="59cca9b91688dc2467754d36793b3d23bebd21a9">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-location-9.0.0_7f2e761a2b33ce9f5196dc4fd77584b1312b7f5a\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.3.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.3.0_d72f829a8157672253086455491a977b4580abd3\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.3.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-23.3.0_5d5f10e98111026f0cb3b036231105ae11448f6d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="a819aae4f0c711e50b4fd633922a3c1a176cb51e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-maps-9.0.0_8e6d2179686ec88ac9a9070a909eca20c0ffe941\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="e595f98f8c525201dccd119f43ad1ddacd4c48d6">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-cast-9.0.0_d6d65b0b8b26e12bdfcdf958e1e897631f89fb5d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics-impl\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="373cd65725af2781d100ddc193c7d3f14464a774">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-analytics-impl-9.0.0_b31961305a445cd355527e0193e43a09d2f69683\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.3.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="debf30ce0a7560396b6235edef77e447006454c2">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.3.0_ddaa1f018388b2d7232df4c6937f213e8c64e8d7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -111,12 +48,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\9.0.0\jars\classes.jar"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="184428c29b2a4b220cd44284d515db5d8cb5fc76">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-wearable-9.0.0_475db464b9729e8000cf799811cc954290395f07\classes.dex" />
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.4.0_feb64c9ea8c4a46b924494666a5df81dbed96b28\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -129,24 +66,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="0facc6fc326f2406f4bb9b02f442994c5ce6a403">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-nearby-9.0.0_a9ae05f978bdc9920cef1637b7d5d8cfba243801\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="c11cf7a7a6e5adf8fa564303a11dbc351fc11b7c">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-safetynet-9.0.0_99566161488f3b65c625ed45adb2cc06f3ed985d\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
@@ -156,39 +75,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.3.0\jars\classes.jar"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\design\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-23.3.0_c39f980651528e511dacecc1fc8b9faf90dc3a71\classes.dex" />
+        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.4.0_0488e52a5fbedaa1fb7b097d9fa2581fd0d4331a\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.0.0\jars\classes.jar"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="ea4b54dcbfe5ac05efb0a314105f07258118d3a7">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-iid-9.0.0_e31a0b18d9451b8fda8f25fea4bb91bf6064c756\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Android\sdk2\extras\android\m2repository\com\android\support\support-annotations\23.3.0\support-annotations-23.3.0.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.3.0_a2621e170232d80b1f06d965e652f21256ec900b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-common\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="5f0f6913a208a126269aaa68004ed0329a832c5b">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-common-9.0.0_2262fed5245b2a8d2d6d32780e802113982d666c\classes.dex" />
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.4.0_c349f5fa5a78e1dc08de323db0de5f1cfd58392f\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -198,15 +99,6 @@
         revision="23.0.3"
         sha1="4431efe5d0f67fab36a698dde725946b33a6bf4a">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appindexing-9.0.0_323a532faf50c5e6f2aec4e4d3da7e350cfffc6b\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="ebb23a47a4d77809ffacf468f8bb9d67bf892a31">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_66ea1966c784718306d38849a7cd55bef2d670d4\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -228,15 +120,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.3.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.3.0_b57f649d6233cb2242e528c01db430b8a490161f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth-base\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
@@ -246,20 +129,11 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-storage-common\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="ed16ff19f0a9515604a0f08104ca0317b82e29e3">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-storage-common-9.0.0_3608853a7bde40439b1ecf7dd49af4db71f6c727\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="8280dedddfc2f6d1b13597c0458adb571c622b75">
+        sha1="0ff6a7d2bf01c3c84614994763c3274eb52b01e9">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8b8c2238b6fe75ee9dfe4cd25fff33be5d16173a\classes.dex" />
     </item>
     <item
@@ -273,30 +147,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-common\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="42df48c7305b08b14fa0e84561091b0c24d70d26">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-common-9.0.0_3ee92a2733cefd174deb0a819a4bf051b88683f6\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
         sha1="5289e799a43a64c4137d109bf992e10a2f952aa3">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-identity-9.0.0_bda44c7b7aceb1bc7dc0134ac311e4d914398cbb\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-crash\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="7e467a973b749c6390a5991c9a8edbde96fc10c9">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-crash-9.0.0_a38fdafc09e00a2ecc6f63dcec52b51f7df2f615\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -309,15 +165,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="cc178928721f3222b3b06bdfbd9497378ccb9792">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-basement-9.0.0_f552074bb67c161a89be5fa96feeeb35b2d9abb0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-analytics\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
@@ -327,12 +174,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\9.0.0\jars\classes.jar"
+        jar="C:\Android\sdk2\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="2cb29455028e92e024bbad0d41c6ec772f2433d1">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-ads-9.0.0_113c98d239298fd2a358460bbb2638472fc71244\classes.dex" />
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.4.0_55321dbe68ae3c7ce3c0d5c4360594f480481939\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -342,15 +189,6 @@
         revision="23.0.3"
         sha1="4caf75b2cfb7ec6e80a57d0ee64fc102ad3578b8">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-gcm-9.0.0_2585518f6542a0a91e0575a7a831a10f0c91149a\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\design\23.3.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.3.0_eae95a18063d3e5881fec08200beb386575314d7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -372,39 +210,21 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="d96f9f3ef66494d1231304cafd28c962dda80dea">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appinvite-9.0.0_b6bdc4946d5e92873dc5f7d791897e1634ee9033\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.0_4aa92d7d0126d63442e8cc4d2a1b972fe66844da\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-iid\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="379d1834afa3c08f43be23a23b103053537b65b5">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-iid-9.0.0_dca0d4e3de666fc9fa7f624056720e1981635a6a\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-module\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
         sha1="24536a7b97926a9c155c88425da6875adeb11b51">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-module-9.0.0_7da37c9c44668d258a82d69d1e85302764b92b17\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.4.0_dc68d855cbd568f529acf7a790e2978a48898186\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -444,33 +264,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager-api\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="69472e334350cafbf442776da05c9a04955252fb">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-tagmanager-api-9.0.0_ff0cdf336c0f9d1079ffb0b5cffff4e9e058fc61\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="294d49a66cc1238d9f7fd352136a45622fa98c0f">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-drive-9.0.0_d744b27d014dba1e670508c03fdaef5572056da2\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads-lite\9.0.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="false"
-        revision="23.0.3"
-        sha1="79e4b41db41d4dbbf364c7bd6aaeee5b876c9d8b">
-        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-ads-lite-9.0.0_65252034ba16887d048dc909d08d59da33966bf7\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"
@@ -495,6 +288,231 @@
         revision="23.0.3"
         sha1="7da84426d876216ed4cdddd85e739be5ecabdd04">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-auth-9.0.0_4b314cb9af76472f64d1f9c97714be8dbf3fa5d7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="2c5bc0ebbe69c9fab587c2216b36ec44ab8f0704">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-games-9.0.0_2488578ac9c13be563d64b3e55cf75659a37acac\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="a819aae4f0c711e50b4fd633922a3c1a176cb51e">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-maps-9.0.0_8e6d2179686ec88ac9a9070a909eca20c0ffe941\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="e595f98f8c525201dccd119f43ad1ddacd4c48d6">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-cast-9.0.0_d6d65b0b8b26e12bdfcdf958e1e897631f89fb5d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics-impl\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="373cd65725af2781d100ddc193c7d3f14464a774">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-analytics-impl-9.0.0_b31961305a445cd355527e0193e43a09d2f69683\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="184428c29b2a4b220cd44284d515db5d8cb5fc76">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-wearable-9.0.0_475db464b9729e8000cf799811cc954290395f07\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="0facc6fc326f2406f4bb9b02f442994c5ce6a403">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-nearby-9.0.0_a9ae05f978bdc9920cef1637b7d5d8cfba243801\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="c11cf7a7a6e5adf8fa564303a11dbc351fc11b7c">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-safetynet-9.0.0_99566161488f3b65c625ed45adb2cc06f3ed985d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-iid\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="ea4b54dcbfe5ac05efb0a314105f07258118d3a7">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-iid-9.0.0_e31a0b18d9451b8fda8f25fea4bb91bf6064c756\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-auth-common\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="5f0f6913a208a126269aaa68004ed0329a832c5b">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-auth-common-9.0.0_2262fed5245b2a8d2d6d32780e802113982d666c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="10d48df869d234540f1a74b030ceb4ca0e758d2a">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_66ea1966c784718306d38849a7cd55bef2d670d4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-23.4.0_17899d97683fe25d2874ff2bd20be78df34809db\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-storage-common\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="ed16ff19f0a9515604a0f08104ca0317b82e29e3">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-storage-common-9.0.0_3608853a7bde40439b1ecf7dd49af4db71f6c727\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-common\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="42df48c7305b08b14fa0e84561091b0c24d70d26">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-common-9.0.0_3ee92a2733cefd174deb0a819a4bf051b88683f6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.firebase\firebase-crash\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="7e467a973b749c6390a5991c9a8edbde96fc10c9">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.firebase-firebase-crash-9.0.0_a38fdafc09e00a2ecc6f63dcec52b51f7df2f615\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="cc178928721f3222b3b06bdfbd9497378ccb9792">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-basement-9.0.0_f552074bb67c161a89be5fa96feeeb35b2d9abb0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="d9ecde39b460470e655de6e47c05573d2d5a8bfb">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-cardview-v7-23.4.0_0d17f20474b90dfa7e621309e19076faaf089a2f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="2cb29455028e92e024bbad0d41c6ec772f2433d1">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-ads-9.0.0_113c98d239298fd2a358460bbb2638472fc71244\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="d96f9f3ef66494d1231304cafd28c962dda80dea">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appinvite-9.0.0_b6bdc4946d5e92873dc5f7d791897e1634ee9033\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.0.0_4aa92d7d0126d63442e8cc4d2a1b972fe66844da\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-iid\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="379d1834afa3c08f43be23a23b103053537b65b5">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-iid-9.0.0_dca0d4e3de666fc9fa7f624056720e1981635a6a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-tagmanager-api\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="69472e334350cafbf442776da05c9a04955252fb">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-tagmanager-api-9.0.0_ff0cdf336c0f9d1079ffb0b5cffff4e9e058fc61\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="294d49a66cc1238d9f7fd352136a45622fa98c0f">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-drive-9.0.0_d744b27d014dba1e670508c03fdaef5572056da2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\libs\internal_impl-23.4.0.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.4.0_c0385529aad50846f424d269f404edf41df9890d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads-lite\9.0.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="79e4b41db41d4dbbf364c7bd6aaeee5b876c9d8b">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-ads-lite-9.0.0_65252034ba16887d048dc909d08d59da33966bf7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.android.support\multidex\1.0.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-multidex-1.0.1_1d2bcc9728befb1fc4f98d5b3d47f04f25ac3e31\classes.dex" />
     </item>
 
 </items>

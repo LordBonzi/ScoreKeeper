@@ -59,6 +59,10 @@ public class EditGame extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
         }else{
             relativeLayout.setVisibility(View.VISIBLE);
+            textViewP1.setText(String.valueOf(arrayListPlayers.get(0)));
+            textViewP2.setText(String.valueOf(arrayListPlayers.get(1)));
+            textViewScoreP1.setText(String.valueOf(arrayListScores.get(0)));
+            textViewScoreP2.setText(String.valueOf(arrayListScores.get(1)));
 
         }
 

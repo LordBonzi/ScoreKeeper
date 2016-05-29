@@ -35,12 +35,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".Settings"
-            android:label="@string/action_settings"
-            android:parentActivityName=".Home"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity
             android:name=".About"
             android:label="@string/About"
             android:parentActivityName=".Home"

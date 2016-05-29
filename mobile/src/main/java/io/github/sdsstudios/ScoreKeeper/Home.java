@@ -30,7 +30,6 @@ public class Home extends AppCompatActivity
 
         newGameIntent = new Intent(this, NewGame.class);
         historyIntent = new Intent(this, History.class);
-        settingsIntent = new Intent(this, Settings.class);
         aboutIntent = new Intent(this, About.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

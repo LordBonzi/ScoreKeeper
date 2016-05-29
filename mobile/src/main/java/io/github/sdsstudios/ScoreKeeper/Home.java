@@ -20,6 +20,7 @@ public class Home extends AppCompatActivity
     Intent historyIntent;
     Intent settingsIntent;
     Intent aboutIntent;
+    Intent editGameIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class Home extends AppCompatActivity
         historyIntent = new Intent(this, History.class);
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
+        editGameIntent = new Intent(this, EditGame.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -95,9 +97,10 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             startActivity(settingsIntent);
 
-
         } else if (id == R.id.nav_about) {
             startActivity(aboutIntent);
+        }else if (id == R.id.nav_edit_game) {
+            startActivity(editGameIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

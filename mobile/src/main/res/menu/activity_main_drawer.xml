@@ -13,9 +13,14 @@
             android:icon="@android:drawable/ic_menu_recent_history"
             android:title="@string/action_history" />
 
+        <item
+            android:id="@+id/nav_edit_game"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            android:title="@string/title_activity_edit_game" />
+
     </group>
 
-    <item android:title="">
+    <item android:title="Information">
         <menu>
             <item
                 android:id="@+id/nav_settings"

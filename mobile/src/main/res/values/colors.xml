@@ -7,5 +7,7 @@
     <color name="secondary_text">#8a000000</color>
     <color name="recyerViewBackground">#E0E0E0</color>
     <color name="divider">#E0E0E0</color>
+    <color name="colorTitleText">#ffffffff</color>
+
 
 </resources>

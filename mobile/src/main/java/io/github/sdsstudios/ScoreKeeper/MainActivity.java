@@ -10,6 +10,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -29,20 +31,21 @@ public class MainActivity extends AppCompatActivity
     public static Button buttonP2;
     TextView textViewP1;
     TextView textViewP2;
+    RecyclerView bigGameList;
     String TAG = "MainActivity.class";
     int gameSize;
     RelativeLayout normal, big;
     ArrayList playersArray;
+    ArrayList scoresArray;
     CursorHelper cursorHelper;
     SmallLayout smallLayout;
-    BigLayout bigLayout;
-
     Intent historyIntent;
     Intent settingsIntent;
     Intent aboutIntent;
     Intent homeIntent;
-
-    private ScoreDBAdapter dbHelper;
+    ScoreDBAdapter dbHelper;
+    private RecyclerView.Adapter bigGameAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         textViewP1 = (TextView)findViewById(R.id.textViewP1);
         textViewP2 = (TextView)findViewById(R.id.textViewP2);
 
+        bigGameList = (RecyclerView)findViewById(R.id.bigGameList);
+
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
@@ -75,21 +80,30 @@ public class MainActivity extends AppCompatActivity
         dbHelper.open();
 
         smallLayout = new SmallLayout();
-        bigLayout = new BigLayout();
 
         gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         playersArray = new ArrayList();
         playersArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
 
-        gameSize = playersArray.size();
+        scoresArray = new ArrayList();
+        scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
-        smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+        gameSize = playersArray.size();
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
+            mLayoutManager = new LinearLayoutManager(this);
+            bigGameList.setLayoutManager(mLayoutManager);
+
+            ArrayList<BigGameModel> bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray,  dbHelper);
+
+            bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID);
+            bigGameList.setAdapter(bigGameAdapter);
         }else{
             normal.setVisibility(View.VISIBLE);
+            smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+
         }
 
         textViewP1.setText(String.valueOf(playersArray.get(0)));
@@ -207,19 +221,6 @@ public class MainActivity extends AppCompatActivity
 
 }
 
-
-
-class BigLayout extends  Activity{
-
-    public void onCreate(){
-    }
-
-    public void game(Button button){
-
-
-
-    }
-}
 
 class SmallLayout extends Activity{
     public static Integer P1Score =0 , P2Score =0;

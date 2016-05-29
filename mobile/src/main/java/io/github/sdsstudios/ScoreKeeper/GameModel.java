@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-
 /**
  * Created by Seth Schroeder on 22/05/2016.
  */
@@ -53,6 +52,7 @@ public class GameModel {
             }else if (arrayListPlayer.size() == 3){
                 t = "3 Player Game";
                 p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1) + " vs " + arrayListPlayer.get(2);
+                s = arrayListScore.get(0) + " : " + arrayListScore.get(1) + " : " + arrayListScore.get(2);
 
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
                 t = "Group Game";

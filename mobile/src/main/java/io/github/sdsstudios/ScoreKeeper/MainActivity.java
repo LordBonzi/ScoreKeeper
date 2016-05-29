@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity
         Log.e("MainActivity", "Started mainactivity");
 
         historyIntent = new Intent(this, History.class);
-        settingsIntent = new Intent(this, Settings.class);
-        aboutIntent = new Intent(this, Settings.class);
         homeIntent = new Intent(this, Home.class);
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);

@@ -7,18 +7,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class EditGame extends AppCompatActivity {
     ArrayList arrayListPlayers, arrayListScores;
-    String time;
+    String date;
     int gameID;
     private TextView textViewP1, textViewP2, textViewScoreP1, textViewScoreP2, textViewDate;
+    private RelativeLayout relativeLayout;
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
+    private CursorHelper cursorHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +39,31 @@ public class EditGame extends AppCompatActivity {
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
+        cursorHelper = new CursorHelper();
+
         textViewP1 = (TextView)findViewById(R.id.textViewEditGameP1);
         textViewP2 = (TextView)findViewById(R.id.textViewEditGameP2);
         textViewScoreP1 = (TextView)findViewById(R.id.textViewEditGameScore1);
         textViewScoreP2 = (TextView)findViewById(R.id.textViewEditGameScore2);
         textViewDate = (TextView)findViewById(R.id.textViewEditGameDate);
 
+        relativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerViewEditGame);
+
+        arrayListPlayers = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+        arrayListScores = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+
+        Log.i("EditGame", "game id " + gameID);
+
+        if (arrayListPlayers.size() > 2){
+            recyclerView.setVisibility(View.VISIBLE);
+        }else{
+            relativeLayout.setVisibility(View.VISIBLE);
+
+        }
+
+        date = cursorHelper.getTimeById(gameID, dbHelper);
+        textViewDate.setText(date);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

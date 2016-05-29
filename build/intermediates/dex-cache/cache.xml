@@ -264,6 +264,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\src\mpandroidchartlibrary-2-2-4.jar"
+        jumboMode="true"
+        optimize="false"
+        revision="23.0.3"
+        sha1="e5455fb794bfcbeb75da252dffd907794614f7fd">
+        <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\2\mpandroidchartlibrary-2-2-4_f02deb4ec89d4ed15faf199fea869692e410f515\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\9.0.0\jars\classes.jar"
         jumboMode="true"
         optimize="false"

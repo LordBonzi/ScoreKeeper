@@ -36,17 +36,15 @@
         <activity
             android:name=".About"
             android:label="@string/About"
-            android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".EditGame"
             android:label="@string/title_activity_edit_game"
-            android:parentActivityName=".Home"
+            android:parentActivityName=".History"
             android:theme="@style/AppTheme.NoActionBar"/>
 
 

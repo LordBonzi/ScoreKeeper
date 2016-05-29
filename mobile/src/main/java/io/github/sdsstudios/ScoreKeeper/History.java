@@ -12,23 +12,25 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
 public class History extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static RelativeLayout relativeLayout;
     RecyclerView recyclerViewHistory;
     CursorHelper cursorHelper;
     int gameID;
     Intent homeIntent;
     Intent settingsIntent;
     Intent aboutIntent;
-
     int numGames;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class History extends AppCompatActivity
 
         homeIntent = new Intent(this, Home.class);
 
+        relativeLayout = (RelativeLayout)findViewById(R.id.historyLayout);
 
         //navigation drawer stuff
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -73,7 +76,7 @@ public class History extends AppCompatActivity
 
         ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
 
-        historyAdapter = new HistoryAdapter(gameModel, dbHelper);
+        historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout);
         recyclerViewHistory.setAdapter(historyAdapter);
 
     }

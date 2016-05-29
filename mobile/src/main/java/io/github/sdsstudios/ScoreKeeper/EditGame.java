@@ -9,6 +9,10 @@ import android.view.View;
 
 public class EditGame extends AppCompatActivity {
 
+    public EditGame() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

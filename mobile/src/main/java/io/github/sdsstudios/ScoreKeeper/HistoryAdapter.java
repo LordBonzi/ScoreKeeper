@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,19 +51,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         // - replace the contents of the view with that element
         GameModel gameModel;
 
-        if (mActivity == 1){
+        if (mActivity == 2){
+            gameModel = mGameModel.get(mGameModel.size()-position-1);
+            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+            holder.textViewHistoryScore.setText(gameModel.getScore());
+            holder.textViewHistoryDate.setText(gameModel.getDate());
+
+        }else if (mActivity == 1){
             gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
             holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
             holder.textViewHistoryScore.setText(gameModel.getScore());
             holder.textViewHistoryDate.setText(gameModel.getDate());
             holder.textViewHistoryType.setText(gameModel.getType());
-
-        }else{
-            gameModel = mGameModel.get(mGameModel.size()-position-1);
-            Log.i("HistoryAdapter", String.valueOf(Integer.valueOf(mdbHelper.getNewestGame()) - position - 1));
-            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-            holder.textViewHistoryScore.setText(gameModel.getScore());
-            holder.textViewHistoryDate.setText(gameModel.getDate());
         }
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
@@ -94,8 +92,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView textViewHistoryDate;
         public TextView textViewHistoryType;
         public RelativeLayout relativeLayout;
-
-
 
         public ViewHolder(View v) {
             super(v);

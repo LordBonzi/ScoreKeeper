@@ -28,7 +28,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:text="12:55" />
+            android:text="" />
 
         <TextView
             android:id="@+id/textViewHistoryPlayers"
@@ -37,7 +37,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Seth vs Alfie"
+            android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_above="@+id/textViewHistoryScore"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="2 Player Game"
+            android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="5 : 11"
+            android:text=""
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </RelativeLayout>
     <RelativeLayout

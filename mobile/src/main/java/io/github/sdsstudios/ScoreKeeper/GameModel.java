@@ -1,7 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 /**
@@ -42,12 +40,9 @@ public class GameModel {
         for (int i = j; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
             p = null;
             s = null;
-            d = null;
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
-
-            Log.i("GameModel", String.valueOf(arrayListPlayer) + arrayListScore + i);
 
             date = cursorHelper.getTimeById(i, dbHelper);
             d = dateHelper.gameDate(date);

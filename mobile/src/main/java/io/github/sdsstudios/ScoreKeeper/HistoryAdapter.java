@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         if (mActivity == 1){
             gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
         }else{
-            gameModel = mGameModel.get(position);
+            gameModel = mGameModel.get(mGameModel.size()-position-1);
         }
 
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
@@ -68,7 +67,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditGame.class);
                 int gameID = Integer.valueOf(mdbHelper.getNewestGame())-position;
-                Log.i("historyadapter", "gameID" + gameID);
                 intent.putExtra("gameID", gameID);
 
                 context.startActivity(intent);

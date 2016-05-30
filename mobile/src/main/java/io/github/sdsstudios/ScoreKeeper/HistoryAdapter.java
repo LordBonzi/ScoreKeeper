@@ -21,14 +21,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private Context context;
     private RelativeLayout relativeLayout;
     private int mActivity;
+    private int numGames;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity) {
+    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity, int numGamesm) {
         mGameModel = gameModel;
         mdbHelper = dbHelper;
         context = context1;
         relativeLayout = layout;
         mActivity = activity;
+        numGames =numGamesm;
     }
 
     // Create new views (invoked by the layout manager)
@@ -79,7 +81,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mGameModel.size();
+        return numGames;
     }
 
     // Provide a reference to the views for each data item

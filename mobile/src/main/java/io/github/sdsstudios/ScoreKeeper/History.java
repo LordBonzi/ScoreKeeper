@@ -52,10 +52,10 @@ public class History extends AppCompatActivity {
         try {
             numGames = Integer.valueOf(dbHelper.getNewestGame());
             ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, 1);
-            historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 1);
+            historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 1, numGames);
             recyclerViewHistory.setAdapter(historyAdapter);
         } catch (Exception e) {
-            textViewNoGames.setText(getResources().getString(R.string.no_games));
+            textViewNoGames.setText(R.string.no_games);
         }
     }
 

@@ -1,10 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,22 +83,6 @@ public class MainActivity extends AppCompatActivity
 
         gameSize = playersArray.size();
 
-
-        //Shared Preferences stuff
-        final String PREFS_NAME = "scorekeeper";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-
-            saveInfo();
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
-                    , Context.MODE_PRIVATE);
-
-        }
-
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
             mLayoutManager = new LinearLayoutManager(this);
@@ -134,17 +118,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void saveInfo(){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-
-        editor.apply();
-    }
 
     @Override
     public void onBackPressed() {
-        startActivity(homeIntent);
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.quit_game);
+
+        builder.setMessage(R.string.quit_game_message);
+
+        builder.setPositiveButton(R.string.finish_game, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startActivity(homeIntent);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
 
     }
 
@@ -162,10 +159,8 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            return true;
+        if (id == android.R.id.home) {
+            onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);

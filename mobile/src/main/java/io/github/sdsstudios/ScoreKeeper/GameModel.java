@@ -34,7 +34,7 @@ public class GameModel {
         if (activity == 1){
             j = 1;
         }else{
-            j = Integer.valueOf(dbHelper.getNewestGame())- 2;
+            j = Integer.valueOf(dbHelper.getNewestGame())- numGames;
         }
 
         for (int i = j; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {

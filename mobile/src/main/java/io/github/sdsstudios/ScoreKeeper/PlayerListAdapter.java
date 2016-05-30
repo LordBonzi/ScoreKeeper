@@ -67,37 +67,25 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void removeAt(int position) {
 
-        if (mDataset.size() >= 3) {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoPlayerRemoval();
+            }
+        };
 
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    undoPlayerRemoval();
-                }
-            };
+        backup = mDataset.get(mDataset.size() - 1 );
+        backupIndex = mDataset.indexOf(backup);
+        mDataset.remove(position);
 
-            backup = mDataset.get(mDataset.size() - 1 );
-            backupIndex = mDataset.indexOf(backup);
-            mDataset.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, mDataset.size());
-            mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
-            Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", onClickListener);
-            snackbar.show();
-        }else{
-            View.OnClickListener onClickListener = null;
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mDataset.size());
 
-            onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    snackbar.dismiss();
-                }
-            };
-            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Must have more than 2 players", Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            snackbar.show();
-        }
+        mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed", Snackbar.LENGTH_LONG)
+                .setAction("Undo", onClickListener);
+        snackbar.show();
+
     }
 
     public void undoPlayerRemoval(){

@@ -21,7 +21,6 @@ public class CursorHelper {
         String[] strValues = s.split(",");
         array = new ArrayList<>(Arrays.asList(strValues));
 
-
         return array;
     }
 

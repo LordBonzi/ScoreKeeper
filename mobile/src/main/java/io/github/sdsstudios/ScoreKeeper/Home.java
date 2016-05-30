@@ -1,6 +1,8 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -27,7 +29,6 @@ public class Home extends AppCompatActivity
     private Intent historyIntent;
     private Intent settingsIntent;
     private Intent aboutIntent;
-    private Intent editGameIntent;
     private RecyclerView recyclerViewRecent;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter adapter;
@@ -50,7 +51,6 @@ public class Home extends AppCompatActivity
         historyIntent = new Intent(this, History.class);
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
-        editGameIntent = new Intent(this, EditGame.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
         recyclerViewRecent = (RecyclerView) findViewById(R.id.recyclerViewRecent);
         textViewNoGames = (TextView)findViewById(R.id.textViewHomeNoGamesHome);
@@ -63,7 +63,20 @@ public class Home extends AppCompatActivity
             }
         });
 
+        //Shared Preferences stuff
+        final String PREFS_NAME = "scorekeeper";
 
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        if (settings.getBoolean("my_first_time", true)) {
+
+            saveSharedPrefs();
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }else {
+            SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -76,16 +89,27 @@ public class Home extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         recyclerViewRecent.setLayoutManager(mLayoutManager);
 
+        displayRecyclerView();
+
+    }
+
+    public void saveSharedPrefs(){
+        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.apply();
+    }
+
+    public void displayRecyclerView(){
         try {
             ArrayList<GameModel> gameModel = GameModel.createGameModel(recentNumGames(), dbHelper, 2);
-            adapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 2);
+            adapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 2, recentNumGames());
             recyclerViewRecent.setAdapter(adapter);
         } catch (Exception e) {
             e.printStackTrace();
-            textViewNoGames.setText(getResources().getString(R.string.no_games));
-            Log.e("Home", String.valueOf(e));
+            Log.e("Home", e.toString());
+            textViewNoGames.setText(R.string.no_games);
         }
-
     }
 
     public Integer recentNumGames(){
@@ -148,8 +172,6 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_about) {
             startActivity(aboutIntent);
-        }else if (id == R.id.nav_edit_game) {
-            startActivity(editGameIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

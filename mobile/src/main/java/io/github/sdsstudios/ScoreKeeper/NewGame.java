@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class NewGame extends AppCompatActivity
 
     public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
+    Snackbar snackbar;
     private CursorHelper cursorHelper;
     private String time;
     private String TAG = "Home";
@@ -171,13 +173,36 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
-                updateArray();
 
-                for (int i = 0; i < players.size(); i ++){
-                    score.add(i, "0");
+                try{
+                    updateArray();
+                    for (int i = 0; i < players.size(); i ++){
+                        score.add(i, "0");
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                dbHelper.updateGame(score, time, ScoreDBAdapter.KEY_SCORE, gameID);
-                startActivity(mainActivityIntent);
+
+                //snackbar must have 2 or more players
+
+                if (players.size() < 2) {
+
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    };
+
+                    snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+                            .setAction("Dismiss", onClickListener);
+                    snackbar.show();
+                }else{
+                    dbHelper.updateGame(score, time, ScoreDBAdapter.KEY_SCORE, gameID);
+                    startActivity(mainActivityIntent);
+                }
+
                 break;
             }
         }

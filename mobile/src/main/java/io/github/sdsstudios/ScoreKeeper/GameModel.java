@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +19,7 @@ public class GameModel {
         mType = type;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) throws ParseException {
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) {
         CursorHelper cursorHelper = new CursorHelper();
         DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t = null;

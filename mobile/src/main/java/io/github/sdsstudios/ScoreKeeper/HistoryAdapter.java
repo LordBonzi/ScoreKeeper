@@ -56,7 +56,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         if (mActivity == 1){
             gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
         }else{
-            gameModel = mGameModel.get(mGameModel.size() - position);
+            gameModel = mGameModel.get(position);
         }
 
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());

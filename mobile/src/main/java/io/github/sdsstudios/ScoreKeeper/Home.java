@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,13 +77,28 @@ public class Home extends AppCompatActivity
         recyclerViewRecent.setLayoutManager(mLayoutManager);
 
         try {
-            ArrayList<GameModel> gameModel = GameModel.createGameModel(5, dbHelper);
+            ArrayList<GameModel> gameModel = GameModel.createGameModel(recentNumGames(), dbHelper);
             adapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 2);
             recyclerViewRecent.setAdapter(adapter);
         } catch (Exception e) {
+            e.printStackTrace();
             textViewNoGames.setText(getResources().getString(R.string.no_games));
+            Log.e("Home", String.valueOf(e));
         }
 
+    }
+
+    public Integer recentNumGames(){
+        int numGames = 0;
+        if (Integer.valueOf(dbHelper.getNewestGame()) == 1){
+            numGames = 1;
+        }else if (Integer.valueOf(dbHelper.getNewestGame()) == 2){
+            numGames = 2;
+        }else if (Integer.valueOf(dbHelper.getNewestGame()) >= 3){
+            numGames = 3;
+        }
+
+        return numGames;
     }
 
 

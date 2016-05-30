@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -72,7 +71,6 @@ public class History extends AppCompatActivity
             historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 1);
             recyclerViewHistory.setAdapter(historyAdapter);
         } catch (Exception e) {
-            Log.i("HIstory", "catch");
             textViewNoGames.setText(getResources().getString(R.string.no_games));
         }
     }

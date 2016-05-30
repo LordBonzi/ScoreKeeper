@@ -9,7 +9,7 @@
     tools:showIn="@layout/app_bar_home">
 
     <TextView
-        android:id="@+id/textViewHomeNoGames"
+        android:id="@+id/textViewHomeNoGamesHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textViewHomeNoGames"
+        android:layout_below="@+id/textViewHomeNoGamesHome"
         android:visibility="visible" />
 
 </RelativeLayout>

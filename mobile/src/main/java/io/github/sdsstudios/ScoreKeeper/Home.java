@@ -53,7 +53,7 @@ public class Home extends AppCompatActivity
         editGameIntent = new Intent(this, EditGame.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
         recyclerViewRecent = (RecyclerView) findViewById(R.id.recyclerViewRecent);
-        textViewNoGames = (TextView)findViewById(R.id.textViewHomeNoGames);
+        textViewNoGames = (TextView)findViewById(R.id.textViewHomeNoGamesHome);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -72,9 +72,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
                 buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
                 score = buttonScore -= 1;
-                holder.butonScore.setText(String.valueOf(score));
-                arrayListScore.set(position, String.valueOf(score));
-                dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE,gameID );
+
+                if (score == -1){
+
+                }else {
+                    holder.butonScore.setText(String.valueOf(score));
+                    arrayListScore.set(position, String.valueOf(score));
+                    dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE,gameID );
+                }
+
+
                 return true;
             }
         });

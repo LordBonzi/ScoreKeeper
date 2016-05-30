@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     public static int gameID;
     public static Button buttonP1;
     public static Button buttonP2;
+    public static boolean firstTime = true;
     TextView textViewP1;
     TextView textViewP2;
     RecyclerView bigGameList;
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         buttonP1.setOnLongClickListener(this);
 
         buttonP2 = (Button) findViewById(R.id.buttonP2);
+        buttonP2.setOnClickListener(this);
         buttonP2.setOnLongClickListener(this);
 
         textViewP1 = (TextView)findViewById(R.id.textViewP1);
@@ -90,6 +91,22 @@ public class MainActivity extends AppCompatActivity
         scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
         gameSize = playersArray.size();
+
+
+        //Shared Preferences stuff
+        final String PREFS_NAME = "scorekeeper";
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+
+        if (settings.getBoolean("my_first_time", true)) {
+
+            saveInfo();
+            settings.edit().putBoolean("my_first_time", false).commit();
+        }else {
+            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
+                    , Context.MODE_PRIVATE);
+
+        }
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -119,20 +136,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Shared Preferences stuff
-        final String PREFS_NAME = "scorekeeper";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-
-            saveInfo();
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
-                    , Context.MODE_PRIVATE);
-
-        }
 
     }
 
@@ -224,8 +227,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onLongClick(View v) {
 
-        Toast.makeText(this, "Long press", Toast.LENGTH_LONG).show();
-
         switch (v.getId()) {
             case R.id.buttonP1:
                 smallLayout.onLongClick(buttonP1, dbHelper, gameID);
@@ -236,6 +237,7 @@ public class MainActivity extends AppCompatActivity
 
                 break;
         }
+
         return true;
     }
 }
@@ -243,24 +245,22 @@ public class MainActivity extends AppCompatActivity
 class SmallLayout extends Activity{
     public static Integer P1Score =0 , P2Score =0;
     ArrayList scoresArray;
+    boolean ft1;
+    boolean ft2;
 
 
     public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int id){
         scoresArray = new ArrayList();
         P1Score = 0;
         P2Score = 0;
+        ft1 = MainActivity.firstTime;
+        ft2 = MainActivity.firstTime;
         scoresArray.add(0, String.valueOf(P1Score));
         scoresArray.add(1, String.valueOf(P2Score));
         updateScores(dbHelper, id);
 
         b1.setText(String.valueOf(P1Score));
         b2.setText(String.valueOf(P2Score));
-    }
-
-    public void game(Button button, Integer score, ScoreDBAdapter dbHelper, int id){
-        score += 1;
-        button.setText(String.valueOf(score));
-        updateScores(dbHelper, id);
     }
 
     public void onClick(Button button, ScoreDBAdapter dbHelper, int id){
@@ -277,12 +277,19 @@ class SmallLayout extends Activity{
     }
     public void onLongClick(Button button, ScoreDBAdapter dbHelper, int id){
 
-        if (button == MainActivity.buttonP1){
+        if (button == MainActivity.buttonP1 && !ft1 && P1Score != 0){
             P1Score -= 1;
             button.setText(String.valueOf(P1Score));
-        }else {
+        }else if (button == MainActivity.buttonP2 && !ft2 && P2Score != 0){
             P2Score -= 1;
             button.setText(String.valueOf(P2Score));
+        }
+
+        if (button == MainActivity.buttonP1){
+            ft1 = false;
+        }else {
+            ft2 = false;
+
         }
 
         updateScores(dbHelper, id);

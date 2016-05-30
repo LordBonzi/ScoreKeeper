@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,11 +17,12 @@ import android.view.View;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Intent newGameIntent;
-    Intent historyIntent;
-    Intent settingsIntent;
-    Intent aboutIntent;
-    Intent editGameIntent;
+    private Intent newGameIntent;
+    private Intent historyIntent;
+    private Intent settingsIntent;
+    private Intent aboutIntent;
+    private Intent editGameIntent;
+    private RecyclerView recyclerViewRecent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

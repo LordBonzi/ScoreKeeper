@@ -19,6 +19,7 @@ public class History extends AppCompatActivity {
     RecyclerView recyclerViewHistory;
     CursorHelper cursorHelper;
     Intent homeIntent;
+    Intent settingsIntent;
     int numGames;
     private TextView textViewNoGames;
     private RecyclerView.Adapter historyAdapter;
@@ -39,6 +40,7 @@ public class History extends AppCompatActivity {
         cursorHelper = new CursorHelper();
 
         homeIntent = new Intent(this, Home.class);
+        settingsIntent = new Intent(this, Settings.class);
 
         relativeLayout = (RelativeLayout)findViewById(R.id.historyLayout);
 
@@ -80,6 +82,7 @@ public class History extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(settingsIntent);
 
             return true;
         }

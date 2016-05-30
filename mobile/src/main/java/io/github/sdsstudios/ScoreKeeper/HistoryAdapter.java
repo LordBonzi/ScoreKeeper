@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
-
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.history_adapter, parent, false);
@@ -54,21 +54,24 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         if (mActivity == 1){
             gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
+            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+            holder.textViewHistoryScore.setText(gameModel.getScore());
+            holder.textViewHistoryDate.setText(gameModel.getDate());
+            holder.textViewHistoryType.setText(gameModel.getType());
+
         }else{
             gameModel = mGameModel.get(mGameModel.size()-position-1);
+            Log.i("HistoryAdapter", String.valueOf(Integer.valueOf(mdbHelper.getNewestGame()) - position - 1));
+            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+            holder.textViewHistoryScore.setText(gameModel.getScore());
+            holder.textViewHistoryDate.setText(gameModel.getDate());
         }
-
-        holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-        holder.textViewHistoryScore.setText(gameModel.getScore());
-        holder.textViewHistoryDate.setText(gameModel.getDate());
-        holder.textViewHistoryType.setText(gameModel.getType());
 
         holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditGame.class);
                 int gameID = Integer.valueOf(mdbHelper.getNewestGame())-position;
                 intent.putExtra("gameID", gameID);
-
                 context.startActivity(intent);
             }
         });

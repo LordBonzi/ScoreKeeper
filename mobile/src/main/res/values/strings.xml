@@ -29,6 +29,7 @@
     <string name="no_games">You haven\'t played any games!</string>
     <string name="recent_games">Recent Games:</string>
     <string name="games_you_have_played">Games you have played:</string>
+    <string name="your_score">Your Score:</string>
 
 </resources>
 

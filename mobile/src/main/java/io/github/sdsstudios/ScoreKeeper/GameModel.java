@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -19,10 +21,11 @@ public class GameModel {
         mType = type;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) {
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity) {
         CursorHelper cursorHelper = new CursorHelper();
         DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t = null;
+        int j;
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
@@ -30,7 +33,13 @@ public class GameModel {
 
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
 
-        for (int i = 1; i <= numGames; i++) {
+        if (activity == 1){
+            j = 1;
+        }else{
+            j = Integer.valueOf(dbHelper.getNewestGame())- 2;
+        }
+
+        for (int i = j; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
             p = null;
             s = null;
             d = null;
@@ -38,9 +47,10 @@ public class GameModel {
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
 
-                date = cursorHelper.getTimeById(i, dbHelper);
-                d = dateHelper.gameDate(date);
+            Log.i("GameModel", String.valueOf(arrayListPlayer) + arrayListScore + i);
 
+            date = cursorHelper.getTimeById(i, dbHelper);
+            d = dateHelper.gameDate(date);
 
             if (arrayListPlayer.size() == 2){
                 t = "2 Player Game";

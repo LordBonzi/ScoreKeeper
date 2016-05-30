@@ -77,7 +77,7 @@ public class Home extends AppCompatActivity
         recyclerViewRecent.setLayoutManager(mLayoutManager);
 
         try {
-            ArrayList<GameModel> gameModel = GameModel.createGameModel(recentNumGames(), dbHelper);
+            ArrayList<GameModel> gameModel = GameModel.createGameModel(recentNumGames(), dbHelper, 2);
             adapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 2);
             recyclerViewRecent.setAdapter(adapter);
         } catch (Exception e) {

@@ -20,11 +20,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnLongClickListener {
 
     public static int gameID;
     public static Button buttonP1;
@@ -60,9 +61,10 @@ public class MainActivity extends AppCompatActivity
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
+        buttonP1.setOnLongClickListener(this);
 
         buttonP2 = (Button) findViewById(R.id.buttonP2);
-        buttonP2.setOnClickListener(this);
+        buttonP2.setOnLongClickListener(this);
 
         textViewP1 = (TextView)findViewById(R.id.textViewP1);
         textViewP2 = (TextView)findViewById(R.id.textViewP2);
@@ -136,6 +138,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
             case R.id.buttonP1:
                 smallLayout.onClick(buttonP1, dbHelper, gameID);
@@ -147,6 +150,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
 
     public void saveInfo(){
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
@@ -217,8 +221,24 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-}
+    @Override
+    public boolean onLongClick(View v) {
 
+        Toast.makeText(this, "Long press", Toast.LENGTH_LONG).show();
+
+        switch (v.getId()) {
+            case R.id.buttonP1:
+                smallLayout.onLongClick(buttonP1, dbHelper, gameID);
+                break;
+
+            case R.id.buttonP2:
+                smallLayout.onLongClick(buttonP2, dbHelper, gameID);
+
+                break;
+        }
+        return true;
+    }
+}
 
 class SmallLayout extends Activity{
     public static Integer P1Score =0 , P2Score =0;
@@ -250,6 +270,18 @@ class SmallLayout extends Activity{
             button.setText(String.valueOf(P1Score));
         }else {
             P2Score += 1;
+            button.setText(String.valueOf(P2Score));
+        }
+
+        updateScores(dbHelper, id);
+    }
+    public void onLongClick(Button button, ScoreDBAdapter dbHelper, int id){
+
+        if (button == MainActivity.buttonP1){
+            P1Score -= 1;
+            button.setText(String.valueOf(P1Score));
+        }else {
+            P2Score -= 1;
             button.setText(String.valueOf(P2Score));
         }
 

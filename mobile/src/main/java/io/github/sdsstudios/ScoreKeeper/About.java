@@ -8,20 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-public class About extends AppCompatActivity
-        implements View.OnClickListener {
-    Button buttonAbout;
-    Intent url;
-    String url_str = "https://github.com/SDS-Studios/ScoreKeeper";
+public class About extends AppCompatActivity implements View.OnClickListener {
+
+    private Button buttonAbout;
+    private Intent url;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         url = new Intent(Intent.ACTION_VIEW);
-        url.setData(Uri.parse(url_str));
+        url.setData(Uri.parse(getResources().getString(R.string.git_link)));
         buttonAbout = (Button)findViewById(R.id.buttonInfo);
         buttonAbout.setOnClickListener(this);
     }

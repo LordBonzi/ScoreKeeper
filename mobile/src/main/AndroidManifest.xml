@@ -12,36 +12,46 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-        android:name=".Home"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:name=".Home"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".NewGame"
             android:label="@string/new_game"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".History"
             android:label="@string/action_history"
+            android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".About"
             android:label="@string/About"
             android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".EditGame"
+            android:label="@string/title_activity_edit_game"
+            android:parentActivityName=".History"
             android:theme="@style/AppTheme.NoActionBar"/>
 
 
     </application>
-
 
 </manifest>

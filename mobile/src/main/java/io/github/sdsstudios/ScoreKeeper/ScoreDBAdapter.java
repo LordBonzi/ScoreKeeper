@@ -7,7 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -83,16 +82,14 @@ public class ScoreDBAdapter {
 
     public String getNewestGame(){
 
-        String value;
+        String value = null;
 
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
         cursor.moveToLast();
 
         int index = cursor.getColumnIndex(KEY_ROWID);
 
-        Log.i(TAG, String.valueOf(index));
-
-        value = cursor.getString(index);
+            value = cursor.getString(index);
 
         return value;
     }

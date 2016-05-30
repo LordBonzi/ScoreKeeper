@@ -20,7 +20,7 @@ public class DateHelper {
     private String dateStr = null;
     private Date theDate;
 
-    public String gameDate(String dateArray){
+    public String gameDate(String dateArray) {
 
         try {
             theDate = simpleDateFormat.parse(dateArray);

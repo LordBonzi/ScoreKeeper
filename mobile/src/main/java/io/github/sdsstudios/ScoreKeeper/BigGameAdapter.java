@@ -81,7 +81,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE,gameID );
                 }
 
-
                 return true;
             }
         });

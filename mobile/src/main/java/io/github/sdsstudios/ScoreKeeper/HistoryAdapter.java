@@ -21,13 +21,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private List<GameModel> mGameModel;
     private Context context;
     private RelativeLayout relativeLayout;
+    private int mActivity;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout) {
+    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity) {
         mGameModel = gameModel;
         mdbHelper = dbHelper;
         context = context1;
         relativeLayout = layout;
+        mActivity = activity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -49,7 +51,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        GameModel gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
+        GameModel gameModel;
+
+        if (mActivity == 1){
+            gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
+        }else{
+            gameModel = mGameModel.get(mGameModel.size() - position);
+        }
 
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
         holder.textViewHistoryScore.setText(gameModel.getScore());
@@ -74,7 +82,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public int getItemCount() {
         return mGameModel.size();
     }
-
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and

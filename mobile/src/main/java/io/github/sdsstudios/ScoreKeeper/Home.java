@@ -8,11 +8,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +28,12 @@ public class Home extends AppCompatActivity
     private Intent aboutIntent;
     private Intent editGameIntent;
     private RecyclerView recyclerViewRecent;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter adapter;
+    private ScoreDBAdapter dbHelper;
+    private RelativeLayout relativeLayout;
+    private CursorHelper cursorHelper;
+    private TextView textViewNoGames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +42,17 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dbHelper = new ScoreDBAdapter(this).open();
+        cursorHelper = new CursorHelper();
+
         newGameIntent = new Intent(this, NewGame.class);
         historyIntent = new Intent(this, History.class);
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
         editGameIntent = new Intent(this, EditGame.class);
+        relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
+        recyclerViewRecent = (RecyclerView) findViewById(R.id.recyclerViewRecent);
+        textViewNoGames = (TextView)findViewById(R.id.textViewHomeNoGames);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +62,7 @@ public class Home extends AppCompatActivity
             }
         });
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -53,7 +71,20 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerViewRecent.setLayoutManager(mLayoutManager);
+
+        try {
+            ArrayList<GameModel> gameModel = GameModel.createGameModel(5, dbHelper);
+            adapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 2);
+            recyclerViewRecent.setAdapter(adapter);
+        } catch (Exception e) {
+            textViewNoGames.setText(getResources().getString(R.string.no_games));
+        }
+
     }
+
 
     @Override
     public void onBackPressed() {

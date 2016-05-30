@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -22,15 +24,14 @@ public class History extends AppCompatActivity
     public static RelativeLayout relativeLayout;
     RecyclerView recyclerViewHistory;
     CursorHelper cursorHelper;
-    int gameID;
     Intent homeIntent;
     Intent settingsIntent;
     Intent aboutIntent;
     int numGames;
+    private TextView textViewNoGames;
     private RecyclerView.Adapter historyAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +42,6 @@ public class History extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-
-        gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         cursorHelper = new CursorHelper();
 
@@ -61,24 +60,21 @@ public class History extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerViewHistory = (RecyclerView)findViewById(R.id.historyList);
+        textViewNoGames = (TextView)findViewById(R.id.historyNoGames);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         recyclerViewHistory.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
-        displayRecyclerView();
-    }
-
-    public void displayRecyclerView(){
-
-        numGames = Integer.valueOf(dbHelper.getNewestGame());
-
-        ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
-
-        historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout);
-        recyclerViewHistory.setAdapter(historyAdapter);
-
+        try {
+            numGames = Integer.valueOf(dbHelper.getNewestGame());
+            ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper);
+            historyAdapter = new HistoryAdapter(gameModel, dbHelper, this, relativeLayout, 1);
+            recyclerViewHistory.setAdapter(historyAdapter);
+        } catch (Exception e) {
+            Log.i("HIstory", "catch");
+            textViewNoGames.setText(getResources().getString(R.string.no_games));
+        }
     }
 
     @Override

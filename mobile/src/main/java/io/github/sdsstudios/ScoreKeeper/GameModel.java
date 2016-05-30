@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.util.Log;
-
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +20,7 @@ public class GameModel {
         mType = type;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper){
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper) throws ParseException {
         CursorHelper cursorHelper = new CursorHelper();
         DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t = null;
@@ -35,14 +34,14 @@ public class GameModel {
         for (int i = 1; i <= numGames; i++) {
             p = null;
             s = null;
+            d = null;
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
-            date = cursorHelper.getTimeById( i, dbHelper);
 
-            Log.i("Gamemodel", String.valueOf(date));
+                date = cursorHelper.getTimeById(i, dbHelper);
+                d = dateHelper.gameDate(date);
 
-            d = dateHelper.gameDate(date);
 
             if (arrayListPlayer.size() == 2){
                 t = "2 Player Game";

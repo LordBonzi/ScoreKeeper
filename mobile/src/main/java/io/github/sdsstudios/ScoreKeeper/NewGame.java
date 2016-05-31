@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -105,25 +104,43 @@ public class NewGame extends AppCompatActivity
 
     public void addPlayers(){
         player = editTextPlayer.getText().toString();
-        Log.i(TAG, String.valueOf(players.size()));
 
-        if (players.size() >= 1) {
-            players.add(players.size(), player);
 
-            dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
 
+        if (player.equals("")){
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            };
+
+            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            snackbar.show();
         }else{
+
+            if (players.size() >= 1) {
+                players.add(players.size(), player);
+
+                dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
+
+            }else{
+
             players.add(players.size(), player);
 
             dbHelper.createGame(players, time, score);
             gameID = Integer.valueOf(dbHelper.getNewestGame());
+            }
+
+            editTextPlayer.setText("");
+
+            // specify an adapter (see also next example)
+            displayRecyclerView();
+            updateArray();
+
         }
 
-        editTextPlayer.setText("");
-
-        // specify an adapter (see also next example)
-        displayRecyclerView();
-        updateArray();
 
     }
 

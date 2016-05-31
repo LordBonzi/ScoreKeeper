@@ -27,11 +27,12 @@
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
     <string name="finish_game">Finish Game</string>
-    <string name="delete_game">Delete Game</string>
+    <string name="delete_game">Delete Game?</string>
+    <string name="must_have_name">The player must have a name!</string>
     <string name="finish_later">Finish Game Later</string>
     <string name="delete">Delete</string>
     <string name="quit_game">Quit Game?</string>
-    <string name="more_than_two_players">You must have two or more players.</string>
+    <string name="more_than_two_players">You must have two or more players!</string>
     <string name="quit_game_message">Are you sure you want to quit this game. You won\'t lose your progress as it has been automatically saved.
         You can continue if you want by reopening it
     in History.</string>

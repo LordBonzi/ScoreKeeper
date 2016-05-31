@@ -6,3 +6,6 @@ This is a android app that track your scores.
 
 !!! Many thanks to Philipp Jahoda @PhilJay for his graph library :) !!!
 
+!!! Many thanks to Google Design for their material design icons library. Finally an official place with the icons! :) !!!
+
+

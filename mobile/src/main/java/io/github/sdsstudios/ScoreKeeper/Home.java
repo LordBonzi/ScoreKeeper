@@ -126,7 +126,6 @@ public class Home extends AppCompatActivity
         return numGames;
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

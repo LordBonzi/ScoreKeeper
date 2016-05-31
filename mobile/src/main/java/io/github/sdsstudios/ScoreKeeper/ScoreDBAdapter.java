@@ -94,6 +94,10 @@ public class ScoreDBAdapter {
         return value;
     }
 
+    public boolean deleteGame(int id){
+        return mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null) > 0;
+    }
+
     public boolean deleteAllgames() {
 
         int doneDelete = 0;

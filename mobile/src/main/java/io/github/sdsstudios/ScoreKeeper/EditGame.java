@@ -1,10 +1,12 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +27,7 @@ public class EditGame extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
     private CursorHelper cursorHelper;
-    private Intent settingsIntent;
+    private Intent settingsIntent, homeIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class EditGame extends AppCompatActivity {
         cursorHelper = new CursorHelper();
 
         settingsIntent = new Intent(this, Settings.class);
+        homeIntent = new Intent(this, Home.class);
 
         textViewP1 = (TextView)findViewById(R.id.textViewEditGameP1);
         textViewP2 = (TextView)findViewById(R.id.textViewEditGameP2);
@@ -96,11 +99,11 @@ public class EditGame extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_delete).setVisible(true);
         return true;
     }
 
@@ -114,11 +117,37 @@ public class EditGame extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(settingsIntent);
-
             return true;
+        }else if (id == R.id.action_delete){
+            delete();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void delete(){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.delete_game);
+
+        builder.setMessage(R.string.delete_game_message);
+
+        builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dbHelper.deleteGame(gameID);
+                startActivity(homeIntent);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void saveInfo(){

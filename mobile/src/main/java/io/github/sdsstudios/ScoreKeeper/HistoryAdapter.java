@@ -63,10 +63,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.textViewHistoryInProgress.setTextColor(holder.color);
         }
 
-
         holder.textViewHistoryInProgress.setText(gameModel.getState());
-
-
         holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditGame.class);

@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,10 +47,9 @@ public class CursorHelper {
         }else if (com  == 0){
             s = "COMPLETED";
         }
+        Log.i("Cursor Helper", s);
 
         return s;
     }
-
-
 
 }

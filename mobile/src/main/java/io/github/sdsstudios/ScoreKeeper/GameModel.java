@@ -39,7 +39,8 @@ public class GameModel {
             j = Integer.valueOf(dbHelper.getNewestGame())- numGames;
         }
 
-        for (int i = j; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
+        for (int i = 1; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
+            progress = "";
             p = null;
             s = null;
             t = null;
@@ -73,9 +74,9 @@ public class GameModel {
             }else if (arrayListPlayer.size() == 1){
                 t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
                 p = String.valueOf(arrayListPlayer.get(0));
-                s = String.valueOf(arrayListScore.get(0));
-            }
-
+                s = String.valueOf(
+            arrayListScore.get(0));
+        }
             if (activity == 1){
                 progress = cursorHelper.getCompletedById(i, dbHelper);
                 if (progress.equals("IN PROGRESS")){
@@ -84,8 +85,13 @@ public class GameModel {
                 }
             }else if (activity == 2){
                 progress = cursorHelper.getCompletedById(i, dbHelper);
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+                if (progress.equals("COMPLETED")){
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress));
 
+                }
+            }else if (activity == 3 ){
+                progress = cursorHelper.getCompletedById(i, dbHelper);
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress));
             }
 
         }

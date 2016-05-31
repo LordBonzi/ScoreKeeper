@@ -201,13 +201,44 @@ public class Home extends AppCompatActivity {
             dbHelper.open();
 
             try {
+                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+                    case 1:
+                        textViewHome.setText(R.string.games_in_progress);
+                        break;
+
+                    case 2:
+                        textViewHome.setText(R.string.completed_games);
+                        break;
+
+                    case 3:
+                        textViewHome.setText(R.string.games_you_have_played);
+                        break;
+
+                }
+
                 numGames = Integer.valueOf(dbHelper.getNewestGame());
                 ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER));
                 historyAdapter = new HistoryAdapter(gameModel, dbHelper, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
                 recyclerViewHome.setAdapter(historyAdapter);
             } catch (Exception e) {
                 e.printStackTrace();
-                textViewHome.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
+                    case 1:
+                        textViewHome.setText(R.string.no_games_started);
+                        break;
+
+                    case 2:
+                        textViewHome.setText(R.string.no_completed_games);
+                        break;
+
+                    case 3:
+                        textViewHome.setText(R.string.no_games);
+                        break;
+
+
+                }
+
             }
             return rootView;
         }
@@ -233,7 +264,7 @@ public class Home extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -243,6 +274,8 @@ public class Home extends AppCompatActivity {
                     return getResources().getString(R.string.in_progress);
                 case 1:
                     return getResources().getString(R.string.completed);
+                case 2:
+                    return getResources().getString(R.string.all_games);
 
             }
             return null;

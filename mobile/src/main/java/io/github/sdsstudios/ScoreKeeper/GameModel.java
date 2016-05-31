@@ -11,18 +11,20 @@ public class GameModel {
     private String mScore;
     private String mType;
     private String mDate;
+    private String mProgress;
 
-    public GameModel(String players, String score, String date, String type) {
+    public GameModel(String players, String score, String date, String type, String progress) {
         mPlayers = players;
         mScore = score;
         mDate = date;
         mType = type;
+        mProgress = progress;
     }
 
     public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity) {
         CursorHelper cursorHelper = new CursorHelper();
         DateHelper dateHelper = new DateHelper();
-        String p, s ,d ,t = null;
+        String p, s ,d ,t, progress = null;
         int j;
 
         ArrayList arrayListPlayer;
@@ -40,6 +42,7 @@ public class GameModel {
         for (int i = j; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
             p = null;
             s = null;
+            t = null;
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
@@ -73,7 +76,18 @@ public class GameModel {
                 s = String.valueOf(arrayListScore.get(0));
             }
 
-            gameModelArrayList.add(new GameModel(p , s , d, t));
+            if (activity == 1){
+                progress = cursorHelper.getCompletedById(i, dbHelper);
+                if (progress.equals("IN PROGRESS")){
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+
+                }
+            }else if (activity == 2){
+                progress = cursorHelper.getCompletedById(i, dbHelper);
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+
+            }
+
         }
         return gameModelArrayList;
     }
@@ -92,6 +106,10 @@ public class GameModel {
 
     public String getType() {
         return mType;
+    }
+
+    public String getState() {
+        return mProgress;
     }
 
 }

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         buttonP1.setOnClickListener(this);
         buttonP1.setOnLongClickListener(this);
 
+
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         buttonP2.setOnClickListener(this);
         buttonP2.setOnLongClickListener(this);
@@ -152,13 +153,14 @@ public class MainActivity extends AppCompatActivity
 
         builder.setMessage(R.string.quit_game_message);
 
-        builder.setNeutralButton(R.string.finish_later, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 startActivity(homeIntent);
             }
         });
-        builder.setPositiveButton(R.string.finish_game, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                dbHelper.updateGame(null, null, 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
                 startActivity(homeIntent);
             }
         });
@@ -249,7 +251,7 @@ class SmallLayout extends Activity{
         scoresArray.set(0, String.valueOf(P1Score));
         scoresArray.set(1, String.valueOf(P2Score));
 
-        dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
+        dbHelper.updateGame(scoresArray, null, 1, ScoreDBAdapter.KEY_SCORE, id);
     }
 
 }

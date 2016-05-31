@@ -81,7 +81,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mDataset.size());
 
-        mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+        mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
         Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed", Snackbar.LENGTH_LONG)
                 .setAction("Undo", onClickListener);
         snackbar.show();
@@ -92,7 +92,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         mDataset.add(backupIndex, backup);
         notifyItemRemoved(backupIndex);
         notifyItemRangeChanged(backupIndex, mDataset.size());
-        mDbHelper.updateGame(mDataset, null, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+        mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
 
         snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo Complete for removal of " + backup, Snackbar.LENGTH_SHORT);
         snackbar.show();

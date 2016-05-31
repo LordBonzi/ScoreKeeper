@@ -19,6 +19,7 @@ public class ScoreDBAdapter {
     public static final String KEY_SCORE = "_score";
     public static final String KEY_PLAYERS = "_players";
     public static final String KEY_TIME = "_time";
+    public static final String KEY_COMPLETED = "_completed";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
@@ -28,7 +29,8 @@ public class ScoreDBAdapter {
                     KEY_ROWID + " integer PRIMARY KEY autoincrement," +
                     KEY_PLAYERS + "," +
                     KEY_SCORE + " , " +
-                    KEY_TIME +
+                    KEY_TIME + " , " +
+                    KEY_COMPLETED +
                     " );";
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
@@ -57,25 +59,32 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String time, String request, int id) {
+    public long updateGame(ArrayList array, String time, int completed, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
-        if (request == KEY_TIME){
+        if (request.equals(KEY_TIME)){
             initialValues.put(request, time);
 
-        }else {
+        }else if (request.equals(KEY_PLAYERS) || request.equals(KEY_SCORE)){
             initialValues.put(request, convertToString(array));
+        }else if (request.equals(KEY_COMPLETED)){
+
+            initialValues.put(request, completed);
+
         }
+
+
         return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
     }
 
-    public long createGame(ArrayList players, String time, ArrayList score) {
+    public long createGame(ArrayList players, String time, ArrayList score, int completed) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_SCORE, convertToString(score));
         initialValues.put(KEY_TIME, time);
+        initialValues.put(KEY_COMPLETED, completed);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
@@ -84,7 +93,7 @@ public class ScoreDBAdapter {
 
         String value = null;
 
-        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE}, null, null, null, null, null);
+        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED}, null, null, null, null, null);
         cursor.moveToLast();
 
         int index = cursor.getColumnIndex(KEY_ROWID);
@@ -108,11 +117,11 @@ public class ScoreDBAdapter {
     public Cursor fetchGamesById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
-            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME},
+            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED},
                     null, null, null, null, null);
 
         } else {
-            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME},
+            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED},
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
         }
@@ -124,7 +133,7 @@ public class ScoreDBAdapter {
 
     public Cursor fetchAllGames() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME},
+        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED},
                 null, null, null, null, null);
 
         if (mCursor != null) {

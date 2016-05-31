@@ -60,7 +60,7 @@ public class NewGame extends AppCompatActivity
         time = sdfDate.format(now);
 
         players = new ArrayList<>();
-        playerList = (RecyclerView)findViewById(R.id.historyList);
+        playerList = (RecyclerView)findViewById(R.id.playerList);
 
         newGameCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.newGameLayout);
 
@@ -123,13 +123,13 @@ public class NewGame extends AppCompatActivity
             if (players.size() >= 1) {
                 players.add(players.size(), player);
 
-                dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
+                dbHelper.updateGame(players, time , 1, ScoreDBAdapter.KEY_PLAYERS, gameID);
 
             }else{
 
             players.add(players.size(), player);
 
-            dbHelper.createGame(players, time, score);
+            dbHelper.createGame(players, time, score, 1);
             gameID = Integer.valueOf(dbHelper.getNewestGame());
             }
 
@@ -191,7 +191,7 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
-                    dbHelper.updateGame(score, time, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(score, time, 1, ScoreDBAdapter.KEY_SCORE, gameID);
                     startActivity(mainActivityIntent);
                 }
 

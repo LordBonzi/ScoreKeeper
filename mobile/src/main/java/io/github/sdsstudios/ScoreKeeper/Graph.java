@@ -52,7 +52,6 @@ public class Graph extends AppCompatActivity{
         entries.add(new Entry(4f, 0));
         entries.add(new Entry(8f, 1));
 
-
         LineDataSet dataset = new LineDataSet(entries, "# of Calls");
 
 

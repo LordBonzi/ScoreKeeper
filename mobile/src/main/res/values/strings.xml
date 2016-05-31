@@ -32,10 +32,10 @@
     <string name="games_you_have_played">Games you have played:</string>
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
-    <string name="complete_game">Finish Game</string>
+    <string name="complete_game">Finish</string>
     <string name="delete_game">Delete Game?</string>
     <string name="must_have_name">The player must have a name!</string>
-    <string name="complete_later">Finish Game Later</string>
+    <string name="complete_later">Finish Later</string>
     <string name="delete">Delete</string>
     <string name="completed">COMPLETED</string>
     <string name="completed_games">Completed Games:</string>

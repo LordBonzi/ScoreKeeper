@@ -68,8 +68,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void removeAt(int position) {
 
-
-
         backup = mDataset.get(position);
         mDataset.remove(position);
 

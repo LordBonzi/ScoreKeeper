@@ -14,7 +14,11 @@
     <string name="loser">Loser:</string>
     <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
-    <string name="about_page_info">This is the info page of ScoreKeeper. \n If you encounter any problems, feel free to submit them to our github. \n https://github.com/SDS-Studios/ScoreKeeper</string>
+    <string name="about_page_info">This is the info page of ScoreKeeper.
+        \n If you encounter any problems, feel free to submit them to our github.
+        \n https://github.com/SDS-Studios/ScoreKeeper
+        \n\n For donate options put a joke about my age and beer
+    </string>
     <string name="github">Our Github</string>
     <string name="website">https://sds-studios.github.io/</string>
     <string name="title_activity_home">Home</string>
@@ -31,6 +35,7 @@
     <string name="must_have_name">The player must have a name!</string>
     <string name="finish_later">Finish Game Later</string>
     <string name="delete">Delete</string>
+    <string name="graph">Graph</string>
     <string name="quit_game">Quit Game?</string>
     <string name="more_than_two_players">You must have two or more players!</string>
     <string name="quit_game_message">Are you sure you want to quit this game. You won\'t lose your progress as it has been automatically saved.

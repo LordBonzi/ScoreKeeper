@@ -19,15 +19,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class EditGame extends AppCompatActivity {
-    ArrayList arrayListPlayers, arrayListScores;
     String date;
     int gameID;
+    private ArrayList arrayListPlayers, arrayListScores;
     private TextView textViewP1, textViewP2, textViewScoreP1, textViewScoreP2, textViewDate;
     private RelativeLayout relativeLayout;
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
     private CursorHelper cursorHelper;
-    private Intent settingsIntent, homeIntent;
+    private Intent settingsIntent, homeIntent, graphIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class EditGame extends AppCompatActivity {
         cursorHelper = new CursorHelper();
 
         settingsIntent = new Intent(this, Settings.class);
+        graphIntent = new Intent(this, Graph.class);
         homeIntent = new Intent(this, Home.class);
 
         textViewP1 = (TextView)findViewById(R.id.textViewEditGameP1);
@@ -104,6 +105,7 @@ public class EditGame extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_delete).setVisible(true);
+        menu.findItem(R.id.action_graph).setVisible(true);
         return true;
     }
 
@@ -120,6 +122,9 @@ public class EditGame extends AppCompatActivity {
             return true;
         }else if (id == R.id.action_delete){
             delete();
+        }else if (id == R.id.action_graph){
+            graphIntent.putExtra("gameID", gameID);
+            startActivity(graphIntent);
         }
 
         return super.onOptionsItemSelected(item);

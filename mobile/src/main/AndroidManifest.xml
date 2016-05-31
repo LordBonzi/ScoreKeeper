@@ -49,6 +49,12 @@
             android:parentActivityName=".History"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity
+            android:name=".Graph"
+            android:label="@string/graph"
+            android:parentActivityName=".EditGame"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
 
     </application>
 

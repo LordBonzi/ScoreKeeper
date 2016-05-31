@@ -8,6 +8,9 @@
     <color name="recyerViewBackground">#E0E0E0</color>
     <color name="divider">#E0E0E0</color>
     <color name="colorTitleText">#ffffffff</color>
-
+    <color name="start">#4CAF50</color>
+    <color name="stop">#F44336</color>
+    <color name="stop_background">#EF5350</color>
+    <color name="button_background">#fff</color>
 
 </resources>

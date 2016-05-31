@@ -1,17 +1,21 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
+import android.content.Context;
+
 import java.util.ArrayList;
 
 /**
  * Created by Seth Schroeder on 22/05/2016.
  */
 
-public class GameModel {
+public class GameModel{
     private String mPlayers;
     private String mScore;
     private String mType;
     private String mDate;
     private String mProgress;
+
 
     public GameModel(String players, String score, String date, String type, String progress) {
         mPlayers = players;
@@ -21,7 +25,7 @@ public class GameModel {
         mProgress = progress;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity) {
+    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity, Context context) {
         CursorHelper cursorHelper = new CursorHelper();
         DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t, progress = null;
@@ -78,19 +82,27 @@ public class GameModel {
             arrayListScore.get(0));
         }
             if (activity == 1){
-                progress = cursorHelper.getCompletedById(i, dbHelper);
-                if (progress.equals("IN PROGRESS")){
+                if (cursorHelper.getCompletedById(i, dbHelper)== 1){
+                    progress = context.getResources().getString(R.string.in_progress);
+
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress));
 
                 }
             }else if (activity == 2){
-                progress = cursorHelper.getCompletedById(i, dbHelper);
-                if (progress.equals("COMPLETED")){
+                if (cursorHelper.getCompletedById(i, dbHelper)== 0){
+                    progress = context.getResources().getString(R.string.completed);
+
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress));
 
                 }
+
             }else if (activity == 3 ){
-                progress = cursorHelper.getCompletedById(i, dbHelper);
+
+                if (cursorHelper.getCompletedById(i, dbHelper) == 0){
+                    progress = context.getResources().getString(R.string.completed);
+                }else if(cursorHelper.getCompletedById(i, dbHelper) == 1){
+                    progress = context.getResources().getString(R.string.in_progress);
+                }
                 gameModelArrayList.add(new GameModel(p , s , d, t, progress));
             }
 

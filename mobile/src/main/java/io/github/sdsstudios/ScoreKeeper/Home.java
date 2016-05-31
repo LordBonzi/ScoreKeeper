@@ -34,7 +34,6 @@ public class Home extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private ScoreDBAdapter dbHelper;
     private RelativeLayout relativeLayout;
-    private TextView textViewNoGames;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -74,7 +73,6 @@ public class Home extends AppCompatActivity {
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
-        textViewNoGames = (TextView)findViewById(R.id.textViewHomeNoGamesHome);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -217,7 +215,7 @@ public class Home extends AppCompatActivity {
                 }
 
                 numGames = Integer.valueOf(dbHelper.getNewestGame());
-                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER));
+                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
                 historyAdapter = new HistoryAdapter(gameModel, dbHelper, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
                 recyclerViewHome.setAdapter(historyAdapter);
             } catch (Exception e) {

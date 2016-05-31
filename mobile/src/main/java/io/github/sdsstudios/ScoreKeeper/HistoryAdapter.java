@@ -59,7 +59,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.textViewHistoryDate.setText(gameModel.getDate());
         holder.textViewHistoryType.setText(gameModel.getType());
 
-        if (gameModel.getState().equals("IN PROGRESS")) {
+        if (gameModel.getState().equals(holder.inProgress)) {
             holder.textViewHistoryInProgress.setTextColor(holder.color);
         }
 
@@ -93,6 +93,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView textViewHistoryInProgress;
         public RelativeLayout relativeLayout;
         public int color;
+        public String inProgress;
 
         public ViewHolder(View v) {
             super(v);
@@ -103,6 +104,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             textViewHistoryInProgress = (TextView)v.findViewById(R.id.textViewInProgress);
             relativeLayout = (RelativeLayout)v.findViewById(R.id.historyLayout);
             color = v.getResources().getColor(R.color.colorAccent);
+            inProgress = v.getResources().getString(R.string.in_progress);
 
 
         }

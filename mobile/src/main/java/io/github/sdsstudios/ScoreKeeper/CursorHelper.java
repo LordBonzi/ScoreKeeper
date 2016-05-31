@@ -36,18 +36,13 @@ public class CursorHelper {
         return s;
     }
 
-    public String getCompletedById(int i, ScoreDBAdapter dbHelper){
-        String s = null;
+    public int getCompletedById(int i, ScoreDBAdapter dbHelper){
+        int s;
 
         Cursor cursor = dbHelper.fetchGamesById(i);
         int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_COMPLETED);
-        int com = cursor.getInt(index);
-        if (com == 1){
-            s = "IN PROGRESS";
-        }else if (com  == 0){
-            s = "COMPLETED";
-        }
-        Log.i("Cursor Helper", s);
+        s = cursor.getInt(index);
+
 
         return s;
     }

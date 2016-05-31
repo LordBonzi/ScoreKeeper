@@ -37,10 +37,10 @@
     <string name="must_have_name">The player must have a name!</string>
     <string name="complete_later">Finish Game Later</string>
     <string name="delete">Delete</string>
-    <string name="completed">Completed</string>
+    <string name="completed">COMPLETED</string>
     <string name="completed_games">Completed Games:</string>
-    <string name="games_in_progress">Games in progress:</string>
-    <string name="in_progress">In Progress</string>
+    <string name="games_in_progress">Unfinished Games:</string>
+    <string name="in_progress">UNFINISHED</string>
     <string name="graph">Graph</string>
     <string name="all_games">All Games</string>
     <string name="quit_game">Quit Game?</string>

@@ -53,6 +53,7 @@
             android:id="@+id/buttonP2"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:background="@color/button_background"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
@@ -60,20 +61,11 @@
             android:text="3"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
 
-        <Chronometer
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:text="Chronometer"
-            android:textColor="#4169E1"
-            android:textSize="20dp" />
-
         <Button
             android:id="@+id/buttonP1"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:background="@color/button_background"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -93,6 +85,28 @@
             android:text="Alfie"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/secondary_text" />
+
+        <Button
+            android:text="00:09"
+            android:background="@color/button_background"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:id="@+id/buttonChronometer"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="normal"
+            android:id="@+id/fabChronometer"
+            android:layout_marginTop="62dp"
+            android:layout_below="@+id/buttonChronometer"
+            android:layout_toRightOf="@+id/textViewP1"
+            android:layout_toEndOf="@+id/textViewP1" />
     </RelativeLayout>
 
 

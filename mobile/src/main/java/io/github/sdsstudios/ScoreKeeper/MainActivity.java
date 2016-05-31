@@ -3,7 +3,12 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     public static Button buttonP1;
     public static Button buttonP2;
     public static boolean firstTime = true;
+    Button buttonChronometer;
+    FloatingActionButton fabChronometer;
     TextView textViewP1;
     TextView textViewP2;
     RecyclerView bigGameList;
@@ -39,6 +47,17 @@ public class MainActivity extends AppCompatActivity
     ScoreDBAdapter dbHelper;
     private RecyclerView.Adapter bigGameAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    //chronometer
+    long starttime = 0L;
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedtime = 0L;
+    int t = 1;
+    int secs = 0;
+    int mins = 0;
+    int milliseconds = 0;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +82,12 @@ public class MainActivity extends AppCompatActivity
         textViewP2 = (TextView)findViewById(R.id.textViewP2);
 
         bigGameList = (RecyclerView)findViewById(R.id.bigGameList);
+
+        buttonChronometer = (Button) findViewById(R.id.buttonChronometer);
+        buttonChronometer.setOnClickListener(this);
+
+        fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
+        fabChronometer.setOnClickListener(this);
 
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
@@ -96,6 +121,7 @@ public class MainActivity extends AppCompatActivity
         }else{
             normal.setVisibility(View.VISIBLE);
             smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+
 
         }
 
@@ -138,11 +164,51 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.buttonP2:
                 smallLayout.onClick(buttonP2, dbHelper, gameID);
+                break;
 
+            case R.id.buttonChronometer:
+
+                break;
+
+            case R.id.fabChronometer:
+                if (t == 1) {
+                    starttime = SystemClock.uptimeMillis();
+                    handler.postDelayed(updateTimer, 0);
+                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                    buttonChronometer.setTextColor(getResources().getColor(R.color.start));
+
+                    t = 0;
+                } else {
+                    timeSwapBuff += timeInMilliseconds;
+                    handler.removeCallbacks(updateTimer);
+                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+                    buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+                    t = 1;
+
+                }
                 break;
         }
     }
 
+    public Runnable updateTimer = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - starttime;
+
+            updatedtime = timeSwapBuff + timeInMilliseconds;
+
+            secs = (int) (updatedtime / 1000);
+            mins = secs / 60;
+            secs = secs % 60;
+            milliseconds = (int) (updatedtime % 1000);
+
+            buttonChronometer.setText("" + mins + ":" + String.format("%02d", secs) + ":"
+                    + String.format("%03d", milliseconds));
+            handler.postDelayed(this, 0);
+        }
+
+    };
 
     @Override
     public void onBackPressed() {

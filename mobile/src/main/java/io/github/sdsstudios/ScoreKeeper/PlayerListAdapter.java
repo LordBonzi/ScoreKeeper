@@ -1,11 +1,13 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.media.Image;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,7 +18,6 @@ import java.util.ArrayList;
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>{
     Snackbar snackbar = null;
     private String backup;
-    private int backupIndex;
     private ArrayList<String> mDataset;
     private ScoreDBAdapter mDbHelper;
     private int mGameID;
@@ -45,7 +46,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
 
@@ -53,7 +54,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removeAt(holder.getAdapterPosition());
+                    removeAt(position);
                 }
             });
 
@@ -67,6 +68,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void removeAt(int position) {
 
+
+
+        backup = mDataset.get(position);
+        mDataset.remove(position);
+
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,27 +80,23 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             }
         };
 
-        backup = mDataset.get(mDataset.size() - 1 );
-        backupIndex = mDataset.indexOf(backup);
-        mDataset.remove(position);
-
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mDataset.size());
 
         mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
-        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed", Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
                 .setAction("Undo", onClickListener);
         snackbar.show();
 
     }
 
     public void undoPlayerRemoval(){
-        mDataset.add(backupIndex, backup);
-        notifyItemRemoved(backupIndex);
-        notifyItemRangeChanged(backupIndex, mDataset.size());
+        mDataset.add(mDataset.size(), backup);
+        notifyItemRemoved(mDataset.size());
+        notifyItemRangeChanged(mDataset.size(), mDataset.size());
         mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
 
-        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo Complete for removal of " + backup, Snackbar.LENGTH_SHORT);
+        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
@@ -104,12 +106,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textViewPlayer;
-        public Button buttonDelete;
+        public ImageButton buttonDelete;
 
         public ViewHolder(View v) {
             super(v);
             textViewPlayer = (TextView) v.findViewById(R.id.textViewPlayer);
-            buttonDelete = (Button) v.findViewById(R.id.buttonDelete);
+            buttonDelete = (ImageButton) v.findViewById(R.id.buttonDelete);
 
         }
         }

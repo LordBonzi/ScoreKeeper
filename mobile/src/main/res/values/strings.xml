@@ -32,7 +32,7 @@
     <string name="games_you_have_played">Games you have played:</string>
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
-    <string name="complete_game">Complete Game</string>
+    <string name="complete_game">Finish Game</string>
     <string name="delete_game">Delete Game?</string>
     <string name="must_have_name">The player must have a name!</string>
     <string name="complete_later">Finish Game Later</string>
@@ -49,6 +49,11 @@
         You can continue in the "In Progress" tab.</string>
 
     <string name="delete_game_message">Are you sure you want to delete this game. You will never get it back.</string>
+
+    <string name="quit_setup_question">Quit Setup?</string>
+    <string name="setp_game_message">Are you sure you want to quit the setup of game. You will never get it back.</string>
+
+    <string name="quit_setup">Quit Setup</string>
 
 
 </resources>

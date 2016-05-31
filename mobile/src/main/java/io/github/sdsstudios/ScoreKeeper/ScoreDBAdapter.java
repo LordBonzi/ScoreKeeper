@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -98,7 +99,7 @@ public class ScoreDBAdapter {
 
         int index = cursor.getColumnIndex(KEY_ROWID);
 
-            value = cursor.getString(index);
+        value = cursor.getString(index);
 
         return value;
     }
@@ -112,6 +113,22 @@ public class ScoreDBAdapter {
         int doneDelete = 0;
         doneDelete = mDb.delete(SQLITE_TABLE, null , null);
         return doneDelete > 0;
+    }
+
+    public int getNumGames(String request, String args){
+        int i =0;
+        Cursor cursor = null;
+
+        cursor = mDb.rawQuery("SELECT COUNT(*) FROM " + SQLITE_TABLE + " WHERE " + request + "='" + args + "'", null);
+
+        for (int o = 0; o < Integer.valueOf(getNewestGame()); o++) {
+
+            cursor.moveToNext();
+            if (cursor.getCount() > 0) {
+                i += cursor.getCount();
+            }
+        }
+        return i;
     }
 
     public Cursor fetchGamesById(int id) throws SQLException {

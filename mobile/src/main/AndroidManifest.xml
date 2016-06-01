@@ -42,6 +42,7 @@
         <activity
             android:name=".Settings"
             android:screenOrientation="portrait"
+            android:parentActivityName=".Home"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

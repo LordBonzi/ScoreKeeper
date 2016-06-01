@@ -1,8 +1,8 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,6 +13,7 @@ import android.widget.Button;
 public class Settings extends AppCompatActivity implements View.OnClickListener{
     private Button buttonDeleteALl;
     private ScoreDBAdapter dbHelper;
+    private Intent homeIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,8 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
+
+        homeIntent = new Intent(this, Home.class);
 
         buttonDeleteALl = (Button)findViewById(R.id.buttonDeleteAll);
         buttonDeleteALl.setOnClickListener(this);
@@ -43,12 +46,17 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        if (id == android.R.id.home) {
+        if (id == android.R.id.home){
             onBackPressed();
         }
 
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(homeIntent);
     }
 
     @Override

@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity
         savedInstanceState.putInt(STATE_P2, SmallLayout.P2Score);
         savedInstanceState.putBoolean(STATE_FT1, SmallLayout.ft1);
         savedInstanceState.putBoolean(STATE_FT2, SmallLayout.ft2);
-        savedInstanceState.putIntegerArrayList(STATE_FT2, SmallLayout.scoresArray);
+        savedInstanceState.putIntegerArrayList(STATE_SCORES, SmallLayout.scoresArray);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);

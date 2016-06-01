@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -159,7 +158,6 @@ public class Home extends AppCompatActivity {
         }
     }
 
-
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -225,17 +223,16 @@ public class Home extends AppCompatActivity {
 
                 switch (getArguments().getInt(ARG_SECTION_NUMBER)){
                     case 1:
-                        textViewHome.setText(R.string.no_games_started);
+                        textViewHome.setText(R.string.games_in_progress);
                         break;
 
                     case 2:
-                        textViewHome.setText(R.string.no_completed_games);
+                        textViewHome.setText(R.string.completed_games);
                         break;
 
                     case 3:
-                        textViewHome.setText(R.string.no_games);
+                        textViewHome.setText(R.string.games_you_have_played);
                         break;
-
 
                 }
 

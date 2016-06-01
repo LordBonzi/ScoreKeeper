@@ -23,8 +23,6 @@
             android:text="tsdfs"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-
-
         <RelativeLayout
             android:id="@+id/layoutEditGame"
             android:layout_width="match_parent"

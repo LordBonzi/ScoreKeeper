@@ -7,9 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
 
-import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 
 
@@ -29,7 +27,7 @@ public class ScoreDBAdapter {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
-                    KEY_ROWID + " integer PRIMARY KEY autoincrement," +
+                    KEY_ROWID + " ," +
                     KEY_PLAYERS + "," +
                     KEY_SCORE + " , " +
                     KEY_TIME + " , " +
@@ -83,8 +81,16 @@ public class ScoreDBAdapter {
     }
 
     public long createGame(ArrayList players, String time, ArrayList score, int completed) {
+        int id;
+        try{
+            id = Integer.parseInt(getNewestGame()) + 1;
+
+        }catch (Exception e){
+            id = 1;
+        }
 
         ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_ROWID, id);
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_SCORE, convertToString(score));
         initialValues.put(KEY_TIME, time);
@@ -102,13 +108,28 @@ public class ScoreDBAdapter {
 
         int index = cursor.getColumnIndex(KEY_ROWID);
 
-        value = cursor.getString(index);
+        try{
+            value = cursor.getString(index);
+
+        }catch (Exception e){
+            value = cursor.getString(0);
+
+        }
 
         return value;
     }
 
     public boolean deleteGame(int id){
-        return mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null) > 0;
+
+        mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
+
+        for (int i = 1; i < id; i++){
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(KEY_ROWID, i);
+
+        }
+
+        return true;
     }
 
     public boolean deleteAllgames() {

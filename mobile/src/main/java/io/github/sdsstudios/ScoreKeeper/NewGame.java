@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,7 +48,6 @@ public class NewGame extends AppCompatActivity
 
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
-    static final String STATE_SCORES = "scoresArray";
     static final String STATE_TIME = "time";
     static final String STATE_GAMEID = "gameid";
 
@@ -100,7 +97,6 @@ public class NewGame extends AppCompatActivity
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
-            score = savedInstanceState.getStringArrayList(STATE_PLAYER_NAME);
             gameID = savedInstanceState.getInt(STATE_GAMEID);
             time = savedInstanceState.getString(STATE_TIME);
             player = savedInstanceState.getString(STATE_PLAYER_NAME);
@@ -111,8 +107,6 @@ public class NewGame extends AppCompatActivity
             Date now = new Date();
             time = sdfDate.format(now);
             players = new ArrayList<>();
-
-
         }
 
     }
@@ -151,10 +145,9 @@ public class NewGame extends AppCompatActivity
 
     }
 
+
     public void addPlayers(){
         player = editTextPlayer.getText().toString();
-
-
 
         if (player.equals("")){
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -171,15 +164,16 @@ public class NewGame extends AppCompatActivity
 
             if (players.size() >= 1) {
                 players.add(players.size(), player);
-
                 dbHelper.updateGame(players, time , 1, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                createScoreArray();
 
             }else{
 
             players.add(players.size(), player);
-
             dbHelper.createGame(players, time, score, 1);
             gameID = Integer.valueOf(dbHelper.getNewestGame());
+            createScoreArray();
+
             }
 
             editTextPlayer.setText("");
@@ -201,7 +195,6 @@ public class NewGame extends AppCompatActivity
             savedInstanceState.putStringArrayList(STATE_PLAYERS, players);
             savedInstanceState.putString(STATE_PLAYER_NAME, player);
             savedInstanceState.putString(STATE_TIME, time);
-            savedInstanceState.putStringArrayList(STATE_SCORES, score);
         }
 
         // Always call the superclass so it can save the view hierarchy state
@@ -210,37 +203,43 @@ public class NewGame extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (players.size() > 0) {
+            AlertDialog dialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle(R.string.quit_setup_question);
+            builder.setTitle(R.string.quit_setup_question);
 
-        builder.setMessage(R.string.quit_setup_question);
+            builder.setMessage(R.string.quit_setup_question);
 
-        builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+            builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
 
-                try {
-                    dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
-                }catch (Exception e){
-                    dbHelper.deleteGame(0);
+                    try {
+                        dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
+                    } catch (Exception e) {
+                        dbHelper.deleteGame(0);
+                    }
+                    startActivity(homeIntent);
                 }
-                startActivity(homeIntent);
-            }
-        });
+            });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
 
-        dialog = builder.create();
-        dialog.show();
+            dialog = builder.create();
+            dialog.show();
+        }else{
+            startActivity(homeIntent);
+        }
     }
 
     public void createScoreArray(){
         try{
+            score.clear();
+
             updateArray();
             for (int i = 0; i < players.size(); i ++){
                 score.add(i, "0");
@@ -265,8 +264,6 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
-
-                createScoreArray();
 
                 //snackbar must have 2 or more players
 

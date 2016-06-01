@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,15 +46,27 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.Adapter bigGameAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    //savedinstancestate stuff
+    static final String STATE_T = "t";
+    static final String STATE_SECS = "secs";
+    static final String STATE_MINS = "mins";
+    static final String STATE_MILLISECS = "millis";
+    static final String STATE_P1 = "scoreP1";
+    static final String STATE_P2 = "scoreP2";
+    static final String STATE_GAMEID = "gameId";
+    static final String STATE_FT1 = "ft1";
+    static final String STATE_FT2 = "ft2";
+    static final String STATE_SCORES = "scores";
+
     //chronometer
-    long starttime = 0L;
-    long timeInMilliseconds = 0L;
-    long timeSwapBuff = 0L;
-    long updatedtime = 0L;
-    int t = 1;
-    int secs = 0;
-    int mins = 0;
-    int milliseconds = 0;
+    long starttime;
+    long timeInMilliseconds;
+    long timeSwapBuff;
+    long updatedtime;
+    int t ;
+    int secs ;
+    int mins ;
+    int milliseconds ;
     Handler handler = new Handler();
 
     @Override
@@ -67,12 +77,17 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        cursorHelper = new CursorHelper();
+
+        dbHelper = new ScoreDBAdapter(this);
+        dbHelper.open();
+        smallLayout = new SmallLayout();
+
         homeIntent = new Intent(this, Home.class);
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
         buttonP1.setOnLongClickListener(this);
-
 
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         buttonP2.setOnClickListener(this);
@@ -92,22 +107,40 @@ public class MainActivity extends AppCompatActivity
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
-        cursorHelper = new CursorHelper();
-
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
-        smallLayout = new SmallLayout();
-
-        gameID = Integer.valueOf(dbHelper.getNewestGame());
-
         playersArray = new ArrayList();
         playersArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
 
-        scoresArray = new ArrayList();
-        scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
-
         gameSize = playersArray.size();
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            t = savedInstanceState.getInt(STATE_T);
+            SmallLayout.P1Score = savedInstanceState.getInt(STATE_P1);
+            SmallLayout.P2Score = savedInstanceState.getInt(STATE_P2);
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            secs = savedInstanceState.getInt(STATE_SECS);
+            mins = savedInstanceState.getInt(STATE_MINS);
+            milliseconds = savedInstanceState.getInt(STATE_MILLISECS);
+            SmallLayout.ft1 = savedInstanceState.getBoolean(STATE_FT1);
+            SmallLayout.ft2 = savedInstanceState.getBoolean(STATE_FT2);
+            SmallLayout.scoresArray = savedInstanceState.getIntegerArrayList(STATE_SCORES);
+
+        }else {
+            smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+            starttime = 0L;
+            timeInMilliseconds = 0L;
+            timeSwapBuff = 0L;
+            updatedtime = 0L;
+            t = 1;
+            secs = 0;
+            mins = 0;
+            milliseconds = 0;
+
+            gameID = Integer.valueOf(dbHelper.getNewestGame());
+            scoresArray = new ArrayList();
+            scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+
+        }
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -120,13 +153,12 @@ public class MainActivity extends AppCompatActivity
             bigGameList.setAdapter(bigGameAdapter);
         }else{
             normal.setVisibility(View.VISIBLE);
-            smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
-
+            textViewP1.setText(String.valueOf(playersArray.get(0)));
+            textViewP2.setText(String.valueOf(playersArray.get(1)));
 
         }
 
-        textViewP1.setText(String.valueOf(playersArray.get(0)));
-        textViewP2.setText(String.valueOf(playersArray.get(1)));
+        chronometerClick();
 
     }
 
@@ -155,6 +187,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
+        savedInstanceState.putInt(STATE_SECS, secs);
+        savedInstanceState.putInt(STATE_MINS, mins);
+        savedInstanceState.putInt(STATE_MILLISECS, milliseconds);
+        savedInstanceState.putInt(STATE_T, t);
+        savedInstanceState.putInt(STATE_P1, SmallLayout.P1Score);
+        savedInstanceState.putInt(STATE_P2, SmallLayout.P2Score);
+        savedInstanceState.putBoolean(STATE_FT1, SmallLayout.ft1);
+        savedInstanceState.putBoolean(STATE_FT2, SmallLayout.ft2);
+        savedInstanceState.putIntegerArrayList(STATE_FT2, SmallLayout.scoresArray);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void chronometerClick(){
+        if (t == 1) {
+            starttime = SystemClock.uptimeMillis();
+            handler.postDelayed(updateTimer, 0);
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+            buttonChronometer.setTextColor(getResources().getColor(R.color.start));
+
+            t = 0;
+        } else {
+            timeSwapBuff += timeInMilliseconds;
+            handler.removeCallbacks(updateTimer);
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+            buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+            t = 1;
+
+        }
+    }
+
+    @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
@@ -171,21 +240,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.fabChronometer:
-                if (t == 1) {
-                    starttime = SystemClock.uptimeMillis();
-                    handler.postDelayed(updateTimer, 0);
-                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
-                    buttonChronometer.setTextColor(getResources().getColor(R.color.start));
-
-                    t = 0;
-                } else {
-                    timeSwapBuff += timeInMilliseconds;
-                    handler.removeCallbacks(updateTimer);
-                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-                    buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
-                    t = 1;
-
-                }
+                chronometerClick();
                 break;
         }
     }
@@ -261,10 +316,10 @@ public class MainActivity extends AppCompatActivity
 }
 
 class SmallLayout extends Activity{
-    public static Integer P1Score =0 , P2Score =0;
-    ArrayList scoresArray;
-    boolean ft1;
-    boolean ft2;
+    public static Integer P1Score , P2Score;
+    public static ArrayList scoresArray;
+    public static boolean ft1;
+    public static boolean ft2;
 
 
     public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int id){

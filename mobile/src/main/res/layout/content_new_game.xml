@@ -47,6 +47,15 @@
         android:layout_alignRight="@+id/buttonNewGame"
         android:layout_alignEnd="@+id/buttonNewGame" />
 
+    <Button
+        android:id="@+id/buttonAddPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_player"
+        android:layout_below="@+id/editTextPlayer"
+        android:layout_alignLeft="@+id/editTextPlayer"
+        android:layout_alignStart="@+id/editTextPlayer" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/playerList"
         android:layout_width="wrap_content"
@@ -57,16 +66,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textView2" />
-
-    <Button
-        android:id="@+id/buttonAddPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_player"
-        android:layout_marginTop="35dp"
-        android:layout_below="@+id/editTextPlayer"
-        android:layout_alignLeft="@+id/editTextPlayer"
-        android:layout_alignStart="@+id/editTextPlayer" />
 
 
 </RelativeLayout>

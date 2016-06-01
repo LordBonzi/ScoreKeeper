@@ -24,5 +24,6 @@
         android:orderInCategory="100"
         android:title="@string/graph"
         android:visible="false"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:enabled="true"/>
 </menu>

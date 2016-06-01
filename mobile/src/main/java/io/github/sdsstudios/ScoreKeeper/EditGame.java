@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -123,8 +124,9 @@ public class EditGame extends AppCompatActivity {
         }else if (id == R.id.action_delete){
             delete();
         }else if (id == R.id.action_graph){
-            graphIntent.putExtra("gameID", gameID);
-            startActivity(graphIntent);
+            Toast toast = Toast.makeText(this, R.string.graph_coming_soon,Toast.LENGTH_LONG );
+            toast.show();
+
         }
 
         return super.onOptionsItemSelected(item);

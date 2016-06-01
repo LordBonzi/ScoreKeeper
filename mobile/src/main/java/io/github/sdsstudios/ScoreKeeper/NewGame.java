@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +48,12 @@ public class NewGame extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
 
+    static final String STATE_PLAYERS = "playersArray";
+    static final String STATE_PLAYER_NAME = "player";
+    static final String STATE_SCORES = "scoresArray";
+    static final String STATE_TIME = "time";
+    static final String STATE_GAMEID = "gameid";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +65,10 @@ public class NewGame extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-
         cursorHelper = new CursorHelper();
-
         homeIntent = new Intent(this, Home.class);
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-        Date now = new Date();
-        time = sdfDate.format(now);
-
-        players = new ArrayList<>();
         playerList = (RecyclerView)findViewById(R.id.playerList);
-
         newGameCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.newGameLayout);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
@@ -97,6 +96,24 @@ public class NewGame extends AppCompatActivity
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
+            score = savedInstanceState.getStringArrayList(STATE_PLAYER_NAME);
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            time = savedInstanceState.getString(STATE_TIME);
+            player = savedInstanceState.getString(STATE_PLAYER_NAME);
+            updateArray();
+            displayRecyclerView();
+        } else {
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+            Date now = new Date();
+            time = sdfDate.format(now);
+            players = new ArrayList<>();
+
+
+        }
 
     }
 
@@ -176,6 +193,22 @@ public class NewGame extends AppCompatActivity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+
+        if (gameID != null) {
+            savedInstanceState.putInt(STATE_GAMEID, gameID);
+            savedInstanceState.putStringArrayList(STATE_PLAYERS, players);
+            savedInstanceState.putString(STATE_PLAYER_NAME, player);
+            savedInstanceState.putString(STATE_TIME, time);
+            savedInstanceState.putStringArrayList(STATE_SCORES, score);
+        }
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onBackPressed() {
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -186,7 +219,12 @@ public class NewGame extends AppCompatActivity
 
         builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
+
+                try {
+                    dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
+                }catch (Exception e){
+                    dbHelper.deleteGame(0);
+                }
                 startActivity(homeIntent);
             }
         });
@@ -201,6 +239,23 @@ public class NewGame extends AppCompatActivity
         dialog.show();
     }
 
+    public void createScoreArray(){
+        try{
+            updateArray();
+            for (int i = 0; i < players.size(); i ++){
+                score.add(i, "0");
+            }
+            dbHelper.updateGame(score, time, 1, ScoreDBAdapter.KEY_SCORE, gameID);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+        }
+
+
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonAddPlayer: {
@@ -211,15 +266,7 @@ public class NewGame extends AppCompatActivity
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
 
-                try{
-                    updateArray();
-                    for (int i = 0; i < players.size(); i ++){
-                        score.add(i, "0");
-                    }
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                createScoreArray();
 
                 //snackbar must have 2 or more players
 
@@ -236,7 +283,7 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
-                    dbHelper.updateGame(score, time, 1, ScoreDBAdapter.KEY_SCORE, gameID);
+                    createScoreArray();
                     startActivity(mainActivityIntent);
                 }
 

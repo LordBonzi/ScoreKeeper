@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 
 
@@ -21,6 +22,7 @@ public class ScoreDBAdapter {
     public static final String KEY_PLAYERS = "_players";
     public static final String KEY_TIME = "_time";
     public static final String KEY_COMPLETED = "_completed";
+    public static final String KEY_CHRONOMETER = "_chronometer";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
@@ -31,7 +33,8 @@ public class ScoreDBAdapter {
                     KEY_PLAYERS + "," +
                     KEY_SCORE + " , " +
                     KEY_TIME + " , " +
-                    KEY_COMPLETED +
+                    KEY_COMPLETED + " , " +
+                    KEY_CHRONOMETER +
                     " );";
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
@@ -94,7 +97,7 @@ public class ScoreDBAdapter {
 
         String value = null;
 
-        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED}, null, null, null, null, null);
+        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER}, null, null, null, null, null);
         cursor.moveToLast();
 
         int index = cursor.getColumnIndex(KEY_ROWID);
@@ -134,11 +137,11 @@ public class ScoreDBAdapter {
     public Cursor fetchGamesById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
-            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED},
+            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER},
                     null, null, null, null, null);
 
         } else {
-            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED},
+            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER},
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
         }
@@ -150,7 +153,7 @@ public class ScoreDBAdapter {
 
     public Cursor fetchAllGames() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED},
+        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER},
                 null, null, null, null, null);
 
         if (mCursor != null) {

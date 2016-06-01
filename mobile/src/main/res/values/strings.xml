@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
-    <string name="new_game">Start Game</string>
+    <string name="new_game">New Game</string>
     <string name="player_s_name">Player\'s name</string>
     <string name="add_player">Add Player</string>
     <string name="_0">0</string>
+    <string name="date">Date</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
@@ -56,6 +55,8 @@
     <string name="setp_game_message">Are you sure you want to quit the setup of game. You will never get it back.</string>
 
     <string name="quit_setup">Quit Setup</string>
+    <string name="players_and_scores">Players and Scores:</string>
+    <string name="length">Length:</string>
 
 
 </resources>

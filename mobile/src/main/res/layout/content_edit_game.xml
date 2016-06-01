@@ -1,86 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="io.github.sdsstudios.ScoreKeeper.EditGame"
     tools:showIn="@layout/activity_edit_game">
 
     <RelativeLayout
+        android:id="@+id/layoutEditGame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
-            android:id="@+id/textViewEditGameDate"
+            android:text="@string/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tsdfs"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <RelativeLayout
-            android:id="@+id/layoutEditGame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewEditGameDate"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textViewEditGameP1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:text="TextView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <TextView
-                android:id="@+id/textViewEditGameScore1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textViewEditGameP1"
-                android:layout_alignBottom="@+id/textViewEditGameP1"
-                android:layout_alignLeft="@+id/textViewEditGameScore2"
-                android:layout_alignStart="@+id/textViewEditGameScore2"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textViewEditGameP2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/textViewEditGameScore1"
-                android:text="TextView"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            <TextView
-                android:id="@+id/textViewEditGameScore2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewEditGameP1"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_toEndOf="@+id/textViewEditGameP1"
-                android:layout_toRightOf="@+id/textViewEditGameP1"
-                android:text="TextView" />
-
-        </RelativeLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewEditGame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textViewEditGameDate"
-            android:visibility="gone" />
+            android:id="@+id/textView3" />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="16/12/16"
+            android:focusableInTouchMode="false"
+            android:inputType="datetime"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_below="@+id/textView3"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="@string/length"
+            android:paddingBottom="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView6"
+            android:layout_below="@+id/editTextDate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName|time"
+            android:hint="10 mins"
+            android:id="@+id/editTextLength"
+            android:singleLine="true"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_below="@+id/textView6"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="@string/players_and_scores"
+            android:paddingBottom="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView4"
+            android:layout_below="@+id/editTextLength"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
     </RelativeLayout>
 
-
-</android.support.v4.widget.NestedScrollView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewEditGame"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:paddingBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/layoutEditGame" />
+</RelativeLayout>

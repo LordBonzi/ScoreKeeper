@@ -2,7 +2,7 @@
 
 [![Gitter](https://badges.gitter.im/SDS-Studios/ScoreKeeper.svg)](https://gitter.im/SDS-Studios/ScoreKeeper?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is a android app that track your scores.
+This is a android app that tracks scores.
 
 !!! Many thanks to Philipp Jahoda @PhilJay for his graph library :) !!!
 

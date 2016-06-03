@@ -40,7 +40,7 @@ public class EditGame extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("custom title");
+        getSupportActionBar().setTitle("WHAT SHOULD WE PUT HERE");
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");

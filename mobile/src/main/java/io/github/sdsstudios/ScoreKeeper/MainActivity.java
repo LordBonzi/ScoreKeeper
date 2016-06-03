@@ -194,6 +194,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
 

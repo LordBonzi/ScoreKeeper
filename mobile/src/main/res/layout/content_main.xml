@@ -86,26 +86,26 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/secondary_text" />
 
-        <Button
-            android:text="00:00:000"
-            android:background="@color/button_background"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:id="@+id/buttonChronometer"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             app:fabSize="normal"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/fab_margin"
             android:id="@+id/fabChronometer"
-            android:layout_marginTop="62dp"
-            android:layout_below="@+id/buttonChronometer"
-            android:layout_toRightOf="@+id/textViewP1"
-            android:layout_toEndOf="@+id/textViewP1" />
+            android:layout_below="@+id/buttonChronometer" />
+
+        <Button
+            android:text="00:00:000"
+            android:background="@color/button_background"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:clickable="false"
+            android:id="@+id/buttonChronometer"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+            android:layout_below="@+id/textViewP2"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 

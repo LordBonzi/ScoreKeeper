@@ -97,6 +97,20 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
                 .setAction("Undo", onClickListener);
         snackbar.show();
+        snackbar.setCallback(new Snackbar.Callback() {
+            @Override
+            public void onShown(Snackbar snackbar) {
+                super.onShown(snackbar);
+            }
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+                backup = null;
+
+            }
+        });
+
 
     }
 

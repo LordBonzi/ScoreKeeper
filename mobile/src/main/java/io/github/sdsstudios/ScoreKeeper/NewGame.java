@@ -162,6 +162,7 @@ public class NewGame extends AppCompatActivity
         }else{
 
             if (players.size() >= 1) {
+                updateArray();
                 players.add(players.size(), player);
                 createScoreArray();
                 dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);

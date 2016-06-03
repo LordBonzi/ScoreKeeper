@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,7 +139,7 @@ public class NewGame extends AppCompatActivity
     }
 
     public void displayRecyclerView(){
-        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID);
+        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID, 1);
         playerList.setAdapter(playerListAdapter);
 
     }
@@ -164,8 +163,8 @@ public class NewGame extends AppCompatActivity
 
             if (players.size() >= 1) {
                 players.add(players.size(), player);
-                dbHelper.updateGame(players, time , 1, ScoreDBAdapter.KEY_PLAYERS, gameID);
                 createScoreArray();
+                dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
 
             }else{
 
@@ -237,20 +236,9 @@ public class NewGame extends AppCompatActivity
     }
 
     public void createScoreArray(){
-        try{
-            score.clear();
 
-            updateArray();
-            for (int i = 0; i < players.size(); i ++){
-                score.add(i, "0");
-            }
-            dbHelper.updateGame(score, time, 1, ScoreDBAdapter.KEY_SCORE, gameID);
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e(TAG, e.toString());
-        }
+                score.add("0");
+        dbHelper.updateGame(score, null , ScoreDBAdapter.KEY_SCORE, gameID);
 
 
     }
@@ -280,7 +268,6 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
-                    createScoreArray();
                     startActivity(mainActivityIntent);
                 }
 

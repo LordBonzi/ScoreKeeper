@@ -102,10 +102,21 @@ public class Home extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        menu.getItem(1).setVisible(true);
 
         return true;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -116,7 +127,6 @@ public class Home extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            finish();
             startActivity(settingsIntent);
             return true;
         }if (id == R.id.action_about) {
@@ -212,6 +222,7 @@ public class Home extends AppCompatActivity {
                 ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
                 historyAdapter = new HistoryAdapter(gameModel, dbHelper, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
                 recyclerViewHome.setAdapter(historyAdapter);
+
 
             } catch (Exception e) {
                 e.printStackTrace();

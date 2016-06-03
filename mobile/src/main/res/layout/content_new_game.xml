@@ -8,28 +8,6 @@
     tools:context="io.github.sdsstudios.ScoreKeeper.NewGame"
     tools:showIn="@layout/app_bar_new_game">
 
-    <TextView
-        android:text="@string/players"
-        android:padding="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonAddPlayer"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView2" />
-
-    <Button
-        android:id="@+id/buttonNewGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/new_game"
-        android:layout_alignBaseline="@+id/buttonAddPlayer"
-        android:layout_alignBottom="@+id/buttonAddPlayer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="11dp"
-        android:layout_marginEnd="11dp" />
 
     <EditText
         android:id="@+id/editTextPlayer"
@@ -65,7 +43,37 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/textView2" />
+        android:layout_below="@+id/relativeLayout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/buttonAddPlayer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:text="@string/players"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/textView2" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonNewGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_game"
+
+        android:layout_below="@+id/editTextPlayer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

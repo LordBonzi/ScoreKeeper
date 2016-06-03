@@ -24,15 +24,8 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabSaveGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@mipmap/ic_save_white_48dp" />
-
     <include layout="@layout/content_edit_game" />
+
 
 
 </android.support.design.widget.CoordinatorLayout>

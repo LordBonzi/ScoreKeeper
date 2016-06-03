@@ -3,13 +3,16 @@
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
+    <string name="edit_game_question">Change Game?</string>
     <string name="player_s_name">Player\'s name</string>
     <string name="add_player">Add Player</string>
     <string name="_0">0</string>
     <string name="date">Date:</string>
+    <string name="date_and_time">Date and Time:</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
+    <string name="are_you_sure_edit_game">Are you sure you want to change this game?</string>
     <string name="loser">Loser:</string>
     <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
@@ -23,7 +26,7 @@
     <string name="title_activity_home">Home</string>
     <string name="About">About</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_edit_game">EditGame</string>
+    <string name="title_activity_edit_game">Change Game</string>
     <string name="no_games">You haven\'t played any games!</string>
     <string name="graph_coming_soon">Feature is coming soon ;)</string>
     <string name="no_completed_games">You haven\'t completed any games!</string>

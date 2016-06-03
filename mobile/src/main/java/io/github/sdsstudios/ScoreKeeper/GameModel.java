@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class GameModel{
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
 
-            date = cursorHelper.getTimeById(i, dbHelper);
+            date = cursorHelper.getStringById(i, ScoreDBAdapter.KEY_TIME, dbHelper);
             d = dateHelper.gameDate(date);
 
             if (arrayListPlayer.size() == 2){
@@ -82,14 +81,14 @@ public class GameModel{
             arrayListScore.get(0));
         }
             if (activity == 1){
-                if (cursorHelper.getCompletedById(i, dbHelper)== 1){
+                if (cursorHelper.getCompletedById(i, dbHelper)== 0){
                     progress = context.getResources().getString(R.string.in_progress);
 
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress));
 
                 }
             }else if (activity == 2){
-                if (cursorHelper.getCompletedById(i, dbHelper)== 0){
+                if (cursorHelper.getCompletedById(i, dbHelper)== 1){
                     progress = context.getResources().getString(R.string.completed);
 
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress));
@@ -98,9 +97,9 @@ public class GameModel{
 
             }else if (activity == 3 ){
 
-                if (cursorHelper.getCompletedById(i, dbHelper) == 0){
+                if (cursorHelper.getCompletedById(i, dbHelper) == 1){
                     progress = context.getResources().getString(R.string.completed);
-                }else if(cursorHelper.getCompletedById(i, dbHelper) == 1){
+                }else if(cursorHelper.getCompletedById(i, dbHelper) == 0){
                     progress = context.getResources().getString(R.string.in_progress);
                 }
                 gameModelArrayList.add(new GameModel(p , s , d, t, progress));

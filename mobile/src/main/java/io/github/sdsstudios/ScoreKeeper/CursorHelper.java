@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +24,12 @@ public class CursorHelper {
         return array;
     }
 
-    public String getTimeById(int i, ScoreDBAdapter dbHelper){
+    public String getStringById(int i, String request, ScoreDBAdapter dbHelper){
 
         String s;
 
         Cursor cursor = dbHelper.fetchGamesById(i);
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_TIME);
+        int index = cursor.getColumnIndex(request);
         s = cursor.getString(index);
 
         return s;

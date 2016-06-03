@@ -1,12 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.media.Image;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,13 +20,15 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     private ArrayList<String> mDataset;
     private ScoreDBAdapter mDbHelper;
     private int mGameID;
+    private int activity;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-        public PlayerListAdapter(ArrayList<String> myDataset, ScoreDBAdapter dbHelper, int gameID) {
+        public PlayerListAdapter(ArrayList<String> myDataset, ScoreDBAdapter dbHelper, int gameID, int mactivity) {
             mDataset = myDataset;
             mDbHelper = dbHelper;
             mGameID = gameID;
+            activity = mactivity;
         }
 
         // Create new views (invoked by the layout manager)
@@ -51,12 +52,23 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             // - replace the contents of the view with that element
 
             holder.textViewPlayer.setText(mDataset.get(position));
-            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeAt(position);
-                }
-            });
+
+            if (activity == 1) {
+                holder.buttonDelete.setBackground(holder.backgroundDelete);
+                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeAt(position);
+                    }
+                });
+            }else if (activity == 2){
+                holder.buttonDelete.setBackground(holder.backgroundEdit);
+                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            }
 
         }
 
@@ -81,7 +93,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mDataset.size());
 
-        mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+        mDbHelper.updateGame(mDataset, null,ScoreDBAdapter.KEY_PLAYERS,  mGameID );
         Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
                 .setAction("Undo", onClickListener);
         snackbar.show();
@@ -92,7 +104,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         mDataset.add(mDataset.size(), backup);
         notifyItemRemoved(mDataset.size());
         notifyItemRangeChanged(mDataset.size(), mDataset.size());
-        mDbHelper.updateGame(mDataset, null, 1, ScoreDBAdapter.KEY_PLAYERS,  mGameID );
+        mDbHelper.updateGame(mDataset, null,  ScoreDBAdapter.KEY_PLAYERS,  mGameID );
 
         snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
         snackbar.show();
@@ -105,11 +117,15 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         // each data item is just a string in this case
         public TextView textViewPlayer;
         public ImageButton buttonDelete;
+        public Drawable backgroundEdit;
+        public Drawable backgroundDelete;
 
         public ViewHolder(View v) {
             super(v);
             textViewPlayer = (TextView) v.findViewById(R.id.textViewPlayer);
             buttonDelete = (ImageButton) v.findViewById(R.id.buttonDelete);
+            backgroundEdit = v.getResources().getDrawable(R.mipmap.ic_create_black_24dp);
+            backgroundDelete = v.getResources().getDrawable(R.mipmap.ic_clear_black_24dp);
 
         }
         }

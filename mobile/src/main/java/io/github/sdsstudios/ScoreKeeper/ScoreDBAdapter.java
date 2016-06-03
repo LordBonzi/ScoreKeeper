@@ -61,18 +61,19 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String time, int completed, String request, int id) {
+    public long updateGame(ArrayList array, String time_or_completed, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
-        if (request.equals(KEY_TIME)){
-            initialValues.put(request, time);
+        if (request.equals(KEY_TIME) || request.equals(KEY_CHRONOMETER)){
+            initialValues.put(request, time_or_completed);
 
         }else if (request.equals(KEY_PLAYERS) || request.equals(KEY_SCORE)){
             initialValues.put(request, convertToString(array));
         }else if (request.equals(KEY_COMPLETED)){
+            int c = Integer.valueOf(time_or_completed);
 
-            initialValues.put(request, completed);
+            initialValues.put(request, c);
 
         }
 

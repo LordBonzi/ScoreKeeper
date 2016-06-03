@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     int secs ;
     int mins ;
     int milliseconds ;
+    String s;
     Handler handler = new Handler();
 
     @Override
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
         smallLayout = new SmallLayout();
+
+        gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         homeIntent = new Intent(this, Home.class);
 
@@ -110,6 +114,12 @@ public class MainActivity extends AppCompatActivity
         playersArray = new ArrayList();
         playersArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
 
+        scoresArray = new ArrayList();
+        scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+
+        Log.i(TAG, "player array is " + playersArray);
+        Log.i(TAG, "score array is " + scoresArray);
+
         gameSize = playersArray.size();
 
         if (savedInstanceState != null) {
@@ -135,10 +145,6 @@ public class MainActivity extends AppCompatActivity
             secs = 0;
             mins = 0;
             milliseconds = 0;
-
-            gameID = Integer.valueOf(dbHelper.getNewestGame());
-            scoresArray = new ArrayList();
-            scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
         }
 
@@ -201,6 +207,7 @@ public class MainActivity extends AppCompatActivity
         savedInstanceState.putBoolean(STATE_FT1, SmallLayout.ft1);
         savedInstanceState.putBoolean(STATE_FT2, SmallLayout.ft2);
         savedInstanceState.putIntegerArrayList(STATE_SCORES, SmallLayout.scoresArray);
+        dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -212,6 +219,7 @@ public class MainActivity extends AppCompatActivity
             handler.postDelayed(updateTimer, 0);
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
             buttonChronometer.setTextColor(getResources().getColor(R.color.start));
+            fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
 
             t = 0;
         } else {
@@ -219,6 +227,8 @@ public class MainActivity extends AppCompatActivity
             handler.removeCallbacks(updateTimer);
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
             buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
             t = 1;
 
         }
@@ -234,10 +244,6 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.buttonP2:
                 smallLayout.onClick(buttonP2, dbHelper, gameID);
-                break;
-
-            case R.id.buttonChronometer:
-
                 break;
 
             case R.id.fabChronometer:
@@ -259,9 +265,12 @@ public class MainActivity extends AppCompatActivity
             secs = secs % 60;
             milliseconds = (int) (updatedtime % 1000);
 
-            buttonChronometer.setText("" + mins + ":" + String.format("%02d", secs) + ":"
-                    + String.format("%03d", milliseconds));
+            s = "" + mins + ":" + String.format("%02d", secs) + ":"
+                    + String.format("%03d", milliseconds);
+
+            buttonChronometer.setText(s);
             handler.postDelayed(this, 0);
+
         }
 
     };
@@ -277,12 +286,16 @@ public class MainActivity extends AppCompatActivity
 
         builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
                 startActivity(homeIntent);
             }
         });
+
         builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dbHelper.updateGame(null, null, 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+                dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 startActivity(homeIntent);
             }
         });
@@ -290,10 +303,12 @@ public class MainActivity extends AppCompatActivity
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                chronometerClick();
             }
         });
 
         dialog = builder.create();
+        chronometerClick();
         dialog.show();
 
     }
@@ -347,6 +362,13 @@ class SmallLayout extends Activity{
             button.setText(String.valueOf(P2Score));
         }
 
+        if (button == MainActivity.buttonP1){
+            ft1 = false;
+        }else {
+            ft2 = false;
+
+        }
+
         updateScores(dbHelper, id);
     }
     public void onLongClick(Button button, ScoreDBAdapter dbHelper, int id){
@@ -373,7 +395,7 @@ class SmallLayout extends Activity{
         scoresArray.set(0, String.valueOf(P1Score));
         scoresArray.set(1, String.valueOf(P2Score));
 
-        dbHelper.updateGame(scoresArray, null, 1, ScoreDBAdapter.KEY_SCORE, id);
+        dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
     }
 
 }

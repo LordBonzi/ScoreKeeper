@@ -5,7 +5,6 @@
     android:id="@+id/historyLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f5f5f5"
     android:clickable="true"
     android:focusable="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -67,14 +66,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="TextView" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutHistoryAdapter">
-
-        <include layout="@layout/divider" />
-
     </RelativeLayout>
 
 </RelativeLayout>

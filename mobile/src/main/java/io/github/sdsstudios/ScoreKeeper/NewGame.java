@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
@@ -44,6 +47,7 @@ public class NewGame extends AppCompatActivity
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
+    private boolean stop = true;
 
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
@@ -57,7 +61,6 @@ public class NewGame extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //TODO delete LOGS
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
@@ -110,6 +113,18 @@ public class NewGame extends AppCompatActivity
 
     }
 
+    public boolean checkDuplicates(ArrayList arrayList){
+        boolean duplicate = false;
+
+        Set<Integer> set = new HashSet<Integer>(arrayList);
+
+        if(set.size() < arrayList.size()){
+            duplicate = true;
+        }
+
+        return duplicate;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -139,14 +154,14 @@ public class NewGame extends AppCompatActivity
     }
 
     public void displayRecyclerView(){
-        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID, 1);
+        playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
         playerList.setAdapter(playerListAdapter);
 
     }
 
-
     public void addPlayers(){
         player = editTextPlayer.getText().toString();
+        Log.i(TAG, ""+players);
 
         if (player.equals("")){
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -164,15 +179,12 @@ public class NewGame extends AppCompatActivity
             if (players.size() >= 1) {
                 updateArray();
                 players.add(players.size(), player);
-                createScoreArray();
                 dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
 
             }else{
-
-            players.add(players.size(), player);
-            dbHelper.createGame(players, time, score, 1);
-            gameID = Integer.valueOf(dbHelper.getNewestGame());
-            createScoreArray();
+                players.add(players.size(), player);
+                dbHelper.createGame(players, time, score, 0);
+                gameID = Integer.valueOf(dbHelper.getNewestGame());
 
             }
 
@@ -182,6 +194,21 @@ public class NewGame extends AppCompatActivity
             displayRecyclerView();
             updateArray();
 
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (stop && gameID != null) {
+
+            try {
+                dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
+            } catch (Exception e) {
+                dbHelper.deleteGame(0);
+            }
         }
 
     }
@@ -203,42 +230,40 @@ public class NewGame extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (players.size() > 0) {
-            AlertDialog dialog;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setTitle(R.string.quit_setup_question);
+        builder.setTitle(R.string.quit_setup_question);
 
-            builder.setMessage(R.string.quit_setup_question);
+        builder.setMessage(R.string.quit_setup_message);
 
-            builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+        builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
-                    try {
-                        dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
-                    } catch (Exception e) {
-                        dbHelper.deleteGame(0);
-                    }
-                    startActivity(homeIntent);
-                }
-            });
+                stop = true;
+                onStop();
+                finish();
+                startActivity(homeIntent);
+            }
+        });
 
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
 
-            dialog = builder.create();
-            dialog.show();
-        }else{
-            startActivity(homeIntent);
-        }
+        dialog = builder.create();
+        dialog.show();
+
     }
 
     public void createScoreArray(){
 
-                score.add("0");
+        while (score.size() <= players.size()){
+            score.add("0");
+        }
+
         dbHelper.updateGame(score, null , ScoreDBAdapter.KEY_SCORE, gameID);
 
 
@@ -253,6 +278,7 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
+                updateArray();
 
                 //snackbar must have 2 or more players
 
@@ -269,7 +295,25 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
-                    startActivity(mainActivityIntent);
+                    if (checkDuplicates(players)){
+
+                        View.OnClickListener onClickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snackbar.dismiss();
+                            }
+                        };
+
+                        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                .setAction("Dismiss", onClickListener);
+                        snackbar.show();
+                    }else{
+                        stop = false;
+                        createScoreArray();
+                        startActivity(mainActivityIntent);
+                    }
+
+
                 }
 
                 break;

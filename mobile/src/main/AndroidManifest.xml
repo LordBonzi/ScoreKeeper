@@ -49,7 +49,7 @@
             android:name=".EditGame"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_edit_game"
+            android:label="@string/game_info"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity
             buttonChronometer.setTextColor(getResources().getColor(R.color.start));
             fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
 
+
             t = 0;
         } else {
             timeSwapBuff += timeInMilliseconds;
@@ -239,6 +240,7 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -314,7 +316,13 @@ public class MainActivity extends AppCompatActivity
         });
 
         dialog = builder.create();
-        chronometerClick();
+        timeSwapBuff += timeInMilliseconds;
+        handler.removeCallbacks(updateTimer);
+        fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+        buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+        fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
+        t = 1;
         dialog.show();
 
     }

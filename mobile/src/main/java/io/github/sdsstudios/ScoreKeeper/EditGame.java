@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class EditGame extends AppCompatActivity {
+public class EditGame extends AppCompatActivity{
     String date;
     int gameID;
     private EditText editTextLength, editTextDate;
@@ -40,7 +40,6 @@ public class EditGame extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("WHAT SHOULD WE PUT HERE");
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
@@ -81,9 +80,8 @@ public class EditGame extends AppCompatActivity {
 
         }
 
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        displayRecyclerView();
+
+        displayRecyclerView(0);
 
     }
 
@@ -146,12 +144,14 @@ public class EditGame extends AppCompatActivity {
 
         editTextLength.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
         editTextDate.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+        displayRecyclerView(1);
     }
 
-    public void displayRecyclerView(){
+    public void displayRecyclerView(int editable){
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
         players = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-
-        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID, 2);
+        playerListAdapter = new PlayerListAdapter(players, arrayListScores, dbHelper, gameID, 2, editable);
         recyclerView.setAdapter(playerListAdapter);
 
     }
@@ -173,6 +173,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                displayRecyclerView(0);
                 editTextLength.setEnabled(false);
                 editTextDate.setEnabled(false);
                 menuItemDelete.setVisible(true);
@@ -186,6 +187,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                displayRecyclerView(0);
                 dialog.dismiss();
             }
         });
@@ -205,6 +207,7 @@ public class EditGame extends AppCompatActivity {
         menuItemDone.setVisible(false);
         menuItemEdit.setVisible(true);
         menuItemCancel.setVisible(false);
+        displayRecyclerView(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -241,4 +244,7 @@ public class EditGame extends AppCompatActivity {
 
         editor.apply();
     }
-}
+
+
+    }
+

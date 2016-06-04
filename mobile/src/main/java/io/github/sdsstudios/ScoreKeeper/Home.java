@@ -98,6 +98,8 @@ public class Home extends AppCompatActivity {
 
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -160,6 +162,7 @@ public class Home extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
     }
 
     public static class PlaceholderFragment extends Fragment {

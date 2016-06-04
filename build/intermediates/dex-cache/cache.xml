@@ -187,7 +187,7 @@
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="843bd1f94274ef205824fe8ce845025bbc5106a9">
+        sha1="a1d48e1eacbfdfdf10023ac1db77da22b48fe6a7">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_66ea1966c784718306d38849a7cd55bef2d670d4\classes.dex" />
     </item>
     <item
@@ -241,7 +241,7 @@
         jumboMode="true"
         optimize="false"
         revision="23.0.3"
-        sha1="2e2797a3ff42c83672342eb69f9b5cd6783501ee">
+        sha1="5bbff1102bb24930eb8eb0a5e8c585c7fbeaef5f">
         <dex dex="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_8b8c2238b6fe75ee9dfe4cd25fff33be5d16173a\classes.dex" />
     </item>
     <item

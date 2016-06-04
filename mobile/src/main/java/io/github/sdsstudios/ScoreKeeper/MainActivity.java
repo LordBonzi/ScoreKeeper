@@ -1,14 +1,19 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     public static Button buttonP1;
     public static Button buttonP2;
     public static boolean firstTime = true;
+    Button buttonChronometer;
+    FloatingActionButton fabChronometer;
     TextView textViewP1;
     TextView textViewP2;
     RecyclerView bigGameList;
@@ -40,6 +47,30 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.Adapter bigGameAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    //savedinstancestate stuff
+    static final String STATE_T = "t";
+    static final String STATE_SECS = "secs";
+    static final String STATE_MINS = "mins";
+    static final String STATE_MILLISECS = "millis";
+    static final String STATE_P1 = "scoreP1";
+    static final String STATE_P2 = "scoreP2";
+    static final String STATE_GAMEID = "gameId";
+    static final String STATE_FT1 = "ft1";
+    static final String STATE_FT2 = "ft2";
+    static final String STATE_SCORES = "scores";
+
+    //chronometer
+    long starttime;
+    long timeInMilliseconds;
+    long timeSwapBuff;
+    long updatedtime;
+    int t ;
+    int secs ;
+    int mins ;
+    int milliseconds ;
+    String s;
+    Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +78,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        cursorHelper = new CursorHelper();
+
+        dbHelper = new ScoreDBAdapter(this);
+        dbHelper.open();
+        smallLayout = new SmallLayout();
+
+        gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         homeIntent = new Intent(this, Home.class);
 
@@ -63,17 +102,14 @@ public class MainActivity extends AppCompatActivity
 
         bigGameList = (RecyclerView)findViewById(R.id.bigGameList);
 
+        buttonChronometer = (Button) findViewById(R.id.buttonChronometer);
+        buttonChronometer.setOnClickListener(this);
+
+        fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
+        fabChronometer.setOnClickListener(this);
+
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
-
-        cursorHelper = new CursorHelper();
-
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
-        smallLayout = new SmallLayout();
-
-        gameID = Integer.valueOf(dbHelper.getNewestGame());
 
         playersArray = new ArrayList();
         playersArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -81,21 +117,34 @@ public class MainActivity extends AppCompatActivity
         scoresArray = new ArrayList();
         scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
+        Log.i(TAG, "player array is " + playersArray);
+        Log.i(TAG, "score array is " + scoresArray);
+
         gameSize = playersArray.size();
 
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            t = savedInstanceState.getInt(STATE_T);
+            SmallLayout.P1Score = savedInstanceState.getInt(STATE_P1);
+            SmallLayout.P2Score = savedInstanceState.getInt(STATE_P2);
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            secs = savedInstanceState.getInt(STATE_SECS);
+            mins = savedInstanceState.getInt(STATE_MINS);
+            milliseconds = savedInstanceState.getInt(STATE_MILLISECS);
+            SmallLayout.ft1 = savedInstanceState.getBoolean(STATE_FT1);
+            SmallLayout.ft2 = savedInstanceState.getBoolean(STATE_FT2);
+            SmallLayout.scoresArray = savedInstanceState.getIntegerArrayList(STATE_SCORES);
 
-        //Shared Preferences stuff
-        final String PREFS_NAME = "scorekeeper";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-
-            saveInfo();
-            settings.edit().putBoolean("my_first_time", false).commit();
         }else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
-                    , Context.MODE_PRIVATE);
+            smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+            starttime = 0L;
+            timeInMilliseconds = 0L;
+            timeSwapBuff = 0L;
+            updatedtime = 0L;
+            t = 1;
+            secs = 0;
+            mins = 0;
+            milliseconds = 0;
 
         }
 
@@ -110,13 +159,86 @@ public class MainActivity extends AppCompatActivity
             bigGameList.setAdapter(bigGameAdapter);
         }else{
             normal.setVisibility(View.VISIBLE);
-            smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID);
+            textViewP1.setText(String.valueOf(playersArray.get(0)));
+            textViewP2.setText(String.valueOf(playersArray.get(1)));
 
         }
 
-        textViewP1.setText(String.valueOf(playersArray.get(0)));
-        textViewP2.setText(String.valueOf(playersArray.get(1)));
+        chronometerClick();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_about).setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
+        savedInstanceState.putInt(STATE_SECS, secs);
+        savedInstanceState.putInt(STATE_MINS, mins);
+        savedInstanceState.putInt(STATE_MILLISECS, milliseconds);
+        savedInstanceState.putInt(STATE_T, t);
+        savedInstanceState.putInt(STATE_P1, SmallLayout.P1Score);
+        savedInstanceState.putInt(STATE_P2, SmallLayout.P2Score);
+        savedInstanceState.putBoolean(STATE_FT1, SmallLayout.ft1);
+        savedInstanceState.putBoolean(STATE_FT2, SmallLayout.ft2);
+        savedInstanceState.putIntegerArrayList(STATE_SCORES, SmallLayout.scoresArray);
+        dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void chronometerClick(){
+        if (t == 1) {
+            starttime = SystemClock.uptimeMillis();
+            handler.postDelayed(updateTimer, 0);
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+            buttonChronometer.setTextColor(getResources().getColor(R.color.start));
+            fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+
+
+            t = 0;
+        } else {
+            timeSwapBuff += timeInMilliseconds;
+            handler.removeCallbacks(updateTimer);
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+            buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
+            t = 1;
+
+        }
     }
 
     @Override
@@ -129,46 +251,86 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.buttonP2:
                 smallLayout.onClick(buttonP2, dbHelper, gameID);
+                break;
 
+            case R.id.fabChronometer:
+                chronometerClick();
                 break;
         }
     }
 
-    public void saveInfo(){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+    public Runnable updateTimer = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - starttime;
+
+            updatedtime = timeSwapBuff + timeInMilliseconds;
+
+            secs = (int) (updatedtime / 1000);
+            mins = secs / 60;
+            secs = secs % 60;
+            milliseconds = (int) (updatedtime % 1000);
+
+            if (mins < 10){
+                s = ""  + "0" + mins + ":" + String.format("%02d", secs) + ":"
+                        + String.format("%03d", milliseconds);
+            }else{
+                s = "" + mins + ":" + String.format("%02d", secs) + ":"
+                        + String.format("%03d", milliseconds);
+            }
 
 
-        editor.apply();
-    }
+
+            buttonChronometer.setText(s);
+            handler.postDelayed(this, 0);
+
+        }
+
+    };
 
     @Override
     public void onBackPressed() {
-        startActivity(homeIntent);
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-    }
+        builder.setTitle(R.string.quit_game);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+        builder.setMessage(R.string.quit_game_message);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                startActivity(homeIntent);
+            }
+        });
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                dbHelper.updateGame(null, s, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                startActivity(homeIntent);
+            }
+        });
 
-            return true;
-        }
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                chronometerClick();
+            }
+        });
 
-        return super.onOptionsItemSelected(item);
+        dialog = builder.create();
+        timeSwapBuff += timeInMilliseconds;
+        handler.removeCallbacks(updateTimer);
+        fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+        buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+        fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
+        t = 1;
+        dialog.show();
+
     }
 
     @Override
@@ -190,10 +352,10 @@ public class MainActivity extends AppCompatActivity
 }
 
 class SmallLayout extends Activity{
-    public static Integer P1Score =0 , P2Score =0;
-    ArrayList scoresArray;
-    boolean ft1;
-    boolean ft2;
+    public static Integer P1Score , P2Score;
+    public static ArrayList scoresArray;
+    public static boolean ft1;
+    public static boolean ft2;
 
 
     public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int id){
@@ -218,6 +380,13 @@ class SmallLayout extends Activity{
         }else {
             P2Score += 1;
             button.setText(String.valueOf(P2Score));
+        }
+
+        if (button == MainActivity.buttonP1){
+            ft1 = false;
+        }else {
+            ft2 = false;
+
         }
 
         updateScores(dbHelper, id);

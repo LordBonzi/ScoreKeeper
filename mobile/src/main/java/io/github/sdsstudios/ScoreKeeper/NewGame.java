@@ -1,10 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,12 +23,15 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
 
     public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
+    Snackbar snackbar;
     private CursorHelper cursorHelper;
     private String time;
     private String TAG = "Home";
@@ -39,9 +43,16 @@ public class NewGame extends AppCompatActivity
     private ArrayList<String> score = new ArrayList<>();
     private Intent mainActivityIntent;
     private Integer gameID;
+    private Intent homeIntent;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
+    private boolean stop = true;
+
+    static final String STATE_PLAYERS = "playersArray";
+    static final String STATE_PLAYER_NAME = "player";
+    static final String STATE_TIME = "time";
+    static final String STATE_GAMEID = "gameid";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +60,14 @@ public class NewGame extends AppCompatActivity
         setContentView(R.layout.activity_new_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO delete LOGS
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
-
         cursorHelper = new CursorHelper();
+        homeIntent = new Intent(this, Home.class);
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-        Date now = new Date();
-        time = sdfDate.format(now);
-
-        players = new ArrayList<>();
-        playerList = (RecyclerView)findViewById(R.id.historyList);
-
+        playerList = (RecyclerView)findViewById(R.id.playerList);
         newGameCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.newGameLayout);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
@@ -91,58 +96,40 @@ public class NewGame extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
 
-    }
-
-    public void updateArray(){
-        players = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-    }
-
-    public void displayRecyclerView(){
-        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID);
-        playerList.setAdapter(playerListAdapter);
-
-    }
-
-    public void addPlayers(){
-        player = editTextPlayer.getText().toString();
-        Log.i(TAG, String.valueOf(players.size()));
-
-        if (players.size() >= 1) {
-            players.add(players.size(), player);
-
-            dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
-
-        }else{
-            players.add(players.size(), player);
-
-            dbHelper.createGame(players, time, score);
-            gameID = Integer.valueOf(dbHelper.getNewestGame());
-        }
-
-        editTextPlayer.setText("");
-
-        // specify an adapter (see also next example)
-        displayRecyclerView();
-        updateArray();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            time = savedInstanceState.getString(STATE_TIME);
+            player = savedInstanceState.getString(STATE_PLAYER_NAME);
+            updateArray();
+            displayRecyclerView();
         } else {
-            super.onBackPressed();
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+            Date now = new Date();
+            time = sdfDate.format(now);
+            players = new ArrayList<>();
         }
-        finish();
 
+    }
+
+    public boolean checkDuplicates(ArrayList arrayList){
+        boolean duplicate = false;
+
+        Set<Integer> set = new HashSet<Integer>(arrayList);
+
+        if(set.size() < arrayList.size()){
+            duplicate = true;
+        }
+
+        return duplicate;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_delete).setVisible(false);
         return true;
     }
 
@@ -154,12 +141,132 @@ public class NewGame extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateArray(){
+        players = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+    }
+
+    public void displayRecyclerView(){
+        playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
+        playerList.setAdapter(playerListAdapter);
+
+    }
+
+    public void addPlayers(){
+        player = editTextPlayer.getText().toString();
+        Log.i(TAG, ""+players);
+
+        if (player.equals("")){
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            };
+
+            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            snackbar.show();
+        }else{
+
+            if (players.size() >= 1) {
+                updateArray();
+                players.add(players.size(), player);
+                dbHelper.updateGame(players, time , ScoreDBAdapter.KEY_PLAYERS, gameID);
+
+            }else{
+                players.add(players.size(), player);
+                dbHelper.createGame(players, time, score, 0);
+                gameID = Integer.valueOf(dbHelper.getNewestGame());
+
+            }
+
+            editTextPlayer.setText("");
+
+            // specify an adapter (see also next example)
+            displayRecyclerView();
+            updateArray();
+
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (stop && gameID != null) {
+
+            try {
+                dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
+            } catch (Exception e) {
+                dbHelper.deleteGame(0);
+            }
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+
+        if (gameID != null) {
+            savedInstanceState.putInt(STATE_GAMEID, gameID);
+            savedInstanceState.putStringArrayList(STATE_PLAYERS, players);
+            savedInstanceState.putString(STATE_PLAYER_NAME, player);
+            savedInstanceState.putString(STATE_TIME, time);
+        }
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.quit_setup_question);
+
+        builder.setMessage(R.string.quit_setup_message);
+
+        builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                stop = true;
+                onStop();
+                finish();
+                startActivity(homeIntent);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+
+    }
+
+    public void createScoreArray(){
+
+        while (score.size() <= players.size()){
+            score.add("0");
+        }
+
+        dbHelper.updateGame(score, null , ScoreDBAdapter.KEY_SCORE, gameID);
+
+
     }
 
     public void onClick(View v) {
@@ -171,15 +278,48 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
-                updateArray();
 
-                for (int i = 0; i < players.size(); i ++){
-                    score.add(i, "0");
+                //snackbar must have 2 or more players
+
+                if (players.size() < 2) {
+
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    };
+
+                    snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+                            .setAction("Dismiss", onClickListener);
+                    snackbar.show();
+                }else{
+                    updateArray();
+                    if (checkDuplicates(players)){
+
+                        View.OnClickListener onClickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snackbar.dismiss();
+                            }
+                        };
+
+                        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                .setAction("Dismiss", onClickListener);
+                        snackbar.show();
+                    }else{
+                        stop = false;
+                        createScoreArray();
+                        startActivity(mainActivityIntent);
+                    }
+
+
                 }
-                dbHelper.updateGame(score, time, ScoreDBAdapter.KEY_SCORE, gameID);
-                startActivity(mainActivityIntent);
+
                 break;
             }
         }
     }
+
+
 }

@@ -22,7 +22,7 @@ public class BigGameModel {
 
         ArrayList<BigGameModel> gameModelArrayList = new ArrayList<>();
 
-        for (int i = 0; i <= numPlayers-1; i++) {
+        for (int i = 0; i < pArray.size(); i++) {
             p = pArray.get(i).toString();
             s = sArray.get(i).toString();
 

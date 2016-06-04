@@ -21,14 +21,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private Context context;
     private RelativeLayout relativeLayout;
     private int mActivity;
+    private int numGames;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity) {
+    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity, int numGamesm) {
         mGameModel = gameModel;
         mdbHelper = dbHelper;
         context = context1;
         relativeLayout = layout;
         mActivity = activity;
+        numGames =numGamesm;
     }
 
     // Create new views (invoked by the layout manager)
@@ -51,20 +53,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         // - replace the contents of the view with that element
         GameModel gameModel;
 
-        if (mActivity == 2){
-            gameModel = mGameModel.get(mGameModel.size()-position-1);
-            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-            holder.textViewHistoryScore.setText(gameModel.getScore());
-            holder.textViewHistoryDate.setText(gameModel.getDate());
+        gameModel = mGameModel.get(mGameModel.size()-position-1);
+        holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+        holder.textViewHistoryScore.setText(gameModel.getScore());
+        holder.textViewHistoryDate.setText(gameModel.getDate());
+        holder.textViewHistoryType.setText(gameModel.getType());
 
-        }else if (mActivity == 1){
-            gameModel = mGameModel.get(Integer.valueOf(mdbHelper.getNewestGame())-position-1);
-            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-            holder.textViewHistoryScore.setText(gameModel.getScore());
-            holder.textViewHistoryDate.setText(gameModel.getDate());
-            holder.textViewHistoryType.setText(gameModel.getType());
+        if (gameModel.getState().equals(holder.inProgress)) {
+            holder.textViewHistoryInProgress.setTextColor(holder.color);
         }
 
+        holder.textViewHistoryInProgress.setText(gameModel.getState());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditGame.class);
@@ -79,7 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mGameModel.size();
+        return numGames;
     }
 
     // Provide a reference to the views for each data item
@@ -91,7 +90,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView textViewHistoryScore;
         public TextView textViewHistoryDate;
         public TextView textViewHistoryType;
+        public TextView textViewHistoryInProgress;
         public RelativeLayout relativeLayout;
+        public int color;
+        public String inProgress;
 
         public ViewHolder(View v) {
             super(v);
@@ -99,7 +101,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             textViewHistoryDate = (TextView)v.findViewById(R.id.textViewHistoryDate);
             textViewHistoryScore = (TextView)v.findViewById(R.id.textViewHistoryScore);
             textViewHistoryType = (TextView)v.findViewById(R.id.textViewHistoryType);
+            textViewHistoryInProgress = (TextView)v.findViewById(R.id.textViewInProgress);
             relativeLayout = (RelativeLayout)v.findViewById(R.id.historyLayout);
+            color = v.getResources().getColor(R.color.colorAccent);
+            inProgress = v.getResources().getString(R.string.in_progress);
 
 
         }

@@ -21,20 +21,29 @@ public class CursorHelper {
         String[] strValues = s.split(",");
         array = new ArrayList<>(Arrays.asList(strValues));
 
-
         return array;
     }
 
-    public String getTimeById(int i, ScoreDBAdapter dbHelper){
+    public String getStringById(int i, String request, ScoreDBAdapter dbHelper){
 
         String s;
 
         Cursor cursor = dbHelper.fetchGamesById(i);
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_TIME);
+        int index = cursor.getColumnIndex(request);
         s = cursor.getString(index);
 
         return s;
     }
 
+    public int getCompletedById(int i, ScoreDBAdapter dbHelper){
+        int s;
+
+        Cursor cursor = dbHelper.fetchGamesById(i);
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_COMPLETED);
+        s = cursor.getInt(index);
+
+
+        return s;
+    }
 
 }

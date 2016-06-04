@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,12 +101,6 @@ public class MainActivity extends AppCompatActivity
 
         bigGameList = (RecyclerView)findViewById(R.id.bigGameList);
 
-        buttonChronometer = (Button) findViewById(R.id.buttonChronometer);
-        buttonChronometer.setOnClickListener(this);
-
-        fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
-        fabChronometer.setOnClickListener(this);
-
         normal = (RelativeLayout)findViewById(R.id.layoutNormal);
         big = (RelativeLayout)findViewById(R.id.layoutBig);
 
@@ -116,9 +109,6 @@ public class MainActivity extends AppCompatActivity
 
         scoresArray = new ArrayList();
         scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
-
-        Log.i(TAG, "player array is " + playersArray);
-        Log.i(TAG, "score array is " + scoresArray);
 
         gameSize = playersArray.size();
 
@@ -150,6 +140,11 @@ public class MainActivity extends AppCompatActivity
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
+            buttonChronometer = (Button) findViewById(R.id.buttonChronometerBig);
+            buttonChronometer.setOnClickListener(this);
+
+            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
+            fabChronometer.setOnClickListener(this);
             mLayoutManager = new LinearLayoutManager(this);
             bigGameList.setLayoutManager(mLayoutManager);
 
@@ -161,6 +156,11 @@ public class MainActivity extends AppCompatActivity
             normal.setVisibility(View.VISIBLE);
             textViewP1.setText(String.valueOf(playersArray.get(0)));
             textViewP2.setText(String.valueOf(playersArray.get(1)));
+            buttonChronometer = (Button) findViewById(R.id.buttonChronometer);
+            buttonChronometer.setOnClickListener(this);
+
+            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
+            fabChronometer.setOnClickListener(this);
 
         }
 

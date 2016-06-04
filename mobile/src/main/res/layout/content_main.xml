@@ -22,9 +22,31 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/bigGameList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="300dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/buttonChronometerBig" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="normal"
+            android:layout_margin="@dimen/fab_margin"
+            android:id="@+id/fabChronometerBig"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:text="00:00:000"
+            android:background="@color/button_background"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:clickable="false"
+            android:id="@+id/buttonChronometerBig"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+            android:layout_above="@+id/fabChronometerBig"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
     <RelativeLayout

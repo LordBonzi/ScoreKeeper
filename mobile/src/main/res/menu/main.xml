@@ -36,6 +36,13 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_add"
+        android:orderInCategory="0"
+        android:visible="false"
+        android:icon="@mipmap/ic_add_white_48dp"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_cancel"
         android:orderInCategory="3"
         android:visible="false"

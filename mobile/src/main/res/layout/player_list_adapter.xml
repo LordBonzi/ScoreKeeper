@@ -11,10 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:visibility="gone"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -68,10 +64,6 @@
         android:id="@+id/playerAdapterExtended"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:visibility="gone"
@@ -87,7 +79,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/editTextPlayerExt"

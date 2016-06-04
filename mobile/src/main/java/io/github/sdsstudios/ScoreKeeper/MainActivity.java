@@ -241,7 +241,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onClick(View v) {
 
@@ -273,8 +272,15 @@ public class MainActivity extends AppCompatActivity
             secs = secs % 60;
             milliseconds = (int) (updatedtime % 1000);
 
-            s = "" + mins + ":" + String.format("%02d", secs) + ":"
-                    + String.format("%03d", milliseconds);
+            if (mins < 10){
+                s = ""  + "0" + mins + ":" + String.format("%02d", secs) + ":"
+                        + String.format("%03d", milliseconds);
+            }else{
+                s = "" + mins + ":" + String.format("%02d", secs) + ":"
+                        + String.format("%03d", milliseconds);
+            }
+
+
 
             buttonChronometer.setText(s);
             handler.postDelayed(this, 0);

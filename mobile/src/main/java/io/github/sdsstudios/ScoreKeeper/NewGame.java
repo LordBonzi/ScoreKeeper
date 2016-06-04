@@ -278,7 +278,6 @@ public class NewGame extends AppCompatActivity
 
             case R.id.buttonNewGame: {
                 mainActivityIntent = new Intent(this, MainActivity.class);
-                updateArray();
 
                 //snackbar must have 2 or more players
 
@@ -295,6 +294,7 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
+                    updateArray();
                     if (checkDuplicates(players)){
 
                         View.OnClickListener onClickListener = new View.OnClickListener() {

@@ -3,6 +3,9 @@
   <component name="AndroidLayouts">
     <shared>
       <config>
+        <devices>
+          <device id="Nexus 4" />
+        </devices>
         <target>android-23</target>
       </config>
     </shared>
@@ -11,7 +14,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f389ee5-3c19-401b-9c22-2d91d347ec74" name="Default" comment="edit players in the list when creating a new game">
+    <list default="true" id="2f389ee5-3c19-401b-9c22-2d91d347ec74" name="Default" comment="major overhaul to editing games and creating games">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileSnapshots.bin" />
@@ -19,20 +22,18 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/mobile.iml" afterPath="$PROJECT_DIR$/mobile/mobile.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/divider.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/divider.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/menu/main.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/menu/main.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" />
     </list>
     <ignored path="ScoreKeeper.iws" />
@@ -64,48 +65,30 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="780">
-              <caret line="328" column="0" selection-start-line="328" selection-start-column="0" selection-end-line="328" selection-end-column="0" />
-              <folding>
-                <element signature="e#10126#10144#0" expanded="true" />
-                <element signature="e#10175#10201#0" expanded="true" />
-                <element signature="e#10238#10261#0" expanded="true" />
-                <element signature="e#10263#10607#0" expanded="true" />
-                <element signature="e#10606#10607#0" expanded="true" />
-                <element signature="e#10645#10667#0" expanded="true" />
-                <element signature="e#10669#11013#0" expanded="true" />
-                <element signature="e#11012#11013#0" expanded="true" />
-                <element signature="e#11051#11066#0" expanded="true" />
-                <element signature="e#11068#11267#0" expanded="true" />
-                <element signature="e#11266#11267#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="4480">
+              <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EditGame.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="EditGame.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1430">
-              <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+            <state relative-caret-position="-400">
+              <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#6276#6303#0" expanded="true" />
-                <element signature="e#6334#6365#0" expanded="true" />
-                <element signature="e#6403#6436#0" expanded="true" />
-                <element signature="e#6438#7018#0" expanded="true" />
-                <element signature="e#7017#7018#0" expanded="true" />
-                <element signature="e#7056#7071#0" expanded="true" />
-                <element signature="e#7073#7276#0" expanded="true" />
-                <element signature="e#7275#7276#0" expanded="true" />
-                <element signature="e#7920#7940#0" expanded="true" />
-                <element signature="e#7971#7999#0" expanded="true" />
-                <element signature="e#8037#8057#0" expanded="true" />
-                <element signature="e#8059#8276#0" expanded="true" />
-                <element signature="e#8275#8276#0" expanded="true" />
-                <element signature="e#8314#8329#0" expanded="true" />
-                <element signature="e#8331#8494#0" expanded="true" />
-                <element signature="e#8493#8494#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#7163#7190#0" expanded="true" />
+                <element signature="e#7221#7252#0" expanded="true" />
+                <element signature="e#7290#7323#0" expanded="true" />
+                <element signature="e#7325#8986#0" expanded="true" />
+                <element signature="e#7505#7546#0" expanded="true" />
+                <element signature="e#7624#7656#0" expanded="true" />
+                <element signature="e#8985#8986#0" expanded="true" />
+                <element signature="e#9024#9039#0" expanded="true" />
+                <element signature="e#9041#9244#0" expanded="true" />
+                <element signature="e#9243#9244#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -114,23 +97,37 @@
       <file leaf-file-name="content_new_game.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+            <state relative-caret-position="1540">
+              <caret line="77" column="4" selection-start-line="77" selection-start-column="4" selection-end-line="77" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer2">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NewGame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1640">
+              <caret line="106" column="16" selection-start-line="106" selection-start-column="16" selection-end-line="106" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="content_edit_game.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret line="7" column="40" selection-start-line="7" selection-start-column="40" selection-end-line="7" selection-end-column="40" />
               <folding>
-                <element signature="e#891#908#0" expanded="true" />
-                <element signature="e#990#1025#0" expanded="true" />
-                <element signature="e#1059#1094#0" expanded="true" />
-                <element signature="e#1559#1577#0" expanded="true" />
-                <element signature="e#1612#1645#0" expanded="true" />
-                <element signature="e#1681#1714#0" expanded="true" />
-                <element signature="e#1743#1778#0" expanded="true" />
-                <element signature="e#1814#1849#0" expanded="true" />
-                <element signature="e#2230#2250#0" expanded="true" />
-                <element signature="e#2362#2397#0" expanded="true" />
-                <element signature="e#2711#2734#0" expanded="true" />
-                <element signature="e#2838#2871#0" expanded="true" />
-                <element signature="e#2901#2936#0" expanded="true" />
-                <element signature="e#2964#2997#0" expanded="true" />
+                <element signature="e#390#430#0" expanded="true" />
+                <element signature="e#676#709#0" expanded="true" />
+                <element signature="e#738#773#0" expanded="true" />
+                <element signature="e#803#838#0" expanded="true" />
+                <element signature="e#866#899#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -142,72 +139,9 @@
       <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="50" column="72" selection-start-line="50" selection-start-column="72" selection-end-line="50" selection-end-column="72" />
+            <state relative-caret-position="1000">
+              <caret line="50" column="46" selection-start-line="50" selection-start-column="46" selection-end-line="50" selection-end-column="46" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlayerListAdapter.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="490">
-              <caret line="67" column="64" selection-start-line="67" selection-start-column="64" selection-end-line="67" selection-end-column="64" />
-              <folding>
-                <element signature="e#2183#3080#0" expanded="true" />
-                <element signature="e#3079#3080#0" expanded="true" />
-                <element signature="e#3135#3307#0" expanded="true" />
-                <element signature="e#3306#3307#0" expanded="true" />
-                <element signature="e#4358#4359#0" expanded="true" />
-                <element signature="e#4399#4400#0" expanded="true" />
-                <element signature="e#4574#4727#0" expanded="true" />
-                <element signature="e#4726#4727#0" expanded="true" />
-                <element signature="e#5239#5240#0" expanded="true" />
-                <element signature="e#5294#5295#0" expanded="true" />
-                <marker date="1465055893445" expanded="false" signature="50:406" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CursorHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/CursorHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="87">
-              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NewGame.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="490">
-              <caret line="305" column="0" selection-start-line="305" selection-start-column="0" selection-end-line="305" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#3014#3363#0" expanded="true" />
-                <element signature="e#3362#3363#0" expanded="true" />
-                <element signature="e#4353#4362#0" expanded="true" />
-                <element signature="e#5821#5993#0" expanded="true" />
-                <element signature="e#5992#5993#0" expanded="true" />
-                <element signature="e#7888#7916#0" expanded="true" />
-                <element signature="e#7947#7974#0" expanded="true" />
-                <element signature="e#8012#8031#0" expanded="true" />
-                <element signature="e#8033#8287#0" expanded="true" />
-                <element signature="e#8286#8287#0" expanded="true" />
-                <element signature="e#8325#8340#0" expanded="true" />
-                <element signature="e#8342#8505#0" expanded="true" />
-                <element signature="e#8504#8505#0" expanded="true" />
-                <element signature="e#9261#9473#0" expanded="true" />
-                <element signature="e#9472#9473#0" expanded="true" />
-                <element signature="e#9555#9585#0" expanded="true" />
-                <element signature="e#9853#10085#0" expanded="true" />
-                <element signature="e#10084#10085#0" expanded="true" />
-                <element signature="e#10171#10198#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -215,32 +149,8 @@
       <file leaf-file-name="player_list_adapter.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-68">
-              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-              <folding>
-                <element signature="e#533#568#0" expanded="true" />
-                <element signature="e#598#633#0" expanded="true" />
-                <element signature="e#663#698#0" expanded="true" />
-                <element signature="e#726#761#0" expanded="true" />
-                <element signature="e#1795#1830#0" expanded="true" />
-                <element signature="e#1864#1899#0" expanded="true" />
-                <element signature="e#2797#2832#0" expanded="true" />
-                <element signature="e#2862#2897#0" expanded="true" />
-                <element signature="e#2927#2962#0" expanded="true" />
-                <element signature="e#2990#3025#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content_main.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="36" column="32" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
+            <state relative-caret-position="160">
+              <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -249,20 +159,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="content_edit_game.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml">
+      <file leaf-file-name="Home.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10">
-              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+            <state relative-caret-position="2640">
+              <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlayerListAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="44">
+              <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
               <folding>
-                <element signature="e#662#695#0" expanded="true" />
-                <element signature="e#724#759#0" expanded="true" />
-                <element signature="e#789#824#0" expanded="true" />
-                <element signature="e#852#885#0" expanded="true" />
-                <element signature="e#1570#1586#0" expanded="true" />
-                <element signature="e#2513#2541#0" expanded="true" />
-                <element signature="e#2919#2942#0" expanded="true" />
+                <element signature="e#2313#3210#0" expanded="true" />
+                <element signature="e#3209#3210#0" expanded="true" />
+                <element signature="e#3265#3437#0" expanded="true" />
+                <element signature="e#3436#3437#0" expanded="true" />
+                <element signature="e#5721#5913#0" expanded="true" />
+                <element signature="e#5912#5913#0" expanded="true" />
+                <element signature="e#6768#6921#0" expanded="true" />
+                <element signature="e#6920#6921#0" expanded="true" />
+                <element signature="e#7867#7868#0" expanded="true" />
+                <element signature="e#7922#7923#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/menu/main.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="392">
+              <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+              <folding />
             </state>
           </provider>
           <provider editor-type-id="android-designer2">
@@ -2188,8 +2121,6 @@
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/activity_settings.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/activity_graph.xml" />
-        <option value="$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml" />
-        <option value="$PROJECT_DIR$/mobile/src/main/res/menu/main.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/CursorHelper.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameModel.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java" />
@@ -2205,14 +2136,16 @@
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListFragment.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/fragment_alert_dialog.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/divider.xml" />
+        <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" />
+        <option value="$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml" />
-        <option value="$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml" />
-        <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" />
+        <option value="$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml" />
+        <option value="$PROJECT_DIR$/mobile/src/main/res/menu/main.xml" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" />
+        <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" />
       </list>
     </option>
   </component>
@@ -2247,7 +2180,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane />
+      </pane>
       <pane id="Scratches">
         <subPane />
       </pane>
@@ -2272,8 +2208,22 @@
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mipmap" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2289,6 +2239,10 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="menu" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -2350,35 +2304,10 @@
               <option name="myItemId" value="mobile" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ScoreKeeper" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MainActivity.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ScoreKeeper" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mobile" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane />
-      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2821,38 +2750,45 @@
       <option name="project" value="LOCAL" />
       <updated>1464962921641</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="edit players in the list when creating a new game">
+      <created>1465055908749</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1465055908749</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6726058" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3976546" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" x="92" y="92" width="1736" height="856" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36940297" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6024499" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3411514" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295838" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21908316" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11513859" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Nl-Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3976546" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" x="92" y="92" width="1736" height="856" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -2912,7 +2848,8 @@
     <MESSAGE value="UI tweaks" />
     <MESSAGE value="bug fix" />
     <MESSAGE value="edit players in the list when creating a new game" />
-    <option name="LAST_COMMIT_MESSAGE" value="edit players in the list when creating a new game" />
+    <MESSAGE value="major overhaul to editing games and creating games" />
+    <option name="LAST_COMMIT_MESSAGE" value="major overhaul to editing games and creating games" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2943,16 +2880,6 @@
         <state relative-caret-position="107">
           <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_graph.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="12" column="40" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/app_bar_settings.xml">
@@ -3056,46 +2983,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/menu/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="40" column="30" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/DateHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="31" column="31" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="564">
-          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -3222,33 +3113,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
           <caret line="51" column="44" selection-start-line="51" selection-start-column="44" selection-end-line="51" selection-end-column="44" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
-        </state>
+      <provider editor-type-id="android-manifest">
+        <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListFragment.java" />
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/app_bar_main.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -3260,17 +3136,7 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/fragment_alert_dialog.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/fragment_alert_dialog.xml" />
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/divider.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -3293,73 +3159,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="21" column="17" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
-          <folding>
-            <element signature="e#891#908#0" expanded="true" />
-            <element signature="e#990#1025#0" expanded="true" />
-            <element signature="e#1059#1094#0" expanded="true" />
-            <element signature="e#1559#1577#0" expanded="true" />
-            <element signature="e#1612#1645#0" expanded="true" />
-            <element signature="e#1681#1714#0" expanded="true" />
-            <element signature="e#1743#1778#0" expanded="true" />
-            <element signature="e#1814#1849#0" expanded="true" />
-            <element signature="e#2230#2250#0" expanded="true" />
-            <element signature="e#2362#2397#0" expanded="true" />
-            <element signature="e#2711#2734#0" expanded="true" />
-            <element signature="e#2838#2871#0" expanded="true" />
-            <element signature="e#2901#2936#0" expanded="true" />
-            <element signature="e#2964#2997#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding>
-            <element signature="e#662#695#0" expanded="true" />
-            <element signature="e#724#759#0" expanded="true" />
-            <element signature="e#789#824#0" expanded="true" />
-            <element signature="e#852#885#0" expanded="true" />
-            <element signature="e#1570#1586#0" expanded="true" />
-            <element signature="e#2513#2541#0" expanded="true" />
-            <element signature="e#2919#2942#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-68">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-          <folding>
-            <element signature="e#533#568#0" expanded="true" />
-            <element signature="e#598#633#0" expanded="true" />
-            <element signature="e#663#698#0" expanded="true" />
-            <element signature="e#726#761#0" expanded="true" />
-            <element signature="e#1795#1830#0" expanded="true" />
-            <element signature="e#1864#1899#0" expanded="true" />
-            <element signature="e#2797#2832#0" expanded="true" />
-            <element signature="e#2862#2897#0" expanded="true" />
-            <element signature="e#2927#2962#0" expanded="true" />
-            <element signature="e#2990#3025#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
@@ -3371,52 +3170,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="328" column="0" selection-start-line="328" selection-start-column="0" selection-end-line="328" selection-end-column="0" />
-          <folding>
-            <element signature="e#10126#10144#0" expanded="true" />
-            <element signature="e#10175#10201#0" expanded="true" />
-            <element signature="e#10238#10261#0" expanded="true" />
-            <element signature="e#10263#10607#0" expanded="true" />
-            <element signature="e#10606#10607#0" expanded="true" />
-            <element signature="e#10645#10667#0" expanded="true" />
-            <element signature="e#10669#11013#0" expanded="true" />
-            <element signature="e#11012#11013#0" expanded="true" />
-            <element signature="e#11051#11066#0" expanded="true" />
-            <element signature="e#11068#11267#0" expanded="true" />
-            <element signature="e#11266#11267#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1430">
-          <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#6276#6303#0" expanded="true" />
-            <element signature="e#6334#6365#0" expanded="true" />
-            <element signature="e#6403#6436#0" expanded="true" />
-            <element signature="e#6438#7018#0" expanded="true" />
-            <element signature="e#7017#7018#0" expanded="true" />
-            <element signature="e#7056#7071#0" expanded="true" />
-            <element signature="e#7073#7276#0" expanded="true" />
-            <element signature="e#7275#7276#0" expanded="true" />
-            <element signature="e#7920#7940#0" expanded="true" />
-            <element signature="e#7971#7999#0" expanded="true" />
-            <element signature="e#8037#8057#0" expanded="true" />
-            <element signature="e#8059#8276#0" expanded="true" />
-            <element signature="e#8275#8276#0" expanded="true" />
-            <element signature="e#8314#8329#0" expanded="true" />
-            <element signature="e#8331#8494#0" expanded="true" />
-            <element signature="e#8493#8494#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/CursorHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="87">
@@ -3425,59 +3178,161 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/strings.xml">
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/DateHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="50" column="72" selection-start-line="50" selection-start-column="72" selection-end-line="50" selection-end-column="72" />
+        <state relative-caret-position="0">
+          <caret line="0" column="17" selection-start-line="0" selection-start-column="17" selection-end-line="0" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/activity_edit_game.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="564">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_graph.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1540">
+          <caret line="77" column="4" selection-start-line="77" selection-start-column="4" selection-end-line="77" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/player_list_adapter.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="305" column="0" selection-start-line="305" selection-start-column="0" selection-end-line="305" selection-end-column="0" />
+        <state relative-caret-position="1640">
+          <caret line="106" column="16" selection-start-line="106" selection-start-column="16" selection-end-line="106" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2640">
+          <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4480">
+          <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1000">
+          <caret line="50" column="46" selection-start-line="50" selection-start-column="46" selection-end-line="50" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_edit_game.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="7" column="40" selection-start-line="7" selection-start-column="40" selection-end-line="7" selection-end-column="40" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#3014#3363#0" expanded="true" />
-            <element signature="e#3362#3363#0" expanded="true" />
-            <element signature="e#4353#4362#0" expanded="true" />
-            <element signature="e#5821#5993#0" expanded="true" />
-            <element signature="e#5992#5993#0" expanded="true" />
-            <element signature="e#7888#7916#0" expanded="true" />
-            <element signature="e#7947#7974#0" expanded="true" />
-            <element signature="e#8012#8031#0" expanded="true" />
-            <element signature="e#8033#8287#0" expanded="true" />
-            <element signature="e#8286#8287#0" expanded="true" />
-            <element signature="e#8325#8340#0" expanded="true" />
-            <element signature="e#8342#8505#0" expanded="true" />
-            <element signature="e#8504#8505#0" expanded="true" />
-            <element signature="e#9261#9473#0" expanded="true" />
-            <element signature="e#9472#9473#0" expanded="true" />
-            <element signature="e#9555#9585#0" expanded="true" />
-            <element signature="e#9853#10085#0" expanded="true" />
-            <element signature="e#10084#10085#0" expanded="true" />
-            <element signature="e#10171#10198#0" expanded="true" />
+            <element signature="e#390#430#0" expanded="true" />
+            <element signature="e#676#709#0" expanded="true" />
+            <element signature="e#738#773#0" expanded="true" />
+            <element signature="e#803#838#0" expanded="true" />
+            <element signature="e#866#899#0" expanded="true" />
           </folding>
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/menu/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="67" column="64" selection-start-line="67" selection-start-column="64" selection-end-line="67" selection-end-column="64" />
+        <state relative-caret-position="44">
+          <caret line="218" column="0" selection-start-line="218" selection-start-column="0" selection-end-line="218" selection-end-column="0" />
           <folding>
-            <element signature="e#2183#3080#0" expanded="true" />
-            <element signature="e#3079#3080#0" expanded="true" />
-            <element signature="e#3135#3307#0" expanded="true" />
-            <element signature="e#3306#3307#0" expanded="true" />
-            <element signature="e#4358#4359#0" expanded="true" />
-            <element signature="e#4399#4400#0" expanded="true" />
-            <element signature="e#4574#4727#0" expanded="true" />
-            <element signature="e#4726#4727#0" expanded="true" />
-            <element signature="e#5239#5240#0" expanded="true" />
-            <element signature="e#5294#5295#0" expanded="true" />
-            <marker date="1465055893445" expanded="false" signature="50:406" placeholder="..." />
+            <element signature="e#2313#3210#0" expanded="true" />
+            <element signature="e#3209#3210#0" expanded="true" />
+            <element signature="e#3265#3437#0" expanded="true" />
+            <element signature="e#3436#3437#0" expanded="true" />
+            <element signature="e#5721#5913#0" expanded="true" />
+            <element signature="e#5912#5913#0" expanded="true" />
+            <element signature="e#6768#6921#0" expanded="true" />
+            <element signature="e#6920#6921#0" expanded="true" />
+            <element signature="e#7867#7868#0" expanded="true" />
+            <element signature="e#7922#7923#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-400">
+          <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#7163#7190#0" expanded="true" />
+            <element signature="e#7221#7252#0" expanded="true" />
+            <element signature="e#7290#7323#0" expanded="true" />
+            <element signature="e#7325#8986#0" expanded="true" />
+            <element signature="e#7505#7546#0" expanded="true" />
+            <element signature="e#7624#7656#0" expanded="true" />
+            <element signature="e#8985#8986#0" expanded="true" />
+            <element signature="e#9024#9039#0" expanded="true" />
+            <element signature="e#9041#9244#0" expanded="true" />
+            <element signature="e#9243#9244#0" expanded="true" />
           </folding>
         </state>
       </provider>

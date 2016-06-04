@@ -3,6 +3,8 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +13,16 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by seth on 08/05/16.
  */
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
     Snackbar snackbar = null;
-    private String backup;
-    private ArrayList<String> playerArray, scoreArray;
+    private String backup, backupScore;
+    public static ArrayList<String> playerArray, scoreArray;
     private ScoreDBAdapter mDbHelper;
     private int mGameID;
     private int activity;
@@ -93,9 +97,61 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 holder.buttonDelete.setVisibility(View.VISIBLE);
                 holder.editTextPlayerExt.setText(playerArray.get(position));
                 holder.editTextScoreExt.setText(scoreArray.get(position));
+                holder.editTextPlayerExt.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        playerArray.set(position, s.toString());
+
+                        if (!checkDuplicates(playerArray)){
+                            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+                        }else {
+
+                            Snackbar snackbar = Snackbar.make(EditGame.editGameLayout, "You can't have duplicate players!", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                holder.editTextScoreExt.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        scoreArray.set(position, s.toString());
+                        mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeAt(position);
+                    }
+                });
             }else if(editable == 0){
                 holder.editTextPlayerExt.setHint(playerArray.get(position));
                 holder.editTextScoreExt.setHint(scoreArray.get(position));
+
                 holder.editTextPlayerExt.setEnabled(false);
                 holder.editTextScoreExt.setEnabled(false);
                 holder.buttonDelete.setVisibility(View.INVISIBLE);
@@ -105,6 +161,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     }
 
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
@@ -112,9 +169,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void removeAt(int position) {
-
         backup = playerArray.get(position);
+        backupScore = scoreArray.get(position);
         playerArray.remove(position);
+        scoreArray.remove(position);
+        Snackbar snackbar;
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -126,10 +185,21 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, playerArray.size());
 
-        mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
-                .setAction("Undo", onClickListener);
-        snackbar.show();
+        if (scoreArray != null){
+            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+            mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
+            snackbar = Snackbar.make(EditGame.editGameLayout, "Player removed.", Snackbar.LENGTH_LONG)
+                    .setAction("Undo", onClickListener);
+            snackbar.show();
+
+        }else{
+            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
+                    .setAction("Undo", onClickListener);
+            snackbar.show();
+        }
+
+
         snackbar.setCallback(new Snackbar.Callback() {
             @Override
             public void onShown(Snackbar snackbar) {
@@ -140,6 +210,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             public void onDismissed(Snackbar snackbar, int event) {
                 super.onDismissed(snackbar, event);
                 backup = null;
+                backupScore = null;
 
             }
         });
@@ -147,19 +218,60 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void undoPlayerRemoval() {
-        playerArray.add(playerArray.size(), backup);
+        if (scoreArray != null){
+            playerArray.add(playerArray.size(), backup);
+            scoreArray.add(scoreArray.size(), backupScore);
+            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+            mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
+
+        }else {
+            playerArray.add(playerArray.size(), backup);
+            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+
+            snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+        }
         notifyItemRemoved(playerArray.size());
         notifyItemRangeChanged(playerArray.size(), playerArray.size());
-        mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
 
-        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-        snackbar.show();
+    }
+
+    public static boolean checkEmpty(){
+        boolean empty = false;
+
+        if (String.valueOf(playerArray.indexOf("")) != null){
+            empty = true;
+        }
+        return empty;
+
+    }
+
+    public static void newPlayer(ScoreDBAdapter mDbHelper, int mGameID, PlayerListAdapter playerListAdapter){
+        playerArray.add(playerArray.size(), "");
+        scoreArray.add(scoreArray.size(), "0");
+        mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+        mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
+        playerListAdapter.notifyItemRemoved(playerArray.size());
+        playerListAdapter.notifyItemRangeChanged(playerArray.size(), playerArray.size());
+    }
+
+    public static boolean checkDuplicates(ArrayList arrayList){
+        boolean duplicate = false;
+
+        Set<Integer> set = new HashSet<Integer>(arrayList);
+
+        if(set.size() < arrayList.size()){
+            duplicate = true;
+        }
+
+        return duplicate;
     }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public EditText editTextPlayer, editTextPlayerExt, editTextScoreExt;
         public ImageButton buttonDelete;
@@ -182,9 +294,5 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         }
 
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 }

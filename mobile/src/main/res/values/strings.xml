@@ -48,6 +48,8 @@
     <string name="games_in_progress">Unfinished Games:</string>
     <string name="in_progress">UNFINISHED</string>
     <string name="graph">Graph</string>
+    <string name="invalid_time">Invalid Length</string>
+    <string name="invalid_date_and_time">Invalid date and time!</string>
     <string name="duplicates_message">You can\'t have duplicate players!</string>
     <string name="all_games">All Games</string>
     <string name="name_already_exists">Name already exists.</string>

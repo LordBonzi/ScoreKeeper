@@ -145,13 +145,9 @@ public class MainActivity extends AppCompatActivity
 
             fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
             fabChronometer.setOnClickListener(this);
-            mLayoutManager = new LinearLayoutManager(this);
-            bigGameList.setLayoutManager(mLayoutManager);
 
-            ArrayList<BigGameModel> bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray,  dbHelper);
+            displayRecyclerView();
 
-            bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID);
-            bigGameList.setAdapter(bigGameAdapter);
         }else{
             normal.setVisibility(View.VISIBLE);
             textViewP1.setText(String.valueOf(playersArray.get(0)));
@@ -168,12 +164,23 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void displayRecyclerView(){
+        mLayoutManager = new LinearLayoutManager(this);
+        bigGameList.setLayoutManager(mLayoutManager);
+
+        ArrayList<BigGameModel> bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray,  dbHelper);
+
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID);
+        bigGameList.setAdapter(bigGameAdapter);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_about).setVisible(true);
+        menu.findItem(R.id.action_reset).setVisible(true);
         return true;
     }
 
@@ -187,6 +194,48 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             onBackPressed();
+            return true;
+        }if (id == R.id.action_reset) {
+
+            AlertDialog dialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.reset_game_question);
+
+            builder.setMessage(R.string.reset_game_message);
+
+            builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    for (int i = 0; i < scoresArray.size(); i++){
+                        scoresArray.set(i, 0);
+                    }
+
+                    if (gameSize > 2){
+                        displayRecyclerView();
+                    }else{
+                        smallLayout.onCreate(buttonP1, buttonP2, dbHelper, gameID);
+                    }
+
+                    dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                }
+            });
+
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    chronometerClick();
+                }
+            });
+
+            dialog = builder.create();
+            timeSwapBuff += timeInMilliseconds;
+            handler.removeCallbacks(updateTimer);
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+            buttonChronometer.setTextColor(getResources().getColor(R.color.stop));
+            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
+            t = 1;
+            dialog.show();
             return true;
         }
 
@@ -279,8 +328,6 @@ public class MainActivity extends AppCompatActivity
                 s = "" + mins + ":" + String.format("%02d", secs) + ":"
                         + String.format("%03d", milliseconds);
             }
-
-
 
             buttonChronometer.setText(s);
             handler.postDelayed(this, 0);

@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -161,7 +160,6 @@ public class NewGame extends AppCompatActivity
 
     public void addPlayers(){
         player = editTextPlayer.getText().toString();
-        Log.i(TAG, ""+players);
 
         if (player.equals("")){
             View.OnClickListener onClickListener = new View.OnClickListener() {

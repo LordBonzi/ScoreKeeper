@@ -22,6 +22,7 @@
         \n\n For donate options put a joke about my age and beer
     </string>
     <string name="github">Our Github</string>
+    <string name="reset">Reset</string>
     <string name="website">https://sds-studios.github.io/</string>
     <string name="title_activity_home">Home</string>
     <string name="About">About</string>
@@ -54,11 +55,13 @@
     <string name="all_games">All Games</string>
     <string name="name_already_exists">Name already exists.</string>
     <string name="quit_game">Quit Game?</string>
+    <string name="reset_game_question">Reset Game?</string>
     <string name="more_than_two_players">You must have two or more players!</string>
     <string name="quit_game_message">Are you sure you want to quit this game. You won\'t lose your progress as it has been automatically saved.
         You can continue in the "In Progress" tab.</string>
 
-    <string name="delete_game_message">Are you sure you want to delete this game. You will never get it back.</string>
+    <string name="delete_game_message">Are you sure you want to delete this game? You will never get it back.</string>
+    <string name="reset_game_message">Are you sure you want to reset this game? Only the scores will be reset; not the players.</string>
 
     <string name="quit_setup_question">Quit Setup?</string>
     <string name="quit_setup_message">Are you sure you want to quit setting up game. Nothing will save.</string>

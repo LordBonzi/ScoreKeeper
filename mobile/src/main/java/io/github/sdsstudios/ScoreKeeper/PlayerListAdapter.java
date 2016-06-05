@@ -170,7 +170,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void removeAt(int position) {
         backup = playerArray.get(position);
-        backupScore = scoreArray.get(position);
+        if (scoreArray != null) {
+            backupScore = scoreArray.get(position);
+        }
         playerArray.remove(position);
         scoreArray.remove(position);
         Snackbar snackbar;

@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,18 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by seth on 08/05/16.
  */
-public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
+public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>{
     Snackbar snackbar = null;
     private String backup, backupScore;
     public static ArrayList<String> playerArray, scoreArray;
-    private ScoreDBAdapter mDbHelper;
+    public static ScoreDBAdapter mDbHelper;
     private int mGameID;
     private int activity;
     private int editable;
@@ -105,10 +107,10 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        playerArray.set(position, s.toString());
+                        Log.i("ontextchanged", "" + playerArray);
+                        playerArray.set(position, s.toString().trim());
 
                         if (!checkDuplicates(playerArray)){
-                            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
                         }else {
 
                             Snackbar snackbar = Snackbar.make(EditGame.editGameLayout, "You can't have duplicate players!", Snackbar.LENGTH_LONG);
@@ -131,8 +133,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        scoreArray.set(position, s.toString());
-                        mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
+                        scoreArray.set(position, s.toString().trim());
 
                     }
 
@@ -161,7 +162,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     }
 
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
@@ -186,8 +186,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRangeChanged(position, playerArray.size());
 
         if (scoreArray != null){
-            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-            mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
             snackbar = Snackbar.make(EditGame.editGameLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
             snackbar.show();
@@ -218,20 +216,22 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void undoPlayerRemoval() {
+        Log.i(backupScore, backup);
+
         if (scoreArray != null){
             playerArray.add(playerArray.size(), backup);
             scoreArray.add(scoreArray.size(), backupScore);
-            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-            mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
-
-        }else {
+        }else{
             playerArray.add(playerArray.size(), backup);
-            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-
+        }
+        if (activity == 1){
             snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-            snackbar.show();
+        }else if (activity == 2){
+            snackbar = Snackbar.make(EditGame.editGameLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
 
         }
+        snackbar.show();
+
         notifyItemRemoved(playerArray.size());
         notifyItemRangeChanged(playerArray.size(), playerArray.size());
 
@@ -239,21 +239,25 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public static boolean checkEmpty(){
         boolean empty = false;
+        Log.i("checkempty", ""+ playerArray + playerArray.contains(Collections.singletonList("")) + playerArray.get(2).toString());
 
-        if (String.valueOf(playerArray.indexOf("")) != null){
+        if (playerArray.contains("")){
             empty = true;
+        }else{
+            empty = false;
         }
         return empty;
 
     }
 
     public static void newPlayer(ScoreDBAdapter mDbHelper, int mGameID, PlayerListAdapter playerListAdapter){
-        playerArray.add(playerArray.size(), "");
+        Log.i("" + playerArray.size(), "" + scoreArray.size());
+        playerArray.add(playerArray.size(), "".trim());
         scoreArray.add(scoreArray.size(), "0");
-        mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-        mDbHelper.updateGame(scoreArray, null, ScoreDBAdapter.KEY_SCORE, mGameID);
-        playerListAdapter.notifyItemRemoved(playerArray.size());
+        Log.i("bob", "" + playerArray);
+        playerListAdapter.notifyItemInserted(playerArray.size());
         playerListAdapter.notifyItemRangeChanged(playerArray.size(), playerArray.size());
+
     }
 
     public static boolean checkDuplicates(ArrayList arrayList){

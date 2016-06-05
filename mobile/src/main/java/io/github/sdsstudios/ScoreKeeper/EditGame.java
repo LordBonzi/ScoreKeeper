@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -176,6 +177,8 @@ public class EditGame extends AppCompatActivity {
         final String newLength = editTextLength.getText().toString();
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
         final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 9);
+        final boolean bCheckEmpty = false;
+        final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -187,23 +190,35 @@ public class EditGame extends AppCompatActivity {
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (!bDateAndTime) {
+                Log.i("positivebutton", ""+PlayerListAdapter.playerArray);
+
+                if (bCheckEmpty) {
+
+                    invalidSnackbar("You can't have empty names!");
+
+                }else if (!bDateAndTime) {
                     invalidSnackbar(getString(R.string.invalid_date_and_time));
 
                 } else if (!bLength){
                     invalidSnackbar(getString(R.string.invalid_time));
 
-                } else if (PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray)) {
+                } else if (bCheckDuplicates) {
 
                     invalidSnackbar("You can't have duplicate players!");
 
-                }else if (PlayerListAdapter.checkEmpty()) {
-
-                    invalidSnackbar("You can't have empty names!");
-
-                }else{
+                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates){
                     dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
                     dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
+                        if (PlayerListAdapter.playerArray.get(i).equals("")){
+                            PlayerListAdapter.playerArray.remove(i);
+                            PlayerListAdapter.scoreArray.remove(i);
+                        }
+
+                    }
+
+                    dbHelper.updateGame(PlayerListAdapter.playerArray,null, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
                     editTextLength.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
                     editTextDate.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
                     displayRecyclerView(0);
@@ -223,7 +238,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                displayRecyclerView(0);
+                displayRecyclerView(1);
                 dialog.dismiss();
             }
         });
@@ -269,6 +284,7 @@ public class EditGame extends AppCompatActivity {
         menuItemGraph.setVisible(true);
         menuItemDone.setVisible(false);
         menuItemEdit.setVisible(true);
+        menuItemAdd.setVisible(false);
         menuItemCancel.setVisible(false);
 
         displayRecyclerView(0);

@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,14 +15,16 @@ public class GameModel{
     private String mType;
     private String mDate;
     private String mProgress;
+    private int gameID;
 
 
-    public GameModel(String players, String score, String date, String type, String progress) {
+    public GameModel(String players, String score, String date, String type, String progress, int gameIDm) {
         mPlayers = players;
         mScore = score;
         mDate = date;
         mType = type;
         mProgress = progress;
+        gameID = gameIDm;
     }
 
     public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity, Context context) {
@@ -29,6 +32,7 @@ public class GameModel{
         DateHelper dateHelper = new DateHelper();
         String p, s ,d ,t, progress = null;
         int j;
+        int gameID;
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
@@ -50,6 +54,7 @@ public class GameModel{
 
             arrayListPlayer = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
+            gameID = i;
 
             date = cursorHelper.getStringById(i, ScoreDBAdapter.KEY_TIME, dbHelper);
             d = dateHelper.gameDate(date);
@@ -84,14 +89,14 @@ public class GameModel{
                 if (cursorHelper.getCompletedById(i, dbHelper)== 0){
                     progress = context.getResources().getString(R.string.in_progress);
 
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
 
                 }
             }else if (activity == 2){
                 if (cursorHelper.getCompletedById(i, dbHelper)== 1){
                     progress = context.getResources().getString(R.string.completed);
 
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
 
                 }
 
@@ -102,7 +107,8 @@ public class GameModel{
                 }else if(cursorHelper.getCompletedById(i, dbHelper) == 0){
                     progress = context.getResources().getString(R.string.in_progress);
                 }
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress));
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
+                Log.i("gamemodel", "" + gameID);
             }
 
         }
@@ -127,6 +133,9 @@ public class GameModel{
 
     public String getState() {
         return mProgress;
+    }
+    public int getGameID() {
+        return gameID;
     }
 
 }

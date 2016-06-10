@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -169,13 +168,21 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void removeAt(int position) {
+        backup = "";
+        backup = "";
+        Log.e("Player array removeat", "z " +playerArray);
         backup = playerArray.get(position);
-        if (scoreArray != null) {
+        try {
             backupScore = scoreArray.get(position);
+            scoreArray.remove(position);
+
+        }catch (Exception e){
+
         }
         playerArray.remove(position);
-        scoreArray.remove(position);
-        Snackbar snackbar;
+        Log.e("Player array removed", "z " +playerArray);
+
+        Snackbar snackbar = null;
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -187,12 +194,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, playerArray.size());
 
-        if (scoreArray != null){
+        if (activity == 2){
             snackbar = Snackbar.make(EditGame.editGameLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
             snackbar.show();
 
-        }else{
+        }else if (activity == 1){
             mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
             snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
@@ -218,14 +225,13 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void undoPlayerRemoval() {
-        Log.i(backupScore, backup);
 
-        if (scoreArray != null){
-            playerArray.add(playerArray.size(), backup);
+        playerArray.add(playerArray.size(), backup);
+
+        if (scoreArray != null) {
             scoreArray.add(scoreArray.size(), backupScore);
-        }else{
-            playerArray.add(playerArray.size(), backup);
         }
+
         if (activity == 1){
             snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
         }else if (activity == 2){
@@ -233,30 +239,20 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         }
         snackbar.show();
+        Log.e("Player array removed", "z " +playerArray);
+
 
         notifyItemRemoved(playerArray.size());
         notifyItemRangeChanged(playerArray.size(), playerArray.size());
 
     }
 
-    public static boolean checkEmpty(){
-        boolean empty = false;
-        Log.i("checkempty", ""+ playerArray + playerArray.contains(Collections.singletonList("")) + playerArray.get(2).toString());
-
-        if (playerArray.contains("")){
-            empty = true;
-        }else{
-            empty = false;
-        }
-        return empty;
-
-    }
 
     public static void newPlayer(ScoreDBAdapter mDbHelper, int mGameID, PlayerListAdapter playerListAdapter){
-        Log.i("" + playerArray.size(), "" + scoreArray.size());
+        Log.e("Player array removed", "z " +playerArray);
+
         playerArray.add(playerArray.size(), "".trim());
         scoreArray.add(scoreArray.size(), "0");
-        Log.i("bob", "" + playerArray);
         playerListAdapter.notifyItemInserted(playerArray.size());
         playerListAdapter.notifyItemRangeChanged(playerArray.size(), playerArray.size());
 

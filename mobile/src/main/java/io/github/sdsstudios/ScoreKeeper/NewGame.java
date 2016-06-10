@@ -112,6 +112,20 @@ public class NewGame extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbHelper.open();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
+    }
+
+
     public boolean checkDuplicates(ArrayList arrayList){
         boolean duplicate = false;
 
@@ -203,11 +217,15 @@ public class NewGame extends AppCompatActivity
         if (stop && gameID != null) {
 
             try {
+                dbHelper.open();
                 dbHelper.deleteGame(Integer.valueOf(dbHelper.getNewestGame()));
             } catch (Exception e) {
+                dbHelper.open();
                 dbHelper.deleteGame(0);
             }
         }
+
+        dbHelper.close();
 
     }
 
@@ -257,14 +275,13 @@ public class NewGame extends AppCompatActivity
     }
 
     public void createScoreArray(){
+        score.clear();
 
         while (score.size() <= players.size()){
             score.add("0");
         }
 
         dbHelper.updateGame(score, null , ScoreDBAdapter.KEY_SCORE, gameID);
-
-
     }
 
     public void onClick(View v) {
@@ -308,6 +325,7 @@ public class NewGame extends AppCompatActivity
                     }else{
                         stop = false;
                         createScoreArray();
+                        mainActivityIntent.putExtra("gameID", gameID);
                         startActivity(mainActivityIntent);
                     }
 

@@ -98,7 +98,17 @@ public class Home extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dbHelper.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,14 +121,9 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
+        dbHelper.open();
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);    }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

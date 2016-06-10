@@ -26,6 +26,7 @@ import java.util.Date;
 public class EditGame extends AppCompatActivity {
     String date;
     int gameID;
+    private String lengthStr =null;
     private EditText editTextLength, editTextDate;
     private ArrayList arrayListPlayers, arrayListScores;
     private RecyclerView recyclerView;
@@ -38,8 +39,7 @@ public class EditGame extends AppCompatActivity {
     private ArrayList players;
     public static CoordinatorLayout editGameLayout;
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:SSS");//dd/MM/yyyy
-
+    SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss");//dd/MM/yyyy
 
     private MenuItem menuItemDelete, menuItemGraph, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd;
 
@@ -74,7 +74,7 @@ public class EditGame extends AppCompatActivity {
 
         date = cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
 
-        editTextLength.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
+        editTextLength.setHint(createLength());
         editTextDate.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
@@ -97,6 +97,12 @@ public class EditGame extends AppCompatActivity {
 
     }
 
+    public String createLength(){
+        cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper);
+
+        return lengthStr;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -113,6 +119,24 @@ public class EditGame extends AppCompatActivity {
         menu.findItem(R.id.action_edit).setVisible(true);
         menu.findItem(R.id.action_settings).setVisible(false);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dbHelper.open();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dbHelper.close();
     }
 
     @Override
@@ -176,7 +200,7 @@ public class EditGame extends AppCompatActivity {
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
-        final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 9);
+        final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
 
@@ -301,6 +325,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                Log.e("Delete game ID", "j"+ gameID);
                 dbHelper.deleteGame(gameID);
                 startActivity(homeIntent);
             }

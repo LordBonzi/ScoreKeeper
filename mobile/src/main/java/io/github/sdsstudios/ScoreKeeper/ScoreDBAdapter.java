@@ -84,7 +84,7 @@ public class ScoreDBAdapter {
     public long createGame(ArrayList players, String time, ArrayList score, int completed) {
         int id;
         try{
-            id = Integer.parseInt(getNewestGame()) + 1;
+            id = Integer.parseInt(getNewestGame());
 
         }catch (Exception e){
             id = 1;
@@ -113,7 +113,7 @@ public class ScoreDBAdapter {
             value = cursor.getString(index);
 
         }catch (Exception e){
-            value = cursor.getString(0);
+            value = "1";
 
         }
 
@@ -124,7 +124,7 @@ public class ScoreDBAdapter {
 
         mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
 
-        for (int i = 1; i < id; i++){
+        for (int i = 0; i < Integer.valueOf(getNewestGame()) ; i++){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_ROWID, i);
 

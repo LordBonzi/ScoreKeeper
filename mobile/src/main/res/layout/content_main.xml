@@ -25,7 +25,7 @@
             android:clickable="true"
             app:fabSize="normal"
             android:layout_margin="@dimen/fab_margin"
-            android:id="@id/fabChronometer"
+            android:id="@+id/fabChronometerBig"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
 
@@ -34,19 +34,20 @@
             android:layout_height="100dp"
             android:clickable="true"
             android:focusableInTouchMode="true"
-            android:id="@id/buttonChronometer"
+            android:id="@+id/buttonChronometerBig"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-            android:layout_above="@+id/fabChronometer"
+            android:layout_above="@+id/fabChronometerBig"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp">
 
             <io.github.sdsstudios.ScoreKeeper.Stopwatch
-                android:id="@id/chronometer"
+                android:id="@+id/chronometerBig"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true" />
+
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.RecyclerView
@@ -126,7 +127,7 @@
             app:fabSize="normal"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/fab_margin"
-            android:id="@id/fabChronometer"
+            android:id="@+id/fabChronometer"
             android:layout_below="@+id/buttonChronometer" />
 
         <android.support.v7.widget.CardView
@@ -134,7 +135,7 @@
             android:layout_height="100dp"
             android:clickable="true"
             android:focusableInTouchMode="true"
-            android:id="@id/buttonChronometer"
+            android:id="@+id/buttonChronometer"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
             android:layout_below="@+id/textViewP2"
             android:layout_centerHorizontal="true" >
@@ -145,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:layout_below="@id/fabChronometer"
+                android:layout_below="@+id/fabChronometer"
                 android:layout_centerHorizontal="true" />
         </android.support.v7.widget.CardView>
 

@@ -16,23 +16,35 @@ public class GameModel{
     private String mDate;
     private String mProgress;
     private int gameID;
+    private static ScoreDBAdapter dbHelper;
 
+    public void closeDB(){
+        dbHelper.close();
+    }
 
-    public GameModel(String players, String score, String date, String type, String progress, int gameIDm) {
+    public GameModel(ScoreDBAdapter dbHelper){
+        this ( null, null, null, null, null, 0, dbHelper);
+    }
+
+    public GameModel(String players, String score, String date, String type, String progress, int gameIDm, ScoreDBAdapter dbAdapter) {
+        super();
         mPlayers = players;
         mScore = score;
         mDate = date;
         mType = type;
         mProgress = progress;
         gameID = gameIDm;
+        dbHelper = dbAdapter;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, ScoreDBAdapter dbHelper, int activity, Context context) {
+    public static ArrayList<GameModel> createGameModel(int numGames, int activity, Context context) {
         CursorHelper cursorHelper = new CursorHelper();
-        DateHelper dateHelper = new DateHelper();
+        TimeHelper dateHelper = new TimeHelper();
         String p, s ,d ,t, progress = null;
         int j;
         int gameID;
+
+        dbHelper.open();
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
@@ -43,10 +55,10 @@ public class GameModel{
         if (activity == 1){
             j = 1;
         }else{
-            j = Integer.valueOf(dbHelper.getNewestGame())- numGames;
+            j = dbHelper.getNewestGame() - numGames;
         }
 
-        for (int i = 1; i <= Integer.valueOf(dbHelper.getNewestGame()); i++) {
+        for (int i = 1; i <= dbHelper.getNewestGame(); i++) {
             progress = "";
             p = null;
             s = null;
@@ -89,14 +101,14 @@ public class GameModel{
                 if (cursorHelper.getCompletedById(i, dbHelper)== 0){
                     progress = context.getResources().getString(R.string.in_progress);
 
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
 
                 }
             }else if (activity == 2){
                 if (cursorHelper.getCompletedById(i, dbHelper)== 1){
                     progress = context.getResources().getString(R.string.completed);
 
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
 
                 }
 
@@ -107,7 +119,7 @@ public class GameModel{
                 }else if(cursorHelper.getCompletedById(i, dbHelper) == 0){
                     progress = context.getResources().getString(R.string.in_progress);
                 }
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID,dbHelper));
                 Log.i("gamemodel", "" + gameID);
             }
 
@@ -137,5 +149,6 @@ public class GameModel{
     public int getGameID() {
         return gameID;
     }
+
 
 }

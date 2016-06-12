@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder>{
 
-    private ScoreDBAdapter mdbHelper;
     private List<GameModel> mGameModel;
     private Context context;
     private RelativeLayout relativeLayout;
@@ -27,9 +26,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private int numGames;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, ScoreDBAdapter dbHelper, Context context1, RelativeLayout layout, int activity, int numGamesm) {
+    public HistoryAdapter(List<GameModel> gameModel, Context context1, RelativeLayout layout, int activity, int numGamesm) {
         mGameModel = gameModel;
-        mdbHelper = dbHelper;
         context = context1;
         relativeLayout = layout;
         mActivity = activity;
@@ -59,7 +57,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         gameModel = mGameModel.get(mGameModel.size()-position-1);
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
         holder.textViewHistoryScore.setText(gameModel.getScore());
-        holder.textViewHistoryDate.setText(gameModel.getDate());
+        holder.textViewHistoryDate.setText("Last played: " + gameModel.getDate());
         holder.textViewHistoryType.setText(gameModel.getType());
 
         if (gameModel.getState().equals(holder.inProgress)) {

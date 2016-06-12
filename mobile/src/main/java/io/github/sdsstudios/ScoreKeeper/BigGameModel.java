@@ -10,14 +10,24 @@ import java.util.ArrayList;
 public class BigGameModel {
     private String mPlayer;
     private String mScore;
+    private static ScoreDBAdapter dbHelper;
 
-    public BigGameModel(String players, String score) {
+    public void closeDB(){
+        dbHelper.close();
+    }
+
+    public BigGameModel(ScoreDBAdapter scoreDBAdapter){
+        this (null , null, scoreDBAdapter);
+    }
+
+    public BigGameModel(String players, String score, ScoreDBAdapter dbAdapter) {
         mPlayer = players;
         mScore = score;
+        dbHelper = dbAdapter;
 
     }
 
-    public static ArrayList<BigGameModel> createGameModel(int numPlayers, ArrayList pArray, ArrayList sArray, ScoreDBAdapter dbHelper){
+    public static ArrayList<BigGameModel> createGameModel(int numPlayers, ArrayList pArray, ArrayList sArray){
         String p, s = null;
 
         ArrayList<BigGameModel> gameModelArrayList = new ArrayList<>();
@@ -26,7 +36,7 @@ public class BigGameModel {
             p = pArray.get(i).toString();
             s = sArray.get(i).toString();
 
-            gameModelArrayList.add(new BigGameModel(p , s));
+            gameModelArrayList.add(new BigGameModel(p , s, dbHelper));
         }
         return gameModelArrayList;
     }

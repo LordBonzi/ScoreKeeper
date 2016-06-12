@@ -87,6 +87,10 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
     }
 
+    public void closeDB(){
+        dbHelper.close();
+    }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

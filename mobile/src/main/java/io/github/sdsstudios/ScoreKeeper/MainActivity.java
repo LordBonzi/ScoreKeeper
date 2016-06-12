@@ -7,11 +7,13 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +21,10 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     TextView textViewP2;
     RecyclerView bigGameList;
     String TAG = "MainActivity.class";
+    private String time;
     int gameSize;
     RelativeLayout normal, big;
     ArrayList playersArray;
@@ -45,9 +51,12 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView.Adapter bigGameAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Stopwatch stopwatch;
+    private TimeHelper timeHelper;
+    private ArrayList<BigGameModel> bigGameModels;
+    private BigGameModel gameModel;
 
     long timeWhenStopped = 0;
-    boolean isPaused= true;
+    boolean isPaused = false;
     long milliseconds ;
 
     @Override
@@ -59,12 +68,20 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         cursorHelper = new CursorHelper();
+        timeHelper = new TimeHelper();
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
+        gameModel = new BigGameModel(dbHelper);
+
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
+
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        time = sdfDate.format(now);
+        dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
 
         smallLayout = new SmallLayout();
 
@@ -79,7 +96,6 @@ public class MainActivity extends AppCompatActivity
         buttonP2.setOnLongClickListener(this);
 
         stopwatch = new Stopwatch(this);
-        stopwatch = (Stopwatch) findViewById(R.id.chronometer);
 
         textViewP1 = (TextView)findViewById(R.id.textViewP1);
         textViewP2 = (TextView)findViewById(R.id.textViewP2);
@@ -97,23 +113,13 @@ public class MainActivity extends AppCompatActivity
 
         gameSize = playersArray.size();
 
-        try {
-
-            stopwatch.setBase(SystemClock.elapsedRealtime() - Long.valueOf(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)) );
-
-        }catch (Exception e){
-            e.printStackTrace();
-            stopwatch.setBase(SystemClock.elapsedRealtime());
-
-        }
-        fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
-
         smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID, cursorHelper);
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
 
-
+            stopwatch = (Stopwatch) findViewById(R.id.chronometerBig);
+            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
             fabChronometer.setOnClickListener(this);
 
             displayRecyclerView();
@@ -123,12 +129,29 @@ public class MainActivity extends AppCompatActivity
 
             textViewP1.setText(String.valueOf(playersArray.get(0)));
             textViewP2.setText(String.valueOf(playersArray.get(1)));
-
+            stopwatch = (Stopwatch) findViewById(R.id.chronometer);
+            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
             fabChronometer.setOnClickListener(this);
 
         }
 
-        chronometerClick();
+        try {
+            stopwatch.setBase((-(3600000 + timeHelper.convertToLong(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)))
+                    + SystemClock.elapsedRealtime())) ;
+
+            stopwatch.start();
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+            stopwatch.setTextColor(getResources().getColor(R.color.start));
+            fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+            Log.e("long",  " "+timeHelper.convertToLong(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Snackbar snackbar;
+            snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        Log.e("base ", "base: " + stopwatch.getBase()) ;
+        Log.e("systemclock ", "" + SystemClock.elapsedRealtime()) ;
 
     }
 
@@ -136,15 +159,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        dbHelper.close();
+        chronometerClick();
     }
 
 
     public void displayRecyclerView(){
         mLayoutManager = new LinearLayoutManager(this);
         bigGameList.setLayoutManager(mLayoutManager);
-
-        ArrayList<BigGameModel> bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray,  dbHelper);
+        bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
         bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID);
         bigGameList.setAdapter(bigGameAdapter);
@@ -172,6 +194,7 @@ public class MainActivity extends AppCompatActivity
             onBackPressed();
             return true;
         }if (id == R.id.action_reset) {
+            isPaused = true;
 
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -203,6 +226,7 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
+                    isPaused = false;
                     chronometerClick();
                 }
             });
@@ -220,16 +244,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-        dbHelper.close();
+    protected void onResume() {
+        super.onResume();
+        dbHelper.open();
 
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
+        chronometerClick();
+        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        gameModel.closeDB();
+        dbHelper.close();
     }
 
     public void chronometerClick(){
-        isPaused = !isPaused;
-        if (isPaused) {
+        if (!isPaused) {
             stopwatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
             stopwatch.start();
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
@@ -251,27 +282,30 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.buttonP1:
                 smallLayout.onClick(buttonP1, dbHelper, gameID);
+                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 break;
 
             case R.id.buttonP2:
                 smallLayout.onClick(buttonP2, dbHelper, gameID);
+                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 break;
 
             case R.id.fabChronometer:
+                isPaused = !isPaused;
+                chronometerClick();
+                break;
+
+            case R.id.fabChronometerBig:
+                isPaused = !isPaused;
                 chronometerClick();
                 break;
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        dbHelper.open();
-
-    }
 
     @Override
     public void onBackPressed() {
+        isPaused = true;
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -281,7 +315,7 @@ public class MainActivity extends AppCompatActivity
 
         builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
                 startActivity(homeIntent);
             }
@@ -291,6 +325,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
                 dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                finish();
                 startActivity(homeIntent);
             }
         });
@@ -298,6 +333,7 @@ public class MainActivity extends AppCompatActivity
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
+                isPaused = false;
                 chronometerClick();
             }
         });
@@ -306,6 +342,7 @@ public class MainActivity extends AppCompatActivity
         fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
         stopwatch.setTextColor(getResources().getColor(R.color.stop));
         fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+        chronometerClick();
         dialog.show();
 
     }
@@ -333,7 +370,6 @@ class SmallLayout extends Activity{
     public static ArrayList scoresArray;
     public static boolean ft1;
     public static boolean ft2;
-
 
     public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int gameID, CursorHelper cursorHelper){
         scoresArray = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);

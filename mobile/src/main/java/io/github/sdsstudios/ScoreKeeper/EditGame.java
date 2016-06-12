@@ -39,7 +39,8 @@ public class EditGame extends AppCompatActivity {
     private ArrayList players;
     public static CoordinatorLayout editGameLayout;
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss");//dd/MM/yyyy
+    SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:S");//dd/MM/yyyy
+    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
 
     private MenuItem menuItemDelete, menuItemGraph, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd;
 
@@ -74,7 +75,7 @@ public class EditGame extends AppCompatActivity {
 
         date = cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
 
-        editTextLength.setHint(createLength());
+        editTextLength.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
         editTextDate.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
@@ -95,12 +96,6 @@ public class EditGame extends AppCompatActivity {
 
         displayRecyclerView(0);
 
-    }
-
-    public String createLength(){
-        cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper);
-
-        return lengthStr;
     }
 
     @Override
@@ -163,7 +158,7 @@ public class EditGame extends AppCompatActivity {
             onMenuCancelClick();
 
         } else if (id == R.id.action_add){
-            PlayerListAdapter.newPlayer(dbHelper, gameID, playerListAdapter);
+            PlayerListAdapter.newPlayer(playerListAdapter);
         }
 
         return super.onOptionsItemSelected(item);
@@ -200,7 +195,7 @@ public class EditGame extends AppCompatActivity {
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
-        final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7);
+        final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7)||checkValidity(editTextLength.getText().toString(), hourlengthFormat, 10);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
 
@@ -325,7 +320,6 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Log.e("Delete game ID", "j"+ gameID);
                 dbHelper.deleteGame(gameID);
                 startActivity(homeIntent);
             }

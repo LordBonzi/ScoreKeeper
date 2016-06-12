@@ -2,7 +2,4 @@
 <resources>
     <item name="action_License" type="id">Licence</item>
     <item name="action_Licence" type="id">License</item>
-    <item name="buttonChronometer" type="id">buttonChronometer</item>
-    <item name="fabChronometer" type="id">fabChronometer</item>
-    <item name="chronometer" type="id">chronometer</item>
 </resources>

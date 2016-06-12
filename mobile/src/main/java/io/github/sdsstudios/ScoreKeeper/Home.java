@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,10 +11,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +80,7 @@ public class Home extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 startActivity(newGameIntent);
             }
         });
@@ -95,19 +99,6 @@ public class Home extends AppCompatActivity {
 
         }
 
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dbHelper.close();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        dbHelper.close();
     }
 
     @Override
@@ -122,7 +113,14 @@ public class Home extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         dbHelper.open();
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dbHelper.close();
     }
 
     @Override
@@ -175,6 +173,10 @@ public class Home extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+        ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
+        RecyclerView.Adapter historyAdapter;
+        ArrayList<GameModel> gameModel;
+        GameModel gModel;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -193,63 +195,100 @@ public class Home extends AppCompatActivity {
         }
 
         @Override
+        public void onPause() {
+            super.onPause();
+            gModel.closeDB();
+            dbHelper.close();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            dbHelper.open();
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
             int numGames = 1;
-            ScoreDBAdapter dbHelper;
             RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(R.id.homeList);
             TextView textViewHome = (TextView)rootView.findViewById(R.id.textViewNoGames);
             RelativeLayout fragmentHomeLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentHomeLayout);
-            RecyclerView.Adapter historyAdapter;
             RecyclerView.LayoutManager mLayoutManager;
 
             mLayoutManager = new LinearLayoutManager(getActivity());
             recyclerViewHome.setLayoutManager(mLayoutManager);
             dbHelper = new ScoreDBAdapter(getActivity());
             dbHelper.open();
+            gModel = new GameModel(dbHelper);
+            Log.e("numrows", ""+dbHelper.numRows());
 
             try {
-                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                    case 1:
-                        textViewHome.setText(R.string.games_in_progress);
-                        break;
+                if (dbHelper.numRows() != 0) {
+                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                        case 1:
+                            textViewHome.setText(R.string.games_in_progress);
+                            break;
 
-                    case 2:
-                        textViewHome.setText(R.string.completed_games);
-                        break;
+                        case 2:
+                            textViewHome.setText(R.string.completed_games);
+                            break;
 
-                    case 3:
-                        textViewHome.setText(R.string.games_you_have_played);
-                        break;
+                        case 3:
+                            textViewHome.setText(R.string.games_you_have_played);
+                            break;
+
+                    }
+
+                    gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
+                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
+                    recyclerViewHome.setAdapter(historyAdapter);
+
+                } else {
+
+                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                        case 1:
+                            textViewHome.setText(R.string.games_in_progress);
+                            break;
+
+                        case 2:
+                            textViewHome.setText(R.string.completed_games);
+                            break;
+
+                        case 3:
+                            textViewHome.setText(R.string.games_you_have_played);
+                            break;
+
+                    }
 
                 }
-
-                numGames = Integer.valueOf(dbHelper.getNewestGame());
-                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                historyAdapter = new HistoryAdapter(gameModel, dbHelper, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
-                recyclerViewHome.setAdapter(historyAdapter);
-
-
-            } catch (Exception e) {
+            }catch (Exception e){
                 e.printStackTrace();
+                Log.e("creating home tabviewss", e.toString());
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                    case 1:
-                        textViewHome.setText(R.string.games_in_progress);
-                        break;
+                builder.setTitle("Error");
 
-                    case 2:
-                        textViewHome.setText(R.string.completed_games);
-                        break;
+                builder.setMessage("Error creating home activity. Report it.");
 
-                    case 3:
-                        textViewHome.setText(R.string.games_you_have_played);
-                        break;
+                builder.setPositiveButton("Report it", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
 
-                }
+                    }
+                });
 
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
             }
             return rootView;
         }

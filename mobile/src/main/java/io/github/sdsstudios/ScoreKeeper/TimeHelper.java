@@ -1,5 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import java.util.GregorianCalendar;
  * Created by Seth Schroeder on 28/05/2016.
  */
 
-public class DateHelper {
+public class TimeHelper {
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");//dd/MM/yyyy
@@ -46,6 +47,16 @@ public class DateHelper {
             dateStr = weekFormat.format(myCal.getTime());
         }
         return dateStr;
+    }
+
+    public Long convertToLong(String time) throws ParseException {
+        Long timeLong = 0L;
+
+        DateFormat f = new SimpleDateFormat("mm:ss:S");
+        Date d = f.parse(time);
+        timeLong = d.getTime();
+
+        return timeLong;
     }
 
 

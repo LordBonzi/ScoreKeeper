@@ -15,8 +15,8 @@
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b12e633-0bb8-49d8-b366-0e23a9828e6e" name="Default" comment=" a incredibly buggy mess. DO NOT PULL THIS. Only as backup so i can start fresh for some activities">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/DateHelper.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/TimeHelper.java" />
+    <list default="true" id="2b12e633-0bb8-49d8-b366-0e23a9828e6e" name="Default" comment="FINALLY. Hopefully this should be less buggy!">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mobile/google-services.json" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/fileSnapshots.bin" />
@@ -26,21 +26,14 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_mobile_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameAdapter.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameModel.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/GameModel.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/GameModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/HistoryAdapter.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/HistoryAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/values/ids.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/values/ids.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/build.gradle" afterPath="$PROJECT_DIR$/mobile/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/mobile.iml" afterPath="$PROJECT_DIR$/mobile/mobile.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java" afterPath="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/layout/content_settings.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/layout/content_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" />
     </list>
     <ignored path="ScoreKeeper.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -71,8 +64,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="700">
-              <caret line="233" column="38" selection-start-line="198" selection-start-column="12" selection-end-line="233" selection-end-column="38" />
+            <state relative-caret-position="570">
+              <caret line="301" column="9" selection-start-line="281" selection-start-column="8" selection-end-line="301" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -80,177 +73,110 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewGame.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3458">
-              <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
-              <folding>
-                <element signature="e#4708#4717#0" expanded="true" />
-                <element signature="e#8676#8704#0" expanded="true" />
-                <element signature="e#8735#8762#0" expanded="true" />
-                <element signature="e#8800#8819#0" expanded="true" />
-                <element signature="e#8821#9023#0" expanded="true" />
-                <element signature="e#9022#9023#0" expanded="true" />
-                <element signature="e#10015#10227#0" expanded="true" />
-                <element signature="e#10226#10227#0" expanded="true" />
-                <element signature="e#10607#10839#0" expanded="true" />
-                <element signature="e#10838#10839#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BigGameModel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/BigGameModel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="19" column="41" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
-              <folding>
-                <element signature="e#279#280#0" expanded="true" />
-                <element signature="e#311#312#0" expanded="true" />
-                <element signature="e#368#369#0" expanded="true" />
-                <element signature="e#418#419#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ScoreDBAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-              <folding>
-                <element signature="e#6225#6226#0" expanded="true" />
-                <element signature="e#6302#6303#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Home.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10">
-              <caret line="267" column="17" selection-start-line="267" selection-start-column="17" selection-end-line="267" selection-end-column="17" />
-              <folding>
-                <element signature="e#3105#3296#0" expanded="true" />
-                <element signature="e#3295#3296#0" expanded="true" />
-                <element signature="e#7997#8023#0" expanded="true" />
-                <element signature="e#8143#8167#0" expanded="true" />
-                <element signature="e#8287#8317#0" expanded="true" />
-                <element signature="e#8926#8952#0" expanded="true" />
-                <element signature="e#9072#9096#0" expanded="true" />
-                <element signature="e#9216#9246#0" expanded="true" />
-                <element signature="e#9764#9918#0" expanded="true" />
-                <element signature="e#9917#9918#0" expanded="true" />
-                <element signature="e#9964#9979#0" expanded="true" />
-                <element signature="e#9981#10177#0" expanded="true" />
-                <element signature="e#10176#10177#0" expanded="true" />
-                <element signature="e#10575#10576#0" expanded="true" />
-                <element signature="e#10608#10609#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CursorHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/CursorHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="19" column="43" selection-start-line="17" selection-start-column="8" selection-end-line="19" selection-end-column="43" />
+            <state relative-caret-position="120">
+              <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameModel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/GameModel.java">
+      <file leaf-file-name="NewGame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+            <state relative-caret-position="520">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
               <folding>
-                <element signature="e#487#488#0" expanded="true" />
-                <element signature="e#519#520#0" expanded="true" />
-                <element signature="e#567#568#0" expanded="true" />
-                <element signature="e#632#633#0" expanded="true" />
-                <element signature="e#4671#4672#0" expanded="true" />
-                <element signature="e#4702#4703#0" expanded="true" />
-                <element signature="e#4734#4735#0" expanded="true" />
-                <element signature="e#4763#4764#0" expanded="true" />
-                <element signature="e#4794#4795#0" expanded="true" />
-                <element signature="e#4822#4823#0" expanded="true" />
-                <element signature="e#4853#4854#0" expanded="true" />
-                <element signature="e#4881#4882#0" expanded="true" />
-                <element signature="e#4913#4914#0" expanded="true" />
-                <element signature="e#4945#4946#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#6227#6228#0" expanded="false" />
+                <element signature="e#6285#6286#0" expanded="false" />
+                <element signature="e#6747#6748#0" expanded="false" />
+                <element signature="e#6805#6806#0" expanded="false" />
+                <element signature="e#9182#9183#0" expanded="false" />
+                <element signature="e#9230#9231#0" expanded="false" />
+                <element signature="e#10130#10131#0" expanded="false" />
+                <element signature="e#10204#10205#0" expanded="false" />
+                <element signature="e#10730#10731#0" expanded="false" />
+                <element signature="e#10812#10813#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EditGame.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-70">
-              <caret line="308" column="31" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
-              <folding>
-                <element signature="e#5522#5548#0" expanded="true" />
-                <element signature="e#12056#12076#0" expanded="true" />
-                <element signature="e#12107#12135#0" expanded="true" />
-                <element signature="e#12173#12193#0" expanded="true" />
-                <element signature="e#12195#12412#0" expanded="true" />
-                <element signature="e#12411#12412#0" expanded="true" />
-                <element signature="e#12450#12465#0" expanded="true" />
-                <element signature="e#12467#12630#0" expanded="true" />
-                <element signature="e#12629#12630#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="210">
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PlayerListAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
+      <file leaf-file-name="content_settings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_settings.xml">
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+          <provider selected="true" editor-type-id="android-designer2">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="77" column="25" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
-              <folding>
-                <element signature="e#1051#1052#0" expanded="true" />
-                <element signature="e#1084#1085#0" expanded="true" />
-                <element signature="e#3252#3504#0" expanded="true" />
-                <element signature="e#3503#3504#0" expanded="true" />
-                <element signature="e#3643#3670#0" expanded="true" />
-                <element signature="e#4529#4530#0" expanded="true" />
-                <element signature="e#4585#4758#0" expanded="true" />
-                <element signature="e#4757#4758#0" expanded="true" />
-                <element signature="e#6525#6717#0" expanded="true" />
-                <element signature="e#6716#6717#0" expanded="true" />
-                <element signature="e#7243#7244#0" expanded="true" />
-                <element signature="e#7284#7285#0" expanded="true" />
-                <element signature="e#7705#7858#0" expanded="true" />
-                <element signature="e#7857#7858#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="200">
+              <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HistoryAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/HistoryAdapter.java">
+      <file leaf-file-name="google-services.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/google-services.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
-              <folding>
-                <element signature="e#2558#4556#0" expanded="true" />
-                <element signature="e#2860#2877#0" expanded="true" />
-                <element signature="e#2920#2950#0" expanded="true" />
-                <element signature="e#3014#3476#0" expanded="true" />
-                <element signature="e#3475#3476#0" expanded="true" />
-                <element signature="e#3526#3543#0" expanded="true" />
-                <element signature="e#3545#3932#0" expanded="true" />
-                <element signature="e#3931#3932#0" expanded="true" />
-                <element signature="e#4555#4556#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="180">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="280">
+              <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="100">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-manifest">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Settings.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -303,23 +229,23 @@
           <value>
             <list>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-analytics-impl:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalyticsImpl900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Displays the sub-projects of root project 'ScoreKeeper'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="projects" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-common:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCommon900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformClassesAndResourcesWithProguardForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-analytics-impl:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalyticsImpl902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -348,9 +274,9 @@
                 <option name="name" value="compileDebugSources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-storage:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-storage:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseStorage900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseStorage902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Runs all device checks using Device Providers and Test Servers." />
@@ -383,13 +309,18 @@
                 <option name="name" value="generateDebugAndroidTestBuildConfig" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager-api:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager-api:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanagerApi900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanagerApi902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="compileDebugAndroidTestShaders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-identity:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIdentity902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -401,11 +332,6 @@
                 <option name="name" value="components" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuth900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="processDebugAndroidTestManifest" />
               </ExternalTaskPojo>
@@ -414,22 +340,17 @@
                 <option name="name" value="compileDebugUnitTestJavaWithJavac" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-wearable:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWearable902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformResourcesWithMergeJavaResForReleaseUnitTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="prePackageMarkerForDebugAndroidTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanager900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-gcm:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGcm900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -452,19 +373,14 @@
                 <option name="name" value="processReleaseUnitTestJavaRes" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-safetynet:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-analytics:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesSafetynet900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalytics902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth-module:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-ads-lite:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthModule900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-cast:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesCast900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAdsLite902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Uninstalls the Release build." />
@@ -474,6 +390,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="compileReleaseShaders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-crash:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCrash902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -488,23 +409,8 @@
                 <option name="name" value="checkReleaseManifest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-panorama:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPanorama900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-vision:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesVision900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="mergeReleaseJniLibFolders" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-core:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCore900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -543,6 +449,11 @@
                 <option name="name" value="assemble" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-appinvite:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppinvite902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="compileReleaseUnitTestSources" />
               </ExternalTaskPojo>
@@ -550,6 +461,16 @@
                 <option name="description" value="Installs the android (on device) tests for the Debug build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="installDebugAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-auth-base:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuthBase902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-database-connection:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabaseConnection902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Runs all device checks on currently connected devices." />
@@ -562,6 +483,16 @@
                 <option name="name" value="connectedDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-basement:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBasement902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-auth:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuth902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Assembles all the Test applications." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="assembleAndroidTest" />
@@ -571,9 +502,14 @@
                 <option name="name" value="processDebugAndroidTestResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-base:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-base:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBase900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBase902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-analytics:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalytics902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -588,13 +524,13 @@
                 <option name="name" value="compileLint" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-fitness:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeReleaseShaders" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesFitness902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-fitness:9.0.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesFitness900Library" />
+                <option name="name" value="mergeReleaseShaders" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -611,11 +547,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="assembleDebugAndroidTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-wallet:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWallet900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -635,18 +566,13 @@
                 <option name="name" value="test" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-nearby:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-nearby:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesNearby900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesNearby902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="mergeDebugAndroidTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-messaging:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseMessaging900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -660,16 +586,6 @@
                 <option name="description" value="Runs all checks." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tasks:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTasks900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-drive:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesDrive900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Run unit tests for the debug build." />
@@ -699,11 +615,6 @@
                 <option name="name" value="compileReleaseAidl" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-games:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGames900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Runs lint on the Release build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="lintRelease" />
@@ -727,11 +638,6 @@
                 <option name="name" value="checkDebugManifest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-analytics:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalytics900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Prints out all the source sets defined in this project." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="sourceSets" />
@@ -739,6 +645,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformResourcesWithMergeJavaResForDebugUnitTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-maps:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesMaps902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -749,9 +660,14 @@
                 <option name="name" value="prepareDebugUnitTestDependencies" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-appinvite:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-cast:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppinvite900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesCast902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-auth:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuth902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -763,9 +679,19 @@
                 <option name="name" value="lintVitalRelease" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-panorama:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPanorama902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Uninstalls the Debug build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="uninstallDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-core:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCore902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -776,9 +702,9 @@
                 <option name="name" value="generateDebugBuildConfig" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-database-connection:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-auth-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabaseConnection900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -788,6 +714,11 @@
                 <option name="description" value="Prepare com.android.support:mediarouter-v7:23.0.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="prepareComAndroidSupportMediarouterV72300Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-database:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabase902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Assembles all Release builds." />
@@ -800,6 +731,11 @@
                 <option name="name" value="prepareComAndroidSupportMultidexInstrumentation101Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-ads:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAds902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformClassesWithJarMergingForDebugAndroidTest" />
               </ExternalTaskPojo>
@@ -808,23 +744,18 @@
                 <option name="name" value="generateReleaseResValues" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-basement:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-appindexing:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBasement900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppindexing902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-iid:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-iid:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIid900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIid902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="assembleReleaseUnitTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-iid:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseIid900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -840,14 +771,19 @@
                 <option name="name" value="lintDebug" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-location:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-location:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesLocation900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesLocation902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Displays the configuration model of root project 'ScoreKeeper'. [incubating]" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="model" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-iid:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseIid902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Displays the tasks runnable from root project 'ScoreKeeper' (some of the displayed tasks may belong to subprojects)." />
@@ -860,9 +796,9 @@
                 <option name="name" value="init" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-storage-common:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-storage-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseStorageCommon900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseStorageCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -917,11 +853,6 @@
                 <option name="name" value="transformNative_libsWithMergeJniLibsForDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-config:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseConfig900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="compileReleaseRenderscript" />
               </ExternalTaskPojo>
@@ -929,11 +860,6 @@
                 <option name="description" value="Assembles all Debug builds." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="assembleDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-maps:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesMaps900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -950,11 +876,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="collectDebugMultiDexComponents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-appindexing:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppindexing900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -991,28 +912,23 @@
                 <option name="name" value="help" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth-common:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthCommon900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServices902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-analytics-impl:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalyticsImpl902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="mergeDebugAssets" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-ads:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAds900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Prepare com.android.support:animated-vector-drawable:23.4.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="prepareComAndroidSupportAnimatedVectorDrawable2340Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-database:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabase900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Uninstall all applications." />
@@ -1022,11 +938,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformNative_libsWithMergeJniLibsForDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-analytics:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalytics900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -1059,6 +970,11 @@
                 <option name="name" value="generateDebugSources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-wallet:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWallet902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="processDebugJavaRes" />
               </ExternalTaskPojo>
@@ -1071,25 +987,45 @@
                 <option name="name" value="jarReleaseClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-plus:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-plus:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPlus900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPlus902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="compileDebugNdk" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-messaging:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseMessaging902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformNative_libsWithMergeJniLibsForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-tasks:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTasks902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="transformClassesWithMultidexlistForDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-gcm:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGcm902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="validateDebugSigning" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-drive:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesDrive902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Installs and runs instrumentation tests for all flavors on connected devices." />
@@ -1126,9 +1062,14 @@
                 <option name="name" value="transformResourcesWithMergeJavaResForDebug" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-identity:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-games:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIdentity900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGames902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanager902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Assembles and tests this project and all projects that depend on it." />
@@ -1136,9 +1077,9 @@
                 <option name="name" value="buildDependents" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-crash:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-config:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCrash900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseConfig902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -1150,11 +1091,6 @@
                 <option name="name" value="prepareComAndroidSupportRecyclerviewV72340Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-wearable:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWearable900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="collectDebugAndroidTestMultiDexComponents" />
               </ExternalTaskPojo>
@@ -1163,13 +1099,23 @@
                 <option name="name" value="mergeReleaseAssets" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-ads-lite:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-safetynet:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAdsLite900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesSafetynet902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-auth-module:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthModule902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="generateReleaseBuildConfig" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-vision:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesVision902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Displays the signing info for each variant." />
@@ -1183,16 +1129,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="mergeDebugAndroidTestShaders" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServices900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-analytics-impl:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalyticsImpl900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -1212,11 +1148,6 @@
                 <option name="name" value="generateDebugAndroidTestResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-auth-base:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuthBase900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="processDebugManifest" />
               </ExternalTaskPojo>
@@ -1233,11 +1164,6 @@
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="properties" />
               </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-auth:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuth900Library" />
-              </ExternalTaskPojo>
             </list>
           </value>
         </entry>
@@ -1245,23 +1171,23 @@
           <value>
             <list>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-analytics-impl:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalyticsImpl900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Displays the sub-projects of project ':mobile'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="projects" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-common:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCommon900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformClassesAndResourcesWithProguardForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-analytics-impl:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalyticsImpl902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1290,9 +1216,9 @@
                 <option name="name" value="compileDebugSources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-storage:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-storage:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseStorage900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseStorage902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Runs all device checks using Device Providers and Test Servers." />
@@ -1325,13 +1251,18 @@
                 <option name="name" value="generateDebugAndroidTestBuildConfig" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager-api:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager-api:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanagerApi900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanagerApi902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="compileDebugAndroidTestShaders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-identity:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIdentity902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1343,11 +1274,6 @@
                 <option name="name" value="components" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuth900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="processDebugAndroidTestManifest" />
               </ExternalTaskPojo>
@@ -1356,22 +1282,17 @@
                 <option name="name" value="compileDebugUnitTestJavaWithJavac" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-wearable:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWearable902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformResourcesWithMergeJavaResForReleaseUnitTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="prePackageMarkerForDebugAndroidTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanager900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-gcm:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGcm900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1394,19 +1315,14 @@
                 <option name="name" value="processReleaseUnitTestJavaRes" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-safetynet:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-analytics:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesSafetynet900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalytics902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth-module:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-ads-lite:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthModule900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-cast:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesCast900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAdsLite902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Uninstalls the Release build." />
@@ -1416,6 +1332,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="compileReleaseShaders" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-crash:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCrash902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1430,23 +1351,8 @@
                 <option name="name" value="checkReleaseManifest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-panorama:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPanorama900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-vision:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesVision900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="mergeReleaseJniLibFolders" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-core:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCore900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1485,6 +1391,11 @@
                 <option name="name" value="assemble" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-appinvite:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppinvite902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="compileReleaseUnitTestSources" />
               </ExternalTaskPojo>
@@ -1492,6 +1403,16 @@
                 <option name="description" value="Installs the android (on device) tests for the Debug build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="installDebugAndroidTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-auth-base:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuthBase902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-database-connection:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabaseConnection902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Runs all device checks on currently connected devices." />
@@ -1504,6 +1425,16 @@
                 <option name="name" value="connectedDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-basement:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBasement902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-auth:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuth902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Assembles all the Test applications." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="assembleAndroidTest" />
@@ -1513,9 +1444,14 @@
                 <option name="name" value="processDebugAndroidTestResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-base:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-base:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBase900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBase902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-analytics:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalytics902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1530,13 +1466,13 @@
                 <option name="name" value="compileLint" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-fitness:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="mergeReleaseShaders" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesFitness902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-fitness:9.0.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesFitness900Library" />
+                <option name="name" value="mergeReleaseShaders" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1553,11 +1489,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="assembleDebugAndroidTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-wallet:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWallet900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1577,18 +1508,13 @@
                 <option name="name" value="test" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-nearby:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-nearby:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesNearby900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesNearby902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="mergeDebugAndroidTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-messaging:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseMessaging900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1602,16 +1528,6 @@
                 <option name="description" value="Runs all checks." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-tasks:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTasks900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-drive:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesDrive900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Run unit tests for the debug build." />
@@ -1641,11 +1557,6 @@
                 <option name="name" value="compileReleaseAidl" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-games:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGames900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Runs lint on the Release build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="lintRelease" />
@@ -1669,11 +1580,6 @@
                 <option name="name" value="checkDebugManifest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-analytics:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalytics900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Prints out all the source sets defined in this project." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="sourceSets" />
@@ -1681,6 +1587,11 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformResourcesWithMergeJavaResForDebugUnitTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-maps:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesMaps902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1691,9 +1602,14 @@
                 <option name="name" value="prepareDebugUnitTestDependencies" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-appinvite:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-cast:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppinvite900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesCast902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-auth:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuth902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1705,9 +1621,19 @@
                 <option name="name" value="lintVitalRelease" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-panorama:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPanorama902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Uninstalls the Debug build." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="uninstallDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-core:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseCore902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1718,9 +1644,9 @@
                 <option name="name" value="generateDebugBuildConfig" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-database-connection:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-auth-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabaseConnection900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1730,6 +1656,11 @@
                 <option name="description" value="Prepare com.android.support:mediarouter-v7:23.0.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="prepareComAndroidSupportMediarouterV72300Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-database:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabase902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Assembles all Release builds." />
@@ -1742,6 +1673,11 @@
                 <option name="name" value="prepareComAndroidSupportMultidexInstrumentation101Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-ads:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAds902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformClassesWithJarMergingForDebugAndroidTest" />
               </ExternalTaskPojo>
@@ -1750,23 +1686,18 @@
                 <option name="name" value="generateReleaseResValues" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-basement:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-appindexing:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesBasement900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppindexing902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-iid:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-iid:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIid900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIid902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="assembleReleaseUnitTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-iid:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseIid900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1782,9 +1713,9 @@
                 <option name="name" value="lintDebug" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-location:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-location:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesLocation900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesLocation902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Displays the configuration model of project ':mobile'. [incubating]" />
@@ -1792,14 +1723,19 @@
                 <option name="name" value="model" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-iid:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseIid902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="description" value="Displays the tasks runnable from project ':mobile'." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="tasks" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-storage-common:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-storage-common:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseStorageCommon900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseStorageCommon902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1854,11 +1790,6 @@
                 <option name="name" value="transformNative_libsWithMergeJniLibsForDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-config:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseConfig900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="compileReleaseRenderscript" />
               </ExternalTaskPojo>
@@ -1866,11 +1797,6 @@
                 <option name="description" value="Assembles all Debug builds." />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="assembleDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-maps:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesMaps900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1887,11 +1813,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="collectDebugMultiDexComponents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-appindexing:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAppindexing900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1928,28 +1849,23 @@
                 <option name="name" value="help" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-auth-common:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthCommon900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServices902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-analytics-impl:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalyticsImpl902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="mergeDebugAssets" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-ads:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAds900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="description" value="Prepare com.android.support:animated-vector-drawable:23.4.0" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="prepareComAndroidSupportAnimatedVectorDrawable2340Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-database:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseDatabase900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Uninstall all applications." />
@@ -1959,11 +1875,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformNative_libsWithMergeJniLibsForDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-analytics:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseAnalytics900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -1991,6 +1902,11 @@
                 <option name="name" value="generateDebugSources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-wallet:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWallet902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="processDebugJavaRes" />
               </ExternalTaskPojo>
@@ -2003,25 +1919,45 @@
                 <option name="name" value="jarReleaseClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-plus:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-plus:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPlus900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesPlus902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="compileDebugNdk" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-messaging:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseMessaging902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformNative_libsWithMergeJniLibsForRelease" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-tasks:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTasks902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="transformClassesWithMultidexlistForDebugAndroidTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-gcm:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGcm902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="validateDebugSigning" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-drive:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesDrive902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Installs and runs instrumentation tests for all flavors on connected devices." />
@@ -2058,9 +1994,14 @@
                 <option name="name" value="transformResourcesWithMergeJavaResForDebug" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-identity:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-games:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesIdentity900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesGames902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-tagmanager:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesTagmanager902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Assembles and tests this project and all projects that depend on it." />
@@ -2068,9 +2009,9 @@
                 <option name="name" value="buildDependents" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.firebase:firebase-crash:9.0.0" />
+                <option name="description" value="Prepare com.google.firebase:firebase-config:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleFirebaseFirebaseCrash900Library" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseConfig902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
@@ -2082,11 +2023,6 @@
                 <option name="name" value="prepareComAndroidSupportRecyclerviewV72340Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-wearable:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesWearable900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="collectDebugAndroidTestMultiDexComponents" />
               </ExternalTaskPojo>
@@ -2095,13 +2031,23 @@
                 <option name="name" value="mergeReleaseAssets" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-ads-lite:9.0.0" />
+                <option name="description" value="Prepare com.google.android.gms:play-services-safetynet:9.0.2" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAdsLite900Library" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesSafetynet902Library" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.firebase:firebase-auth-module:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleFirebaseFirebaseAuthModule902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="generateReleaseBuildConfig" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Prepare com.google.android.gms:play-services-vision:9.0.2" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
+                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesVision902Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Displays the signing info for each variant." />
@@ -2115,16 +2061,6 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="mergeDebugAndroidTestShaders" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServices900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-analytics-impl:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAnalyticsImpl900Library" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="description" value="Deletes the build directory." />
@@ -2145,11 +2081,6 @@
                 <option name="name" value="generateDebugAndroidTestResources" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-auth-base:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuthBase900Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="processDebugManifest" />
               </ExternalTaskPojo>
@@ -2166,11 +2097,6 @@
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
                 <option name="name" value="properties" />
               </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.google.android.gms:play-services-auth:9.0.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/mobile" />
-                <option name="name" value="prepareComGoogleAndroidGmsPlayServicesAuth900Library" />
-              </ExternalTaskPojo>
             </list>
           </value>
         </entry>
@@ -2178,7 +2104,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper" value="4394598524326" />
+        <entry key="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper" value="4395271558020" />
       </map>
     </option>
     <option name="externalProjectsViewState">
@@ -2204,14 +2130,19 @@
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/ScoreDBAdapter.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java" />
         <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java" />
+        <option value="$PROJECT_DIR$/mobile/build.gradle" />
+        <option value="$PROJECT_DIR$/mobile/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/mobile/src/main/res/layout/content_settings.xml" />
+        <option value="$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1616" />
+    <option name="height" value="876" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -2224,7 +2155,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="AndroidView" proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -2238,9 +2169,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2258,6 +2187,46 @@
               <option name="myItemId" value="mobile" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -2299,34 +2268,136 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="mobile" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ScoreKeeper" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MainActivity.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mobile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScoreKeeper" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="instant.run" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="device.picker.selection" value="TA98601TJK" />
+    <property name="device.picker.selection" value="e2310431" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPaletteManager-NlPreviewForm.SHOW" value="false" />
-    <property name="android.project.structure.last.selected" value="SDK Location" />
+    <property name="android.project.structure.last.selected" value="mobile" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="android.sdk.path" value="C:/Android/sdk2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper\mobile" />
+      <recent name="C:\Users\Seth Schroeder\GitProjects\ScoreKeeper" />
+    </key>
   </component>
   <component name="RunManager" selected="Android Application.mobile">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
@@ -2661,38 +2732,45 @@
       <option name="project" value="LOCAL" />
       <updated>1465586446459</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="FINALLY. Hopefully this should be less buggy!">
+      <created>1465757739049</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1465757739049</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32729805" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44097996" sideWeight="0.50852877" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45768374" sideWeight="0.4914712" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4568245" sideWeight="0.4914712" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1401919" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16902314" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Nl-Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -2708,7 +2786,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=" a incredibly buggy mess. DO NOT PULL THIS. Only as backup so i can start fresh for some activities" />
-    <option name="LAST_COMMIT_MESSAGE" value=" a incredibly buggy mess. DO NOT PULL THIS. Only as backup so i can start fresh for some activities" />
+    <MESSAGE value="FINALLY. Hopefully this should be less buggy!" />
+    <option name="LAST_COMMIT_MESSAGE" value="FINALLY. Hopefully this should be less buggy!" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -2718,77 +2797,15 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1540">
-          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
-          <folding>
-            <element signature="e#5522#5548#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/GameModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1220">
-          <caret line="64" column="72" selection-start-line="64" selection-start-column="72" selection-end-line="64" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3360">
-          <caret line="190" column="24" selection-start-line="188" selection-start-column="8" selection-end-line="190" selection-end-column="24" />
-          <folding>
-            <element signature="e#2756#4530#0" expanded="true" />
-            <element signature="e#3252#3504#0" expanded="true" />
-            <element signature="e#3503#3504#0" expanded="true" />
-            <element signature="e#3643#3670#0" expanded="true" />
-            <element signature="e#4529#4530#0" expanded="true" />
-            <element signature="e#7243#7244#0" expanded="true" />
-            <element signature="e#7284#7285#0" expanded="true" />
-            <element signature="e#7705#7858#0" expanded="true" />
-            <element signature="e#7857#7858#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1340">
-          <caret line="67" column="32" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/TimeHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="56" column="16" selection-start-line="56" selection-start-column="16" selection-end-line="56" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Stopwatch.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2640">
           <caret line="145" column="0" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="e#848#849#0" expanded="false" />
+            <element signature="e#887#888#0" expanded="false" />
+            <element signature="e#948#949#0" expanded="false" />
+            <element signature="e#988#989#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2797,7 +2814,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1720">
           <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#3045#3236#0" expanded="true" />
+            <element signature="e#3235#3236#0" expanded="true" />
+            <element signature="e#7937#7963#0" expanded="true" />
+            <element signature="e#8083#8107#0" expanded="true" />
+            <element signature="e#8227#8257#0" expanded="true" />
+            <element signature="e#8866#8892#0" expanded="true" />
+            <element signature="e#9012#9036#0" expanded="true" />
+            <element signature="e#9156#9186#0" expanded="true" />
+            <element signature="e#9704#9858#0" expanded="true" />
+            <element signature="e#9857#9858#0" expanded="true" />
+            <element signature="e#9904#9919#0" expanded="true" />
+            <element signature="e#9921#10117#0" expanded="true" />
+            <element signature="e#10116#10117#0" expanded="true" />
+            <element signature="e#10515#10516#0" expanded="true" />
+            <element signature="e#10548#10549#0" expanded="true" />
+            <marker date="1465757713294" expanded="false" signature="50:1009" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2806,16 +2840,17 @@
         <state relative-caret-position="3700">
           <caret line="213" column="0" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
           <folding>
-            <element signature="e#4708#4717#0" expanded="true" />
-            <element signature="e#8676#8704#0" expanded="true" />
-            <element signature="e#8735#8762#0" expanded="true" />
-            <element signature="e#8800#8819#0" expanded="true" />
-            <element signature="e#8821#9023#0" expanded="true" />
-            <element signature="e#9022#9023#0" expanded="true" />
-            <element signature="e#10015#10227#0" expanded="true" />
-            <element signature="e#10226#10227#0" expanded="true" />
-            <element signature="e#10607#10839#0" expanded="true" />
-            <element signature="e#10838#10839#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#6227#6228#0" expanded="false" />
+            <element signature="e#6285#6286#0" expanded="false" />
+            <element signature="e#6747#6748#0" expanded="false" />
+            <element signature="e#6805#6806#0" expanded="false" />
+            <element signature="e#9182#9183#0" expanded="false" />
+            <element signature="e#9230#9231#0" expanded="false" />
+            <element signature="e#10130#10131#0" expanded="false" />
+            <element signature="e#10204#10205#0" expanded="false" />
+            <element signature="e#10730#10731#0" expanded="false" />
+            <element signature="e#10812#10813#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2824,7 +2859,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2280">
           <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#6225#6226#0" expanded="true" />
+            <element signature="e#6302#6303#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2833,7 +2871,15 @@
         <state relative-caret-position="1540">
           <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding>
-            <element signature="e#5522#5548#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#7989#10298#0" expanded="false" />
+            <element signature="e#10297#10298#0" expanded="false" />
+            <element signature="e#10353#10556#0" expanded="false" />
+            <element signature="e#10555#10556#0" expanded="false" />
+            <element signature="e#12195#12412#0" expanded="false" />
+            <element signature="e#12411#12412#0" expanded="false" />
+            <element signature="e#12467#12630#0" expanded="false" />
+            <element signature="e#12629#12630#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2842,7 +2888,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1220">
           <caret line="64" column="72" selection-start-line="64" selection-start-column="72" selection-end-line="64" selection-end-column="72" />
-          <folding />
+          <folding>
+            <element signature="e#439#440#0" expanded="true" />
+            <element signature="e#471#472#0" expanded="true" />
+            <element signature="e#519#520#0" expanded="true" />
+            <element signature="e#584#585#0" expanded="true" />
+            <element signature="e#4623#4624#0" expanded="true" />
+            <element signature="e#4654#4655#0" expanded="true" />
+            <element signature="e#4686#4687#0" expanded="true" />
+            <element signature="e#4715#4716#0" expanded="true" />
+            <element signature="e#4746#4747#0" expanded="true" />
+            <element signature="e#4774#4775#0" expanded="true" />
+            <element signature="e#4805#4806#0" expanded="true" />
+            <element signature="e#4833#4834#0" expanded="true" />
+            <element signature="e#4865#4866#0" expanded="true" />
+            <element signature="e#4897#4898#0" expanded="true" />
+            <marker date="1465757713258" expanded="false" signature="50:128" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2851,28 +2913,26 @@
         <state relative-caret-position="3360">
           <caret line="190" column="24" selection-start-line="188" selection-start-column="8" selection-end-line="190" selection-end-column="24" />
           <folding>
-            <element signature="e#2756#4530#0" expanded="true" />
-            <element signature="e#3252#3504#0" expanded="true" />
-            <element signature="e#3503#3504#0" expanded="true" />
-            <element signature="e#3643#3670#0" expanded="true" />
-            <element signature="e#4529#4530#0" expanded="true" />
-            <element signature="e#7243#7244#0" expanded="true" />
-            <element signature="e#7284#7285#0" expanded="true" />
-            <element signature="e#7705#7858#0" expanded="true" />
-            <element signature="e#7857#7858#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3383#3384#0" expanded="false" />
+            <element signature="e#3473#3474#0" expanded="false" />
+            <element signature="e#6632#6633#0" expanded="false" />
+            <element signature="e#6698#6699#0" expanded="false" />
+            <element signature="e#7796#7797#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1340">
           <caret line="67" column="32" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
@@ -2890,16 +2950,17 @@
         <state relative-caret-position="3940">
           <caret line="222" column="32" selection-start-line="222" selection-start-column="32" selection-end-line="222" selection-end-column="32" />
           <folding>
-            <element signature="e#4708#4717#0" expanded="true" />
-            <element signature="e#8676#8704#0" expanded="true" />
-            <element signature="e#8735#8762#0" expanded="true" />
-            <element signature="e#8800#8819#0" expanded="true" />
-            <element signature="e#8821#9023#0" expanded="true" />
-            <element signature="e#9022#9023#0" expanded="true" />
-            <element signature="e#10015#10227#0" expanded="true" />
-            <element signature="e#10226#10227#0" expanded="true" />
-            <element signature="e#10607#10839#0" expanded="true" />
-            <element signature="e#10838#10839#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#6227#6228#0" expanded="false" />
+            <element signature="e#6285#6286#0" expanded="false" />
+            <element signature="e#6747#6748#0" expanded="false" />
+            <element signature="e#6805#6806#0" expanded="false" />
+            <element signature="e#9182#9183#0" expanded="false" />
+            <element signature="e#9230#9231#0" expanded="false" />
+            <element signature="e#10130#10131#0" expanded="false" />
+            <element signature="e#10204#10205#0" expanded="false" />
+            <element signature="e#10730#10731#0" expanded="false" />
+            <element signature="e#10812#10813#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2909,7 +2970,15 @@
         <state relative-caret-position="3420">
           <caret line="192" column="95" selection-start-line="192" selection-start-column="95" selection-end-line="192" selection-end-column="95" />
           <folding>
-            <element signature="e#5522#5548#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#7989#10298#0" expanded="false" />
+            <element signature="e#10297#10298#0" expanded="false" />
+            <element signature="e#10353#10556#0" expanded="false" />
+            <element signature="e#10555#10556#0" expanded="false" />
+            <element signature="e#12195#12412#0" expanded="false" />
+            <element signature="e#12411#12412#0" expanded="false" />
+            <element signature="e#12467#12630#0" expanded="false" />
+            <element signature="e#12629#12630#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2919,15 +2988,13 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#2756#4530#0" expanded="true" />
-            <element signature="e#3252#3504#0" expanded="true" />
-            <element signature="e#3503#3504#0" expanded="true" />
-            <element signature="e#3643#3670#0" expanded="true" />
-            <element signature="e#4529#4530#0" expanded="true" />
-            <element signature="e#7243#7244#0" expanded="true" />
-            <element signature="e#7284#7285#0" expanded="true" />
-            <element signature="e#7705#7858#0" expanded="true" />
-            <element signature="e#7857#7858#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3383#3384#0" expanded="false" />
+            <element signature="e#3473#3474#0" expanded="false" />
+            <element signature="e#6632#6633#0" expanded="false" />
+            <element signature="e#6698#6699#0" expanded="false" />
+            <element signature="e#7796#7797#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2943,14 +3010,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="860">
           <caret line="43" column="28" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/ids.xml">
@@ -2961,84 +3028,73 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/app_bar_new_game.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
           <caret line="4" column="34" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="34" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
+      <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/activity_new_game.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
           <caret line="7" column="28" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="28" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/app_bar_new_game.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/app_bar_new_game.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
           <caret line="4" column="34" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="34" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
       <provider editor-type-id="android-designer2">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_new_game.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/mipmap-hdpi/ic_clear_black_24dp.png">
@@ -3059,37 +3115,20 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1340">
           <caret line="67" column="32" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
+      <provider editor-type-id="android-designer2">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/TimeHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="520">
           <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3114,8 +3153,8 @@
         <state relative-caret-position="560">
           <caret line="90" column="16" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="16" />
           <folding>
-            <element signature="e#3192#3193#0" expanded="true" />
-            <element signature="e#3224#3225#0" expanded="true" />
+            <element signature="e#3192#3193#0" expanded="false" />
+            <element signature="e#3224#3225#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3125,10 +3164,10 @@
         <state relative-caret-position="400">
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
-            <element signature="e#848#849#0" expanded="true" />
-            <element signature="e#887#888#0" expanded="true" />
-            <element signature="e#948#949#0" expanded="true" />
-            <element signature="e#988#989#0" expanded="true" />
+            <element signature="e#848#849#0" expanded="false" />
+            <element signature="e#887#888#0" expanded="false" />
+            <element signature="e#948#949#0" expanded="false" />
+            <element signature="e#988#989#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3138,10 +3177,10 @@
         <state relative-caret-position="380">
           <caret line="19" column="41" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
           <folding>
-            <element signature="e#279#280#0" expanded="true" />
-            <element signature="e#311#312#0" expanded="true" />
-            <element signature="e#368#369#0" expanded="true" />
-            <element signature="e#418#419#0" expanded="true" />
+            <element signature="e#279#280#0" expanded="false" />
+            <element signature="e#311#312#0" expanded="false" />
+            <element signature="e#368#369#0" expanded="false" />
+            <element signature="e#418#419#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3151,15 +3190,15 @@
         <state relative-caret-position="360">
           <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
           <folding>
-            <element signature="e#2558#4556#0" expanded="true" />
-            <element signature="e#2860#2877#0" expanded="true" />
-            <element signature="e#2920#2950#0" expanded="true" />
-            <element signature="e#3014#3476#0" expanded="true" />
-            <element signature="e#3475#3476#0" expanded="true" />
-            <element signature="e#3526#3543#0" expanded="true" />
-            <element signature="e#3545#3932#0" expanded="true" />
-            <element signature="e#3931#3932#0" expanded="true" />
-            <element signature="e#4555#4556#0" expanded="true" />
+            <element signature="e#2558#4556#0" expanded="false" />
+            <element signature="e#2860#2877#0" expanded="false" />
+            <element signature="e#2920#2950#0" expanded="false" />
+            <element signature="e#3014#3476#0" expanded="false" />
+            <element signature="e#3475#3476#0" expanded="false" />
+            <element signature="e#3526#3543#0" expanded="false" />
+            <element signature="e#3545#3932#0" expanded="false" />
+            <element signature="e#3931#3932#0" expanded="false" />
+            <element signature="e#4555#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3167,22 +3206,23 @@
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/GameModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="181">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
           <folding>
-            <element signature="e#487#488#0" expanded="true" />
+            <element signature="e#439#440#0" expanded="true" />
+            <element signature="e#471#472#0" expanded="true" />
             <element signature="e#519#520#0" expanded="true" />
-            <element signature="e#567#568#0" expanded="true" />
-            <element signature="e#632#633#0" expanded="true" />
-            <element signature="e#4671#4672#0" expanded="true" />
-            <element signature="e#4702#4703#0" expanded="true" />
-            <element signature="e#4734#4735#0" expanded="true" />
-            <element signature="e#4763#4764#0" expanded="true" />
-            <element signature="e#4794#4795#0" expanded="true" />
-            <element signature="e#4822#4823#0" expanded="true" />
-            <element signature="e#4853#4854#0" expanded="true" />
-            <element signature="e#4881#4882#0" expanded="true" />
-            <element signature="e#4913#4914#0" expanded="true" />
-            <element signature="e#4945#4946#0" expanded="true" />
+            <element signature="e#584#585#0" expanded="true" />
+            <element signature="e#4623#4624#0" expanded="true" />
+            <element signature="e#4654#4655#0" expanded="true" />
+            <element signature="e#4686#4687#0" expanded="true" />
+            <element signature="e#4715#4716#0" expanded="true" />
+            <element signature="e#4746#4747#0" expanded="true" />
+            <element signature="e#4774#4775#0" expanded="true" />
+            <element signature="e#4805#4806#0" expanded="true" />
+            <element signature="e#4833#4834#0" expanded="true" />
+            <element signature="e#4865#4866#0" expanded="true" />
+            <element signature="e#4897#4898#0" expanded="true" />
+            <marker date="1465757713258" expanded="false" signature="50:128" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -3206,97 +3246,169 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="233" column="38" selection-start-line="198" selection-start-column="12" selection-end-line="233" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Home.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10">
-          <caret line="267" column="17" selection-start-line="267" selection-start-column="17" selection-end-line="267" selection-end-column="17" />
+          <caret line="265" column="17" selection-start-line="265" selection-start-column="17" selection-end-line="265" selection-end-column="17" />
           <folding>
-            <element signature="e#3105#3296#0" expanded="true" />
-            <element signature="e#3295#3296#0" expanded="true" />
-            <element signature="e#7997#8023#0" expanded="true" />
-            <element signature="e#8143#8167#0" expanded="true" />
-            <element signature="e#8287#8317#0" expanded="true" />
-            <element signature="e#8926#8952#0" expanded="true" />
-            <element signature="e#9072#9096#0" expanded="true" />
-            <element signature="e#9216#9246#0" expanded="true" />
-            <element signature="e#9764#9918#0" expanded="true" />
-            <element signature="e#9917#9918#0" expanded="true" />
-            <element signature="e#9964#9979#0" expanded="true" />
-            <element signature="e#9981#10177#0" expanded="true" />
-            <element signature="e#10176#10177#0" expanded="true" />
-            <element signature="e#10575#10576#0" expanded="true" />
-            <element signature="e#10608#10609#0" expanded="true" />
+            <element signature="e#3045#3236#0" expanded="true" />
+            <element signature="e#3235#3236#0" expanded="true" />
+            <element signature="e#7937#7963#0" expanded="true" />
+            <element signature="e#8083#8107#0" expanded="true" />
+            <element signature="e#8227#8257#0" expanded="true" />
+            <element signature="e#8866#8892#0" expanded="true" />
+            <element signature="e#9012#9036#0" expanded="true" />
+            <element signature="e#9156#9186#0" expanded="true" />
+            <element signature="e#9704#9858#0" expanded="true" />
+            <element signature="e#9857#9858#0" expanded="true" />
+            <element signature="e#9904#9919#0" expanded="true" />
+            <element signature="e#9921#10117#0" expanded="true" />
+            <element signature="e#10116#10117#0" expanded="true" />
+            <element signature="e#10515#10516#0" expanded="true" />
+            <element signature="e#10548#10549#0" expanded="true" />
+            <marker date="1465757713294" expanded="false" signature="50:1009" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/EditGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-70">
+        <state relative-caret-position="5660">
           <caret line="308" column="31" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
           <folding>
-            <element signature="e#5522#5548#0" expanded="true" />
-            <element signature="e#12056#12076#0" expanded="true" />
-            <element signature="e#12107#12135#0" expanded="true" />
-            <element signature="e#12173#12193#0" expanded="true" />
-            <element signature="e#12195#12412#0" expanded="true" />
-            <element signature="e#12411#12412#0" expanded="true" />
-            <element signature="e#12450#12465#0" expanded="true" />
-            <element signature="e#12467#12630#0" expanded="true" />
-            <element signature="e#12629#12630#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#7989#10298#0" expanded="false" />
+            <element signature="e#10297#10298#0" expanded="false" />
+            <element signature="e#10353#10556#0" expanded="false" />
+            <element signature="e#10555#10556#0" expanded="false" />
+            <element signature="e#12195#12412#0" expanded="false" />
+            <element signature="e#12411#12412#0" expanded="false" />
+            <element signature="e#12467#12630#0" expanded="false" />
+            <element signature="e#12629#12630#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/PlayerListAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
+        <state relative-caret-position="1180">
           <caret line="77" column="25" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
           <folding>
-            <element signature="e#1051#1052#0" expanded="true" />
-            <element signature="e#1084#1085#0" expanded="true" />
-            <element signature="e#3252#3504#0" expanded="true" />
-            <element signature="e#3503#3504#0" expanded="true" />
-            <element signature="e#3643#3670#0" expanded="true" />
-            <element signature="e#4529#4530#0" expanded="true" />
-            <element signature="e#4585#4758#0" expanded="true" />
-            <element signature="e#4757#4758#0" expanded="true" />
-            <element signature="e#6525#6717#0" expanded="true" />
-            <element signature="e#6716#6717#0" expanded="true" />
-            <element signature="e#7243#7244#0" expanded="true" />
-            <element signature="e#7284#7285#0" expanded="true" />
-            <element signature="e#7705#7858#0" expanded="true" />
-            <element signature="e#7857#7858#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3383#3384#0" expanded="false" />
+            <element signature="e#3473#3474#0" expanded="false" />
+            <element signature="e#6632#6633#0" expanded="false" />
+            <element signature="e#6698#6699#0" expanded="false" />
+            <element signature="e#7796#7797#0" expanded="false" />
+            <element signature="e#7847#7848#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/NewGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3458">
-          <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
+        <state relative-caret-position="520">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding>
-            <element signature="e#4708#4717#0" expanded="true" />
-            <element signature="e#8676#8704#0" expanded="true" />
-            <element signature="e#8735#8762#0" expanded="true" />
-            <element signature="e#8800#8819#0" expanded="true" />
-            <element signature="e#8821#9023#0" expanded="true" />
-            <element signature="e#9022#9023#0" expanded="true" />
-            <element signature="e#10015#10227#0" expanded="true" />
-            <element signature="e#10226#10227#0" expanded="true" />
-            <element signature="e#10607#10839#0" expanded="true" />
-            <element signature="e#10838#10839#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#6227#6228#0" expanded="false" />
+            <element signature="e#6285#6286#0" expanded="false" />
+            <element signature="e#6747#6748#0" expanded="false" />
+            <element signature="e#6805#6806#0" expanded="false" />
+            <element signature="e#9182#9183#0" expanded="false" />
+            <element signature="e#9230#9231#0" expanded="false" />
+            <element signature="e#10130#10131#0" expanded="false" />
+            <element signature="e#10204#10205#0" expanded="false" />
+            <element signature="e#10730#10731#0" expanded="false" />
+            <element signature="e#10812#10813#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/google-services.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/res/layout/content_settings.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="301" column="9" selection-start-line="281" selection-start-column="8" selection-end-line="301" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mobile/src/main/java/io/github/sdsstudios/ScoreKeeper/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+          <folding />
         </state>
       </provider>
     </entry>

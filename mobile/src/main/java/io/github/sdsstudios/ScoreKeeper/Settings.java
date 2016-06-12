@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+
 public class Settings extends AppCompatActivity implements View.OnClickListener{
-    private Button buttonDeleteALl;
+    private Button buttonDeleteALl, buttonReport;
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +26,11 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
@@ -30,6 +39,8 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
 
         buttonDeleteALl = (Button)findViewById(R.id.buttonDeleteAll);
         buttonDeleteALl.setOnClickListener(this);
+        buttonReport = (Button)findViewById(R.id.buttonReport);
+        buttonReport.setOnClickListener(this);
 
     }
 
@@ -61,6 +72,14 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        dbHelper.deleteAllgames();
-    }
+        switch (v.getId()) {
+            case R.id.buttonDeleteAll:
+                dbHelper.deleteAllgames();
+                break;
+
+            case R.id.buttonReport:
+                FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+                break;
+
+        }    }
 }

@@ -21,6 +21,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/buttonDeleteAll" />
+
+    <Button
+        android:text="@string/report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonReport"
+        android:layout_below="@+id/buttonDeleteAll"
+        android:layout_alignRight="@+id/buttonDeleteAll"
+        android:layout_alignEnd="@+id/buttonDeleteAll" />
 </RelativeLayout>
 
 

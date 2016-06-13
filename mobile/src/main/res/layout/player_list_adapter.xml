@@ -30,7 +30,6 @@
         android:layout_toStartOf="@+id/buttonEdit"
         android:layout_toLeftOf="@+id/buttonEdit" />
 
-
         <ImageButton
             android:id="@+id/buttonEdit"
             android:layout_width="wrap_content"
@@ -39,6 +38,8 @@
             android:tint="#757575"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp"
             android:src="@mipmap/ic_create_black_24dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

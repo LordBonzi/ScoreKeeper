@@ -38,7 +38,7 @@ public class NewGame extends AppCompatActivity
     private String time = null;
     private String TAG = "Home";
     private EditText editTextPlayer;
-    private Button buttonNewGame, buttonAddPlayer;
+    private Button buttonNewGame, buttonAddPlayer, buttonQuit;
     private RecyclerView playerList;
     private String player;
     private ArrayList<String> players = new ArrayList<>();
@@ -89,6 +89,9 @@ public class NewGame extends AppCompatActivity
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
+
+        buttonQuit = (Button)findViewById(R.id.buttonQuit);
+        buttonQuit.setOnClickListener(this);
 
         buttonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
         buttonAddPlayer.setOnClickListener(this);
@@ -306,6 +309,10 @@ public class NewGame extends AppCompatActivity
         switch (v.getId()) {
             case R.id.buttonAddPlayer: {
                 addPlayers();
+                break;
+            }
+            case R.id.buttonQuit:{
+                onBackPressed();
                 break;
             }
 

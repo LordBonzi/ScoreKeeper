@@ -17,8 +17,6 @@
         android:layout_marginTop="16dp"
         android:id="@+id/relativeLayout">
 
-        <include layout="@layout/divider"/>
-
         <TextView
             android:text="@string/players"
             android:layout_centerVertical="true"
@@ -33,19 +31,32 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/buttonNewGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/new_game"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_below="@+id/editTextPlayer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:layout_height="48sp"
+        android:id="@+id/relativeLayout2">
+
+        <Button
+            android:id="@+id/buttonNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16sp"
+            android:layout_marginEnd="16sp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/stepper_right"
+            android:drawableEnd="@drawable/stepper_right"
+            android:paddingLeft="5sp"
+            android:paddingStart="5sp"
+            android:paddingRight="5sp"
+            android:paddingEnd="5sp"
+            android:text="@string/start_game"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/buttonAddPlayer"
@@ -72,19 +83,29 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/buttonAddPlayer"
         android:layout_alignStart="@+id/buttonAddPlayer"
-        android:layout_alignRight="@+id/buttonNewGame"
-        android:layout_alignEnd="@+id/buttonNewGame" />
+        android:layout_alignRight="@+id/playerList"
+        android:layout_alignEnd="@+id/playerList" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/playerList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/relativeLayout"
-        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/buttonAddPlayer"
         android:layout_alignStart="@+id/buttonAddPlayer"
-        android:layout_alignRight="@+id/buttonNewGame"
-        android:layout_alignEnd="@+id/buttonNewGame" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/relativeLayout2" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/view" />
 
 
 </RelativeLayout>

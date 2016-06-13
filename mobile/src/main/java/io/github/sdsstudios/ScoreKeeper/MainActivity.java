@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +74,15 @@ public class MainActivity extends AppCompatActivity
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                FirebaseCrash.report(new Exception(t.toString()));
+
+            }
+        });
 
         gameModel = new BigGameModel(dbHelper);
 
@@ -278,7 +289,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.buttonP1:
                 smallLayout.onClick(buttonP1, dbHelper, gameID);
@@ -300,6 +310,7 @@ public class MainActivity extends AppCompatActivity
                 chronometerClick();
                 break;
         }
+
     }
 
 

@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class Home extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private ScoreDBAdapter dbHelper;
     private RelativeLayout relativeLayout;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -75,6 +77,16 @@ public class Home extends AppCompatActivity {
         settingsIntent = new Intent(this, Settings.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                FirebaseCrash.report(new Exception(t.toString()));
+
+            }
+        });
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +249,7 @@ public class Home extends AppCompatActivity {
                             break;
 
                         case 3:
-                            textViewHome.setText(R.string.games_you_have_played);
+                            textViewHome.setText(R.string.all_games);
                             break;
 
                     }
@@ -258,7 +270,7 @@ public class Home extends AppCompatActivity {
                             break;
 
                         case 3:
-                            textViewHome.setText(R.string.games_you_have_played);
+                            textViewHome.setText(R.string.all_games);
                             break;
 
                     }
@@ -266,29 +278,8 @@ public class Home extends AppCompatActivity {
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                Log.e("creating home tabviewss", e.toString());
-                AlertDialog dialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                FirebaseCrash.report(new Exception(e.toString()));
 
-                builder.setTitle("Error");
-
-                builder.setMessage("Error creating home activity. Report it.");
-
-                builder.setPositiveButton("Report it", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-
-                    }
-                });
-
-                dialog = builder.create();
-                dialog.show();
             }
             return rootView;
         }

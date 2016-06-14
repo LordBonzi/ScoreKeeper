@@ -157,12 +157,11 @@ public class MainActivity extends AppCompatActivity
             Log.e("long",  " "+timeHelper.convertToLong(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
         } catch (ParseException e) {
             e.printStackTrace();
+            FirebaseCrash.report(new Exception(e.toString() + ", time:  " + cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-        Log.e("base ", "base: " + stopwatch.getBase()) ;
-        Log.e("systemclock ", "" + SystemClock.elapsedRealtime()) ;
 
     }
 

@@ -16,8 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -26,7 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static android.R.id.list;
 
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener {
@@ -50,6 +56,9 @@ public class NewGame extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
     private boolean stop = true;
+    private Spinner spinnerTimeLimit;
+    private String timeLimit = null;
+    private List<String> timerArray = new ArrayList<String>();
 
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
@@ -63,6 +72,63 @@ public class NewGame extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
+
+        dbHelper = new ScoreDBAdapter(this);
+        dbHelper.open();
+
+        dbHelper.createGame(players, time, score, 0, timeLimit);
+        gameID = dbHelper.getNewestGame();
+        //Spinner stuff
+
+        timerArray.add("No Timer");
+        timerArray.add("1 Minute");
+        timerArray.add("5 Minutes");
+        timerArray.add("30 Minutes");
+        timerArray.add("90 Minutes");
+        timerArray.add("New Time limit...");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTimeLimit.setAdapter(dataAdapter);
+        spinnerTimeLimit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        timeLimit = "00:01:00:0";
+                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+                        break;
+                    case 1:
+                        timeLimit = "00:05:00:0";
+                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                        break;
+                    case 2:
+                        timeLimit = "00:30:00:0";
+                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                        break;
+                    case 3:
+                        timeLimit = "00:90:00:0";
+                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                        break;
+                    case 4:
+                        timeLimit = "00:01:00:0";
+                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                timeLimit = null;
+            }
+        });
+
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
@@ -72,14 +138,6 @@ public class NewGame extends AppCompatActivity
 
             }
         });
-
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
-        dbHelper.createGame(players, time, score, 0);
-        gameID = dbHelper.getNewestGame();
-        Log.e(TAG + "id", ""+gameID);
-
 
         cursorHelper = new CursorHelper();
         homeIntent = new Intent(this, Home.class);

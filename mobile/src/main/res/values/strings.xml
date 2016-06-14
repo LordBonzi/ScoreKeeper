@@ -78,6 +78,15 @@
     <string name="players_and_scores">Players and Scores:</string>
     <string name="length">Length:</string>
 
+    <string-array name="time_limit_array">
+        <item>No Timer</item>
+        <item>1 Minute</item>
+        <item>5 Minutes</item>
+        <item>30 Minutes</item>
+        <item>90 Minutes</item>
+        <item>Create…</item>
+    </string-array>
+
 
 </resources>
 

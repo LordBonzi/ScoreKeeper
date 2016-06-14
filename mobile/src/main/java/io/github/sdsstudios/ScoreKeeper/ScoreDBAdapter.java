@@ -79,9 +79,7 @@ public class ScoreDBAdapter {
             initialValues.put(request, c);
 
         }else if (request.equals(KEY_TIMER)){
-
-            int c = Integer.valueOf(time_or_completed_or_timeLimit);
-            initialValues.put(request, c);
+            initialValues.put(request, time_or_completed_or_timeLimit);
 
         }
 

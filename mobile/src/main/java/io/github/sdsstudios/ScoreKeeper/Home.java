@@ -81,7 +81,8 @@ public class Home extends AppCompatActivity {
 
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-                FirebaseCrash.report(new Exception(t.toString()));
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
 
             }
         });

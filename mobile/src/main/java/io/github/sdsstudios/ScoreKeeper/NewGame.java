@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,13 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static android.R.id.list;
-
 public class NewGame extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
@@ -58,7 +54,6 @@ public class NewGame extends AppCompatActivity
     private boolean stop = true;
     private Spinner spinnerTimeLimit;
     private String timeLimit = null;
-    private List<String> timerArray = new ArrayList<String>();
 
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
@@ -74,70 +69,21 @@ public class NewGame extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
+
+            }
+        });
+
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
         dbHelper.createGame(players, time, score, 0, timeLimit);
         gameID = dbHelper.getNewestGame();
-        //Spinner stuff
-
-        timerArray.add("No Timer");
-        timerArray.add("1 Minute");
-        timerArray.add("5 Minutes");
-        timerArray.add("30 Minutes");
-        timerArray.add("90 Minutes");
-        timerArray.add("New Time limit...");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTimeLimit.setAdapter(dataAdapter);
-        spinnerTimeLimit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        timeLimit = "00:01:00:0";
-                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                        break;
-                    case 1:
-                        timeLimit = "00:05:00:0";
-                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-
-                        break;
-                    case 2:
-                        timeLimit = "00:30:00:0";
-                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-
-                        break;
-                    case 3:
-                        timeLimit = "00:90:00:0";
-                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-
-                        break;
-                    case 4:
-                        timeLimit = "00:01:00:0";
-                        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                timeLimit = null;
-            }
-        });
-
-
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                FirebaseCrash.report(new Exception(t.toString()));
-
-            }
-        });
 
         cursorHelper = new CursorHelper();
         homeIntent = new Intent(this, Home.class);
@@ -156,6 +102,30 @@ public class NewGame extends AppCompatActivity
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
         playerList = (RecyclerView) findViewById(R.id.playerList);
+        //Spinner stuff
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            time = savedInstanceState.getString(STATE_TIME);
+            player = savedInstanceState.getString(STATE_PLAYER_NAME);
+            displayRecyclerView();
+        } else {
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+            Date now = new Date();
+            time = sdfDate.format(now);
+            dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
+            players = new ArrayList<>();
+            displayRecyclerView();
+        }
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.time_limit_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTimeLimit.setAdapter(adapter);
+        spinnerTimeLimit.setOnItemSelectedListener(this);
+
+
 
         editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -174,21 +144,7 @@ public class NewGame extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
 
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
-            gameID = savedInstanceState.getInt(STATE_GAMEID);
-            time = savedInstanceState.getString(STATE_TIME);
-            player = savedInstanceState.getString(STATE_PLAYER_NAME);
-            displayRecyclerView();
-        } else {
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-            Date now = new Date();
-            time = sdfDate.format(now);
-            dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
-            players = new ArrayList<>();
-            displayRecyclerView();
-        }
+
 
     }
 
@@ -421,4 +377,44 @@ public class NewGame extends AppCompatActivity
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position){
+            case 0:
+                timeLimit = null;
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+                break;
+            case 1:
+                timeLimit = "00:01:00:0";
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+                break;
+            case 2:
+                timeLimit = "00:05:00:0";
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                break;
+            case 3:
+                timeLimit = "00:30:00:0";
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                break;
+            case 4:
+                timeLimit = "00:90:00:0";
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                break;
+            case 5:
+                timeLimit = "00:01:00:0";
+                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+            timeLimit = null;
+        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+
+    }
 }

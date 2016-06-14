@@ -28,9 +28,16 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
+
+            }
+        });
+
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();

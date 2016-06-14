@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,16 @@ public class Graph extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
+
+            }
+        });
 
         editGameIntent = new Intent(this, EditGame.class);
 

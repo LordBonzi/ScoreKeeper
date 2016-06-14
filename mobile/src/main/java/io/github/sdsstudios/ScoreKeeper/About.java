@@ -31,7 +31,9 @@ public class About extends AppCompatActivity implements View.OnClickListener {
 
             @Override
             public void uncaughtException(Thread t, Throwable f) {
-                FirebaseCrash.report(new Exception(t.toString()));
+                f.printStackTrace();
+
+                FirebaseCrash.report(new Exception(f.toString()));
 
             }
         });

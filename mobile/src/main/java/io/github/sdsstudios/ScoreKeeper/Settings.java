@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +37,9 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();

@@ -118,15 +118,12 @@ public class Stopwatch extends TextView {
 
         String text = "";
 
-        if (hours > 0) {
-            text += df.format(hours) + ":";
-        }
-
+        text += df.format(hours) + ":";
         text += df.format(minutes) + ":";
         text += df.format(seconds) + ":";
         text += Integer.toString(milliseconds);
-
         setText(text);
+
     }
 
     private void updateRunning() {

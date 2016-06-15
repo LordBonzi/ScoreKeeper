@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,6 +55,9 @@ public class MainActivity extends AppCompatActivity
     private TimeHelper timeHelper;
     private ArrayList<BigGameModel> bigGameModels;
     private BigGameModel gameModel;
+    private String timeLimitString = null;
+
+    AlertDialog dialog;
 
     long timeWhenStopped = 0;
     boolean isPaused = false;
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
 
         cursorHelper = new CursorHelper();
         timeHelper = new TimeHelper();
@@ -93,6 +98,8 @@ public class MainActivity extends AppCompatActivity
         Date now = new Date();
         time = sdfDate.format(now);
         dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
+
+        timeLimitString = cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
 
         smallLayout = new SmallLayout();
 
@@ -155,13 +162,47 @@ public class MainActivity extends AppCompatActivity
             stopwatch.setTextColor(getResources().getColor(R.color.start));
             fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
             Log.e("long",  " "+timeHelper.convertToLong(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, e.toString());
             FirebaseCrash.report(new Exception(e.toString() + ", time:  " + cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
+
+        stopwatch.setOnChronometerTickListener(new Stopwatch.OnChronometerTickListener() {
+
+            @Override
+            public void onChronometerTick(Stopwatch chronometer) {
+                if (timeLimitString != null) {
+                    if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
+                        isPaused = true;
+                        chronometerClick();
+                        fabChronometer.setEnabled(false);
+
+                        builder.setTitle(R.string.time_limit_reached);
+
+                        builder.setMessage(R.string.time_limit_question);
+
+                        builder.setPositiveButton(R.string.extend, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+
+                        builder.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+
+                        dialog = builder.create();
+                        dialog.show();
+                    }
+                }
+            }
+
+        });
 
     }
 

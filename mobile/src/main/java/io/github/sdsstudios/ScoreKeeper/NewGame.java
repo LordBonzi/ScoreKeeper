@@ -234,7 +234,7 @@ public class NewGame extends AppCompatActivity
             editTextPlayer.setText("");
 
             dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS,gameID);
-            dbHelper.updateGame(null, "00:00:0", ScoreDBAdapter.KEY_CHRONOMETER,gameID);
+            dbHelper.updateGame(null, "00:00:00:0", ScoreDBAdapter.KEY_CHRONOMETER,gameID);
 
             // specify an adapter (see also next example)
             playerListAdapter.notifyItemInserted(players.size());
@@ -375,7 +375,6 @@ public class NewGame extends AppCompatActivity
             }
         }
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

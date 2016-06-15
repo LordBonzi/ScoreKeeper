@@ -74,6 +74,11 @@
     <string name="quit_setup_question">Quit Setup?</string>
     <string name="quit_setup_message">Are you sure you want to quit setting up game. Nothing will save.</string>
 
+    <string name="time_limit_reached">Time Limit Reached</string>
+    <string name="time_limit_question">The time limit has been reached. Do you want to finish the game or extend the time limit?</string>
+
+    <string name="extend">Extend</string>
+
     <string name="quit_setup">Quit Setup</string>
     <string name="players_and_scores">Players and Scores:</string>
     <string name="length">Length:</string>

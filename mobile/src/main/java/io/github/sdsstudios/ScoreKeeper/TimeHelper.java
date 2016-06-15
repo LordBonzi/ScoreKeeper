@@ -52,7 +52,7 @@ public class TimeHelper {
     public Long convertToLong(String time) throws ParseException {
         Long timeLong = 0L;
 
-        DateFormat f = new SimpleDateFormat("mm:ss:S");
+        DateFormat f = new SimpleDateFormat("hh:mm:ss:S");
         Date d = f.parse(time);
         timeLong = d.getTime();
 

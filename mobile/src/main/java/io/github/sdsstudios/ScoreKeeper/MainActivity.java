@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     long timeWhenStopped = 0;
     boolean isPaused = false;
-    long milliseconds ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 
         cursorHelper = new CursorHelper();
         timeHelper = new TimeHelper();
@@ -206,13 +204,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         chronometerClick();
     }
-
 
     public void displayRecyclerView(){
         mLayoutManager = new LinearLayoutManager(this);

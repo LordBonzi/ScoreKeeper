@@ -203,6 +203,7 @@ public class ScoreDBAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
+
             onCreate(db);
         }
     }

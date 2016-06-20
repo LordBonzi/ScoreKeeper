@@ -92,20 +92,6 @@ public class EditGame extends AppCompatActivity {
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
 
-        final String PREFS_NAME = "scorekeeper";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-
-            saveInfo();
-            settings.edit().putBoolean("my_first_time", false).commit();
-        } else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper"
-                    , Context.MODE_PRIVATE);
-
-        }
-
         displayRecyclerView(0);
 
     }

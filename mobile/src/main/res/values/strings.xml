@@ -78,19 +78,16 @@
     <string name="time_limit_question">The time limit has been reached. Do you want to finish the game or extend the time limit?</string>
 
     <string name="extend">Extend</string>
+    <string name="create">Create</string>
+    <string name="hour">Hours:</string>
+    <string name="minute">Minutes:</string>
+    <string name="seconds">Seconds:</string>
 
     <string name="quit_setup">Quit Setup</string>
     <string name="players_and_scores">Players and Scores:</string>
     <string name="length">Length:</string>
 
-    <string-array name="time_limit_array">
-        <item>No Timer</item>
-        <item>1 Minute</item>
-        <item>5 Minutes</item>
-        <item>30 Minutes</item>
-        <item>90 Minutes</item>
-        <item>Create…</item>
-    </string-array>
+    <string name="title_activity_time_limit">TimeLimit</string>
 
 
 </resources>

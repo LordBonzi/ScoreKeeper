@@ -95,7 +95,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                                     .setAction("Dismiss", onClickListener);
                             snackbar.show();
                         }else{
+                            mDbHelper.open();
                             mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+                            mDbHelper.close();
                             holder.editTextPlayer.setEnabled(false);
                             holder.buttonEdit.setImageResource(R.mipmap.ic_create_black_24dp);
                             holder.buttonDelete.setVisibility(View.VISIBLE);

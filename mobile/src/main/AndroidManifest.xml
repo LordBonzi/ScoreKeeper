@@ -6,14 +6,14 @@
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
-        android:versionCode="07"
-        android:versionName="0.7alpha"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:versionCode="07"
+        android:versionName="0.7alpha">
         <activity
             android:name=".Home"
             android:label="@string/app_name"
@@ -60,9 +60,7 @@
             android:parentActivityName=".EditGame"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Report">
-
-        </activity>
+        <activity android:name=".Report"></activity>
     </application>
 
 </manifest>

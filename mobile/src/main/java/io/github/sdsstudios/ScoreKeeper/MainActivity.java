@@ -194,6 +194,10 @@ public class MainActivity extends AppCompatActivity
                             }
                         });
 
+                        dbHelper.open();
+                        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                        dbHelper.close();
+
                         dialog = builder.create();
                         dialog.show();
                     }
@@ -242,6 +246,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }if (id == R.id.action_reset) {
             isPaused = true;
+            chronometerClick();
 
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -252,6 +257,7 @@ public class MainActivity extends AppCompatActivity
 
             builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+
                     for (int i = 0; i < scoresArray.size(); i++){
                         scoresArray.set(i, 0);
                     }
@@ -273,15 +279,10 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
-                    isPaused = false;
-                    chronometerClick();
                 }
             });
 
             dialog = builder.create();
-            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-            stopwatch.setTextColor(getResources().getColor(R.color.stop));
-            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
 
             dialog.show();
             return true;

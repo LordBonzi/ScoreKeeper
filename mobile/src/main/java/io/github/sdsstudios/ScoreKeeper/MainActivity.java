@@ -188,9 +188,12 @@ public class MainActivity extends AppCompatActivity
                             }
                         });
 
-                        builder.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
+                                dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                                dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                                finish();
+                                startActivity(homeIntent);
                             }
                         });
 
@@ -371,10 +374,7 @@ public class MainActivity extends AppCompatActivity
 
         builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
-                dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                finish();
-                startActivity(homeIntent);
+
             }
         });
 

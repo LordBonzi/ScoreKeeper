@@ -79,6 +79,7 @@ public class Home extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
             @Override
+
             public void uncaughtException(Thread t, Throwable e) {
                 e.printStackTrace();
                 FirebaseCrash.report(new Exception(e.toString()));
@@ -193,7 +194,7 @@ public class Home extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
             int numGames = 1;
-            RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(R.id.homeList);
+            RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(android.R.id.list);
             TextView textViewHome = (TextView)rootView.findViewById(R.id.textViewNoGames);
             RelativeLayout fragmentHomeLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentHomeLayout);
             RecyclerView.LayoutManager mLayoutManager;

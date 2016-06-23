@@ -23,5 +23,6 @@ SOFTWARE.
 -----------------------------------------------------------------------------
 
 Basicaly anyone can use, sell/distribute, etc this software as long as they 
-      * Give credit to us for using our software
-      * Dont publish an exact clone the the Play Store 
+
+      1. Give credit to us for using our software
+      2. Dont publish an exact clone the the Play Store 

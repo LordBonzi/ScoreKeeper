@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -164,8 +165,12 @@ public class NewGame extends AppCompatActivity
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
-        if (settings.getBoolean("my_first_time", true)) {
+        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 
+
+        try {
+            timeLimitArray = convertToArray(sharedPref.getString("timelimitarray", null));
+        }catch (Exception e){
             timeLimitArray = new ArrayList();
             timeLimitArray.add(0, "No Time Limit");
             timeLimitArray.add(1, "1 Minute");
@@ -173,12 +178,6 @@ public class NewGame extends AppCompatActivity
             timeLimitArray.add(3, "30 Minutes");
             timeLimitArray.add(4, "90 Minutes");
             timeLimitArray.add(5, "Create...");
-            saveSharedPrefs();
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-            timeLimitArray = convertToArray(sharedPref.getString("timelimitarray", null));
-
         }
 
         displaySpinner();

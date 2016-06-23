@@ -7,37 +7,16 @@
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="category1" >
-        <EditTextPreference
+        android:title="DANGER ZONE!" >
+        <Preference
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="@string/pref_user_name"
-            android:summary="@string/pref_user_name_summary"
-            android:key="prefUsername"/>
+            android:title="@string/delete_all_games"
+            android:key="prefDeleteAllGames"
+            />
+
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="@string/pref_update_setting" >
-        <CheckBoxPreference
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:defaultValue="false"
-            android:key="prefSendReport"
-            android:summary="@string/pref_send_report_summary"
-            android:title="@string/pref_send_report" >
-        </CheckBoxPreference>
-
-        <ListPreference
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:key="prefSyncFrequency"
-            android:entries="@array/syncFrequency"
-            android:summary="@string/pref_sync_frequency_summary"
-            android:entryValues="@array/syncFrequencyValues"
-            android:title="@string/pref_sync_frequency" />
-    </PreferenceCategory>
 
 </PreferenceScreen>
 

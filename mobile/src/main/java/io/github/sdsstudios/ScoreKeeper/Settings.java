@@ -1,22 +1,40 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
+
+import java.util.ArrayList;
 
 public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
+    private boolean enabled;
+    private SharedPreferences settings, prefs;
+    private Preference deletePreference;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    AlertDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +46,39 @@ public class Settings extends PreferenceActivity{
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.content_settings);
+        deletePreference = (Preference) findPreference("prefDeleteAllGames");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        deletePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.delete_all_games) + "?");
+
+                builder.setMessage(R.string.delete_all_games_mes);
+
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            dbHelper.deleteAllgames();
+                        }catch (Exception e){
+                            Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+                return true;
+            }
+        });
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
@@ -45,6 +95,35 @@ public class Settings extends PreferenceActivity{
 
         homeIntent = new Intent(this, Home.class);
 
+
+        //Shared prefs stuff
+
+        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+
+        prefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+
+// Instance field for listener
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                saveInfo();
+
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    private void saveInfo(){
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -57,18 +136,31 @@ public class Settings extends PreferenceActivity{
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         getDelegate().onDestroy();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
     }
 
 
     private void setSupportActionBar(@Nullable Toolbar toolbar) {
         getDelegate().setSupportActionBar(toolbar);
     }
+
     private void getSupportActionBar() {
         getDelegate().getSupportActionBar();
     }

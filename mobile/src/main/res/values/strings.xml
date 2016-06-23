@@ -25,6 +25,7 @@
         \n\n For donate options put a joke about my age and beer
     </string>
     <string name="github">Our Github</string>
+    <string name="delete_all_games">Delete All Games</string>
     <string name="quit">Quit</string>
     <string name="reset">Reset</string>
     <string name="website">https://sds-studios.github.io/</string>
@@ -44,6 +45,7 @@
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
     <string name="complete_game">Finish</string>
+    <string name="delete_all_games_mes">You will not get them back.</string>
     <string name="players">Players:</string>
     <string name="delete_game">Delete Game?</string>
     <string name="must_have_name">The player must have a name!</string>

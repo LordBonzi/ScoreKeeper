@@ -237,7 +237,8 @@ public class Home extends AppCompatActivity {
                             break;
 
                         case 3:
-                            textViewHome.setText(R.string.all_games + ":");
+                            final String s = getResources().getString(R.string.all_games) + ":";
+                            textViewHome.setText(s);
                             break;
 
                     }

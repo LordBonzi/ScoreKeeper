@@ -2,29 +2,32 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.preference.PreferenceActivity;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
-public class Settings extends AppCompatActivity implements View.OnClickListener{
-    private Button buttonDeleteALl, buttonReport;
+public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private AppCompatDelegate mDelegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDelegate().installViewFactory();
+        getDelegate().onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        addPreferencesFromResource(R.xml.content_settings);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -37,20 +40,49 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
         homeIntent = new Intent(this, Home.class);
 
-        buttonDeleteALl = (Button)findViewById(R.id.buttonDeleteAll);
-        buttonDeleteALl.setOnClickListener(this);
-        buttonReport = (Button)findViewById(R.id.buttonReport);
-        buttonReport.setOnClickListener(this);
+    }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getDelegate().onPostResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getDelegate().onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getDelegate().onDestroy();
+    }
+
+
+    private void setSupportActionBar(@Nullable Toolbar toolbar) {
+        getDelegate().setSupportActionBar(toolbar);
+    }
+    private void getSupportActionBar() {
+        getDelegate().getSupportActionBar();
+    }
+
+    private AppCompatDelegate getDelegate() {
+        if (mDelegate == null) {
+            mDelegate = AppCompatDelegate.create(this, null);
+        }
+        return mDelegate;
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        getDelegate().setContentView(layoutResID);
     }
 
     @Override
@@ -79,16 +111,4 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
         startActivity(homeIntent);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.buttonDeleteAll:
-                dbHelper.deleteAllgames();
-                break;
-
-            case R.id.buttonReport:
-                FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-                break;
-
-        }    }
 }

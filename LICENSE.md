@@ -160,10 +160,3 @@ Creative Commons is not a party to its public licenses. Notwithstanding, Creativ
 
 Creative Commons may be contacted at creativecommons.org
 ```
-
------------------------------------------------------------------------------
-
-Basicaly anyone can use, sell/distribute, etc this software as long as they 
-
-      1. Give credit to us for using our software
-      2. Dont publish an exact clone on the Play Store 

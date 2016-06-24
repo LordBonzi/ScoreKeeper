@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Settings extends PreferenceActivity{
@@ -31,10 +32,11 @@ public class Settings extends PreferenceActivity{
     private AppCompatDelegate mDelegate;
     private boolean enabled;
     private SharedPreferences settings, prefs;
-    private Preference deletePreference;
+    private Preference deletePreference, timeLimitPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
-
+    private SharedPreferences.Editor edit;
+    private DataHelper dataHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,11 @@ public class Settings extends PreferenceActivity{
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.content_settings);
+
+        dataHelper = new DataHelper();
+
         deletePreference = (Preference) findPreference("prefDeleteAllGames");
+        timeLimitPreference = (Preference) findPreference("prefDeleteTimeLimit");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -80,6 +86,14 @@ public class Settings extends PreferenceActivity{
             }
         });
 
+        timeLimitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                deleteTimeLimits();
+                return true;
+            }
+        });
+
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
             @Override
@@ -104,6 +118,8 @@ public class Settings extends PreferenceActivity{
                 PreferenceManager.getDefaultSharedPreferences(this);
 
 
+
+
 // Instance field for listener
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -115,9 +131,32 @@ public class Settings extends PreferenceActivity{
         prefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
-    private void saveInfo(){
-        SharedPreferences.Editor edit = prefs.edit();
+    private void deleteTimeLimits(){
+        edit = prefs.edit();
         edit.apply();
+
+        ArrayList timeLimitArray = new ArrayList();
+        timeLimitArray.add(0, "No Time Limit");
+        timeLimitArray.add(1, "1 Minute");
+        timeLimitArray.add(2, "5 Minutes");
+        timeLimitArray.add(3, "30 Minutes");
+        timeLimitArray.add(4, "90 Minutes");
+        timeLimitArray.add(5, "Create...");
+
+        ArrayList timeLimitArrayNum = new ArrayList();
+        timeLimitArrayNum.add(0, "No Time Limit");
+        timeLimitArrayNum.add(1, "00:01:00:0");
+        timeLimitArrayNum.add(2, "00:05:00:0");
+        timeLimitArrayNum.add(3, "00:30:00:0");
+        timeLimitArrayNum.add(4, "01:30:00:0");
+        timeLimitArrayNum.add(5, "Create...");
+
+        edit.putString("timelimitarray", dataHelper.convertToString(timeLimitArray));
+        edit.putString("timelimitarraynum", dataHelper.convertToString(timeLimitArrayNum));
+    }
+
+    private void saveInfo(){
+
     }
 
     @Override

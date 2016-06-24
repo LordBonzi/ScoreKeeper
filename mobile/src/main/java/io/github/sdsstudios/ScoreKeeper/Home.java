@@ -193,7 +193,6 @@ public class Home extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-            int numGames = 1;
             RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(android.R.id.list);
             TextView textViewHome = (TextView)rootView.findViewById(R.id.textViewNoGames);
             RelativeLayout fragmentHomeLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentHomeLayout);

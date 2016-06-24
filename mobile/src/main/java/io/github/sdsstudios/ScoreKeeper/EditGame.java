@@ -33,7 +33,7 @@ public class EditGame extends AppCompatActivity {
     private ArrayList arrayListPlayers, arrayListScores;
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
-    private CursorHelper cursorHelper;
+    private DataHelper dataHelper;
     private Intent settingsIntent, homeIntent, graphIntent;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -70,7 +70,7 @@ public class EditGame extends AppCompatActivity {
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        cursorHelper = new CursorHelper();
+        dataHelper = new DataHelper();
 
         settingsIntent = new Intent(this, Settings.class);
         graphIntent = new Intent(this, Graph.class);
@@ -82,13 +82,13 @@ public class EditGame extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 
-        arrayListPlayers = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-        arrayListScores = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+        arrayListPlayers = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
-        date = cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
+        date = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
 
-        editTextLength.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
-        editTextDate.setHint(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+        editTextLength.setHint(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
+        editTextDate.setHint(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
 
@@ -174,15 +174,15 @@ public class EditGame extends AppCompatActivity {
         menuItemCancel.setVisible(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        editTextLength.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
-        editTextDate.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+        editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
+        editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         displayRecyclerView(1);
     }
 
     public void displayRecyclerView(int editable) {
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        players = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+        players = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
         playerListAdapter = new PlayerListAdapter(players, arrayListScores, dbHelper, gameID, 2, editable);
         recyclerView.setAdapter(playerListAdapter);
 
@@ -236,8 +236,8 @@ public class EditGame extends AppCompatActivity {
 
                     dbHelper.updateGame(PlayerListAdapter.playerArray,null, ScoreDBAdapter.KEY_PLAYERS, gameID);
                     dbHelper.updateGame(PlayerListAdapter.scoreArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
-                    editTextLength.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
-                    editTextDate.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+                    editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
+                    editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
                     displayRecyclerView(0);
                     editTextLength.setEnabled(false);
                     editTextDate.setEnabled(false);
@@ -292,8 +292,8 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuCancelClick(){
-        editTextLength.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
-        editTextDate.setText(cursorHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+        editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
+        editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
 
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);

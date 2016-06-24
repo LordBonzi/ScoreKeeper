@@ -7,12 +7,19 @@
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="DANGER ZONE!" >
+        android:title="DANGER ZONE!">
         <Preference
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:title="@string/delete_all_games"
             android:key="prefDeleteAllGames"
+            />
+
+        <Preference
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:title="@string/delete_time_limit"
+            android:key="prefDeleteTimeLimit"
             />
 
     </PreferenceCategory>

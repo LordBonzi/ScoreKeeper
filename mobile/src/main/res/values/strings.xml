@@ -45,6 +45,7 @@
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
     <string name="complete_game">Finish</string>
+    <string name="delete_time_limit">Delete Time Limits</string>
     <string name="delete_all_games_mes">You will not get them back.</string>
     <string name="players">Players:</string>
     <string name="delete_game">Delete Game?</string>

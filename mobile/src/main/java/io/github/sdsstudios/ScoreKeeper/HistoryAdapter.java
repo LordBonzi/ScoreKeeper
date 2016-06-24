@@ -21,16 +21,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private List<GameModel> mGameModel;
     private Context context;
-    private RelativeLayout relativeLayout;
-    private int mActivity;
     private int numGames;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, Context context1, RelativeLayout layout, int activity, int numGamesm) {
+    public HistoryAdapter(List<GameModel> gameModel, Context context1, int numGamesm) {
         mGameModel = gameModel;
         context = context1;
-        relativeLayout = layout;
-        mActivity = activity;
         numGames =numGamesm;
     }
 

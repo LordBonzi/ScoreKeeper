@@ -162,14 +162,10 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:id="@+id/spinnerTimeLimit"
         android:layout_below="@+id/relativeLayoutSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
+        android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/playerList"
@@ -179,8 +175,19 @@
         android:layout_alignRight="@+id/spinnerTimeLimit"
         android:layout_alignEnd="@+id/spinnerTimeLimit"
         android:layout_above="@+id/relativeLayout2"
-        android:layout_alignLeft="@+id/spinnerTimeLimit"
-        android:layout_alignStart="@+id/spinnerTimeLimit" />
+        android:layout_alignLeft="@+id/checkBoxNoTimeLimit"
+        android:layout_alignStart="@+id/checkBoxNoTimeLimit" />
+
+    <CheckBox
+        android:id="@+id/checkBoxNoTimeLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_time_limit"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/relativeLayoutSpinner"
+        android:layout_alignLeft="@+id/editTextPlayer"
+        android:layout_alignStart="@+id/editTextPlayer" />
 
 
 </RelativeLayout>

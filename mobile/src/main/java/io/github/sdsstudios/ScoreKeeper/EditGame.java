@@ -224,6 +224,7 @@ public class EditGame extends AppCompatActivity {
                     invalidSnackbar("You can't have duplicate players!");
 
                 }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates){
+                    dbHelper.open();
                     dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
                     dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
@@ -248,6 +249,7 @@ public class EditGame extends AppCompatActivity {
                     menuItemEdit.setVisible(true);
                     menuItemCancel.setVisible(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    dbHelper.close();
                 }
 
             }

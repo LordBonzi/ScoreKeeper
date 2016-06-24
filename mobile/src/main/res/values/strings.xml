@@ -120,6 +120,7 @@
 
         <string name="pref_user_profile">User Profile</string>
         <string name="pref_update_setting">Update Settings</string>
+    <string name="no_time_limit">Time Limit</string>
 
 
 </resources>

@@ -222,7 +222,7 @@ public class Home extends AppCompatActivity {
                     }
 
                     gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
+                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size());
                     recyclerViewHome.setAdapter(historyAdapter);
 
                 } else {

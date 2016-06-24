@@ -292,8 +292,10 @@ public class MainActivity extends AppCompatActivity
                     stopwatch.setBase(SystemClock.elapsedRealtime());
                     timeWhenStopped = 0;
 
+                    dbHelper.open();
                     dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
                     dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.close();
                 }
             });
 

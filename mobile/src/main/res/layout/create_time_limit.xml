@@ -11,6 +11,22 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <CheckBox
+        android:text="@string/extend"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBoxExtend" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/checkBoxExtend"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
     <TextView
         android:text="@string/hour"
         android:paddingBottom="12dp"
@@ -112,5 +128,5 @@
         android:layout_toRightOf="@+id/editTextMinute"
         android:layout_toLeftOf="@+id/editTextSeconds"
         android:layout_toStartOf="@+id/editTextSeconds" />
-
+    </RelativeLayout>
 </RelativeLayout>

@@ -17,13 +17,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     ArrayList arrayListScore;
     int gameID;
     private ArrayList<BigGameModel> mBigGameModel;
+    private boolean enabled;
+
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter, int id) {
+    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter, int id, boolean menabled) {
         mBigGameModel = myDataset;
         dbHelper =dbAdapter;
         arrayListScore = score;
         gameID = id;
+        enabled = menabled;
     }
 
     // Create new views (invoked by the layout manager)
@@ -48,47 +51,53 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
         holder.textViewPlayer.setText(bigGameModel.getPlayers());
         holder.butonScore.setText(bigGameModel.getScore());
-        holder.butonScore.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                int score = 0;
-                int buttonScore = 0;
+        if (enabled) {
 
-                buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                score = buttonScore += 1;
-                holder.butonScore.setText(String.valueOf(score));
-                arrayListScore.set(position, String.valueOf(score));
-                dbHelper.open();
-                dbHelper.updateGame(arrayListScore, null,ScoreDBAdapter.KEY_SCORE,gameID );
-                dbHelper.close();
+            holder.butonScore.setOnClickListener(new View.OnClickListener() {
 
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    int score = 0;
+                    int buttonScore = 0;
 
-        holder.butonScore.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                int score = 0;
-                int buttonScore = 0;
-
-                buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                score = buttonScore -= 1;
-
-                if (score == -1){
-
-                }else {
+                    buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
+                    score = buttonScore += 1;
                     holder.butonScore.setText(String.valueOf(score));
                     arrayListScore.set(position, String.valueOf(score));
                     dbHelper.open();
-                    dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE,gameID );
+                    dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE, gameID);
                     dbHelper.close();
+
                 }
+            });
 
-                return true;
-            }
-        });
+            holder.butonScore.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int score = 0;
+                    int buttonScore = 0;
 
+                    buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
+                    score = buttonScore -= 1;
+
+                    if (score == -1) {
+
+                    } else {
+                        holder.butonScore.setText(String.valueOf(score));
+                        arrayListScore.set(position, String.valueOf(score));
+                        dbHelper.open();
+                        dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                        dbHelper.close();
+                    }
+
+                    return true;
+                }
+            });
+
+        }else{
+            holder.butonScore.setEnabled(false);
+        }
     }
 
     public void closeDB(){

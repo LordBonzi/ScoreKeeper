@@ -34,7 +34,7 @@ public class EditGame extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
     private DataHelper dataHelper;
-    private Intent settingsIntent, homeIntent, graphIntent;
+    private Intent settingsIntent, homeIntent;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private PlayerListAdapter playerListAdapter;
@@ -63,7 +63,6 @@ public class EditGame extends AppCompatActivity {
         dataHelper = new DataHelper();
 
         settingsIntent = new Intent(this, Settings.class);
-        graphIntent = new Intent(this, Graph.class);
         homeIntent = new Intent(this, Home.class);
 
         editTextDate = (EditText) findViewById(R.id.editTextDate);

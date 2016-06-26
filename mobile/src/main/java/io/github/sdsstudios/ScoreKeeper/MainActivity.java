@@ -13,13 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -29,7 +34,7 @@ import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, View.OnLongClickListener{
+        implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener{
 
     public static int gameID;
     public static Button buttonP1;
@@ -58,7 +63,11 @@ public class MainActivity extends AppCompatActivity
     private String timeLimitString = null;
     private boolean finished;
 
-    AlertDialog dialog;
+    private View dialogView;
+    private LayoutInflater inflter = null;
+    private AlertDialog alertDialog;
+
+    private boolean extend = false;
 
     long timeWhenStopped = 0;
     boolean isPaused = false;
@@ -171,15 +180,7 @@ public class MainActivity extends AppCompatActivity
             snackbar.show();
         }
 
-        stopwatch.setOnChronometerTickListener(new Stopwatch.OnChronometerTickListener() {
-
-            @Override
-            public void onChronometerTick(Stopwatch chronometer) {
-                timeLimitReached(chronometer);
-            }
-
-        });
-
+        stopwatch.setOnChronometerTickListener(this);
     }
 
     private void timeLimitReached(Stopwatch chronometer){
@@ -187,36 +188,59 @@ public class MainActivity extends AppCompatActivity
             if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
                 finished = true;
                 isPaused = true;
-                chronometerClick();
                 fabChronometer.setEnabled(false);
+                buttonP1.setEnabled(false);
+                buttonP2.setEnabled(false);
+                bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
+                bigGameList.setAdapter(bigGameAdapter);
+                chronometerClick();
 
-                builder.setTitle(R.string.time_limit_reached);
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                LayoutInflater inflater = this.getLayoutInflater();
+                dialogView = inflater.inflate(R.layout.create_time_limit, null);
 
-                builder.setMessage(R.string.time_limit_question);
+                final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+                final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+                final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+                final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
+                checkBoxExtend.setVisibility(View.VISIBLE);
+                final RelativeLayout relativeLayout = (RelativeLayout)dialogView.findViewById(R.id.relativeLayout2);
+                editTextHour.setText("0");
+                editTextMinute.setText("0");
+                editTextSecond.setText("0");
 
-                builder.setPositiveButton(R.string.extend, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
+                checkBoxExtend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (checkBoxExtend.isChecked()){
+                            relativeLayout.setVisibility(View.VISIBLE);
+                            extend = true;
+                        }else{
+                            relativeLayout.setVisibility(View.INVISIBLE);
+                            extend = false;
+                        }
                     }
                 });
 
-                builder.setNegativeButton(R.string.complete_game, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dbHelper.open();
-                        dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
-                        dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                        dbHelper.close();
-                        finish();
-                        startActivity(homeIntent);
+                dialogBuilder.setTitle(R.string.time_limit_reached);
+                dialogBuilder.setMessage(R.string.time_limit_question);
+
+                dialogBuilder.setPositiveButton(R.string.done, null);
+                dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isPaused = true;
+                        chronometerClick();
+                        dialog.dismiss();
                     }
                 });
 
-                dbHelper.open();
-                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                dbHelper.close();
+                dialogBuilder.setView(dialogView);
+                alertDialog = dialogBuilder.create();
+                alertDialog.setOnShowListener(this);
 
-                dialog = builder.create();
-                dialog.show();
+                alertDialog.show();
             }
         }
 
@@ -233,7 +257,7 @@ public class MainActivity extends AppCompatActivity
         bigGameList.setLayoutManager(mLayoutManager);
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -374,47 +398,104 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        isPaused = true;
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (fabChronometer.isEnabled()) {
+            isPaused = true;
+            AlertDialog dialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle(R.string.quit_game);
+            builder.setTitle(R.string.quit_game);
 
-        builder.setMessage(R.string.quit_game_message);
+            builder.setMessage(R.string.quit_game_message);
 
-        builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dbHelper.open();
-                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
-                dbHelper.close();
-                startActivity(homeIntent);
-            }
-        });
+            builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dbHelper.open();
+                    dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.close();
+                    startActivity(homeIntent);
+                }
+            });
 
-        builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dbHelper.open();
-                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
-                dbHelper.close();
-                startActivity(homeIntent);
-            }
-        });
+            builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dbHelper.open();
+                    dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.close();
+                    startActivity(homeIntent);
+                }
+            });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
 
-        dialog = builder.create();
-        fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-        stopwatch.setTextColor(getResources().getColor(R.color.stop));
-        fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
-        chronometerClick();
-        dialog.show();
+            dialog = builder.create();
+            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+            stopwatch.setTextColor(getResources().getColor(R.color.stop));
+            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+            chronometerClick();
+            dialog.show();
 
+        }else{
+            finished = true;
+            isPaused = true;
+            fabChronometer.setEnabled(false);
+            buttonP1.setEnabled(false);
+            buttonP2.setEnabled(false);
+            bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
+            bigGameList.setAdapter(bigGameAdapter);
+            chronometerClick();
+
+            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            dialogView = inflater.inflate(R.layout.create_time_limit, null);
+
+            final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+            final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+            final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+            final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
+            checkBoxExtend.setVisibility(View.VISIBLE);
+            final RelativeLayout relativeLayout = (RelativeLayout)dialogView.findViewById(R.id.relativeLayout2);
+            editTextHour.setText("0");
+            editTextMinute.setText("0");
+            editTextSecond.setText("0");
+
+            checkBoxExtend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (checkBoxExtend.isChecked()){
+                        relativeLayout.setVisibility(View.VISIBLE);
+                        extend = true;
+                    }else{
+                        relativeLayout.setVisibility(View.INVISIBLE);
+                        extend = false;
+                    }
+                }
+            });
+
+            dialogBuilder.setTitle(R.string.time_limit_reached);
+            dialogBuilder.setMessage(R.string.time_limit_question);
+
+            dialogBuilder.setPositiveButton(R.string.done, null);
+            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    isPaused = true;
+                    chronometerClick();
+                    dialog.dismiss();
+                }
+            });
+
+            dialogBuilder.setView(dialogView);
+            alertDialog = dialogBuilder.create();
+            alertDialog.setOnShowListener(this);
+
+            alertDialog.show();        }
     }
 
     @Override
@@ -433,9 +514,130 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
+    @Override
+    public void onShow(DialogInterface dialogInterface) {
+        Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        b.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                if (extend) {
+                    final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+                    final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+                    final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+                    String hour = editTextHour.getText().toString().trim();
+                    String minute = editTextMinute.getText().toString().trim();
+                    String seconds = editTextSecond.getText().toString().trim();
+
+                    String oldTimeLimit = stopwatch.getText().toString();
+                    String[] timeLimitSplit = oldTimeLimit.split(":");
+
+                    String oldHour = timeLimitSplit[0];
+                    String oldMinute = timeLimitSplit[1];
+                    String oldSeconds = timeLimitSplit[2];
+
+                    timeLimitString = "00:00:00:0";
+
+                    if (TextUtils.isEmpty(hour)) {
+                        editTextHour.setError("Can't be empty");
+                        return;
+                    } else if (TextUtils.isEmpty(minute)) {
+                        editTextMinute.setError("Can't be empty");
+                        return;
+                    } else if (TextUtils.isEmpty(seconds)) {
+                        editTextSecond.setError("Can't be empty");
+                        return;
+                    } else {
+
+                        if (Integer.valueOf(hour) + Integer.valueOf(oldHour) >= 24) {
+                            editTextHour.setError("Hour must be less than " + String.valueOf(24 - Integer.valueOf(oldHour)));
+                        } else if (Integer.valueOf(minute)+ Integer.valueOf(oldMinute) >= 60) {
+                            editTextMinute.setError("Minute must be less than " + String.valueOf(60 - Integer.valueOf(oldMinute)));
+
+                        } else if (Integer.valueOf(seconds) + Integer.valueOf(oldSeconds) >= 60) {
+                            editTextSecond.setError("Seconds must be less than " + String.valueOf(60 - Integer.valueOf(oldSeconds)));
+
+                        } else {
+                            hour = String.valueOf(Integer.valueOf(hour) + Integer.valueOf(oldHour));
+                            minute = String.valueOf(Integer.valueOf(minute) + Integer.valueOf(oldHour));
+                            seconds = String.valueOf(Integer.valueOf(seconds) + Integer.valueOf(oldSeconds));
+
+                            try {
+                                if (hour.length() == 1 && !hour.equals("0")) {
+                                    hour = ("0" + hour);
+
+                                }
+                                if (minute.length() == 1 && !minute.equals("0")) {
+                                    minute = ("0" + minute);
+                                }
+                                if (seconds.length() == 1 && !seconds.equals("0")) {
+                                    seconds = ("0" + seconds);
+                                }
+
+                                if (hour.equals("0")) {
+                                    hour = "00";
+                                }
+
+                                if (minute.equals("0")) {
+                                    minute = "00";
+                                }
+
+                                if (seconds.equals("0")) {
+                                    seconds = "00";
+                                }
+
+                                timeLimitString += hour + ":";
+                                timeLimitString += minute + ":";
+                                timeLimitString += seconds + ":";
+                                timeLimitString += "0";
+
+                                if (!timeLimitString.equals("00:00:00:0")) {
+
+                                    dbHelper.open();
+                                    dbHelper.updateGame(null, timeLimitString, ScoreDBAdapter.KEY_TIMER, gameID);
+                                    dbHelper.close();
+
+                                    isPaused = false;
+                                    chronometerClick();
+                                    timeLimitReached(stopwatch);
+                                    fabChronometer.setEnabled(true);
+                                    buttonP1.setEnabled(true);
+                                    buttonP2.setEnabled(true);
+                                    bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
+                                    bigGameList.setAdapter(bigGameAdapter);
+                                    alertDialog.dismiss();
+
+                                } else {
+                                    alertDialog.dismiss();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e(TAG, e.toString());
+                                Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_time, Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        }
+                    }
+
+                }else{
+                    alertDialog.dismiss();
+                    startActivity(homeIntent);
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onChronometerTick(Stopwatch chronometer) {
+        timeLimitReached(stopwatch);
+    }
 }
 
-class SmallLayout extends Activity{
+class SmallLayout{
     public static Integer P1Score , P2Score;
     public static ArrayList scoresArray;
     public static boolean ft1;

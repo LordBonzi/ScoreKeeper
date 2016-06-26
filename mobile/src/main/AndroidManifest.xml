@@ -12,8 +12,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:versionCode="07"
-        android:versionName="0.7alpha">
+        android:versionCode="8"
+        android:versionName="0.8alpha">
         <activity
             android:name=".Home"
             android:label="@string/app_name"
@@ -54,13 +54,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".Graph"
-            android:label="@string/graph"
-            android:parentActivityName=".EditGame"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Report"></activity>
+        <activity android:name=".Report">
+
+        </activity>
     </application>
 
 </manifest>

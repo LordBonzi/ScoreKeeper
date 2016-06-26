@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Run in the background"
+        android:summary="Run the game in the background if it has a timer"
+        android:enabled="false"
+        android:key="prefRunInBackground"/>
+
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

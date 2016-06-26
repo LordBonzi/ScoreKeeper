@@ -175,22 +175,14 @@ public class NewGame extends AppCompatActivity
 
             timeLimitArrayNum = new ArrayList();
             timeLimitArrayNum.add(0, "Create...");
-            saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
+            dataHelper.saveSharedPrefs(timeLimitArray, timeLimitArrayNum, this);
         }
 
         spinnerTimeLimit.setVisibility(View.INVISIBLE);
         displaySpinner();
     }
 
-    public void saveSharedPrefs(List array, List arrayNum){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
 
-        editor.putString("timelimitarray", dataHelper.convertToString(array));
-        editor.putString("timelimitarraynum", dataHelper.convertToString(arrayNum));
-
-        editor.apply();
-    }
 
     public void displaySpinner(){
 
@@ -208,17 +200,6 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    public boolean checkDuplicates(List arrayList){
-        boolean duplicate = false;
-
-        Set<Integer> set = new HashSet<Integer>(arrayList);
-
-        if(set.size() < arrayList.size()){
-            duplicate = true;
-        }
-
-        return duplicate;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,7 +235,7 @@ public class NewGame extends AppCompatActivity
         player = editTextPlayer.getText().toString();
         boolean duplicates;
         players.add(players.size(), player);
-        duplicates = checkDuplicates(players);
+        duplicates = dataHelper.checkDuplicates(players);
 
         if (duplicates){
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -403,7 +384,7 @@ public class NewGame extends AppCompatActivity
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
-                    if (checkDuplicates(players)){
+                    if (dataHelper.checkDuplicates(players)){
 
                         View.OnClickListener onClickListener = new View.OnClickListener() {
                             @Override
@@ -433,6 +414,9 @@ public class NewGame extends AppCompatActivity
                 if (checkBoxNoTimeLimit.isChecked()){
                     spinnerTimeLimit.setEnabled(true);
                     spinnerTimeLimit.setVisibility(View.VISIBLE);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, timeLimitArrayNum.get(0).toString(),ScoreDBAdapter.KEY_TIMER, gameID);
+
                 }else{
                     spinnerTimeLimit.setEnabled(false);
                     spinnerTimeLimit.setVisibility(View.INVISIBLE);
@@ -450,56 +434,7 @@ public class NewGame extends AppCompatActivity
     }
 
 
-    public String createTimeLimitCondensed(String timeLimit){
-        Pattern p = Pattern.compile("^\\d+$");
-        Matcher m = p.matcher(timeLimit);
-        timeLimitCondensed = "";
-        StringBuilder stringBuilder = new StringBuilder();
 
-        if(m.matches()){
-            timeLimit.replaceAll("^0+", "");
-        }
-
-        String[] timeLimitSplit = timeLimit.split(":");
-
-        String hour = timeLimitSplit[0];
-        String minute = timeLimitSplit[1];
-        String second = timeLimitSplit[2];
-
-        if (!hour.equals("00")){
-            stringBuilder.append(Integer.valueOf(hour).toString()).append(" Hrs ");
-            timeLimitCondensed = stringBuilder.toString();
-
-        }
-
-        if(!minute.equals("00")){
-            if (!timeLimitCondensed.equals("")){
-                stringBuilder.append(" · " + Integer.valueOf(minute).toString()).append(" Mins ");
-
-            }else{
-                stringBuilder.append(Integer.valueOf(minute).toString()).append(" Mins ");
-
-            }
-            timeLimitCondensed = stringBuilder.toString();
-
-        }
-
-        if(!second.equals("00")){
-
-            if (!timeLimitCondensed.equals("")){
-                stringBuilder.append(" · " + Integer.valueOf(second).toString()).append(" Secs ");
-
-            }else{
-                stringBuilder.append(Integer.valueOf(second).toString()).append(" Secs ");
-
-            }
-            timeLimitCondensed = stringBuilder.toString();
-
-        }
-
-        return timeLimitCondensed;
-
-    }
 
 
 }

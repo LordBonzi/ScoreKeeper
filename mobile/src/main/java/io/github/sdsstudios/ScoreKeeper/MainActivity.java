@@ -1,9 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,9 +31,7 @@ import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     SmallLayout smallLayout;
     Intent homeIntent;
     ScoreDBAdapter dbHelper;
+    private boolean immersive = false;
     private RecyclerView.Adapter bigGameAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Stopwatch stopwatch;
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity
         dataHelper = new DataHelper();
         timeHelper = new TimeHelper();
 
+
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
@@ -94,13 +97,6 @@ public class MainActivity extends AppCompatActivity
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
-
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-        Date now = new Date();
-        time = sdfDate.format(now);
-        dbHelper.open();
-        dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
-        dbHelper.close();
 
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
 
@@ -186,61 +182,7 @@ public class MainActivity extends AppCompatActivity
     private void timeLimitReached(Stopwatch chronometer){
         if (timeLimitString != null) {
             if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
-                finished = true;
-                isPaused = true;
-                fabChronometer.setEnabled(false);
-                buttonP1.setEnabled(false);
-                buttonP2.setEnabled(false);
-                bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
-                bigGameList.setAdapter(bigGameAdapter);
-                chronometerClick();
-
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                LayoutInflater inflater = this.getLayoutInflater();
-                dialogView = inflater.inflate(R.layout.create_time_limit, null);
-
-                final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-                final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-                final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
-                final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
-                checkBoxExtend.setVisibility(View.VISIBLE);
-                final RelativeLayout relativeLayout = (RelativeLayout)dialogView.findViewById(R.id.relativeLayout2);
-                editTextHour.setText("0");
-                editTextMinute.setText("0");
-                editTextSecond.setText("0");
-
-                checkBoxExtend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (checkBoxExtend.isChecked()){
-                            relativeLayout.setVisibility(View.VISIBLE);
-                            extend = true;
-                        }else{
-                            relativeLayout.setVisibility(View.INVISIBLE);
-                            extend = false;
-                        }
-                    }
-                });
-
-                dialogBuilder.setTitle(R.string.time_limit_reached);
-                dialogBuilder.setMessage(R.string.time_limit_question);
-
-                dialogBuilder.setPositiveButton(R.string.done, null);
-                dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isPaused = true;
-                        chronometerClick();
-                        dialog.dismiss();
-                    }
-                });
-
-                dialogBuilder.setView(dialogView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.setOnShowListener(this);
-
-                alertDialog.show();
+                timeLimitDialog();
             }
         }
 
@@ -268,7 +210,66 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_about).setVisible(true);
         menu.findItem(R.id.action_reset).setVisible(true);
+        menu.findItem(R.id.action_fullscreen).setVisible(true);
         return true;
+    }
+
+    public void timeLimitDialog(){
+        finished = true;
+        isPaused = true;
+        fabChronometer.setEnabled(false);
+        buttonP1.setEnabled(false);
+        buttonP2.setEnabled(false);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
+        bigGameList.setAdapter(bigGameAdapter);
+        chronometerClick();
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.create_time_limit, null);
+
+        final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+        final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+        final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+        final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
+        checkBoxExtend.setVisibility(View.VISIBLE);
+        final RelativeLayout relativeLayout = (RelativeLayout)dialogView.findViewById(R.id.relativeLayout2);
+        editTextHour.setText("0");
+        editTextMinute.setText("0");
+        editTextSecond.setText("0");
+
+        checkBoxExtend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBoxExtend.isChecked()){
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    extend = true;
+                }else{
+                    relativeLayout.setVisibility(View.INVISIBLE);
+                    extend = false;
+                }
+            }
+        });
+
+        dialogBuilder.setTitle(R.string.time_limit_reached);
+        dialogBuilder.setMessage(R.string.time_limit_question);
+        dialogBuilder.setPositiveButton(R.string.done, null);
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                isPaused = true;
+                chronometerClick();
+                dialog.dismiss();
+                immersiveMode();
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        alertDialog = dialogBuilder.create();
+        alertDialog.setOnShowListener(this);
+
+        alertDialog.show();
     }
 
     @Override
@@ -282,7 +283,8 @@ public class MainActivity extends AppCompatActivity
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        }if (id == R.id.action_reset) {
+        }
+        if (id == R.id.action_reset) {
             isPaused = true;
             chronometerClick();
 
@@ -296,13 +298,13 @@ public class MainActivity extends AppCompatActivity
             builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    for (int i = 0; i < scoresArray.size(); i++){
+                    for (int i = 0; i < scoresArray.size(); i++) {
                         scoresArray.set(i, 0);
                     }
 
-                    if (gameSize > 2){
+                    if (gameSize > 2) {
                         displayRecyclerView();
-                    }else{
+                    } else {
                         smallLayout.onCreate(buttonP1, buttonP2, dbHelper, gameID, dataHelper);
                     }
 
@@ -319,6 +321,7 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
+                    immersiveMode();
                 }
             });
 
@@ -327,14 +330,51 @@ public class MainActivity extends AppCompatActivity
             dialog.show();
             return true;
         }
+        if (id == R.id.action_fullscreen) {
+            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT);
+            immersiveMode();
+            }
+
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void immersiveMode(){
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void showSystemBars(){
+        getSupportActionBar().show();
+        Window w = this.getWindow();
+
+        w.setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        immersive = !immersive;
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void hideSystemBars(){
+        getSupportActionBar().hide();
+        Window w = this.getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        immersive = !immersive;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        dbHelper.open();
 
     }
 
@@ -348,6 +388,7 @@ public class MainActivity extends AppCompatActivity
         gameModel.closeDB();
         dbHelper.close();
     }
+
 
     public void chronometerClick(){
         if (!isPaused) {
@@ -398,6 +439,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        immersiveMode();
+
         if (fabChronometer.isEnabled()) {
             isPaused = true;
             AlertDialog dialog;
@@ -430,6 +473,7 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
+                    immersiveMode();
                 }
             });
 
@@ -441,61 +485,8 @@ public class MainActivity extends AppCompatActivity
             dialog.show();
 
         }else{
-            finished = true;
-            isPaused = true;
-            fabChronometer.setEnabled(false);
-            buttonP1.setEnabled(false);
-            buttonP2.setEnabled(false);
-            bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
-            bigGameList.setAdapter(bigGameAdapter);
-            chronometerClick();
-
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            dialogView = inflater.inflate(R.layout.create_time_limit, null);
-
-            final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-            final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-            final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
-            final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
-            checkBoxExtend.setVisibility(View.VISIBLE);
-            final RelativeLayout relativeLayout = (RelativeLayout)dialogView.findViewById(R.id.relativeLayout2);
-            editTextHour.setText("0");
-            editTextMinute.setText("0");
-            editTextSecond.setText("0");
-
-            checkBoxExtend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (checkBoxExtend.isChecked()){
-                        relativeLayout.setVisibility(View.VISIBLE);
-                        extend = true;
-                    }else{
-                        relativeLayout.setVisibility(View.INVISIBLE);
-                        extend = false;
-                    }
-                }
-            });
-
-            dialogBuilder.setTitle(R.string.time_limit_reached);
-            dialogBuilder.setMessage(R.string.time_limit_question);
-
-            dialogBuilder.setPositiveButton(R.string.done, null);
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    isPaused = true;
-                    chronometerClick();
-                    dialog.dismiss();
-                }
-            });
-
-            dialogBuilder.setView(dialogView);
-            alertDialog = dialogBuilder.create();
-            alertDialog.setOnShowListener(this);
-
-            alertDialog.show();        }
+            timeLimitDialog();
+            }
     }
 
     @Override
@@ -538,7 +529,7 @@ public class MainActivity extends AppCompatActivity
                     String oldMinute = timeLimitSplit[1];
                     String oldSeconds = timeLimitSplit[2];
 
-                    timeLimitString = "00:00:00:0";
+                    timeLimitString = "";
 
                     if (TextUtils.isEmpty(hour)) {
                         editTextHour.setError("Can't be empty");
@@ -608,9 +599,11 @@ public class MainActivity extends AppCompatActivity
                                     bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
                                     bigGameList.setAdapter(bigGameAdapter);
                                     alertDialog.dismiss();
+                                    immersiveMode();
 
                                 } else {
                                     alertDialog.dismiss();
+                                    immersiveMode();
                                 }
 
                             } catch (Exception e) {
@@ -623,7 +616,10 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 }else{
-                    alertDialog.dismiss();
+                    immersiveMode();
+                    dbHelper.open();
+                    dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.close();
                     startActivity(homeIntent);
 
                 }

@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -114,7 +113,6 @@ public class GameModel{
 
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
                     dbHelper.close();
-
                 }
 
             }else if (activity == 3 ){

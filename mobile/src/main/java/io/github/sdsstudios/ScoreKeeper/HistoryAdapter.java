@@ -53,7 +53,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         gameModel = mGameModel.get(mGameModel.size()-position-1);
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
         holder.textViewHistoryScore.setText(gameModel.getScore());
-        holder.textViewHistoryDate.setText("Last played: " + gameModel.getDate());
+        holder.textViewHistoryDate.setText(gameModel.getDate());
         holder.textViewHistoryType.setText(gameModel.getType());
 
         if (gameModel.getState().equals(holder.inProgress)) {

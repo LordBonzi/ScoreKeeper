@@ -1,10 +1,12 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -18,10 +20,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,16 +43,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.github.sdsstudios.ScoreKeeper.MainActivity.gameID;
+
 public class NewGame extends AppCompatActivity
-        implements View.OnClickListener, AdapterView.OnItemSelectedListener, DialogInterface.OnShowListener{
+        implements View.OnClickListener{
 
     public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
-    Snackbar snackbar;
+    private Snackbar snackbar;
+    private TimeLimitAdapter timeLimitAdapter;
     private DataHelper dataHelper;
     private String time = null;
     private String TAG = "NewGame";
@@ -56,22 +67,16 @@ public class NewGame extends AppCompatActivity
     private String player;
     private ArrayList<String> players = new ArrayList<>();
     private ArrayList<String> score = new ArrayList<>();
-    private Intent mainActivityIntent;
     private Integer gameID;
-    private Intent homeIntent;
-    private RecyclerView.Adapter mAdapter;
+    private Intent homeIntent, mainActivityIntent;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
     private boolean stop = true;
-    private Spinner spinnerTimeLimit;
+    public static Spinner spinnerTimeLimit;
     private String timeLimit = null;
-    private ArrayList timeLimitArray;
-    private ArrayList timeLimitArrayNum;
+    private List timeLimitArray;
+    private List timeLimitArrayNum;
     private String timeLimitCondensed = "";
-    private ArrayAdapter<String> adapter;
-    private AlertDialog alertDialog;
-    private View dialogView;
-
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
     static final String STATE_TIME = "time";
@@ -87,21 +92,9 @@ public class NewGame extends AppCompatActivity
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
 
 
-
-
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-        });
-
         dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
 
+        dbHelper.open();
         dbHelper.createGame(players, time, score, 0, timeLimit);
         gameID = dbHelper.getNewestGame();
         dbHelper.close();
@@ -178,43 +171,35 @@ public class NewGame extends AppCompatActivity
             timeLimitArrayNum = dataHelper.convertToArray(sharedPref.getString("timelimitarraynum", null));
         }else{
             timeLimitArray = new ArrayList();
-            timeLimitArray.add(0, "1 Minute");
-            timeLimitArray.add(1, "5 Minutes");
-            timeLimitArray.add(2, "30 Minutes");
-            timeLimitArray.add(3, "90 Minutes");
-            timeLimitArray.add(4, "Create...");
-            timeLimitArray.add(5, "Delete...");
+            timeLimitArray.add(0, "Create...");
 
             timeLimitArrayNum = new ArrayList();
-            timeLimitArrayNum.add(0, "00:01:00:0");
-            timeLimitArrayNum.add(1, "00:05:00:0");
-            timeLimitArrayNum.add(2, "00:30:00:0");
-            timeLimitArrayNum.add(3, "01:30:00:0");
-            timeLimitArrayNum.add(4, "Create...");
-            timeLimitArrayNum.add(5, "Delete...");
+            timeLimitArrayNum.add(0, "Create...");
+            saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
         }
 
-
+        spinnerTimeLimit.setVisibility(View.INVISIBLE);
         displaySpinner();
     }
 
-    public void saveSharedPrefs(){
+    public void saveSharedPrefs(List array, List arrayNum){
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        editor.putString("timelimitarray", dataHelper.convertToString(timeLimitArray));
-        editor.putString("timelimitarraynum", dataHelper.convertToString(timeLimitArrayNum));
+        editor.putString("timelimitarray", dataHelper.convertToString(array));
+        editor.putString("timelimitarraynum", dataHelper.convertToString(arrayNum));
 
         editor.apply();
     }
 
     public void displaySpinner(){
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeLimitArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTimeLimit.setAdapter(adapter);
-        spinnerTimeLimit.setOnItemSelectedListener(this);
+        timeLimitAdapter=new TimeLimitAdapter(this, timeLimitArray, timeLimitArrayNum, dbHelper, gameID);
+        spinnerTimeLimit.setAdapter(timeLimitAdapter);
+
     }
+
+
 
     @Override
     protected void onResume() {
@@ -223,7 +208,7 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    public boolean checkDuplicates(ArrayList arrayList){
+    public boolean checkDuplicates(List arrayList){
         boolean duplicate = false;
 
         Set<Integer> set = new HashSet<Integer>(arrayList);
@@ -328,8 +313,6 @@ public class NewGame extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        onStop();
-        playerListAdapter.closeDB();
         dbHelper.close();
 
     }
@@ -449,10 +432,13 @@ public class NewGame extends AppCompatActivity
             case R.id.checkBoxNoTimeLimit: {
                 if (checkBoxNoTimeLimit.isChecked()){
                     spinnerTimeLimit.setEnabled(true);
+                    spinnerTimeLimit.setVisibility(View.VISIBLE);
                 }else{
                     spinnerTimeLimit.setEnabled(false);
+                    spinnerTimeLimit.setVisibility(View.INVISIBLE);
                     timeLimit = null;
                     dbHelper.open();
+                    timeLimit=null;
                     dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
                     dbHelper.close();
                 }
@@ -463,93 +449,8 @@ public class NewGame extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (position){
 
-
-            case 0:
-                timeLimit = "00:01:00:0";
-                dbHelper.open();
-                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                dbHelper.close();
-
-                break;
-
-            case 1:
-                timeLimit = "00:05:00:0";
-                dbHelper.open();
-                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                dbHelper.close();
-
-                break;
-
-            case 2:
-                timeLimit = "00:30:00:0";
-                dbHelper.open();
-                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                dbHelper.close();
-
-                break;
-
-            case 3:
-                timeLimit = "01:30:00:0";
-                dbHelper.open();
-                dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                dbHelper.close();
-                break;
-
-        }
-
-        if(position > 3 && position < timeLimitArray.size() -2){
-            timeLimit = timeLimitArrayNum.get(position).toString();
-            dbHelper.open();
-            dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-            dbHelper.close();
-        }
-
-        if (position == timeLimitArray.size() -2){
-            final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            dialogView = inflater.inflate(R.layout.content_time_limit, null);
-            final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-            final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-            final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
-            editTextHour.setText("0");
-            editTextMinute.setText("0");
-            editTextSecond.setText("0");
-            dialogBuilder.setPositiveButton(R.string.create, null);
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            dialogBuilder.setView(dialogView);
-            alertDialog = dialogBuilder.create();
-
-            alertDialog.setOnShowListener(this);
-
-            dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            alertDialog.show();
-
-            dbHelper.close();
-
-        }
-        if (position == timeLimitArray.size() -1){
-            onEditClick();
-
-        }
-    }
-
-    private String createTimeLimitCondensed(String timeLimit){
+    public String createTimeLimitCondensed(String timeLimit){
         Pattern p = Pattern.compile("^\\d+$");
         Matcher m = p.matcher(timeLimit);
         timeLimitCondensed = "";
@@ -566,17 +467,17 @@ public class NewGame extends AppCompatActivity
         String second = timeLimitSplit[2];
 
         if (!hour.equals("00")){
-            stringBuilder.append(" , " + Integer.valueOf(hour).toString()).append(" Hours ");
+            stringBuilder.append(Integer.valueOf(hour).toString()).append(" Hrs ");
             timeLimitCondensed = stringBuilder.toString();
 
         }
 
         if(!minute.equals("00")){
             if (!timeLimitCondensed.equals("")){
-                stringBuilder.append(" , " + Integer.valueOf(minute).toString()).append(", Minutes ");
+                stringBuilder.append(" · " + Integer.valueOf(minute).toString()).append(" Mins ");
 
             }else{
-                stringBuilder.append(Integer.valueOf(minute).toString()).append(" Minutes ");
+                stringBuilder.append(Integer.valueOf(minute).toString()).append(" Mins ");
 
             }
             timeLimitCondensed = stringBuilder.toString();
@@ -586,10 +487,10 @@ public class NewGame extends AppCompatActivity
         if(!second.equals("00")){
 
             if (!timeLimitCondensed.equals("")){
-                stringBuilder.append(" , " + Integer.valueOf(second).toString()).append(" Seconds ");
+                stringBuilder.append(" · " + Integer.valueOf(second).toString()).append(" Secs ");
 
             }else{
-                stringBuilder.append(Integer.valueOf(second).toString()).append(" Seconds ");
+                stringBuilder.append(Integer.valueOf(second).toString()).append(" Secs ");
 
             }
             timeLimitCondensed = stringBuilder.toString();
@@ -600,155 +501,5 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-            timeLimit = null;
-        dbHelper.open();
-        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-        dbHelper.close();
-
-    }
-
-    @Override
-    public void onShow(final DialogInterface dialog) {
-
-        Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        b.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-            final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-            final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-            final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
-            String hour = editTextHour.getText().toString().trim();
-            String minute = editTextMinute.getText().toString().trim();
-            String seconds = editTextSecond.getText().toString().trim();
-            String timeLimitString = "";
-            DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:S");
-
-            if(TextUtils.isEmpty(hour)) {
-                editTextHour.setError("Can't be empty");
-                return;
-            }else if(TextUtils.isEmpty(minute)) {
-                editTextMinute.setError("Can't be empty");
-                return;
-            }else if(TextUtils.isEmpty(seconds)) {
-                editTextSecond.setError("Can't be empty");
-                return;
-            }else {
-
-                if (Integer.valueOf(hour) >= 24) {
-                    editTextHour.setError("Hour must be less than 24");
-                } else if (Integer.valueOf(minute) >= 60) {
-                    editTextMinute.setError("Minute must be less than 60");
-
-                } else if (Integer.valueOf(seconds) >= 60) {
-                    editTextSecond.setError("Seconds must be less than 60");
-
-                } else {
-
-                    try {
-                        if (hour.length() == 1 && !hour.equals("0")) {
-                            hour = ("0" + hour);
-                        }
-                        if (minute.length() == 1 && !minute.equals("0")) {
-                            minute = ("0" + minute);
-                        }
-                        if (seconds.length() == 1&& !seconds.equals("0")) {
-                            seconds = ("0" + seconds);
-                        }
-
-                        if (hour.equals("0")) {
-                            hour = "00";
-                        }
-
-                        if (minute.equals("0")) {
-                            minute = "00";
-                        }
-
-                        if (seconds.equals("0")) {
-                            seconds = "00";
-                        }
-
-                        timeLimitString += hour + ":";
-                        timeLimitString += minute + ":";
-                        timeLimitString += seconds + ":";
-                        timeLimitString += "0";
-
-                        if (!timeLimitString.equals("00:00:00:0")) {
-
-                            dbHelper.open();
-                            dbHelper.updateGame(null, timeLimitString, ScoreDBAdapter.KEY_TIMER, gameID);
-                            dbHelper.close();
-
-                            timeLimit = timeLimitString;
-                            timeLimitArray.add(timeLimitArray.size() - 2, createTimeLimitCondensed(timeLimitString));
-                            timeLimitArrayNum.add(timeLimitArrayNum.size() - 2, timeLimitString);
-
-                            if (checkDuplicates(timeLimitArray)) {
-                                timeLimitArray.remove(timeLimitArray.size() - 2);
-                                timeLimitArrayNum.remove(timeLimitArrayNum.size() - 2);
-                                Snackbar snackbar = Snackbar.make(newGameCoordinatorLayout, "Already exists", Snackbar.LENGTH_SHORT);
-                                snackbar.show();
-                            }
-
-                            adapter.notifyDataSetChanged();
-                            alertDialog.dismiss();
-                            spinnerTimeLimit.setSelection(timeLimitArray.size() - 3);
-                            saveSharedPrefs();
-
-                        }else{
-                            dialog.dismiss();
-                        }
-                        
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e(TAG, e.toString());
-                        Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_time, Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                }
-            }
-        }
-        });
-    }
-
-    public void onEditClick(){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-
-
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        LayoutInflater inflater = this.getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.fragment_time_limit_edit, null);
-        RecyclerView recyclerView = (RecyclerView)dialogView.findViewById(R.id.recyclerview);
-
-        builder.setView(dialogView);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        TimeLimitAdapter timeLimitAdapter = new TimeLimitAdapter(timeLimitArray, timeLimitArrayNum);
-        recyclerView.setAdapter(timeLimitAdapter);
-        builder.setTitle(R.string.quit_setup_question);
-
-
-        builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-                stop = true;
-                startActivity(homeIntent);
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
-    }
 
 }

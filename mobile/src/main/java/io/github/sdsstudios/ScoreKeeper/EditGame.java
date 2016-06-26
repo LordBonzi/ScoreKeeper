@@ -54,16 +54,6 @@ public class EditGame extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-        });
-
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
 

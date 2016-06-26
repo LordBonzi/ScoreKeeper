@@ -37,6 +37,7 @@ public class ScoreDBAdapter {
                     KEY_CHRONOMETER + " , " +
                     KEY_TIMER +
                     " );";
+
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -45,8 +46,12 @@ public class ScoreDBAdapter {
         this.mCtx = ctx;
     }
 
+
     public ScoreDBAdapter open() throws SQLException {
-        mDbHelper = new DatabaseHelper(mCtx);
+        close();
+        if (mDbHelper == null) {
+            mDbHelper = new DatabaseHelper(mCtx);
+        }
         mDb = mDbHelper.getWritableDatabase();
         return this;
     }
@@ -64,7 +69,7 @@ public class ScoreDBAdapter {
         return str;
     }
 
-    public long updateGame(ArrayList array, String time_or_completed_or_timeLimit, String request, int id) {
+    public void updateGame(ArrayList array, String time_or_completed_or_timeLimit, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -83,7 +88,10 @@ public class ScoreDBAdapter {
 
         }
 
-        return mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
+        open();
+        mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
+        close();
+
     }
 
     public long createGame(ArrayList players, String time, ArrayList score, int completed, String timeLimit) {
@@ -106,7 +114,6 @@ public class ScoreDBAdapter {
 
     public int numRows(){
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER}, null, null, null, null, null);
-        Log.e("numrows", ""+cursor.getCount());
 
         return  cursor.getCount();
     }
@@ -124,11 +131,9 @@ public class ScoreDBAdapter {
             value = cursor.getInt(index) ;
 
         }catch (Exception e){
-            Log.e("getnewestgameerror", e.toString());
             value = 1;
 
         }
-        Log.e("getNewestGame", ""+value);
 
         cursor.close();
         return value;
@@ -136,11 +141,11 @@ public class ScoreDBAdapter {
 
     public boolean deleteGame(int id){
 
+        open();
         mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
         Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER}, null, null, null, null, null);
 
         for (int i = 1; i <= numRows(); i++){
-            Log.e("deleteGame", numRows() + ", "+i );
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_ROWID, i);
             cursor.moveToNext();
@@ -150,6 +155,7 @@ public class ScoreDBAdapter {
         }
 
         cursor.close();
+        close();
         return true;
     }
 
@@ -177,17 +183,6 @@ public class ScoreDBAdapter {
         return mCursor;
     }
 
-    public Cursor fetchAllGames() {
-
-        Cursor mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER},
-                null, null, null, null, null);
-
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-
-        return mCursor;
-    }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 

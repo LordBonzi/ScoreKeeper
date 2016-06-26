@@ -1,76 +1,268 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.provider.ContactsContract;
+import android.support.annotation.DrawableRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by seth on 08/05/16.
  */
-public class TimeLimitAdapter extends RecyclerView.Adapter<TimeLimitAdapter.ViewHolder> {
-    private ArrayList timeLimitArray, timeLimitArrayNum;
+public class TimeLimitAdapter extends BaseAdapter{
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public TimeLimitAdapter(ArrayList myDataset, ArrayList numArray) {
-        timeLimitArray = myDataset;
-        timeLimitArrayNum = numArray;
+    public static String timeLimit;
 
+    private int gameID;
+    private List timeLimitArray;
+    private List timeLimitArrayNum;
+    LayoutInflater inflter;
+    private NewGame newGame;
+    private TextView timeLimitTextView;
+    private Context context;
+    private ScoreDBAdapter dbHelper;
+    public static AlertDialog alertDialog = null;
+
+
+    public TimeLimitAdapter(Context ctx,List objects, List objectsNum, ScoreDBAdapter db, int id) {
+        context = ctx;
+        timeLimitArray = objects;
+        inflter = (LayoutInflater.from(ctx));
+        dbHelper = db;
+        gameID = id;
+        timeLimitArrayNum = objectsNum;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
-    public TimeLimitAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                          int viewType) {
-        // create a new view
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.time_limit_adapter, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-
-        ViewHolder vh = new ViewHolder(view);
-        return vh;
+    public int getCount() {
+        return timeLimitArray.size();
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
+    public Object getItem(int i) {
+        return null;
+    }
 
-        holder.textView.setText(timeLimitArray.get(position).toString());
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public View getView(final int position, View view, ViewGroup parent) {
+        newGame = new NewGame();
+
+        view = inflter.inflate(R.layout.time_limit_spinner_adapter, null);
+
+        timeLimitTextView = (TextView) view.findViewById(R.id.textView);
+        timeLimitTextView.setText(timeLimitArray.get(position).toString());
+
+        timeLimitTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
+                if (position != timeLimitArray.size() -1) {
+                    timeLimitArray.remove(position);
+                    timeLimitArrayNum.remove(position);
+                    notifyDataSetChanged();
+                    saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
+                }
+
+                return true;
             }
         });
+
+        timeLimitTextView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                if (position < timeLimitArray.size() -1){
+                    timeLimit = timeLimitArrayNum.get(position).toString();
+                    NewGame.spinnerTimeLimit.setSelection(position);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+                    dbHelper.close();
+                }else {
+
+                        final View dialogView;
+
+                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+                        dialogView = inflter.inflate(R.layout.create_time_limit, null);
+                        EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+                        EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+                        EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+                        editTextHour.setText("0");
+                        editTextMinute.setText("0");
+                        editTextSecond.setText("0");
+
+                        dialogBuilder.setPositiveButton(R.string.create, null);
+                        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialogBuilder.setView(dialogView);
+
+                        alertDialog = dialogBuilder.create();
+
+                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialogInterface) {
+
+                                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                b.setOnClickListener(new View.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(View view) {
+                                        final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+                                        final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+                                        final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+                                        String hour = editTextHour.getText().toString().trim();
+                                        String minute = editTextMinute.getText().toString().trim();
+                                        String seconds = editTextSecond.getText().toString().trim();
+                                        String timeLimitString = "";
+
+                                        if (TextUtils.isEmpty(hour)) {
+                                            editTextHour.setError("Can't be empty");
+                                            return;
+                                        } else if (TextUtils.isEmpty(minute)) {
+                                            editTextMinute.setError("Can't be empty");
+                                            return;
+                                        } else if (TextUtils.isEmpty(seconds)) {
+                                            editTextSecond.setError("Can't be empty");
+                                            return;
+                                        } else {
+
+                                            if (Integer.valueOf(hour) >= 24) {
+                                                editTextHour.setError("Hour must be less than 24");
+                                            } else if (Integer.valueOf(minute) >= 60) {
+                                                editTextMinute.setError("Minute must be less than 60");
+
+                                            } else if (Integer.valueOf(seconds) >= 60) {
+                                                editTextSecond.setError("Seconds must be less than 60");
+
+                                            } else {
+
+                                                try {
+                                                    if (hour.length() == 1 && !hour.equals("0")) {
+                                                        hour = ("0" + hour);
+                                                    }
+                                                    if (minute.length() == 1 && !minute.equals("0")) {
+                                                        minute = ("0" + minute);
+                                                    }
+                                                    if (seconds.length() == 1 && !seconds.equals("0")) {
+                                                        seconds = ("0" + seconds);
+                                                    }
+
+                                                    if (hour.equals("0")) {
+                                                        hour = "00";
+                                                    }
+
+                                                    if (minute.equals("0")) {
+                                                        minute = "00";
+                                                    }
+
+                                                    if (seconds.equals("0")) {
+                                                        seconds = "00";
+                                                    }
+
+                                                    timeLimitString += hour + ":";
+                                                    timeLimitString += minute + ":";
+                                                    timeLimitString += seconds + ":";
+                                                    timeLimitString += "0";
+
+                                                    if (!timeLimitString.equals("00:00:00:0")) {
+                                                        dbHelper = new ScoreDBAdapter(context);
+
+                                                        dbHelper.open();
+                                                        dbHelper.updateGame(null, timeLimitString, ScoreDBAdapter.KEY_TIMER, gameID);
+                                                        dbHelper.close();
+
+                                                        timeLimit = timeLimitString;
+                                                        timeLimitArray.add(timeLimitArray.size() - 1, newGame.createTimeLimitCondensed(timeLimitString));
+                                                        timeLimitArrayNum.add(timeLimitArrayNum.size() - 1, timeLimitString);
+
+                                                        if (newGame.checkDuplicates(timeLimitArray)) {
+                                                            timeLimitArray.remove(timeLimitArray.size() - 2);
+                                                            timeLimitArrayNum.remove(timeLimitArrayNum.size() - 2);
+                                                            Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Already exists", Snackbar.LENGTH_SHORT);
+                                                            snackbar.show();
+
+                                                        }
+
+                                                        notifyDataSetChanged();
+                                                        alertDialog.dismiss();
+                                                        NewGame.spinnerTimeLimit.setSelection(timeLimitArray.size() - 2);
+                                                        saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
+
+                                                    } else {
+                                                        alertDialog.dismiss();
+                                                    }
+
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    Log.e("tmelimitadapter", e.toString());
+                                                    Toast toast = Toast.makeText(context, R.string.invalid_time, Toast.LENGTH_SHORT);
+                                                    toast.show();
+                                                }
+                                            }
+                                        }
+
+
+                                    }
+
+                                });
+
+                            }
+                        });
+                    alertDialog.show();
+
+                    }
+
+    }
+});
+        return view;
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return timeLimitArray.size() - 2;
+    public void saveSharedPrefs(List array, List arrayNum){
+        DataHelper dataHelper =new DataHelper();
+        SharedPreferences sharedPref = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("timelimitarray", dataHelper.convertToString(array));
+        editor.putString("timelimitarraynum", dataHelper.convertToString(arrayNum));
+
+        editor.apply();
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-
-        public TextView textView;
-        public RelativeLayout relativeLayout;
-
-        public ViewHolder(View v) {
-            super(v);
-
-            relativeLayout = (RelativeLayout)v.findViewById(R.id.timeLimitAdapterLayout);
-            textView = (TextView )v.findViewById(R.id.textViewTimeLimit);
-
-        }
-    }
 }

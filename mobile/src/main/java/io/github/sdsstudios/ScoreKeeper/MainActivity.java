@@ -81,15 +81,6 @@ public class MainActivity extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-        });
         gameModel = new BigGameModel(dbHelper);
 
         Bundle extras = getIntent().getExtras();
@@ -98,7 +89,9 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         time = sdfDate.format(now);
+        dbHelper.open();
         dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.close();
 
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
 
@@ -354,12 +347,16 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.buttonP1:
                 smallLayout.onClick(buttonP1, dbHelper, gameID);
+                dbHelper.open();
                 dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.close();
                 break;
 
             case R.id.buttonP2:
                 smallLayout.onClick(buttonP2, dbHelper, gameID);
+                dbHelper.open();
                 dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.close();
                 break;
 
             case R.id.fabChronometer:
@@ -400,7 +397,6 @@ public class MainActivity extends AppCompatActivity
                 dbHelper.open();
                 dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
-                dbHelper.close();
                 dbHelper.close();
                 startActivity(homeIntent);
             }
@@ -499,7 +495,9 @@ class SmallLayout extends Activity{
         scoresArray.set(0, String.valueOf(P1Score));
         scoresArray.set(1, String.valueOf(P2Score));
 
+        dbHelper.open();
         dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
+        dbHelper.close();
     }
 
 }

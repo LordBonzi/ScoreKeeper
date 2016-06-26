@@ -13,8 +13,8 @@ import java.util.List;
 
 public class DataHelper {
 
-    public ArrayList convertToArray(String s){
-        ArrayList arrayList = null;
+    public List convertToArray(String s){
+        List arrayList = null;
 
         String[] strValues = s.split(",");
         arrayList = new ArrayList<>(Arrays.asList(strValues));
@@ -22,7 +22,7 @@ public class DataHelper {
         return arrayList;
     }
 
-    public String convertToString(List<String> array) {
+    public String convertToString(List array) {
 
         String str = TextUtils.join(",", array);
 
@@ -39,6 +39,7 @@ public class DataHelper {
         String s = cursor.getString(index);
         String[] strValues = s.split(",");
         array = new ArrayList<>(Arrays.asList(strValues));
+        cursor.close();
 
         return array;
     }
@@ -53,6 +54,7 @@ public class DataHelper {
         int index = cursor.getColumnIndex(request);
         s = cursor.getString(index);
 
+        cursor.close();
         return s;
     }
 
@@ -65,6 +67,7 @@ public class DataHelper {
         int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_COMPLETED);
         s = cursor.getInt(index);
 
+        cursor.close();
 
         return s;
     }

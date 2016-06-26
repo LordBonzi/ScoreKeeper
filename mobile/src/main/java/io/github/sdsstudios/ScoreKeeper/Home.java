@@ -76,17 +76,6 @@ public class Home extends AppCompatActivity {
         settingsIntent = new Intent(this, Settings.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-        });
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);

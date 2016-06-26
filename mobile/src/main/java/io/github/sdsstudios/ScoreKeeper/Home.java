@@ -22,6 +22,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class Home extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private ScoreDBAdapter dbHelper;
     private RelativeLayout relativeLayout;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -72,33 +76,19 @@ public class Home extends AppCompatActivity {
         settingsIntent = new Intent(this, Settings.class);
         relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 startActivity(newGameIntent);
             }
         });
 
-        //Shared Preferences stuff
-        final String PREFS_NAME = "scorekeeper";
-
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.getBoolean("my_first_time", true)) {
-
-            saveSharedPrefs();
-            settings.edit().putBoolean("my_first_time", false).commit();
-        }else {
-            SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-
-        }
-
 
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,14 +101,16 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        dbHelper.open();
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);    }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dbHelper.close();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -139,25 +131,6 @@ public class Home extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void saveSharedPrefs(){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.apply();
-    }
-
-    public Integer recentNumGames(){
-        int numGames = 0;
-        if (Integer.valueOf(dbHelper.getNewestGame()) == 1){
-            numGames = 1;
-        }else if (Integer.valueOf(dbHelper.getNewestGame()) == 2){
-            numGames = 2;
-        }else if (Integer.valueOf(dbHelper.getNewestGame()) >= 3){
-            numGames = 3;
-        }
-
-        return numGames;
-    }
 
     @Override
     public void onBackPressed() {
@@ -170,6 +143,10 @@ public class Home extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
+        ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
+        RecyclerView.Adapter historyAdapter;
+        ArrayList<GameModel> gameModel;
+        GameModel gModel;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -188,62 +165,77 @@ public class Home extends AppCompatActivity {
         }
 
         @Override
+        public void onPause() {
+            super.onPause();
+            gModel.closeDB();
+            dbHelper.close();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            dbHelper.open();
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-            int numGames = 1;
-            ScoreDBAdapter dbHelper;
-            RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(R.id.homeList);
+            RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(android.R.id.list);
             TextView textViewHome = (TextView)rootView.findViewById(R.id.textViewNoGames);
             RelativeLayout fragmentHomeLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentHomeLayout);
-            RecyclerView.Adapter historyAdapter;
             RecyclerView.LayoutManager mLayoutManager;
 
             mLayoutManager = new LinearLayoutManager(getActivity());
             recyclerViewHome.setLayoutManager(mLayoutManager);
             dbHelper = new ScoreDBAdapter(getActivity());
             dbHelper.open();
+            gModel = new GameModel(dbHelper);
 
             try {
-                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                    case 1:
-                        textViewHome.setText(R.string.games_in_progress);
-                        break;
+                if (dbHelper.numRows() != 0) {
+                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                        case 1:
+                            textViewHome.setText(R.string.games_in_progress);
+                            break;
 
-                    case 2:
-                        textViewHome.setText(R.string.completed_games);
-                        break;
+                        case 2:
+                            textViewHome.setText(R.string.completed_games);
+                            break;
 
-                    case 3:
-                        textViewHome.setText(R.string.games_you_have_played);
-                        break;
+                        case 3:
+                            textViewHome.setText(R.string.all_games);
+                            break;
+
+                    }
+
+                    gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
+                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size());
+                    recyclerViewHome.setAdapter(historyAdapter);
+
+                } else {
+
+                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                        case 1:
+                            textViewHome.setText(R.string.games_in_progress);
+                            break;
+
+                        case 2:
+                            textViewHome.setText(R.string.completed_games);
+                            break;
+
+                        case 3:
+                            final String s = getResources().getString(R.string.all_games) + ":";
+                            textViewHome.setText(s);
+                            break;
+
+                    }
 
                 }
-
-                numGames = Integer.valueOf(dbHelper.getNewestGame());
-                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGames, dbHelper, getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                historyAdapter = new HistoryAdapter(gameModel, dbHelper, getActivity(), fragmentHomeLayout, getArguments().getInt(ARG_SECTION_NUMBER), gameModel.size());
-                recyclerViewHome.setAdapter(historyAdapter);
-
-
-            } catch (Exception e) {
+            }catch (Exception e){
                 e.printStackTrace();
-
-                switch (getArguments().getInt(ARG_SECTION_NUMBER)){
-                    case 1:
-                        textViewHome.setText(R.string.games_in_progress);
-                        break;
-
-                    case 2:
-                        textViewHome.setText(R.string.completed_games);
-                        break;
-
-                    case 3:
-                        textViewHome.setText(R.string.games_you_have_played);
-                        break;
-
-                }
+                FirebaseCrash.report(new Exception(e.toString()));
 
             }
             return rootView;

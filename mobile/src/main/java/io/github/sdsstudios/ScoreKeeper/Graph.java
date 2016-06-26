@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class Graph extends AppCompatActivity{
     private ArrayList entries = new ArrayList<>();
     private int gameID;
     private ScoreDBAdapter dbHelper;
-    private CursorHelper cursorHelper;
+    private DataHelper dataHelper;
     private LineChart lineChart;
     private Intent editGameIntent;
 
@@ -36,18 +37,28 @@ public class Graph extends AppCompatActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
+
+            }
+        });
+
         editGameIntent = new Intent(this, EditGame.class);
 
         lineChart = (LineChart)findViewById(R.id.chart);
 
         dbHelper = new ScoreDBAdapter(this).open();
-        cursorHelper = new CursorHelper();
+        dataHelper = new DataHelper();
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
 
-        arrayListPlayers = cursorHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID,dbHelper);
-        arrayListScores = cursorHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID,dbHelper);
+        arrayListPlayers = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID,dbHelper);
+        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID,dbHelper);
 
         entries.add(new Entry(4f, 0));
         entries.add(new Entry(8f, 1));

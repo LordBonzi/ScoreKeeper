@@ -59,7 +59,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 score = buttonScore += 1;
                 holder.butonScore.setText(String.valueOf(score));
                 arrayListScore.set(position, String.valueOf(score));
+                dbHelper.open();
                 dbHelper.updateGame(arrayListScore, null,ScoreDBAdapter.KEY_SCORE,gameID );
+                dbHelper.close();
 
             }
         });
@@ -78,15 +80,19 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }else {
                     holder.butonScore.setText(String.valueOf(score));
                     arrayListScore.set(position, String.valueOf(score));
+                    dbHelper.open();
                     dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE,gameID );
+                    dbHelper.close();
                 }
 
                 return true;
             }
         });
 
+    }
 
-
+    public void closeDB(){
+        dbHelper.close();
     }
 
     // Return the size of your dataset (invoked by the layout manager)

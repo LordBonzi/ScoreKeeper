@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 public class About extends AppCompatActivity implements View.OnClickListener {
 
     private Button buttonAbout;
@@ -24,6 +26,17 @@ public class About extends AppCompatActivity implements View.OnClickListener {
         url.setData(Uri.parse(getResources().getString(R.string.git_link)));
         buttonAbout = (Button)findViewById(R.id.buttonInfo);
         buttonAbout.setOnClickListener(this);
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable f) {
+                f.printStackTrace();
+
+                FirebaseCrash.report(new Exception(f.toString()));
+
+            }
+        });
     }
 
     public void onClick(View v) {

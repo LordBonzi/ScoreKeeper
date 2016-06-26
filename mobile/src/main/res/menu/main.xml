@@ -43,6 +43,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_reset"
+        android:orderInCategory="5"
+        android:title="@string/reset"
+        android:visible="false" />
+
+    <item
         android:id="@+id/action_cancel"
         android:orderInCategory="3"
         android:visible="false"

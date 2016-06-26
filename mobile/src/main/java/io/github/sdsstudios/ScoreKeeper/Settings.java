@@ -1,36 +1,199 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.preference.CheckBoxPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
-public class Settings extends AppCompatActivity implements View.OnClickListener{
-    private Button buttonDeleteALl;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private AppCompatDelegate mDelegate;
+    private boolean enabled;
+    private SharedPreferences settings, prefs;
+    private Preference deletePreference, timeLimitPreference;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    AlertDialog dialog;
+    private SharedPreferences.Editor edit;
+    private DataHelper dataHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDelegate().installViewFactory();
+        getDelegate().onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        addPreferencesFromResource(R.xml.content_settings);
+
+        dataHelper = new DataHelper();
+
+        deletePreference = (Preference) findPreference("prefDeleteAllGames");
+        timeLimitPreference = (Preference) findPreference("prefDeleteTimeLimit");
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        deletePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.delete_all_games) + "?");
+
+                builder.setMessage(R.string.delete_all_games_mes);
+
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            dbHelper.deleteAllgames();
+                        }catch (Exception e){
+                            Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+                return true;
+            }
+        });
+
+        timeLimitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                deleteTimeLimits();
+                return true;
+            }
+        });
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                FirebaseCrash.report(new Exception(e.toString()));
+
+            }
+        });
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
         homeIntent = new Intent(this, Home.class);
 
-        buttonDeleteALl = (Button)findViewById(R.id.buttonDeleteAll);
-        buttonDeleteALl.setOnClickListener(this);
 
+        //Shared prefs stuff
+
+        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+
+        prefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+
+
+
+// Instance field for listener
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                saveInfo();
+
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    private void deleteTimeLimits(){
+
+    }
+
+    private void saveInfo(){
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        getDelegate().onPostResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getDelegate().onStop();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getDelegate().onDestroy();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+
+    private void setSupportActionBar(@Nullable Toolbar toolbar) {
+        getDelegate().setSupportActionBar(toolbar);
+    }
+
+    private void getSupportActionBar() {
+        getDelegate().getSupportActionBar();
+    }
+
+    private AppCompatDelegate getDelegate() {
+        if (mDelegate == null) {
+            mDelegate = AppCompatDelegate.create(this, null);
+        }
+        return mDelegate;
+    }
+
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        getDelegate().setContentView(layoutResID);
     }
 
     @Override
@@ -59,8 +222,4 @@ public class Settings extends AppCompatActivity implements View.OnClickListener{
         startActivity(homeIntent);
     }
 
-    @Override
-    public void onClick(View v) {
-        dbHelper.deleteAllgames();
-    }
 }

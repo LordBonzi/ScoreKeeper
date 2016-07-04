@@ -1,8 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -11,23 +9,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
-import java.util.ArrayList;
-
-public class Home extends AppCompatActivity {
+public class Home extends AppCompatActivity{
 
     private Intent newGameIntent;
     private Intent settingsIntent;
@@ -36,6 +27,9 @@ public class Home extends AppCompatActivity {
     private ScoreDBAdapter dbHelper;
     private RelativeLayout relativeLayout;
     private FirebaseAnalytics mFirebaseAnalytics;
+
+    public static MultiSelectToolbarListener multiSelectToolbarListener;
+
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -51,12 +45,15 @@ public class Home extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private MenuItem deleteMenuItem, settingsMenuItem;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
@@ -67,7 +64,7 @@ public class Home extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         dbHelper = new ScoreDBAdapter(this).open();
 
@@ -94,6 +91,9 @@ public class Home extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        deleteMenuItem = menu.findItem(R.id.action_delete);
+        settingsMenuItem = menu.findItem(R.id.action_settings);
+        deleteMenuItem.setVisible(false);
 
         return true;
     }
@@ -102,6 +102,7 @@ public class Home extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         dbHelper.open();
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
     }
@@ -128,119 +129,21 @@ public class Home extends AppCompatActivity {
             return true;
         }
 
+        if (id == android.R.id.home) {
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+
     }
 
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
-        RecyclerView.Adapter historyAdapter;
-        ArrayList<GameModel> gameModel;
-        GameModel gModel;
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static Home.PlaceholderFragment newInstance(int sectionNumber) {
-            Home.PlaceholderFragment fragment = new Home.PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            gModel.closeDB();
-            dbHelper.close();
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            dbHelper.open();
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
-            RecyclerView recyclerViewHome = (RecyclerView)rootView.findViewById(android.R.id.list);
-            TextView textViewHome = (TextView)rootView.findViewById(R.id.textViewNoGames);
-            RelativeLayout fragmentHomeLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentHomeLayout);
-            RecyclerView.LayoutManager mLayoutManager;
-
-            mLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerViewHome.setLayoutManager(mLayoutManager);
-            dbHelper = new ScoreDBAdapter(getActivity());
-            dbHelper.open();
-            gModel = new GameModel(dbHelper);
-
-            try {
-                if (dbHelper.numRows() != 0) {
-                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
-                        case 1:
-                            textViewHome.setText(R.string.games_in_progress);
-                            break;
-
-                        case 2:
-                            textViewHome.setText(R.string.completed_games);
-                            break;
-
-                        case 3:
-                            textViewHome.setText(R.string.all_games);
-                            break;
-
-                    }
-
-                    gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size());
-                    recyclerViewHome.setAdapter(historyAdapter);
-
-                } else {
-
-                    switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
-                        case 1:
-                            textViewHome.setText(R.string.games_in_progress);
-                            break;
-
-                        case 2:
-                            textViewHome.setText(R.string.completed_games);
-                            break;
-
-                        case 3:
-                            final String s = getResources().getString(R.string.all_games) + ":";
-                            textViewHome.setText(s);
-                            break;
-
-                    }
-
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-            return rootView;
-        }
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -256,7 +159,7 @@ public class Home extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return Home.PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override

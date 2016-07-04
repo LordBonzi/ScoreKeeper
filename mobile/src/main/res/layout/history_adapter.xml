@@ -10,6 +10,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
+    <View
+        android:id="@+id/selected_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/relativeLayoutHistoryAdapter"
         android:layout_width="match_parent"
@@ -40,33 +47,39 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:id="@+id/textViewHistoryType"
+            android:id="@+id/textViewHistoryScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/textViewHistoryScore"
+            android:layout_above="@+id/textViewHistoryType"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text=""
+            android:text="2 : 4"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
         <TextView
-            android:id="@+id/textViewHistoryScore"
+            android:id="@+id/textViewHistoryType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text=""
+            android:text="2 Player Game ·"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         <TextView
-            android:id="@+id/textViewInProgress"
+            android:id="@+id/textViewHistoryInProgress"
             android:layout_width="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="TextView" />
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/textViewHistoryType"
+            android:layout_toEndOf="@+id/textViewHistoryType"
+            android:text="UNFINISHED"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
     </RelativeLayout>
+
 
 </RelativeLayout>
 

@@ -31,10 +31,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     private int editable;
     private CoordinatorLayout coordinatorLayout;
 
-    public void closeDB(){
-        mDbHelper.close();
-    }
-
     // Provide a suitable constructor (depends on the kind of dataset)
     public PlayerListAdapter(ArrayList<String> player, ArrayList score, ScoreDBAdapter dbHelper, int gameID, int mactivity, int meditable) {
         playerArray = player;
@@ -48,7 +44,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         } else if (activity == 2) {
             coordinatorLayout = EditGame.editGameLayout;
         }
-        Log.e("playerlistadapterarray", "J"+ playerArray);
     }
 
     // Create new views (invoked by the layout manager)

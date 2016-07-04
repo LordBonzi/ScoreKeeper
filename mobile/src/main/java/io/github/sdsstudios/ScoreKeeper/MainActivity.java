@@ -552,7 +552,7 @@ public class MainActivity extends AppCompatActivity
 
                         } else {
                             hour = String.valueOf(Integer.valueOf(hour) + Integer.valueOf(oldHour));
-                            minute = String.valueOf(Integer.valueOf(minute) + Integer.valueOf(oldHour));
+                            minute = String.valueOf(Integer.valueOf(minute) + Integer.valueOf(oldMinute));
                             seconds = String.valueOf(Integer.valueOf(seconds) + Integer.valueOf(oldSeconds));
 
                             try {
@@ -631,6 +631,8 @@ public class MainActivity extends AppCompatActivity
     public void onChronometerTick(Stopwatch chronometer) {
         timeLimitReached(stopwatch);
     }
+
+
 }
 
 class SmallLayout{

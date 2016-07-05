@@ -8,12 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
 
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.ActionMode</item>
 
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/colorPrimary</item>
+        <item name="android:layout_marginBottom">30dp</item>
+
     </style>
 
     <style name="LargeText">

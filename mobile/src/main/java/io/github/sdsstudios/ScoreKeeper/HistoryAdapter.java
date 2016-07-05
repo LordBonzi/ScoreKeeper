@@ -2,7 +2,6 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +21,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     public static List<GameModel> mGameModel;
     private static Context context;
     private int numGames;
-    private View view;
-    GameModel gameModel;
+    private GameModel gameModel;
 
     private ViewHolder.ClickListener clickListener;
 
@@ -87,7 +85,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
         // create a new view
-        view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.history_adapter, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
@@ -115,13 +113,10 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         holder.textViewHistoryInProgress.setText(gameModel.getState());
 
         if (isSelected(position)){
-            Log.e("historyadapter", "visible");
             holder.selectedOverlay.setVisibility(View.VISIBLE);
-            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
 
         }else {
-            Log.e("historyadapter", "invisible");
-
             holder.selectedOverlay.setVisibility(View.INVISIBLE);
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);

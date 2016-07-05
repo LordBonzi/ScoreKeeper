@@ -1,7 +1,9 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -43,11 +45,12 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
     private MenuItem deleteMenuItem, settingsMenuItem;
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private int currentTab;
+    private int currentTab = 1;
+    AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +61,14 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        gamesDeleted(1);
+        appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(this.currentTab);
+        mViewPager.setPagingEnabled(true);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -70,7 +77,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
             @Override
             public void onPageSelected(int position) {
-                currentTab = mViewPager.getCurrentItem();
+                currentTab = position;
 
             }
 
@@ -79,6 +86,10 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
             }
         });
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
         dbHelper = new ScoreDBAdapter(this).open();
 
         newGameIntent = new Intent(this, NewGame.class);
@@ -159,12 +170,37 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
     }
 
     @Override
-    public void gamesDeleted(int currentTab) {
+    public void gamesDeleted() {
         mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(this.currentTab);
+    }
+
+    @Override
+    public void multiSelectEnabled() {
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(0,0);
+        tabLayout.setLayoutParams(layoutParams);
+        toolbar.setLayoutParams(layoutParams);
+        mViewPager.setPagingEnabled(false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //hold current color of status bar
+            int statusBarColor = getWindow().getStatusBarColor();
+            //set your gray color
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+
+    }
+
+    @Override
+    public void multiSelectDisabled() {
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.WRAP_CONTENT);
+        tabLayout.setLayoutParams(layoutParams);
+        toolbar.setLayoutParams(layoutParams);
+        mViewPager.setPagingEnabled(true);
+
 
     }
 

@@ -5,5 +5,9 @@ package io.github.sdsstudios.ScoreKeeper;
  */
 
 public interface UpdateTabsListener {
-    void gamesDeleted(int currentTab);
+    void gamesDeleted();
+
+    void multiSelectEnabled();
+
+    void multiSelectDisabled();
 }

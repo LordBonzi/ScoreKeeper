@@ -31,7 +31,7 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
     static ArrayList<GameModel> gameModel;
     GameModel gModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private int currentTab;
+    UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
 
     public PlaceholderFragment() {
     }
@@ -134,6 +134,8 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
     public void onItemClicked(int position, int gameID) {
         if (actionMode != null) {
             toggleSelection(position, gameID);
+            actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
+
         }
     }
 
@@ -142,6 +144,9 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         if (actionMode == null) {
             actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionBarCallback());
         }
+
+        UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
+        updateTabsListener.multiSelectEnabled();
         toggleSelection(position, gameID);
 
         return true;
@@ -151,6 +156,8 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate (R.menu.action_mode, menu);
+            mode.setTitle(1 + " items selected");
+
             return true;
         }
 
@@ -176,14 +183,15 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                     dbHelper.close();
                     recyclerViewHome.setAdapter(historyAdapter);
 
-                    UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
-                    updateTabsListener.gamesDeleted(1);
+                    updateTabsListener = ((UpdateTabsListener)getActivity());
+                    updateTabsListener.gamesDeleted();
 
                     mode.finish();
 
                     return true;
 
                 default:
+
                     return false;
             }
         }
@@ -191,6 +199,9 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             historyAdapter.clearSelection();
+            updateTabsListener = ((UpdateTabsListener) getActivity());
+            updateTabsListener.multiSelectDisabled();
+
             actionMode = null;
         }
     }

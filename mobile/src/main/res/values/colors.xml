@@ -15,5 +15,6 @@
     <color name="stop_background">#EF5350</color>
     <color name="button_background">#fff</color>
     <color name="disabled">#bbbbbb</color>
+    <color name="multiselect">#E0E0E0</color>
 
 </resources>

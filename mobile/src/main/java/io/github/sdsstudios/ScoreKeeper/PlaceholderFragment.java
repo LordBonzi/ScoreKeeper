@@ -91,9 +91,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                 historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), this);
                 recyclerViewHome.setAdapter(historyAdapter);
 
-
-
-
             } else {
 
                 switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
@@ -122,8 +119,8 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         return rootView;
     }
 
-    private void toggleSelection(int position) {
-        historyAdapter.toggleSelection(position);
+    private void toggleSelection(int position, int gameID) {
+        historyAdapter.toggleSelection(position, gameID);
         int count = historyAdapter.getSelectedItemCount();
 
         if (count == 0) {
@@ -134,18 +131,18 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
     }
 
     @Override
-    public void onItemClicked(int position) {
+    public void onItemClicked(int position, int gameID) {
         if (actionMode != null) {
-            toggleSelection(position);
+            toggleSelection(position, gameID);
         }
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
+    public boolean onItemLongClicked(int position, int gameID) {
         if (actionMode == null) {
             actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionBarCallback());
         }
-        toggleSelection(position);
+        toggleSelection(position, gameID);
 
         return true;
     }
@@ -168,6 +165,16 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                 case R.id.action_delete:
                     // TODO: actually remove items
                     Log.e("actionbarcallback", "menu_remove");
+                    dbHelper.open();
+                    historyAdapter.removeItems(historyAdapter.getSelectedItems());
+                    historyAdapter.deleteSelectedGames(dbHelper);
+                    dbHelper.close();
+
+                    dbHelper.open();
+                    gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
+                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), PlaceholderFragment.this);
+                    dbHelper.close();
+                    recyclerViewHome.setAdapter(historyAdapter);
                     mode.finish();
                     return true;
 

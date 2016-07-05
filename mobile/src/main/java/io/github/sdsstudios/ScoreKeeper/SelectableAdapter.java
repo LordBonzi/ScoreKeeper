@@ -5,7 +5,7 @@ package io.github.sdsstudios.ScoreKeeper;
  */
 
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     @SuppressWarnings("unused")
     private static final String TAG = SelectableAdapter.class.getSimpleName();
 
-    private SparseBooleanArray selectedItems;
+    private SparseIntArray selectedItems;
 
     public SelectableAdapter () {
-        selectedItems = new SparseBooleanArray ();
+        selectedItems = new SparseIntArray();
     }
 
     /**
@@ -34,12 +34,12 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
      * Toggle the selection status of the item at a given position
      * @param position Position of the item to toggle the selection status for
      */
-    public void toggleSelection(int position) {
-        if (selectedItems.get(position, false)) {
-            selectedItems.delete(position);
-        } else {
-            selectedItems.put(position, true);
-        }
+
+
+    public void toggleSelection(int position, int gameID) {
+
+            selectedItems.put(position, gameID);
+
         notifyItemChanged(position);
     }
 
@@ -73,4 +73,14 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
         }
         return items;
     }
+
+    public void deleteSelectedGames(ScoreDBAdapter dbHelper){
+        for (int i =0; i < selectedItems.size(); i++){
+            dbHelper.deleteGame(getSelectedItems().get(i));
+        }
+
+        notifyDataSetChanged();
+    }
+
+
 }

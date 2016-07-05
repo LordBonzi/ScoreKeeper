@@ -7,7 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -85,7 +84,6 @@ public class ScoreDBAdapter {
 
         }else if (request.equals(KEY_TIMER)){
             initialValues.put(request, time_or_completed_or_timeLimit);
-
         }
 
         open();

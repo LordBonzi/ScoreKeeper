@@ -28,7 +28,6 @@ public class Home extends AppCompatActivity{
     private RelativeLayout relativeLayout;
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    public static MultiSelectToolbarListener multiSelectToolbarListener;
 
 
     /**
@@ -58,7 +57,7 @@ public class Home extends AppCompatActivity{
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -143,16 +142,16 @@ public class Home extends AppCompatActivity{
 
     }
 
-
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private int count;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, int count) {
             super(fm);
+            this.count = count;
         }
 
         @Override
@@ -165,7 +164,7 @@ public class Home extends AppCompatActivity{
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return count;
         }
 
         @Override

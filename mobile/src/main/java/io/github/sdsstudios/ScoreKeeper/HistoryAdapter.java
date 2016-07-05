@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -11,19 +10,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by seth on 08/05/16.
  */
-public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>{
+public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder> implements UpdateDatabase{
 
     public static List<GameModel> mGameModel;
     private static Context context;
     private int numGames;
-    private AppCompatActivity activity;
-    private ViewHolder viewHolder;
     private View view;
+    GameModel gameModel;
 
     private ViewHolder.ClickListener clickListener;
 
@@ -33,6 +33,52 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         context = context1;
         numGames =numGamesm;
         this.clickListener = clickListener;
+
+    }
+
+    public void removeItem(int position) {
+        notifyItemRemoved(position);
+    }
+
+    public void removeItems(List<Integer> positions) {
+        // Reverse-sort the list
+        Collections.sort(positions, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return rhs - lhs;
+            }
+        });
+
+        // Split the list in ranges
+        while (!positions.isEmpty()) {
+            if (positions.size() == 1) {
+                removeItem(positions.get(0));
+                positions.remove(0);
+            } else {
+                int count = 1;
+                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
+                    ++count;
+                }
+
+                if (count == 1) {
+                    removeItem(positions.get(0));
+                } else {
+                    removeRange(positions.get(count - 1), count);
+                }
+
+                for (int i = 0; i < count; ++i) {
+                    positions.remove(0);
+                }
+            }
+        }
+
+    }
+
+    private void removeRange(int positionStart, int itemCount) {
+        for (int i = 0; i < itemCount; ++i) {
+            mGameModel.remove(positionStart);
+        }
+        notifyItemRangeRemoved(positionStart, itemCount);
     }
 
     // Create new views (invoked by t
@@ -55,10 +101,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final GameModel gameModel;
-
 
         gameModel = mGameModel.get(mGameModel.size()-position-1);
+
         holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
         holder.textViewHistoryScore.setText(gameModel.getScore());
         holder.textViewHistoryDate.setText(gameModel.getDate());
@@ -73,9 +118,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             holder.selectedOverlay.setVisibility(View.VISIBLE);
             holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
 
-
         }else {
             Log.e("historyadapter", "invisible");
+
             holder.selectedOverlay.setVisibility(View.INVISIBLE);
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -83,15 +128,17 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
 
         }
 
-
-
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return numGames;
+    }
+
+    @Override
+    public void deleteGames(ScoreDBAdapter dbHelper) {
+
     }
 
     // Provide a reference to the views for each data item
@@ -130,13 +177,14 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-
         }
 
         @Override
         public void onClick(View view) {
             if (listener != null) {
-                listener.onItemClicked(getPosition());
+                final GameModel gameModel;
+                gameModel = mGameModel.get(mGameModel.size()-getAdapterPosition()-1);
+                listener.onItemClicked(getAdapterPosition(), gameModel.getGameID());
             }
 
         }
@@ -145,14 +193,16 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         public boolean onLongClick(View view) {
 
             if (listener != null) {
-                return listener.onItemLongClicked(getPosition());
+                final GameModel gameModel;
+                gameModel = mGameModel.get(mGameModel.size()-getAdapterPosition()-1);
+                return listener.onItemLongClicked(getAdapterPosition(), gameModel.getGameID());
             }
             return false;
         }
 
         public interface ClickListener {
-            public void onItemClicked(int position);
-            public boolean onItemLongClicked(int position);
+            public void onItemClicked(int position, int gameID);
+            public boolean onItemLongClicked(int position, int gameID);
         }
     }
 

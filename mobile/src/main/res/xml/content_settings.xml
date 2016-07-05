@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -9,6 +8,14 @@
         android:layout_width="match_parent"
         android:title="Run in the background"
         android:summary="Run the game in the background if it has a timer"
+        android:enabled="false"
+        android:key="prefRunInBackground"/>
+
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Default Tab on homepage"
+        android:summary="Select which tab to automatically go to when going to the homepage."
         android:enabled="false"
         android:key="prefRunInBackground"/>
 

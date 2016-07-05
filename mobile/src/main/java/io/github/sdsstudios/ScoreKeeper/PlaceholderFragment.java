@@ -25,13 +25,13 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
      * fragment.
      */
     ActionMode actionMode;
-
     private RecyclerView recyclerViewHome;
     ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
     HistoryAdapter historyAdapter;
     static ArrayList<GameModel> gameModel;
     GameModel gModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private int currentTab;
 
     public PlaceholderFragment() {
     }
@@ -175,7 +175,12 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                     historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), PlaceholderFragment.this);
                     dbHelper.close();
                     recyclerViewHome.setAdapter(historyAdapter);
+
+                    UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
+                    updateTabsListener.gamesDeleted(1);
+
                     mode.finish();
+
                     return true;
 
                 default:

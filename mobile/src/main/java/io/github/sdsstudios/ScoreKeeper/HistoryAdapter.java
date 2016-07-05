@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder> implements UpdateDatabase{
+public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>{
 
     public static List<GameModel> mGameModel;
     private static Context context;
@@ -111,6 +111,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         if (gameModel.getState().equals(holder.inProgress)) {
             holder.textViewHistoryInProgress.setTextColor(holder.color);
         }
+
         holder.textViewHistoryInProgress.setText(gameModel.getState());
 
         if (isSelected(position)){
@@ -134,11 +135,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     @Override
     public int getItemCount() {
         return numGames;
-    }
-
-    @Override
-    public void deleteGames(ScoreDBAdapter dbHelper) {
-
     }
 
     // Provide a reference to the views for each data item

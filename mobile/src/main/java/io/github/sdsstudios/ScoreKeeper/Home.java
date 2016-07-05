@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-public class Home extends AppCompatActivity{
+public class Home extends AppCompatActivity implements UpdateTabsListener{
 
     private Intent newGameIntent;
     private Intent settingsIntent;
@@ -47,6 +47,7 @@ public class Home extends AppCompatActivity{
     private MenuItem deleteMenuItem, settingsMenuItem;
     private Toolbar toolbar;
     private TabLayout tabLayout;
+    private int currentTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +58,27 @@ public class Home extends AppCompatActivity{
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        gamesDeleted(1);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentTab = mViewPager.getCurrentItem();
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         dbHelper = new ScoreDBAdapter(this).open();
 
         newGameIntent = new Intent(this, NewGame.class);
@@ -85,6 +99,8 @@ public class Home extends AppCompatActivity{
 
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,11 +158,21 @@ public class Home extends AppCompatActivity{
 
     }
 
+    @Override
+    public void gamesDeleted(int currentTab) {
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(this.currentTab);
+
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter{
         private int count;
 
         public SectionsPagerAdapter(FragmentManager fm, int count) {

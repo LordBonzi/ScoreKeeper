@@ -59,14 +59,17 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
         mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setPagingEnabled(true);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -86,8 +89,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
             }
         });
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+
 
         dbHelper = new ScoreDBAdapter(this).open();
 

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,15 +26,17 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     private GameModel gameModel;
     private SharedPreferences sharedPreferences;
     private boolean colorise;
+    private int tab;
 
     private ViewHolder.ClickListener clickListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, Context context1, int numGamesm, ViewHolder.ClickListener clickListener) {
+    public HistoryAdapter(List<GameModel> gameModel, Context context1, int numGamesm, ViewHolder.ClickListener clickListener, int tab2) {
         mGameModel = gameModel;
         context = context1;
         numGames =numGamesm;
         this.clickListener = clickListener;
+        tab = tab2;
 
     }
 
@@ -119,33 +120,37 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        try {
-            gameModel = mGameModel.get(mGameModel.size()-position-1);
+        if (mGameModel.size() == 0){
+
+        }else {
+
+            gameModel = mGameModel.get(mGameModel.size() - position - 1);
+
             holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
             holder.textViewHistoryScore.setText(gameModel.getScore());
             holder.textViewHistoryDate.setText(gameModel.getDate());
             holder.textViewHistoryType.setText(gameModel.getType());
-            holder.textViewHistoryInProgress.setText(gameModel.getState());
 
-            if (colorise) {
-                holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            if (tab != 1) {
+                holder.textViewHistoryInProgress.setText(gameModel.getState());
+
+                if (colorise) {
+                    holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                }
             }
 
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-            if (isSelected(gameModel.getGameID())){
+            if (isSelected(gameModel.getGameID())) {
                 holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
-            }else {
+            } else {
 
                 holder.relativeLayout.setBackgroundResource(outValue.resourceId);
             }
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("HistoryAdapter", e.toString());
-            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
         }
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)

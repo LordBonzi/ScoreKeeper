@@ -96,12 +96,12 @@ public class GameModel{
                 s = String.valueOf(
             arrayListScore.get(0));
         }
+
             if (activity == 1){
                 dbHelper.open();
 
                 if (dataHelper.getCompletedById(i, dbHelper)== 0){
                     progress = context.getResources().getString(R.string.in_progress);
-                    t += " ·";
 
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
                     dbHelper.close();

@@ -1,5 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -88,7 +89,7 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                 }
 
                 gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), this);
+                historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), this, getArguments().getInt(ARG_SECTION_NUMBER));
                 recyclerViewHome.setAdapter(historyAdapter);
 
             } else {
@@ -137,10 +138,14 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
 
     @Override
     public void onItemClicked(int position, int gameID) {
-        toggleSelection(position, gameID);
 
         if (actionMode != null) {
-             actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
+            toggleSelection(position, gameID);
+            actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
+        }else{
+            Intent intent = new Intent(getActivity(), EditGame.class);
+            intent.putExtra("gameID", gameID);
+            getActivity().startActivity(intent);
         }
 
     }

@@ -27,6 +27,15 @@
         android:enabled="false"
         android:key="prefRunInBackground"/>
 
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Stats"
+        android:enabled="false"
+        android:key="prefStats"
+        />
+
+
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

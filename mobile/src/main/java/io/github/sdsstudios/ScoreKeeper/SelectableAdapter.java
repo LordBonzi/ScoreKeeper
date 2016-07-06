@@ -5,6 +5,7 @@ package io.github.sdsstudios.ScoreKeeper;
  */
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseIntArray;
 
 import java.util.ArrayList;
@@ -37,9 +38,13 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
 
 
     public void toggleSelection(int position, int gameID) {
+        Log.e("SelectableAdapter", position + "," + gameID);
 
+        if (getSelectedItems().contains(position)) {
+            selectedItems.delete(position);
+        } else {
             selectedItems.put(position, gameID);
-
+        }
         notifyItemChanged(position);
     }
 

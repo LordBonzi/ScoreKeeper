@@ -24,14 +24,14 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
      * The fragment argument representing the section number for this
      * fragment.
      */
-    ActionMode actionMode;
+    private ActionMode actionMode;
     private RecyclerView recyclerViewHome;
     ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
-    HistoryAdapter historyAdapter;
-    static ArrayList<GameModel> gameModel;
-    GameModel gModel;
+    private HistoryAdapter historyAdapter;
+    private static ArrayList<GameModel> gameModel;
+    private GameModel gModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
-    UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
+    private UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
 
     public PlaceholderFragment() {
     }
@@ -116,6 +116,7 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
             FirebaseCrash.report(new Exception(e.toString()));
 
         }
+
         return rootView;
     }
 
@@ -126,16 +127,20 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         if (count == 0) {
             actionMode.finish();
         } else {
-            actionMode.invalidate();
+            try {
+                actionMode.invalidate();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onItemClicked(int position, int gameID) {
-        if (actionMode != null) {
-            toggleSelection(position, gameID);
-            actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
+        toggleSelection(position, gameID);
 
+        if (actionMode != null) {
+             actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
         }
     }
 
@@ -143,6 +148,10 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
     public boolean onItemLongClicked(int position, int gameID) {
         if (actionMode == null) {
             actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionBarCallback());
+        }
+
+        if (actionMode != null) {
+            actionMode.setTitle(1 + " items selected");
         }
 
         UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
@@ -156,7 +165,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate (R.menu.action_mode, menu);
-            mode.setTitle(1 + " items selected");
 
             return true;
         }
@@ -176,12 +184,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                     historyAdapter.removeItems(historyAdapter.getSelectedItems());
                     historyAdapter.deleteSelectedGames(dbHelper);
                     dbHelper.close();
-
-                    dbHelper.open();
-                    gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
-                    historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), PlaceholderFragment.this);
-                    dbHelper.close();
-                    recyclerViewHome.setAdapter(historyAdapter);
 
                     updateTabsListener = ((UpdateTabsListener)getActivity());
                     updateTabsListener.gamesDeleted();

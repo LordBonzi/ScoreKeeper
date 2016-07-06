@@ -66,7 +66,6 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         // Set up the ViewPager with the sections adapter.
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(this.currentTab);
         mViewPager.setPagingEnabled(true);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -176,6 +175,8 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(this.currentTab);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override

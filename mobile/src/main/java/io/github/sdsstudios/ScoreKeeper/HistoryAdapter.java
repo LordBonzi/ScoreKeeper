@@ -2,12 +2,14 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,30 +102,32 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        gameModel = mGameModel.get(mGameModel.size()-position-1);
+        try {
+            gameModel = mGameModel.get(mGameModel.size()-position-1);
+            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+            holder.textViewHistoryScore.setText(gameModel.getScore());
+            holder.textViewHistoryDate.setText(gameModel.getDate());
+            holder.textViewHistoryType.setText(gameModel.getType());
+            if (gameModel.getState().equals(holder.inProgress)) {
+                holder.textViewHistoryInProgress.setTextColor(holder.color);
+            }
 
-        holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-        holder.textViewHistoryScore.setText(gameModel.getScore());
-        holder.textViewHistoryDate.setText(gameModel.getDate());
-        holder.textViewHistoryType.setText(gameModel.getType());
-        if (gameModel.getState().equals(holder.inProgress)) {
-            holder.textViewHistoryInProgress.setTextColor(holder.color);
-        }
-
-        holder.textViewHistoryInProgress.setText(gameModel.getState());
-
-        if (isSelected(position)){
-            holder.selectedOverlay.setVisibility(View.VISIBLE);
-            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
-
-        }else {
-            holder.selectedOverlay.setVisibility(View.INVISIBLE);
+            holder.textViewHistoryInProgress.setText(gameModel.getState());
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            holder.relativeLayout.setBackgroundResource(outValue.resourceId);
 
+            if (isSelected(position)){
+                holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
+            }else {
+
+                holder.relativeLayout.setBackgroundResource(outValue.resourceId);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("HistoryAdapter", e.toString());
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -145,7 +149,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         public TextView textViewHistoryType;
         public TextView textViewHistoryInProgress;
         public RelativeLayout relativeLayout;
-        public View selectedOverlay;
         public int color;
         public String inProgress;
 
@@ -154,7 +157,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         public ViewHolder(View v, ClickListener listener) {
             super(v);
 
-            selectedOverlay = v.findViewById(R.id.selected_overlay);
             textViewHistoryPlayers = (TextView)v.findViewById(R.id.textViewHistoryPlayers);
             textViewHistoryDate = (TextView)v.findViewById(R.id.textViewHistoryDate);
             textViewHistoryScore = (TextView)v.findViewById(R.id.textViewHistoryScore);

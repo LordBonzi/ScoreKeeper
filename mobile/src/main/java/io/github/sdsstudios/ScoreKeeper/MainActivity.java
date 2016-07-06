@@ -507,14 +507,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onShow(DialogInterface dialogInterface) {
+    public void onShow(final DialogInterface dialogInterface) {
         Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         b.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                final CheckBox checkBoxExtend = (CheckBox)dialogView.findViewById(R.id.checkBoxExtend);
 
-                if (extend) {
+                if (checkBoxExtend.isChecked()) {
                     final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
                     final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
                     final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);

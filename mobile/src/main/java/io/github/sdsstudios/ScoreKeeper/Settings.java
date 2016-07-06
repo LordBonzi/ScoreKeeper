@@ -5,10 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -22,24 +20,21 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private boolean enabled;
-    private SharedPreferences settings, prefs;
-    private Preference deletePreference, timeLimitPreference;
+    private SharedPreferences settings;
+    private Preference deletePreference, timeLimitPreference, colorisePreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
-    private SharedPreferences.Editor edit;
     private DataHelper dataHelper;
+    private boolean colorise;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
@@ -53,6 +48,8 @@ public class Settings extends PreferenceActivity{
 
         deletePreference = (Preference) findPreference("prefDeleteAllGames");
         timeLimitPreference = (Preference) findPreference("prefDeleteTimeLimit");
+        colorisePreference = (SwitchPreference) findPreference("prefColoriseUnfinishedGames");
+
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -86,6 +83,15 @@ public class Settings extends PreferenceActivity{
             }
         });
 
+        colorisePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                colorise = !colorise;
+                saveInfo();
+                return true;
+            }
+        });
+
         timeLimitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -109,33 +115,42 @@ public class Settings extends PreferenceActivity{
 
         homeIntent = new Intent(this, Home.class);
 
-
         //Shared prefs stuff
 
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
 
-        prefs =
-                PreferenceManager.getDefaultSharedPreferences(this);
-
-
-
-
-// Instance field for listener
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                saveInfo();
-
-            }
-        };
-
-        prefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     private void deleteTimeLimits(){
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home){
+            onBackPressed();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void saveInfo(){
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("prefColoriseUnfinishedGames", colorise);
+        editor.apply();
 
     }
 
@@ -196,26 +211,6 @@ public class Settings extends PreferenceActivity{
         getDelegate().setContentView(layoutResID);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == android.R.id.home){
-            onBackPressed();
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {

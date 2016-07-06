@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,6 +25,8 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     private static Context context;
     private int numGames;
     private GameModel gameModel;
+    private SharedPreferences sharedPreferences;
+    private boolean colorise;
 
     private ViewHolder.ClickListener clickListener;
 
@@ -104,7 +107,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, clickListener);
+        sharedPreferences = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 
+        colorise = sharedPreferences.getBoolean("prefColoriseUnfinishedGames", false);
         return vh;
     }
 
@@ -122,7 +127,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             holder.textViewHistoryType.setText(gameModel.getType());
             holder.textViewHistoryInProgress.setText(gameModel.getState());
 
-            if (gameModel.getState().equals(context.getResources().getString(R.string.in_progress))) {
+            if (colorise) {
                 holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
             }
 

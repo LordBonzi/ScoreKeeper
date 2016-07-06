@@ -80,6 +80,8 @@
     <string name="time_limit_reached">Time Limit Reached</string>
     <string name="time_limit_question">The time limit has been reached. Do you want to finish the game or extend the time limit?</string>
 
+    <string name="colorise_unfinished">Colorize Unfinished Games</string>
+
     <string name="extend">Extend</string>
     <string name="create">Create</string>
     <string name="hour">Hours:</string>

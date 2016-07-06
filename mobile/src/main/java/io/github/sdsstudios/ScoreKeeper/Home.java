@@ -174,9 +174,10 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         // Set up the ViewPager with the sections adapter.
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(this.currentTab);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(this.currentTab);
+
     }
 
     @Override
@@ -187,8 +188,6 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         mViewPager.setPagingEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //hold current color of status bar
-            int statusBarColor = getWindow().getStatusBarColor();
             //set your gray color
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }

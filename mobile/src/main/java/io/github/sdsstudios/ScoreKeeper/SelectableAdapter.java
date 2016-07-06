@@ -27,8 +27,10 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
      * @return true if the item is selected, false otherwise
      */
 
-    public boolean isSelected(int position) {
-        return getSelectedItems().contains(position);
+    public boolean isSelected(int gameID) {
+
+        return getSelectedItems().contains(gameID);
+
     }
 
     /**
@@ -40,7 +42,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     public void toggleSelection(int position, int gameID) {
         Log.e("SelectableAdapter", position + "," + gameID);
 
-        if (getSelectedItems().contains(position)) {
+        if (getSelectedItems().contains(gameID)) {
             selectedItems.delete(position);
         } else {
             selectedItems.put(position, gameID);
@@ -71,21 +73,13 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
      * Indicates the list of selected items
      * @return List of selected items ids
      */
+
     public List<Integer> getSelectedItems() {
         List<Integer> items = new ArrayList<> (selectedItems.size());
         for (int i = 0; i < selectedItems.size(); ++i) {
-            items.add(selectedItems.keyAt(i));
+            items.add(selectedItems.valueAt(i));
         }
         return items;
     }
-
-    public void deleteSelectedGames(ScoreDBAdapter dbHelper){
-        for (int i =0; i < selectedItems.size(); i++){
-            dbHelper.deleteGame(getSelectedItems().get(i));
-        }
-
-        notifyDataSetChanged();
-    }
-
 
 }

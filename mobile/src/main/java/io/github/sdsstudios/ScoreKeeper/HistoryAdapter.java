@@ -55,23 +55,35 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 removeItem(positions.get(0));
                 positions.remove(0);
             } else {
-                int count = 1;
-                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
-                    ++count;
-                }
 
-                if (count == 1) {
-                    removeItem(positions.get(0));
-                } else {
-                    removeRange(positions.get(count - 1), count);
-                }
+                    int count = 1;
+                    while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
+                        ++count;
+                    }
 
-                for (int i = 0; i < count; ++i) {
-                    positions.remove(0);
-                }
+                    if (count == 1) {
+                        removeItem(positions.get(0));
+                    } else {
+                        removeRange(positions.get(count - 1), count);
+                    }
+
+                    for (int i = 0; i < count; ++i) {
+                        positions.remove(0);
+                    }
+
             }
         }
 
+    }
+
+    public void deleteSelectedGames(ScoreDBAdapter dbHelper){
+        Log.e("deleteSelectedHistApap", "" + getSelectedItems().toString());
+        for (int i = 0; i < getSelectedItems().size(); i++){
+            Log.e("deleteSelectedHistApap", "" + getSelectedItems().get(i).toString());
+            dbHelper.deleteGame(getSelectedItems().get(i));
+        }
+
+        notifyDataSetChanged();
     }
 
     private void removeRange(int positionStart, int itemCount) {
@@ -108,15 +120,16 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             holder.textViewHistoryScore.setText(gameModel.getScore());
             holder.textViewHistoryDate.setText(gameModel.getDate());
             holder.textViewHistoryType.setText(gameModel.getType());
-            if (gameModel.getState().equals(holder.inProgress)) {
-                holder.textViewHistoryInProgress.setTextColor(holder.color);
+            holder.textViewHistoryInProgress.setText(gameModel.getState());
+
+            if (gameModel.getState().equals(context.getResources().getString(R.string.in_progress))) {
+                holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
             }
 
-            holder.textViewHistoryInProgress.setText(gameModel.getState());
             TypedValue outValue = new TypedValue();
             context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-            if (isSelected(position)){
+            if (isSelected(gameModel.getGameID())){
                 holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
             }else {
 
@@ -126,7 +139,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         }catch (Exception e){
             e.printStackTrace();
             Log.e("HistoryAdapter", e.toString());
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -190,6 +203,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 gameModel = mGameModel.get(mGameModel.size()-getAdapterPosition()-1);
                 return listener.onItemLongClicked(getAdapterPosition(), gameModel.getGameID());
             }
+
             return false;
         }
 

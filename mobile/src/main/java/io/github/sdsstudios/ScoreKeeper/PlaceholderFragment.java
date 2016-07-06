@@ -142,6 +142,7 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         if (actionMode != null) {
              actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
         }
+
     }
 
     @Override
@@ -181,7 +182,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                     // TODO: actually remove items
                     Log.e("actionbarcallback", "menu_remove");
                     dbHelper.open();
-                    historyAdapter.removeItems(historyAdapter.getSelectedItems());
                     historyAdapter.deleteSelectedGames(dbHelper);
                     dbHelper.close();
 

@@ -100,22 +100,21 @@ public class GameModel{
             if (activity == 1){
                 dbHelper.open();
 
-                if (dataHelper.getCompletedById(i, dbHelper)== 0){
-                    progress = context.getResources().getString(R.string.in_progress);
+                progress = context.getResources().getString(R.string.in_progress);
 
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
-                    dbHelper.close();
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
+                dbHelper.close();
 
-                }
             }else if (activity == 2){
                 dbHelper.open();
                 if (dataHelper.getCompletedById(i, dbHelper)== 1){
                     progress = context.getResources().getString(R.string.completed);
                     t += " ·";
-
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
+
                     dbHelper.close();
                 }
+
 
             }else if (activity == 3 ){
                 dbHelper.open();

@@ -49,7 +49,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
     private MenuItem deleteMenuItem, settingsMenuItem;
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private int currentTab = 1;
+    private int currentTab = 3;
     AppBarLayout appBarLayout;
 
     @Override
@@ -59,17 +59,19 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mViewPager = (CustomViewPager) findViewById(R.id.container);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
+
         appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
-        // Set up the ViewPager with the sections adapter.
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setPagingEnabled(true);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setPagingEnabled(true);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -88,6 +90,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
             }
         });
+
 
 
 
@@ -156,11 +159,6 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
             return true;
         }
 
-        if (id == android.R.id.home) {
-
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,7 +170,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
     @Override
     public void gamesDeleted() {
-        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager(), 3);
+        mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager = (CustomViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -190,7 +188,7 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         mViewPager.setPagingEnabled(false);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //set your gray color
+
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
@@ -202,8 +200,6 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         tabLayout.setLayoutParams(layoutParams);
         toolbar.setLayoutParams(layoutParams);
         mViewPager.setPagingEnabled(true);
-
-
     }
 
     /**
@@ -211,24 +207,23 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter{
-        private int count;
 
-        public SectionsPagerAdapter(FragmentManager fm, int count) {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.count = count;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            return PlaceholderFragment.newInstance((position +1));
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return count;
+            return 3;
         }
 
         @Override

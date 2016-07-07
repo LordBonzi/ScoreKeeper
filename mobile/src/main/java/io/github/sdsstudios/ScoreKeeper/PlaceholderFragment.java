@@ -83,11 +83,11 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                         break;
 
                     case 3:
-                        textViewHome.setText(R.string.all_games);
+                        final String s = getResources().getString(R.string.all_games) + ":";
+                        textViewHome.setText(s);
                         break;
 
                 }
-
                 gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
                 historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), this, getArguments().getInt(ARG_SECTION_NUMBER));
                 recyclerViewHome.setAdapter(historyAdapter);
@@ -107,7 +107,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                         final String s = getResources().getString(R.string.all_games) + ":";
                         textViewHome.setText(s);
                         break;
-
                 }
 
             }
@@ -184,7 +183,6 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    // TODO: actually remove items
                     Log.e("actionbarcallback", "menu_remove");
                     dbHelper.open();
                     historyAdapter.deleteSelectedGames(dbHelper);

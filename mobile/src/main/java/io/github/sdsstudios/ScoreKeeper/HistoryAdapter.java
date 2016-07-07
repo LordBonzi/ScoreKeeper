@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         numGames =numGamesm;
         this.clickListener = clickListener;
         tab = tab2;
-
     }
 
     public void removeItem(int position) {
@@ -81,9 +79,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     }
 
     public void deleteSelectedGames(ScoreDBAdapter dbHelper){
-        Log.e("deleteSelectedHistApap", "" + getSelectedItems().toString());
         for (int i = 0; i < getSelectedItems().size(); i++){
-            Log.e("deleteSelectedHistApap", "" + getSelectedItems().get(i).toString());
             dbHelper.deleteGame(getSelectedItems().get(i));
         }
 
@@ -99,6 +95,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
 
     // Create new views (invoked by t
     // he layout manager)
+
     @Override
     public HistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
@@ -122,31 +119,35 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
 
         if (mGameModel.size() == 0){
 
-        }else {
+        }else if(mGameModel.size() > 0){
 
-            gameModel = mGameModel.get(mGameModel.size() - position - 1);
+            try {
+                gameModel = mGameModel.get(mGameModel.size() - position - 1);
 
-            holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-            holder.textViewHistoryScore.setText(gameModel.getScore());
-            holder.textViewHistoryDate.setText(gameModel.getDate());
-            holder.textViewHistoryType.setText(gameModel.getType());
+                holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+                holder.textViewHistoryScore.setText(gameModel.getScore());
+                holder.textViewHistoryDate.setText(gameModel.getDate());
+                holder.textViewHistoryType.setText(gameModel.getType());
 
-            if (tab != 1) {
-                holder.textViewHistoryInProgress.setText(gameModel.getState());
+                if (tab != 1) {
+                    holder.textViewHistoryInProgress.setText(gameModel.getState());
 
-                if (colorise) {
-                    holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    if (colorise) {
+                        holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    }
                 }
-            }
 
-            TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                TypedValue outValue = new TypedValue();
+                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-            if (isSelected(gameModel.getGameID())) {
-                holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
-            } else {
+                if (isSelected(gameModel.getGameID())) {
+                    holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
+                } else {
 
-                holder.relativeLayout.setBackgroundResource(outValue.resourceId);
+                    holder.relativeLayout.setBackgroundResource(outValue.resourceId);
+                }
+            }catch (Exception e){
+
             }
 
         }

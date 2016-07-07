@@ -108,6 +108,12 @@
             <item name="0">0</item>
         </string-array>
 
+    <string-array name="defaultTabs">
+        <item name="1">Unfinished Games</item>
+        <item name="2">Completed Games</item>
+        <item name="3">All Games</item>
+    </string-array>
+
         <string name="hello_world">Hello world!</string>
         <string name="done">Done</string>
         <string name="menu_settings">Settings</string>

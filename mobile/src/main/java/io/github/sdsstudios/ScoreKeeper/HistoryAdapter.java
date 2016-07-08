@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,6 +111,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         sharedPreferences = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 
         colorise = sharedPreferences.getBoolean("prefColoriseUnfinishedGames", false);
+
         return vh;
     }
 
@@ -130,14 +132,11 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 holder.textViewHistoryScore.setText(gameModel.getScore());
                 holder.textViewHistoryDate.setText(gameModel.getDate());
                 holder.textViewHistoryType.setText(gameModel.getType());
-
-                if (tab != 1) {
-                    holder.textViewHistoryInProgress.setText(gameModel.getState());
+                holder.textViewHistoryInProgress.setText(gameModel.getState());
 
                     if (colorise) {
                         holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     }
-                }
 
                 TypedValue outValue = new TypedValue();
                 context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -217,7 +216,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 return listener.onItemLongClicked(getAdapterPosition(), gameModel.getGameID());
             }
 
-            return false;
+            return true;
         }
 
         public interface ClickListener {

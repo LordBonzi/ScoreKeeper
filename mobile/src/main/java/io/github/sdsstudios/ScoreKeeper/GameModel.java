@@ -40,7 +40,6 @@ public class GameModel{
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
         String p, s ,d ,t, progress = null;
-        int j;
         int gameID;
 
         ArrayList arrayListPlayer;
@@ -50,12 +49,6 @@ public class GameModel{
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
 
         dbHelper.open();
-
-        if (activity == 1){
-            j = 1;
-        }else{
-            j = dbHelper.getNewestGame() - numGames;
-        }
 
         for (int i = 1; i <= dbHelper.open().getNewestGame(); i++) {
             progress = "";
@@ -93,14 +86,15 @@ public class GameModel{
             }else if (arrayListPlayer.size() == 1){
                 t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
                 p = String.valueOf(arrayListPlayer.get(0));
-                s = String.valueOf(
-            arrayListScore.get(0));
+                s = String.valueOf(arrayListScore.get(0));
         }
 
             if (activity == 1){
                 dbHelper.open();
 
                 progress = context.getResources().getString(R.string.in_progress);
+                t += " ·";
+
 
                 gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
                 dbHelper.close();
@@ -116,7 +110,7 @@ public class GameModel{
                 }
 
 
-            }else if (activity == 3 ){
+            }else if (activity == 3){
                 dbHelper.open();
 
                 if (dataHelper.getCompletedById(i, dbHelper) == 1){

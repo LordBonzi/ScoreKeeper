@@ -25,13 +25,13 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private ActionMode actionMode;
+    private ActionMode actionMode = null;
     private RecyclerView recyclerViewHome;
     ScoreDBAdapter dbHelper = new ScoreDBAdapter(getActivity());
     private HistoryAdapter historyAdapter;
     private static ArrayList<GameModel> gameModel;
     private GameModel gModel;
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static String ARG_SECTION_NUMBER = "section_number";
     private UpdateTabsListener updateTabsListener = ((UpdateTabsListener)getActivity());
 
     public PlaceholderFragment() {
@@ -41,6 +41,7 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
+        Log.e("placeholdr", "newinstance "+sectionNumber);
         return fragment;
     }
 
@@ -70,6 +71,8 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
         dbHelper = new ScoreDBAdapter(getActivity());
         dbHelper.open();
         gModel = new GameModel(dbHelper);
+        Log.e("placeholdr", " "+getArguments().getInt(ARG_SECTION_NUMBER));
+
 
         try {
             if (dbHelper.numRows() != 0) {
@@ -88,6 +91,8 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
                         break;
 
                 }
+
+
                 gameModel = GameModel.createGameModel(dbHelper.numRows(), getArguments().getInt(ARG_SECTION_NUMBER), getActivity());
                 historyAdapter = new HistoryAdapter(gameModel, getActivity(), gameModel.size(), this, getArguments().getInt(ARG_SECTION_NUMBER));
                 recyclerViewHome.setAdapter(historyAdapter);

@@ -60,14 +60,15 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
         setSupportActionBar(toolbar);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        dbHelper = new ScoreDBAdapter(this).open();
+        mViewPager = (CustomViewPager) findViewById(R.id.container);
 
         mSectionsPagerAdapter = new Home.SectionsPagerAdapter(getSupportFragmentManager());
 
-        appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
-        mViewPager = (CustomViewPager) findViewById(R.id.container);
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
@@ -94,7 +95,6 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
 
 
 
-        dbHelper = new ScoreDBAdapter(this).open();
 
         newGameIntent = new Intent(this, NewGame.class);
         aboutIntent = new Intent(this, About.class);
@@ -217,7 +217,8 @@ public class Home extends AppCompatActivity implements UpdateTabsListener{
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            return PlaceholderFragment.newInstance((position +1));
+            return PlaceholderFragment.newInstance(position + 1);
+
         }
 
         @Override

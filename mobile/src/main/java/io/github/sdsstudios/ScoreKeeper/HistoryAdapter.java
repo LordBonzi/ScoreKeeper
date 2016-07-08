@@ -26,6 +26,8 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     private SharedPreferences sharedPreferences;
     private boolean colorise;
     private int tab;
+    private UpdateTabsListener updateTabsListener;
+    public static boolean actionModeDisabled = true;
 
     private ViewHolder.ClickListener clickListener;
 
@@ -140,9 +142,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 TypedValue outValue = new TypedValue();
                 context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-                if (isSelected(gameModel.getGameID())) {
+                if (isSelected(gameModel.getGameID()) ) {
                     holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
-                } else {
+                } else if (!isSelected(gameModel.getGameID()) || actionModeDisabled){
 
                     holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                 }

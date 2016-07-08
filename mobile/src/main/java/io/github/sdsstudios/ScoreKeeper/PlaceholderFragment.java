@@ -206,6 +206,9 @@ public class PlaceholderFragment extends Fragment implements HistoryAdapter.View
             historyAdapter.clearSelection();
             updateTabsListener = ((UpdateTabsListener) getActivity());
             updateTabsListener.multiSelectDisabled();
+            HistoryAdapter.actionModeDisabled = true;
+            historyAdapter.notifyDataSetChanged();
+
 
             actionMode = null;
         }

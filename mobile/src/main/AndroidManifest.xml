@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.sdsstudios.ScoreKeeper">
-
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    package="io.github.sdstudios.ScoreKeeper">
 
     <application
         android:name="android.support.multidex.MultiDexApplication"

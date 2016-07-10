@@ -89,6 +89,7 @@ public class GameModel{
                 dbHelper.open();
                 if (dataHelper.getCompletedById(i, dbHelper)== 0){
                     progress = context.getResources().getString(R.string.unfinished);
+                    t += " ·";
 
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
                     dbHelper.close();

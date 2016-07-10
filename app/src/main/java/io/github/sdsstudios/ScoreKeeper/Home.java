@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,12 +21,13 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
-public class Home extends AppCompatActivity{
+public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
 
     private Intent newGameIntent;
     private Intent settingsIntent;
     private Intent aboutIntent;
     private Intent historyIntent;
+    private Button buttonMore;
     private ScoreDBAdapter dbHelper;
     private FirebaseAnalytics mFirebaseAnalytics;
     private TextView textViewNumGames;
@@ -52,6 +54,13 @@ public class Home extends AppCompatActivity{
         settingsIntent = new Intent(this, Settings.class);
         historyIntent = new Intent(this, History.class);
         relativeLayoutRecent = (RelativeLayout)findViewById(R.id.layoutRecentGames);
+        buttonMore = (Button)findViewById(R.id.buttonMore);
+        buttonMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(historyIntent);
+            }
+        });
 
         recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
@@ -90,7 +99,7 @@ public class Home extends AppCompatActivity{
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
                 gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
-                historyAdapter = new HistoryAdapter(gameModel, this, null);
+                historyAdapter = new HistoryAdapter(gameModel, this, this);
                 recyclerView.setAdapter(historyAdapter);
             } else {
                 recyclerView.setVisibility(View.INVISIBLE);
@@ -108,9 +117,7 @@ public class Home extends AppCompatActivity{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         settingsMenuItem = menu.findItem(R.id.action_settings);
-        historyMenuItem = menu.findItem(R.id.action_history);
         settingsMenuItem.setVisible(true);
-        historyMenuItem.setVisible(true);
 
         return true;
     }
@@ -142,9 +149,6 @@ public class Home extends AppCompatActivity{
         }if (id == R.id.action_about) {
             startActivity(aboutIntent);
             return true;
-        }if (id == R.id.action_history) {
-            startActivity(historyIntent);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -156,6 +160,17 @@ public class Home extends AppCompatActivity{
 
     }
 
+    @Override
+    public void onItemClicked(int position, int gameID) {
+        Intent intent = new Intent(this, EditGame.class);
+        intent.putExtra("gameID", gameID);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position, int gameID) {
+        return false;
+    }
 }
 
 

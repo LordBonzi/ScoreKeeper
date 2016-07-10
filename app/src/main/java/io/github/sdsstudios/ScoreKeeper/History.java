@@ -36,7 +36,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private Toolbar toolbar;
     private HistoryAdapter historyAdapter;
     private static ArrayList<GameModel> gameModel;
-    private GameModel gModel;
     private ActionMode actionMode = null;
 
     @Override
@@ -163,7 +162,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             RecyclerView.LayoutManager mLayoutManager;
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
-            gameModel = GameModel.createGameModel(type, this, dbHelper);
+            gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
             historyAdapter = new HistoryAdapter(gameModel, this, this);
             recyclerView.setAdapter(historyAdapter);
         }else{

@@ -23,7 +23,6 @@ public class Settings extends PreferenceActivity{
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
-    private boolean enabled;
     private SharedPreferences settings;
     private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
@@ -132,7 +131,6 @@ public class Settings extends PreferenceActivity{
         if (id == android.R.id.home){
             onBackPressed();
         }
-
 
         return super.onOptionsItemSelected(item);
     }

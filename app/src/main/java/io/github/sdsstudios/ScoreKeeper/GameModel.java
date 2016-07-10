@@ -27,12 +27,11 @@ public class GameModel{
         gameID = gameIDm;
     }
 
-    public static ArrayList<GameModel> createGameModel(int activity, Context context, ScoreDBAdapter dbHelper) {
+    public static ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
         String p, s ,d ,t, progress = null;
         int gameID;
-        int numGames = dbHelper.numRows();
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
@@ -42,7 +41,7 @@ public class GameModel{
 
         dbHelper.open();
 
-        for (int i = 1; i <= dbHelper.open().getNewestGame(); i++) {
+        for (int i = 1; i <= numGames; i++) {
             progress = "";
             p = null;
             s = null;
@@ -79,6 +78,7 @@ public class GameModel{
                 t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
                 p = String.valueOf(arrayListPlayer.get(0));
                 s = String.valueOf(arrayListScore.get(0));
+
         }
 
             if (activity == 1){
@@ -101,7 +101,6 @@ public class GameModel{
 
                     dbHelper.close();
                 }
-
 
             }else if (activity == 3){
                 dbHelper.open();

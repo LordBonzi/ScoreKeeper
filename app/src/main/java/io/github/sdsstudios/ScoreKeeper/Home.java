@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -19,8 +19,8 @@ public class Home extends AppCompatActivity{
     private Intent aboutIntent;
     private Intent historyIntent;
     private ScoreDBAdapter dbHelper;
-    private RelativeLayout relativeLayout;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private TextView textViewNumGames;
 
     private MenuItem settingsMenuItem, historyMenuItem;
     private Toolbar toolbar;
@@ -37,7 +37,9 @@ public class Home extends AppCompatActivity{
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
         historyIntent = new Intent(this, History.class);
-        relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
+
+        textViewNumGames = (TextView)findViewById(R.id.textViewNumGamesPlayed);
+        textViewNumGames.setText(String.valueOf(dbHelper.numRows()));
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

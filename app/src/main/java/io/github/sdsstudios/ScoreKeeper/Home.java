@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -34,6 +35,7 @@ public class Home extends AppCompatActivity{
     private static ArrayList<GameModel> gameModel;
     private SharedPreferences sharedPreferences;
     private int numGamesToShow;
+    private RelativeLayout relativeLayoutRecent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class Home extends AppCompatActivity{
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
         historyIntent = new Intent(this, History.class);
+        relativeLayoutRecent = (RelativeLayout)findViewById(R.id.layoutRecentGames);
 
         recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
@@ -66,6 +69,10 @@ public class Home extends AppCompatActivity{
 
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
+
+        if (dbHelper.numRows() ==0 ){
+            relativeLayoutRecent.setVisibility(View.INVISIBLE);
+        }
 
         displayRecyclerView();
 

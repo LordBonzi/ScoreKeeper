@@ -7,22 +7,16 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:title="Run in the background"
-        android:summary="Run the game in the background if it has a timer"
+        android:summary="Run the game in the background if you leave the app"
         android:enabled="false"
         android:key="prefRunInBackground"/>
 
-    <SwitchPreference
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="Default Tab on homepage"
-        android:summary="Select which tab to automatically go to when going to the homepage."
-        android:enabled="false"
-        android:key="prefRunInBackground"/>
 
-    <ListPreference android:title="Default Tab on Homepage"
-        android:key="prefDefaultTab"
-        android:entries="@array/defaultTabs"
-        android:entryValues="@array/defaultTabs"/>
+    <ListPreference android:title="Number of games on Homepage"
+        android:summary="The number of recent games to show on the homepage"
+        android:key="prefNumGames"
+        android:entries="@array/numGames"
+        android:entryValues="@array/numGames"/>
 
     <Preference
         android:layout_height="wrap_content"

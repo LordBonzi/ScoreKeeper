@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.SwitchPreference;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crash.FirebaseCrash;
 
 public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
@@ -27,11 +25,12 @@ public class Settings extends PreferenceActivity{
     private AppCompatDelegate mDelegate;
     private boolean enabled;
     private SharedPreferences settings;
-    private Preference deletePreference, timeLimitPreference, colorisePreference;
+    private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
     private boolean colorise;
+    private int numGamesToShow;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -46,9 +45,10 @@ public class Settings extends PreferenceActivity{
 
         dataHelper = new DataHelper();
 
-        deletePreference = (Preference) findPreference("prefDeleteAllGames");
-        timeLimitPreference = (Preference) findPreference("prefDeleteTimeLimit");
-        colorisePreference = (SwitchPreference) findPreference("prefColoriseUnfinishedGames");
+        deletePreference = findPreference("prefDeleteAllGames");
+        timeLimitPreference = findPreference("prefDeleteTimeLimit");
+        colorisePreference = findPreference("prefColoriseUnfinishedGames");
+        numGamesPreference = findPreference("prefNumGames");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -92,23 +92,16 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        timeLimitPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                deleteTimeLimits();
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                numGamesToShow = 0;
+                saveInfo();
                 return true;
             }
+
         });
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.toString()));
-
-            }
-        });
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
@@ -119,10 +112,7 @@ public class Settings extends PreferenceActivity{
 
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
-
-    }
-
-    private void deleteTimeLimits(){
+        numGamesToShow = Integer.valueOf(settings.getString("numgamestoshow", "1"));
 
     }
 
@@ -150,6 +140,7 @@ public class Settings extends PreferenceActivity{
     private void saveInfo(){
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("prefColoriseUnfinishedGames", colorise);
+        editor.putString("numgamestoshow", String.valueOf(numGamesToShow));
         editor.apply();
 
     }

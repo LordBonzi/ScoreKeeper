@@ -133,9 +133,8 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                     if (colorise) {
                         holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
                     }
-
-
                 }
+
                 holder.textViewHistoryInProgress.setAllCaps(true);
 
                 TypedValue outValue = new TypedValue();

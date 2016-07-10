@@ -41,6 +41,10 @@ public class GameModel{
 
         dbHelper.open();
 
+        if (numGames > dbHelper.numRows()){
+            numGames = dbHelper.numRows();
+        }
+
         for (int i = 1; i <= numGames; i++) {
             progress = "";
             p = null;

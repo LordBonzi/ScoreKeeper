@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class Home extends AppCompatActivity{
     private SharedPreferences sharedPreferences;
     private int numGamesToShow;
     private RelativeLayout relativeLayoutRecent;
+    private String TAG = "Home";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class Home extends AppCompatActivity{
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
 
-        if (dbHelper.numRows() ==0 ){
+        if (dbHelper.numRows() == 0 ){
             relativeLayoutRecent.setVisibility(View.INVISIBLE);
         }
 
@@ -81,18 +83,24 @@ public class Home extends AppCompatActivity{
     public void displayRecyclerView(){
         dbHelper.open();
 
-        if (dbHelper.numRows() != 0) {
+        try {
+            if (dbHelper.numRows() != 0) {
 
-            RecyclerView.LayoutManager mLayoutManager;
-            mLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(mLayoutManager);
-            gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
-            historyAdapter = new HistoryAdapter(gameModel, this, null);
-            recyclerView.setAdapter(historyAdapter);
-        }else{
-            recyclerView.setVisibility(View.INVISIBLE);
+                RecyclerView.LayoutManager mLayoutManager;
+                mLayoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(mLayoutManager);
+                gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
+                historyAdapter = new HistoryAdapter(gameModel, this, null);
+                recyclerView.setAdapter(historyAdapter);
+            } else {
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+            dbHelper.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+
         }
-        dbHelper.close();
     }
 
     @Override

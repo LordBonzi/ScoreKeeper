@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -37,7 +38,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private static ArrayList<GameModel> gameModel;
     private GameModel gModel;
     private ActionMode actionMode = null;
-    private int typeChecked = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         recyclerView = (RecyclerView)findViewById(R.id.historyRecyclerView);
 
-        displayRecyclerView(typeChecked);
 
         dbHelper.close();
 
@@ -72,12 +71,19 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         menuItemUnfinished = menu.findItem(R.id.action_unfinished);
         menuItemUnfinished.setVisible(true);
+        menuItemUnfinished.setChecked(true);
+
 
         menuItemCompleted = menu.findItem(R.id.action_completed);
         menuItemCompleted.setVisible(true);
+        menuItemCompleted.setChecked(true);
+
 
         settingsMenuItem = menu.findItem(R.id.action_settings);
         settingsMenuItem.setVisible(false);
+
+        displayRecyclerView();
+
 
         return true;
     }
@@ -110,16 +116,24 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             startActivity(aboutIntent);
             return true;
         }if (id == R.id.action_unfinished){
-            typeChecked = 1;
-            displayRecyclerView(typeChecked);
-            menuItemUnfinished.setChecked(true);
+            if (!menuItemCompleted.isChecked()){
+                Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
+            }else {
+                menuItemUnfinished.setChecked(!menuItemUnfinished.isChecked());
 
+                displayRecyclerView();
+            }
 
+            displayRecyclerView();
         }if (id == R.id.action_completed){
-            typeChecked = 2;
 
-            displayRecyclerView(typeChecked);
-            menuItemCompleted.setChecked(true);
+            if (!menuItemUnfinished.isChecked()){
+                Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
+            }else {
+                menuItemCompleted.setChecked(!menuItemCompleted.isChecked());
+
+                displayRecyclerView();
+            }
 
 
         }
@@ -132,9 +146,21 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     }
 
-    public void displayRecyclerView(int type){
+    public void displayRecyclerView(){
         dbHelper.open();
         if (dbHelper.numRows() != 0) {
+            int type = 3;
+
+            if (menuItemCompleted.isChecked()){
+                type = 2;
+            }
+            if (menuItemUnfinished.isChecked()){
+                type = 1;
+            }
+            if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()){
+                type = 3;
+            }
+
 
             RecyclerView.LayoutManager mLayoutManager;
             mLayoutManager = new LinearLayoutManager(this);

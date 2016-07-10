@@ -15,17 +15,9 @@ public class GameModel{
     private String mDate;
     private String mProgress;
     private int gameID;
-    private static ScoreDBAdapter dbHelper;
 
-    public void closeDB(){
-        dbHelper.close();
-    }
 
-    public GameModel(ScoreDBAdapter dbHelper){
-        this ( null, null, null, null, null, 0, dbHelper);
-    }
-
-    public GameModel(String players, String score, String date, String type, String progress, int gameIDm, ScoreDBAdapter dbAdapter) {
+    public GameModel(String players, String score, String date, String type, String progress, int gameIDm) {
         super();
         mPlayers = players;
         mScore = score;
@@ -33,14 +25,14 @@ public class GameModel{
         mType = type;
         mProgress = progress;
         gameID = gameIDm;
-        dbHelper = dbAdapter;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, int activity, Context context) {
+    public static ArrayList<GameModel> createGameModel(int activity, Context context, ScoreDBAdapter dbHelper) {
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
         String p, s ,d ,t, progress = null;
         int gameID;
+        int numGames = dbHelper.numRows();
 
         ArrayList arrayListPlayer;
         ArrayList arrayListScore;
@@ -92,19 +84,19 @@ public class GameModel{
             if (activity == 1){
                 dbHelper.open();
 
-                progress = context.getResources().getString(R.string.in_progress);
+                progress = context.getResources().getString(R.string.unfinished);
                 t += " ·";
 
-
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
                 dbHelper.close();
 
             }else if (activity == 2){
+
                 dbHelper.open();
                 if (dataHelper.getCompletedById(i, dbHelper)== 1){
                     progress = context.getResources().getString(R.string.completed);
                     t += " ·";
-                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID, dbHelper));
+                    gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
 
                     dbHelper.close();
                 }
@@ -116,11 +108,11 @@ public class GameModel{
                 if (dataHelper.getCompletedById(i, dbHelper) == 1){
                     progress = context.getResources().getString(R.string.completed);
                 }else if(dataHelper.getCompletedById(i, dbHelper) == 0){
-                    progress = context.getResources().getString(R.string.in_progress);
+                    progress = context.getResources().getString(R.string.unfinished);
                 }
                 t += " ·";
 
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID,dbHelper));
+                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
                 dbHelper.close();
 
             }

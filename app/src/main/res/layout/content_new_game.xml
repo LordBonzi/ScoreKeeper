@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/scrollView"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="io.github.sdsstudios.ScoreKeeper.NewGame"
+    android:fillViewport="true"
     tools:showIn="@layout/app_bar_new_game">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/editTextPlayer"
@@ -56,44 +61,89 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+        <Button
+        android:id="@+id/buttonAddPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_player"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textColor="@color/colorAccent"
+        android:layout_alignBaseline="@+id/editTextPlayer"
+        android:layout_alignBottom="@+id/editTextPlayer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp" />
+
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/relativeLayoutPlayers"
-        android:layout_below="@+id/spinnerTimeLimit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:id="@+id/spinnerTimeLimit"
+        android:visibility="gone"
+        android:layout_below="@+id/relativeLayoutSpinner"
+        android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
+        android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
 
-        <View
+        <CheckBox
+        android:id="@+id/checkBoxNoTimeLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_time_limit"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/relativeLayoutSpinner"
+        android:layout_alignLeft="@+id/editTextPlayer"
+        android:layout_alignStart="@+id/editTextPlayer" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"
-            android:layout_alignTop="@+id/relativeLayout"
+            android:layout_height="48dp"
+            android:id="@+id/relativeLayoutPlayers"
+            android:layout_below="@+id/checkBoxNoTimeLimit"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true">
 
-        <TextView
-            android:text="@string/players"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:textStyle="bold"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:text="@string/players"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/playerList"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeLayoutPlayers"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_alignLeft="@+id/checkBoxNoTimeLimit"
+            android:layout_alignStart="@+id/checkBoxNoTimeLimit"
+            android:layout_alignRight="@+id/buttonAddPlayer"
+            android:layout_alignEnd="@+id/buttonAddPlayer" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
+        <RelativeLayout
         android:layout_width="match_parent"
         android:background="#f5f5f5"
         android:layout_height="48sp"
         android:id="@+id/relativeLayout2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
         <View
             android:layout_width="match_parent"
@@ -144,51 +194,5 @@
             android:layout_alignParentStart="true" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/buttonAddPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_player"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorAccent"
-        android:layout_alignBaseline="@+id/editTextPlayer"
-        android:layout_alignBottom="@+id/editTextPlayer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:id="@+id/spinnerTimeLimit"
-        android:visibility="gone"
-        android:layout_below="@+id/relativeLayoutSpinner"
-        android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
-        android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/playerList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutPlayers"
-        android:layout_alignRight="@+id/spinnerTimeLimit"
-        android:layout_alignEnd="@+id/spinnerTimeLimit"
-        android:layout_above="@+id/relativeLayout2"
-        android:layout_alignLeft="@+id/checkBoxNoTimeLimit"
-        android:layout_alignStart="@+id/checkBoxNoTimeLimit" />
-
-    <CheckBox
-        android:id="@+id/checkBoxNoTimeLimit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_time_limit"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_below="@+id/relativeLayoutSpinner"
-        android:layout_alignLeft="@+id/editTextPlayer"
-        android:layout_alignStart="@+id/editTextPlayer" />
-
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

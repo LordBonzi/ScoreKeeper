@@ -6,12 +6,20 @@
         android:id="@+id/action_settings"
         android:orderInCategory="10000"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="true"/>
 
     <item
         android:id="@+id/action_about"
         android:orderInCategory="100"
         android:title="@string/About"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_history"
+        android:orderInCategory="1"
+        android:title="@string/action_history"
         android:visible="false"
         app:showAsAction="never" />
 
@@ -63,7 +71,7 @@
         android:title="@string/graph"
         android:visible="false"
         app:showAsAction="never"
-        android:enabled="true"/>
+        android:enabled="false"/>
 
     <item
         android:id="@+id/action_fullscreen"
@@ -72,4 +80,23 @@
         android:title="@string/fullscreen"
         android:visible="false"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_unfinished"
+        android:orderInCategory="1000"
+        android:visible="false"
+        android:title="@string/unfinished"
+        android:checkable="true"
+        android:checked="false"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_completed"
+        android:orderInCategory="1010"
+        android:title="@string/completed"
+        android:checkable="true"
+        android:checked="false"
+        android:visible="false"
+        app:showAsAction="never"/>
+
 </menu>

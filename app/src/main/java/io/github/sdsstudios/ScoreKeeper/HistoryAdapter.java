@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,19 +25,17 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     private GameModel gameModel;
     private SharedPreferences sharedPreferences;
     private boolean colorise;
-    private int tab;
     private UpdateTabsListener updateTabsListener;
     public static boolean actionModeDisabled = true;
 
     private ViewHolder.ClickListener clickListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, Context context1, int numGamesm, ViewHolder.ClickListener clickListener, int tab2) {
+    public HistoryAdapter(List<GameModel> gameModel, Context context1, ViewHolder.ClickListener clickListener) {
         mGameModel = gameModel;
         context = context1;
-        numGames =numGamesm;
+        numGames =gameModel.size();
         this.clickListener = clickListener;
-        tab = tab2;
     }
 
     public void removeItem(int position) {
@@ -189,7 +186,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             textViewHistoryInProgress = (TextView)v.findViewById(R.id.textViewHistoryInProgress);
             relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayoutHistoryAdapter);
             color = v.getResources().getColor(R.color.colorAccent);
-            inProgress = v.getResources().getString(R.string.in_progress);
+            inProgress = v.getResources().getString(R.string.unfinished);
 
             this.listener = listener;
 

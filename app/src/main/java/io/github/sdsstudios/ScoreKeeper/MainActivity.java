@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity
             dialog.show();
             return true;
         }
+
         if (id == R.id.action_fullscreen) {
             Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT);
             immersiveMode();
@@ -443,6 +444,7 @@ public class MainActivity extends AppCompatActivity
 
         if (fabChronometer.isEnabled()) {
             isPaused = true;
+            chronometerClick();
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -481,7 +483,6 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
             stopwatch.setTextColor(getResources().getColor(R.color.stop));
             fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
-            chronometerClick();
             dialog.show();
 
         }else{
@@ -591,8 +592,6 @@ public class MainActivity extends AppCompatActivity
                                     dbHelper.updateGame(null, timeLimitString, ScoreDBAdapter.KEY_TIMER, gameID);
                                     dbHelper.close();
 
-                                    isPaused = false;
-                                    chronometerClick();
                                     timeLimitReached(stopwatch);
                                     fabChronometer.setEnabled(true);
                                     buttonP1.setEnabled(true);

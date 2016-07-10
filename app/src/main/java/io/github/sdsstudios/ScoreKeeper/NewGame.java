@@ -66,7 +66,6 @@ public class NewGame extends AppCompatActivity
         setContentView(R.layout.activity_new_game);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
 
 
@@ -143,10 +142,13 @@ public class NewGame extends AppCompatActivity
         //Shared Preferences stuff
 
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        String timeLimit = sharedPref.getString("timelimitarray", null);
+        String timeLimitnum = sharedPref.getString("timelimitarraynum", null);
 
-        if (sharedPref.contains("timelimitarray")){
-            timeLimitArray = dataHelper.convertToArray(sharedPref.getString("timelimitarray", null));
-            timeLimitArrayNum = dataHelper.convertToArray(sharedPref.getString("timelimitarraynum", null));
+        if (timeLimit != null && timeLimitnum !=null) {
+
+            timeLimitArray = dataHelper.convertToArray(timeLimit);
+            timeLimitArrayNum = dataHelper.convertToArray(timeLimitnum);
         }else{
             timeLimitArray = new ArrayList();
             timeLimitArray.add(0, "Create...");
@@ -155,6 +157,7 @@ public class NewGame extends AppCompatActivity
             timeLimitArrayNum.add(0, "Create...");
             dataHelper.saveSharedPrefs(timeLimitArray, timeLimitArrayNum, this);
         }
+
 
         spinnerTimeLimit.setVisibility(View.INVISIBLE);
         displaySpinner();

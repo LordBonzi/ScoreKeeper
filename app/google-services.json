@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "682213715014",
+    "firebase_url": "https://score-keeper-8a81f.firebaseio.com",
+    "project_id": "score-keeper-8a81f",
+    "storage_bucket": "score-keeper-8a81f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682213715014:android:b0e5f5328e12e398",
+        "android_client_info": {
+          "package_name": "io.github.sdsstudios.ScoreKeeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682213715014-ph93d1s6tgpp3dk51vlc62rfumpjd0gv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcFLQTQ9nxAQKzo5i9k7nreMK26lMpiyA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

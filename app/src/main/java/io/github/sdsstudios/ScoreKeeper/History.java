@@ -10,10 +10,10 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -120,7 +120,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
             }else {
                 menuItemUnfinished.setChecked(!menuItemUnfinished.isChecked());
-
                 displayRecyclerView();
             }
 
@@ -161,19 +160,21 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 type = 3;
             }
 
-
             RecyclerView.LayoutManager mLayoutManager;
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
             gameModel = GameModel.createGameModel(type, this, dbHelper);
             historyAdapter = new HistoryAdapter(gameModel, this, this);
             recyclerView.setAdapter(historyAdapter);
+        }else{
+            recyclerView.setVisibility(View.INVISIBLE);
         }
         dbHelper.close();
     }
 
     @Override
     public void gamesDeleted() {
+        displayRecyclerView();
 
     }
 
@@ -196,8 +197,10 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         if (count == 0) {
             actionMode.finish();
         } else {
+
             try {
                 actionMode.invalidate();
+                actionMode.setTitle(count + " items selected");
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -208,6 +211,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     public void multiSelectDisabled() {
         AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.WRAP_CONTENT);
         toolbar.setLayoutParams(layoutParams);
+        displayRecyclerView();
     }
 
     @Override
@@ -215,7 +219,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         if (actionMode != null) {
             toggleSelection(position, gameID);
-            actionMode.setTitle(historyAdapter.getSelectedItemCount() + " items selected");
         }else{
             Intent intent = new Intent(this, EditGame.class);
             intent.putExtra("gameID", gameID);
@@ -262,13 +265,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    Log.e("actionbarcallback", "menu_remove");
                     dbHelper.open();
                     historyAdapter.deleteSelectedGames(dbHelper);
                     dbHelper.close();
 
                     gamesDeleted();
-
                     mode.finish();
 
                     return true;
@@ -285,7 +286,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             multiSelectDisabled();
             HistoryAdapter.actionModeDisabled = true;
             historyAdapter.notifyDataSetChanged();
-
+            gamesDeleted();
 
             actionMode = null;
         }

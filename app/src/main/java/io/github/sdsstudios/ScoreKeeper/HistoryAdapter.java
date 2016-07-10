@@ -93,9 +93,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         notifyItemRangeRemoved(positionStart, itemCount);
     }
 
-    // Create new views (invoked by t
-    // he layout manager)
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {

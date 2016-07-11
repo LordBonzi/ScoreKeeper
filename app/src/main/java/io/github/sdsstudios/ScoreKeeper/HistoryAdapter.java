@@ -1,10 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -121,6 +118,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         return vh;
     }
 
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -132,6 +130,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         }else if(mGameModel.size() > 0){
 
             try {
+
                 gameModel = mGameModel.get(mGameModel.size() - position - 1);
 
                 if (!recentGames){
@@ -163,49 +162,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
                 holder.textViewHistoryScore.setText(gameModel.getScore());
                 holder.textViewHistoryDate.setText(gameModel.getDate());
 
-                holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
-                    public void onClick(View v) {
-                        if (gameModel.getState().equals(holder.inProgress) && !recentGames){
-
-                            AlertDialog dialog;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                            builder.setTitle(R.string.carry_on);
-
-                            builder.setMessage(R.string.continue_game_message);
-
-                            builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(context, EditGame.class);
-                                    intent.putExtra("gameID", gameModel.getGameID());
-                                    context.startActivity(intent);
-                                }
-                            });
-
-                            builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(context, MainActivity.class);
-                                    intent.putExtra("gameID", gameModel.getGameID());
-                                    context.startActivity(intent);
-                                }
-                            });
-
-                            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            dialog = builder.create();
-                            dialog.show();
-
-                        }else{
-                            Intent intent = new Intent(context, EditGame.class);
-                            intent.putExtra("gameID", gameModel.getGameID());
-                            context.startActivity(intent);
-                        }
-                    }
-                });
 
 
             }catch (Exception ignored){

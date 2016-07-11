@@ -40,6 +40,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private int numGamesToShow;
     private RelativeLayout relativeLayoutRecent;
     private String TAG = "Home";
+    private int lastPlayedGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +62,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         });
 
         buttonLastGame = (Button)findViewById(R.id.buttonContinueLastGame);
-        buttonLastGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Home.this, MainActivity.class);
-                intent.putExtra("gameID", dbHelper.getNewestGame());
-                startActivity(intent);
-            }
-        });
+
 
         recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
@@ -88,10 +82,21 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
+        lastPlayedGame = sharedPreferences.getInt("lastplayedgame", dbHelper.getNewestGame());
+
+        buttonLastGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home.this, MainActivity.class);
+                intent.putExtra("gameID", lastPlayedGame);
+                startActivity(intent);
+            }
+        });
 
         if (dbHelper.numRows() == 0 ){
             relativeLayoutRecent.setVisibility(View.INVISIBLE);
             buttonMore.setVisibility(View.INVISIBLE);
+            buttonLastGame.setVisibility(View.INVISIBLE);
         }
 
         displayRecyclerView();

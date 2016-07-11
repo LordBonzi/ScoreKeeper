@@ -83,7 +83,7 @@ public class GameModel{
                 p = String.valueOf(arrayListPlayer.get(0));
                 s = String.valueOf(arrayListScore.get(0));
 
-        }
+            }
 
             if (activity == 1){
                 dbHelper.open();
@@ -121,6 +121,7 @@ public class GameModel{
                 dbHelper.close();
 
             }
+
 
         }
         dbHelper.close();

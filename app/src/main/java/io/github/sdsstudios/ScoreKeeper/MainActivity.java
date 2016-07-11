@@ -1,8 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,11 +70,13 @@ public class MainActivity extends AppCompatActivity
     private View dialogView;
     private LayoutInflater inflter = null;
     private AlertDialog alertDialog;
-
     private boolean extend = false;
-
     long timeWhenStopped = 0;
     boolean isPaused = false;
+
+    private SharedPreferences sharedPreferences;
+
+    private
 
     AlertDialog.Builder builder;
 
@@ -88,7 +92,6 @@ public class MainActivity extends AppCompatActivity
 
         dataHelper = new DataHelper();
         timeHelper = new TimeHelper();
-
 
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
@@ -114,13 +117,13 @@ public class MainActivity extends AppCompatActivity
 
         stopwatch = new Stopwatch(this);
 
-        textViewP1 = (TextView)findViewById(R.id.textViewP1);
-        textViewP2 = (TextView)findViewById(R.id.textViewP2);
+        textViewP1 = (TextView) findViewById(R.id.textViewP1);
+        textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
-        bigGameList = (RecyclerView)findViewById(R.id.bigGameList);
+        bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
 
-        normal = (RelativeLayout)findViewById(R.id.layoutNormal);
-        big = (RelativeLayout)findViewById(R.id.layoutBig);
+        normal = (RelativeLayout) findViewById(R.id.layoutNormal);
+        big = (RelativeLayout) findViewById(R.id.layoutBig);
 
         playersArray = new ArrayList();
         playersArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -130,7 +133,7 @@ public class MainActivity extends AppCompatActivity
 
         gameSize = playersArray.size();
 
-        smallLayout.onCreate(buttonP1,  buttonP2, dbHelper, gameID, dataHelper);
+        smallLayout.onCreate(buttonP1, buttonP2, dbHelper, gameID, dataHelper);
 
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
             displayRecyclerView();
 
-        }else{
+        } else {
             normal.setVisibility(View.VISIBLE);
 
             textViewP1.setText(String.valueOf(playersArray.get(0)));
@@ -153,14 +156,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         try {
-            stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)))
-                    + SystemClock.elapsedRealtime())) ;
+            stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
+                    + SystemClock.elapsedRealtime()));
 
             timeLimitReached(stopwatch);
 
-            if (finished){
+            if (finished) {
 
-            }else{
+            } else {
                 stopwatch.start();
                 fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
                 stopwatch.setTextColor(getResources().getColor(R.color.start));
@@ -170,14 +173,20 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.toString());
-            FirebaseCrash.report(new Exception(e.toString() + ", time:  " + dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER,dbHelper)));
+            FirebaseCrash.report(new Exception(e.toString() + ", time:  " + dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)));
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
 
         stopwatch.setOnChronometerTickListener(this);
+
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("lastplayedgame", gameID);
+        editor.apply();
     }
+
 
     private void timeLimitReached(Stopwatch chronometer){
         if (timeLimitString != null) {

@@ -1,9 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +32,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private RelativeLayout relativeLayout;
     private FirebaseAnalytics mFirebaseAnalytics;
     private RecyclerView recyclerView;
-
+    private DataHelper dataHelper;
     private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
     private Toolbar toolbar;
     private HistoryAdapter historyAdapter;
@@ -47,6 +49,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = new ScoreDBAdapter(this).open();
+        dataHelper = new DataHelper();
         newGameIntent = new Intent(this, NewGame.class);
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
@@ -209,16 +212,52 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     }
 
     @Override
-    public void onItemClicked(int position, int gameID) {
+    public void onItemClicked(int position, final int gameID) {
 
         if (actionMode != null) {
             toggleSelection(position, gameID);
         }else{
-            Intent intent = new Intent(this, EditGame.class);
-            intent.putExtra("gameID", gameID);
-            startActivity(intent);
-        }
 
+            if (dataHelper.getCompletedById(gameID, dbHelper) == 0) {
+
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle(R.string.carry_on);
+
+                builder.setMessage(R.string.continue_game_message);
+
+                builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getBaseContext(), EditGame.class);
+                        intent.putExtra("gameID", gameID);
+                        startActivity(intent);
+                    }
+                });
+
+                builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.putExtra("gameID", gameID);
+                        startActivity(intent);
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+            }else{
+                Intent intent = new Intent(this, EditGame.class);
+                intent.putExtra("gameID", gameID);
+                startActivity(intent);
+            }
+
+        }
     }
 
     @Override

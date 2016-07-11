@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -122,7 +121,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 displayRecyclerView();
             }
 
-            displayRecyclerView();
         }if (id == R.id.action_completed){
 
             if (!menuItemUnfinished.isChecked()){
@@ -155,6 +153,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             if (menuItemUnfinished.isChecked()){
                 type = 1;
             }
+
             if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()){
                 type = 3;
             }
@@ -163,7 +162,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
             gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
-            historyAdapter = new HistoryAdapter(gameModel, this, this);
+            historyAdapter = new HistoryAdapter(gameModel, this, this, false);
             recyclerView.setAdapter(historyAdapter);
         }else{
             recyclerView.setVisibility(View.INVISIBLE);
@@ -179,9 +178,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     @Override
     public void multiSelectEnabled() {
-        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(0,0);
-        toolbar.setLayoutParams(layoutParams);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -208,8 +204,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     @Override
     public void multiSelectDisabled() {
-        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.WRAP_CONTENT);
-        toolbar.setLayoutParams(layoutParams);
+
         displayRecyclerView();
     }
 

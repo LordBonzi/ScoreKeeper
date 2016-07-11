@@ -1,7 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,15 +30,16 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     private boolean colorise;
     private UpdateTabsListener updateTabsListener;
     public static boolean actionModeDisabled = true;
-
     private ViewHolder.ClickListener clickListener;
+    private boolean recentGames;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, Context context1, ViewHolder.ClickListener clickListener) {
+    public HistoryAdapter(List<GameModel> gameModel, Context context1, ViewHolder.ClickListener clickListener, boolean recentGames) {
         mGameModel = gameModel;
         context = context1;
         numGames =gameModel.size();
         this.clickListener = clickListener;
+        this.recentGames = recentGames;
     }
 
     public void removeItem(int position) {
@@ -97,8 +101,16 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                                         int viewType) {
         // create a new view
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.history_adapter, parent, false);
+
+        View view;
+        if (recentGames){
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.recent_history_adapter, parent, false);
+        }else{
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.history_adapter, parent, false);
+        }
+
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, clickListener);
@@ -122,31 +134,81 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             try {
                 gameModel = mGameModel.get(mGameModel.size() - position - 1);
 
-                holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-                holder.textViewHistoryScore.setText(gameModel.getScore());
-                holder.textViewHistoryDate.setText(gameModel.getDate());
-                holder.textViewHistoryType.setText(gameModel.getType());
-                holder.textViewHistoryInProgress.setText(gameModel.getState());
+                if (!recentGames){
 
-                if (gameModel.getState().equals("Unfinished")) {
+                    holder.textViewHistoryType.setText(gameModel.getType());
+                    holder.textViewHistoryInProgress.setText(gameModel.getState());
 
-                    if (colorise) {
-                        holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    if (gameModel.getState().equals("Unfinished")) {
+
+                        if (colorise) {
+                            holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                        }
+                    }
+
+                    holder.textViewHistoryInProgress.setAllCaps(true);
+
+                    TypedValue outValue = new TypedValue();
+                    context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+
+                    if (isSelected(gameModel.getGameID()) ) {
+                        holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
+                    } else if (!isSelected(gameModel.getGameID()) || actionModeDisabled){
+
+                        holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                     }
                 }
 
-                holder.textViewHistoryInProgress.setAllCaps(true);
+                holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
+                holder.textViewHistoryScore.setText(gameModel.getScore());
+                holder.textViewHistoryDate.setText(gameModel.getDate());
 
-                TypedValue outValue = new TypedValue();
-                context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                holder.relativeLayout.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v) {
+                        if (gameModel.getState().equals(holder.inProgress) && !recentGames){
 
-                if (isSelected(gameModel.getGameID()) ) {
-                    holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
-                } else if (!isSelected(gameModel.getGameID()) || actionModeDisabled){
+                            AlertDialog dialog;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                    holder.relativeLayout.setBackgroundResource(outValue.resourceId);
-                }
-            }catch (Exception e){
+                            builder.setTitle(R.string.carry_on);
+
+                            builder.setMessage(R.string.continue_game_message);
+
+                            builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(context, EditGame.class);
+                                    intent.putExtra("gameID", gameModel.getGameID());
+                                    context.startActivity(intent);
+                                }
+                            });
+
+                            builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(context, MainActivity.class);
+                                    intent.putExtra("gameID", gameModel.getGameID());
+                                    context.startActivity(intent);
+                                }
+                            });
+
+                            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog = builder.create();
+                            dialog.show();
+
+                        }else{
+                            Intent intent = new Intent(context, EditGame.class);
+                            intent.putExtra("gameID", gameModel.getGameID());
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+
+
+            }catch (Exception ignored){
 
             }
 
@@ -175,6 +237,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
         public RelativeLayout relativeLayout;
         public int color;
         public String inProgress;
+        public String completed;
 
         private ClickListener listener;
 
@@ -189,11 +252,14 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
             relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayoutHistoryAdapter);
             color = v.getResources().getColor(R.color.colorAccent);
             inProgress = v.getResources().getString(R.string.unfinished);
+            completed = v.getResources().getString(R.string.completed);
 
             this.listener = listener;
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+
+
         }
 
         @Override

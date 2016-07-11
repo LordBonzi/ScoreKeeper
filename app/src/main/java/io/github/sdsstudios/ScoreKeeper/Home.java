@@ -27,7 +27,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private Intent settingsIntent;
     private Intent aboutIntent;
     private Intent historyIntent;
-    private Button buttonMore;
+    private Button buttonMore, buttonLastGame;
     private ScoreDBAdapter dbHelper;
     private FirebaseAnalytics mFirebaseAnalytics;
     private TextView textViewNumGames;
@@ -45,8 +45,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         dbHelper = new ScoreDBAdapter(this).open();
         newGameIntent = new Intent(this, NewGame.class);
@@ -59,6 +57,16 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 startActivity(historyIntent);
+            }
+        });
+
+        buttonLastGame = (Button)findViewById(R.id.buttonContinueLastGame);
+        buttonLastGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home.this, MainActivity.class);
+                intent.putExtra("gameID", dbHelper.getNewestGame());
+                startActivity(intent);
             }
         });
 
@@ -83,6 +91,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         if (dbHelper.numRows() == 0 ){
             relativeLayoutRecent.setVisibility(View.INVISIBLE);
+            buttonMore.setVisibility(View.INVISIBLE);
         }
 
         displayRecyclerView();
@@ -99,7 +108,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
                 gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
-                historyAdapter = new HistoryAdapter(gameModel, this, this);
+                historyAdapter = new HistoryAdapter(gameModel, this, this, true);
                 recyclerView.setAdapter(historyAdapter);
             } else {
                 recyclerView.setVisibility(View.INVISIBLE);
@@ -162,7 +171,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
     @Override
     public void onItemClicked(int position, int gameID) {
-        Intent intent = new Intent(this, EditGame.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("gameID", gameID);
         startActivity(intent);
     }

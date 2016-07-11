@@ -29,7 +29,7 @@ public class Settings extends PreferenceActivity{
     AlertDialog dialog;
     private DataHelper dataHelper;
     private boolean colorise;
-    private int numGamesToShow;
+    private String numGamesToShow;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class Settings extends PreferenceActivity{
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                numGamesToShow = 0;
+                numGamesToShow = (String) o;
                 saveInfo();
                 return true;
             }
@@ -111,7 +111,7 @@ public class Settings extends PreferenceActivity{
 
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
-        numGamesToShow = Integer.valueOf(settings.getString("numgamestoshow", "1"));
+        numGamesToShow = settings.getString("numgamestoshow", "3");
 
     }
 
@@ -138,7 +138,7 @@ public class Settings extends PreferenceActivity{
     private void saveInfo(){
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("prefColoriseUnfinishedGames", colorise);
-        editor.putString("numgamestoshow", String.valueOf(numGamesToShow));
+        editor.putString("numgamestoshow", numGamesToShow);
         editor.apply();
 
     }

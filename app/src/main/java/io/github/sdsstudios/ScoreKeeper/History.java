@@ -147,28 +147,32 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     public void displayRecyclerView(){
         dbHelper.open();
-        if (dbHelper.numRows() != 0) {
-            int type = 3;
+        try {
+            if (dbHelper.numRows() != 0) {
+                int type = 3;
 
-            if (menuItemCompleted.isChecked()){
-                type = 2;
-            }
-            if (menuItemUnfinished.isChecked()){
-                type = 1;
-            }
+                if (menuItemCompleted.isChecked()) {
+                    type = 2;
+                }
+                if (menuItemUnfinished.isChecked()) {
+                    type = 1;
+                }
 
-            if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()){
-                type = 3;
-            }
+                if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()) {
+                    type = 3;
+                }
 
-            RecyclerView.LayoutManager mLayoutManager;
-            mLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(mLayoutManager);
-            gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
-            historyAdapter = new HistoryAdapter(gameModel, this, this, false);
-            recyclerView.setAdapter(historyAdapter);
-        }else{
-            recyclerView.setVisibility(View.INVISIBLE);
+                RecyclerView.LayoutManager mLayoutManager;
+                mLayoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(mLayoutManager);
+                gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
+                historyAdapter = new HistoryAdapter(gameModel, this, this, false);
+                recyclerView.setAdapter(historyAdapter);
+            } else {
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+        }catch (Exception ignore){
+
         }
         dbHelper.close();
     }

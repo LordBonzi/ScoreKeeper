@@ -1,24 +1,15 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.provider.ContactsContract;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -27,11 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -222,7 +208,7 @@ public class TimeLimitAdapter extends BaseAdapter{
                                                     if (dataHelper.checkDuplicates(timeLimitArray)) {
                                                         timeLimitArray.remove(timeLimitArray.size() - 2);
                                                         timeLimitArrayNum.remove(timeLimitArrayNum.size() - 2);
-                                                        Snackbar snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, "Already exists", Snackbar.LENGTH_SHORT);
+                                                        Snackbar snackbar = Snackbar.make(NewGame.relativeLayout, "Already exists", Snackbar.LENGTH_SHORT);
                                                         snackbar.show();
 
                                                     }

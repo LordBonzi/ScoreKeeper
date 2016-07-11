@@ -5,13 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,7 +30,6 @@ import java.util.List;
 public class NewGame extends AppCompatActivity
         implements View.OnClickListener{
 
-    public static CoordinatorLayout newGameCoordinatorLayout;
     public static PlayerListAdapter playerListAdapter;
     private Snackbar snackbar;
     private TimeLimitAdapter timeLimitAdapter;
@@ -60,12 +58,14 @@ public class NewGame extends AppCompatActivity
     static final String STATE_TIME = "time";
     static final String STATE_GAMEID = "gameid";
 
+    public static RelativeLayout relativeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_game);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.content_new_game);
+
+        relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
 
 
@@ -81,7 +81,6 @@ public class NewGame extends AppCompatActivity
         homeIntent = new Intent(this, Home.class);
 
         playerList = (RecyclerView)findViewById(R.id.playerList);
-        newGameCoordinatorLayout = (CoordinatorLayout)findViewById(R.id.newGameLayout);
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
@@ -227,7 +226,7 @@ public class NewGame extends AppCompatActivity
             };
             players.remove(players.size() -1);
 
-            snackbar = Snackbar.make(newGameCoordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+            snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             snackbar.show();
         }
@@ -242,7 +241,7 @@ public class NewGame extends AppCompatActivity
 
             players.remove(players.size() -1);
 
-            snackbar = Snackbar.make(newGameCoordinatorLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
+            snackbar = Snackbar.make(relativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             snackbar.show();
         }else if (!duplicates){
@@ -364,7 +363,7 @@ public class NewGame extends AppCompatActivity
                         }
                     };
 
-                    snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+                    snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
                 }else{
@@ -377,7 +376,7 @@ public class NewGame extends AppCompatActivity
                             }
                         };
 
-                        snackbar = Snackbar.make(NewGame.newGameCoordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                        snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                                 .setAction("Dismiss", onClickListener);
                         snackbar.show();
                     }else{

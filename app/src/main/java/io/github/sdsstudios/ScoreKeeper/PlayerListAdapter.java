@@ -30,6 +30,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     private int activity;
     private int editable;
     private CoordinatorLayout coordinatorLayout;
+    private RelativeLayout relativeLayout;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public PlayerListAdapter(ArrayList<String> player, ArrayList score, ScoreDBAdapter dbHelper, int gameID, int mactivity, int meditable) {
@@ -40,7 +41,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         activity = mactivity;
         editable = meditable;
         if(activity == 1){
-            coordinatorLayout = NewGame.newGameCoordinatorLayout;
+            relativeLayout = NewGame.relativeLayout;
         } else if (activity == 2) {
             coordinatorLayout = EditGame.editGameLayout;
         }
@@ -86,9 +87,18 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                             playerArray.set(position, backup);
 
-                            snackbar = Snackbar.make(coordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                                    .setAction("Dismiss", onClickListener);
-                            snackbar.show();
+
+                            if (coordinatorLayout != null) {
+                                snackbar = Snackbar.make(coordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                        .setAction("Dismiss", onClickListener);
+                                snackbar.show();
+                            }else{
+                                snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                        .setAction("Dismiss", onClickListener);
+                                snackbar.show();
+                            }
+
+
                         }else{
                             mDbHelper.open();
                             mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
@@ -206,9 +216,15 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, playerArray.size());
 
-        snackbar = Snackbar.make(coordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
-                .setAction("Undo", onClickListener);
-        snackbar.show();
+        if (coordinatorLayout != null) {
+            snackbar = Snackbar.make(coordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
+                    .setAction("Undo", onClickListener);
+            snackbar.show();
+        }else{
+            snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
+                    .setAction("Undo", onClickListener);
+            snackbar.show();
+        }
 
     }
 
@@ -217,8 +233,14 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         playerArray.add(playerArray.size(), backup);
 
         scoreArray.add(scoreArray.size(), backupScore);
-        snackbar = Snackbar.make(coordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
 
+        if (coordinatorLayout != null) {
+            snackbar = Snackbar.make(coordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }else{
+            snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
         snackbar.show();
 
         notifyItemInserted(playerArray.size());

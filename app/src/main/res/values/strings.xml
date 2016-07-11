@@ -119,6 +119,8 @@
         <string name="pref_update_setting">Update Settings</string>
     <string name="no_time_limit">Time Limit</string>
     <string name="fullscreen">Fullscreen</string>
+    <string name="preset_title">Preset:</string>
+    <string name="preset">Preset</string>
 
 
 </resources>

@@ -122,6 +122,7 @@
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
     <string name="edit_presets">Edit Presets</string>
+    <string name="delete_presets">Delete Presets</string>
 
 
 </resources>

@@ -102,7 +102,7 @@
     <item
         android:id="@+id/action_edit_presets"
         android:orderInCategory="10"
-        android:title="@string/edit_presets"
+        android:title="@string/delete_presets"
         android:visible="false"
         app:showAsAction="never"/>
 

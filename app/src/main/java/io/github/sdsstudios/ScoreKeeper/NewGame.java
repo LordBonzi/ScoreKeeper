@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -206,6 +207,10 @@ public class NewGame extends AppCompatActivity
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
+                    players = new ArrayList();
+                    timeLimit = null;
+                    displayRecyclerView(players);
+                    displaySpinner(true);
 
                 }
             });
@@ -233,7 +238,6 @@ public class NewGame extends AppCompatActivity
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -257,6 +261,8 @@ public class NewGame extends AppCompatActivity
             return true;
         }if (id == R.id.action_edit_presets){
             onEditPresetsClick();
+        }if (id == R.id.action_edit_presets){
+            deletePresetsDialog();
         }
 
         return super.onOptionsItemSelected(item);
@@ -399,6 +405,59 @@ public class NewGame extends AppCompatActivity
 
     }
 
+    public void deletePresetsDialog(){
+        final View dialogView;
+        ArrayList titleArrayList  =new ArrayList();
+
+        for (int i = 1; i <= presetDBAdapter.open().numRows(); i++){
+            presetDBAdapter.open();
+            titleArrayList.add(dataHelper.getPresetStringByID(i, PresetDBAdapter.KEY_TITLE, presetDBAdapter));
+            presetDBAdapter.close();
+        }
+
+        final RecyclerViewArrayAdapter arrayAdapter = new RecyclerViewArrayAdapter(titleArrayList, this);
+        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog alertDialog;
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerViewFragment);
+        dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                for (int j = 0; j < arrayAdapter.getItemsToDeleteList().size(); j++){
+                    presetDBAdapter.open();
+                    Log.e(TAG, arrayAdapter.getItemsToDeleteList().get(j) + " , "+j);
+                    presetDBAdapter.deletePreset((Integer) arrayAdapter.getItemsToDeleteList().get(j));
+                    presetDBAdapter.close();
+                    displaySpinner(false);
+
+                }
+            }
+
+        });
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+        dialogBuilder.setView(dialogView);
+
+        alertDialog = dialogBuilder.create();
+        mLayoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.setAdapter(arrayAdapter);
+
+
+        alertDialog.show();
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonAddPlayer: {
@@ -444,6 +503,8 @@ public class NewGame extends AppCompatActivity
 
                 break;
             }
+
+
         }
     }
 
@@ -472,7 +533,6 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 final String[] title = new String[1];
-
 
                 if (players.size() == 2){
                     editTextPresetTitle.setHint(players.get(0) + " vs " + players.get(1));

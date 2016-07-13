@@ -1,9 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,8 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -324,14 +320,6 @@ public class EditGame extends AppCompatActivity {
         dialog.show();
     }
 
-    public void saveInfo(){
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("gameID", gameID = 0);
-
-
-        editor.apply();
-    }
 
 
     }

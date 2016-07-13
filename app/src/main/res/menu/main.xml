@@ -99,4 +99,11 @@
         android:visible="false"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_edit_presets"
+        android:orderInCategory="10"
+        android:title="@string/edit_presets"
+        android:visible="false"
+        app:showAsAction="never"/>
+
 </menu>

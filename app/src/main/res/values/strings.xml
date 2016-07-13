@@ -107,7 +107,6 @@
         <string name="menu_settings">Settings</string>
         <string name="title_activity_main">MainActivity</string>
 
-
         <string name="pref_send_report">Send crash reports</string>
         <string name="pref_send_report_summary">Helps to fix bugs</string>
         <string name="pref_sync_frequency">Sync frequency</string>
@@ -121,6 +120,8 @@
     <string name="fullscreen">Fullscreen</string>
     <string name="preset_title">Preset:</string>
     <string name="preset">Preset</string>
+    <string name="create_preset">Save Preset</string>
+    <string name="edit_presets">Edit Presets</string>
 
 
 </resources>

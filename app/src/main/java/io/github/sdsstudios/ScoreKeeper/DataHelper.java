@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,6 +154,47 @@ public class DataHelper {
         cursor.close();
 
         return s;
+    }
+
+    public String getPresetStringByID(int i, String request, PresetDBAdapter dbHelper){
+
+        String s = "";
+        int index = 1;
+        dbHelper.open();
+        Cursor cursor = dbHelper.fetchPresetById(i);
+
+        if (request == PresetDBAdapter.KEY_TIME_LIMIT) {
+            index = cursor.getColumnIndex(PresetDBAdapter.KEY_TIME_LIMIT);
+        }else if(request == PresetDBAdapter.KEY_TITLE){
+            index = cursor.getColumnIndex(PresetDBAdapter.KEY_TITLE);
+
+        }
+
+        try {
+            s = cursor.getString(index);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("DataHelper", e.toString());
+        }
+
+        dbHelper.close();
+        cursor.close();
+        return s;
+    }
+
+    public ArrayList getPresetPlayerArrayByID(int gameID,  PresetDBAdapter dbHelper){
+        ArrayList array;
+        dbHelper.open();
+
+        Cursor cursor = dbHelper.fetchPresetById(gameID);
+        int index = cursor.getColumnIndex(PresetDBAdapter.KEY_PLAYERS);
+        String s = cursor.getString(index);
+        String[] strValues = s.split(",");
+        array = new ArrayList<>(Arrays.asList(strValues));
+        cursor.close();
+        dbHelper.close();
+
+        return array;
     }
 
 

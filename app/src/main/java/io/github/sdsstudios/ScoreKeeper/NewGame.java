@@ -10,11 +10,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -28,20 +33,21 @@ import java.util.Date;
 import java.util.List;
 
 public class NewGame extends AppCompatActivity
-        implements View.OnClickListener{
+        implements View.OnClickListener, PresetListener{
 
     public static PlayerListAdapter playerListAdapter;
     private Snackbar snackbar;
     private TimeLimitAdapter timeLimitAdapter;
+    private PresetDBAdapter presetDBAdapter;
     private DataHelper dataHelper;
     private String time = null;
     private String TAG = "NewGame";
     private EditText editTextPlayer;
-    private Button buttonNewGame, buttonAddPlayer, buttonQuit;
+    private Button buttonNewGame, buttonAddPlayer, buttonQuit, buttonCreatePreset;
     private CheckBox checkBoxNoTimeLimit;
     private RecyclerView playerList;
     private String player;
-    private ArrayList<String> players = new ArrayList<>();
+    private ArrayList players = new ArrayList<>();
     private ArrayList<String> score = new ArrayList<>();
     private Integer gameID;
     private Intent homeIntent, mainActivityIntent;
@@ -49,6 +55,7 @@ public class NewGame extends AppCompatActivity
     private ScoreDBAdapter dbHelper;
     private boolean stop = true;
     public static Spinner spinnerTimeLimit;
+    public static Spinner spinnerPreset;
     private String timeLimit = null;
     private List timeLimitArray;
     private List timeLimitArrayNum;
@@ -58,24 +65,29 @@ public class NewGame extends AppCompatActivity
     static final String STATE_TIME = "time";
     static final String STATE_GAMEID = "gameid";
 
-    public static RelativeLayout relativeLayout;
+    public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_new_game);
 
+        relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
+        spinnerPreset = (Spinner)findViewById(R.id.spinnerPreset);
 
+        buttonCreatePreset = (Button)findViewById(R.id.buttonCreatePreset);
+        buttonCreatePreset.setOnClickListener(this);
+        buttonCreatePreset.setVisibility(View.VISIBLE);
 
+        presetDBAdapter = new PresetDBAdapter(this);
         dbHelper = new ScoreDBAdapter(this);
 
         dbHelper.open();
         dbHelper.createGame(players, time, score, 0, timeLimit);
         gameID = dbHelper.getNewestGame();
         dbHelper.close();
-
 
         dataHelper = new DataHelper();
         homeIntent = new Intent(this, Home.class);
@@ -88,6 +100,8 @@ public class NewGame extends AppCompatActivity
         checkBoxNoTimeLimit = (CheckBox) findViewById(R.id.checkBoxNoTimeLimit);
         checkBoxNoTimeLimit.setOnClickListener(this);
         checkBoxNoTimeLimit.setChecked(false);
+
+
         spinnerTimeLimit.setEnabled(false);
         timeLimit = null;
         dbHelper.open();
@@ -101,7 +115,6 @@ public class NewGame extends AppCompatActivity
         buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
-        playerList = (RecyclerView) findViewById(R.id.playerList);
 
         if (savedInstanceState != null) {
             // Restore value of members from saved state
@@ -109,7 +122,7 @@ public class NewGame extends AppCompatActivity
             gameID = savedInstanceState.getInt(STATE_GAMEID);
             time = savedInstanceState.getString(STATE_TIME);
             player = savedInstanceState.getString(STATE_PLAYER_NAME);
-            displayRecyclerView();
+            displayRecyclerView(players);
         } else {
             SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
             Date now = new Date();
@@ -118,7 +131,7 @@ public class NewGame extends AppCompatActivity
             dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
             dbHelper.close();
             players = new ArrayList<>();
-            displayRecyclerView();
+            displayRecyclerView(players);
         }
 
         editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -135,8 +148,7 @@ public class NewGame extends AppCompatActivity
 
         //RecyclerView Stuff
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        playerList.setLayoutManager(mLayoutManager);
+
 
         //Shared Preferences stuff
 
@@ -159,19 +171,60 @@ public class NewGame extends AppCompatActivity
 
 
         spinnerTimeLimit.setVisibility(View.INVISIBLE);
-        displaySpinner();
+        displaySpinner(true);
+        displaySpinner(false);
     }
 
 
 
-    public void displaySpinner(){
+    public void displaySpinner(boolean timelimitspinner){
 
-        timeLimitAdapter=new TimeLimitAdapter(this, timeLimitArray, timeLimitArrayNum, dbHelper, gameID);
-        spinnerTimeLimit.setAdapter(timeLimitAdapter);
+        if (timelimitspinner) {
+            timeLimitAdapter = new TimeLimitAdapter(this, timeLimitArray, timeLimitArrayNum, dbHelper, gameID);
+            spinnerTimeLimit.setAdapter(timeLimitAdapter);
+        }else {
+            ArrayList titleArrayList = new ArrayList();
+
+            for (int i = 1; i <= presetDBAdapter.open().numRows(); i++){
+                presetDBAdapter.open();
+                titleArrayList.add(dataHelper.getPresetStringByID(i, PresetDBAdapter.KEY_TITLE, presetDBAdapter));
+                presetDBAdapter.close();
+            }
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, titleArrayList);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinnerPreset.setAdapter(dataAdapter);
+            if (presetDBAdapter.numRows() == 0){
+                NewGame.spinnerPreset.setVisibility(View.INVISIBLE);
+            }
+            spinnerPreset.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    loadGame(i+1);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
 
     }
 
+    public void loadGame(int position){
+        dataHelper = new DataHelper();
+        presetDBAdapter.open();
+        ArrayList presetPlayers = new ArrayList();
+        String presetTimeLimit;
+        presetPlayers = dataHelper.getPresetPlayerArrayByID(position, presetDBAdapter);
+        presetTimeLimit = dataHelper.getPresetStringByID(position, PresetDBAdapter.KEY_TIME_LIMIT, presetDBAdapter);
+        presetDBAdapter.close();
 
+        updateEditText(presetPlayers, presetTimeLimit);
+
+    }
 
     @Override
     protected void onResume() {
@@ -186,6 +239,8 @@ public class NewGame extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_delete).setVisible(false);
+        menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_edit_presets).setVisible(true);
         return true;
     }
 
@@ -200,12 +255,20 @@ public class NewGame extends AppCompatActivity
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        }if (id == R.id.action_edit_presets){
+            onEditPresetsClick();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayRecyclerView(){
+    public void onEditPresetsClick(){
+
+    }
+
+    public void displayRecyclerView(ArrayList players){
+        mLayoutManager = new LinearLayoutManager(this);
+        playerList.setLayoutManager(mLayoutManager);
         playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
         playerList.setAdapter(playerListAdapter);
 
@@ -349,45 +412,7 @@ public class NewGame extends AppCompatActivity
             }
 
             case R.id.buttonNewGame: {
-                mainActivityIntent = new Intent(this, MainActivity.class);
-                stop = false;
-
-                //snackbar must have 2 or more players
-
-                if (players.size() < 2) {
-
-                    View.OnClickListener onClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            snackbar.dismiss();
-                        }
-                    };
-
-                    snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
-                            .setAction("Dismiss", onClickListener);
-                    snackbar.show();
-                }else{
-                    if (dataHelper.checkDuplicates(players)){
-
-                        View.OnClickListener onClickListener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                snackbar.dismiss();
-                            }
-                        };
-
-                        snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                                .setAction("Dismiss", onClickListener);
-                        snackbar.show();
-                    }else{
-                        createScoreArray();
-                        mainActivityIntent.putExtra("gameID", gameID);
-                        startActivity(mainActivityIntent);
-                        finish();
-                    }
-
-
-                }
+                createNewGame(players, true);
 
                 break;
 
@@ -396,6 +421,7 @@ public class NewGame extends AppCompatActivity
             case R.id.checkBoxNoTimeLimit: {
                 if (checkBoxNoTimeLimit.isChecked()){
                     spinnerTimeLimit.setEnabled(true);
+                    displaySpinner(false);
                     spinnerTimeLimit.setVisibility(View.VISIBLE);
                     dbHelper.open();
                     dbHelper.updateGame(null, timeLimitArrayNum.get(0).toString(),ScoreDBAdapter.KEY_TIMER, gameID);
@@ -410,14 +436,178 @@ public class NewGame extends AppCompatActivity
                     dbHelper.close();
                 }
 
+                break;
+            }
+
+            case R.id.buttonCreatePreset:{
+                createNewGame(players, false);
 
                 break;
             }
         }
     }
 
+    public void createPresetDialog() {
+        final View dialogView;
+
+        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog alertDialog;
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogView = inflter.inflate(R.layout.create_preset_fragment, null);
+        final EditText editTextPresetTitle = (EditText) dialogView.findViewById(R.id.editTextPresetTitle);
+        dialogBuilder.setPositiveButton(R.string.create, null);
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+
+        alertDialog = dialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                final String[] title = new String[1];
 
 
+                if (players.size() == 2){
+                    editTextPresetTitle.setHint(players.get(0) + " vs " + players.get(1));
+
+                }else if (players.size() == 3){
+                    editTextPresetTitle.setHint(players.get(0) + " vs " + players.get(1) + " vs " + players.get(2));
+
+                }else if (players.size() > 3 && players.size() < 10){
+                    String playerTitle = "";
+                    for (int i = 0; i < players.size(); i++){
+                        playerTitle += players.get(i);
+                        if (i != players.size()-1){
+                            playerTitle += ",";
+                        }
+                    }
+
+                    editTextPresetTitle.setHint(playerTitle);
+
+                }else if (players.size() > 10){
+                    String playerTitle = "";
+                    for (int i = 0; i < players.size(); i++){
+                        playerTitle += players.get(i);
+                        if (i != players.size()-1){
+                            playerTitle += ",";
+                        }
+                    }
+
+                    editTextPresetTitle.setHint(playerTitle);
+
+                }else if (players.size() == 1){
+                    editTextPresetTitle.setHint(String.valueOf(players.get(0)));
+
+                }
+
+                 title[0] = editTextPresetTitle.getHint().toString();
+
+                editTextPresetTitle.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        title[0] = charSequence.toString();
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        createPreset(title[0]);
+                        alertDialog.dismiss();
+                        displaySpinner(false);
+                        spinnerPreset.setVisibility(View.VISIBLE);
+
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+
+    }
+
+    public void createNewGame(ArrayList players, boolean startGame) {
+            mainActivityIntent = new Intent(this, MainActivity.class);
+            stop = false;
+
+            //snackbar must have 2 or more players
+
+            if (players.size() < 2) {
+
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        snackbar.dismiss();
+                    }
+                };
+
+                snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+                        .setAction("Dismiss", onClickListener);
+                snackbar.show();
+            } else {
+                if (dataHelper.checkDuplicates(players)) {
+
+                    View.OnClickListener onClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            snackbar.dismiss();
+                        }
+                    };
+
+                    snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                            .setAction("Dismiss", onClickListener);
+                    snackbar.show();
+                } else {
+                    createScoreArray();
+
+                    if (startGame) {
+                        mainActivityIntent.putExtra("gameID", gameID);
+                        startActivity(mainActivityIntent);
+                        finish();
+                    }else{
+                        createPresetDialog();
+                    }
+                }
+
+            }
+
+    }
+
+    public void createPreset(String title){
+        presetDBAdapter = new PresetDBAdapter(this);
+        presetDBAdapter.open();
+        presetDBAdapter.createPreset(players, timeLimit, title);
+        presetDBAdapter.close();
+
+    }
+
+    @Override
+    public void updateEditText(ArrayList players, String timeLimit) {
+        this.players = players;
+        displayRecyclerView(players);
+        checkBoxNoTimeLimit.setChecked(true);
+        spinnerTimeLimit.setEnabled(true);
+        spinnerTimeLimit.setVisibility(View.VISIBLE);
+    }
 
 
 }

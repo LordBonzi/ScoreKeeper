@@ -63,7 +63,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         buttonLastGame = (Button)findViewById(R.id.buttonContinueLastGame);
 
-
         recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
         textViewNumGames = (TextView)findViewById(R.id.textViewNumGamesPlayed);
@@ -113,8 +112,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
                 gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
-                historyAdapter = new HistoryAdapter(gameModel, this, this, true);
-                recyclerView.setAdapter(historyAdapter);
+                if (gameModel.isEmpty()){
+                    relativeLayoutRecent.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
+                }else{
+                    historyAdapter = new HistoryAdapter(gameModel, this, this, true);
+                    recyclerView.setAdapter(historyAdapter);
+                }
+
             } else {
                 recyclerView.setVisibility(View.INVISIBLE);
             }

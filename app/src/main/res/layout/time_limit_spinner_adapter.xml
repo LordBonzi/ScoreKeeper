@@ -4,6 +4,8 @@
     android:orientation="vertical"
     android:id="@+id/timeLimitSpinnerAdapter"
     android:layout_width="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
     android:layout_height="48dp">
 
     <TextView
@@ -14,11 +16,11 @@
         android:layout_gravity="center"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
-        android:paddingTop="16dp"
         android:clickable="true"
+        android:longClickable="true"
+        android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="Demo"
-        android:textColor="#000"
-        android:longClickable="true" />
+        android:textColor="#000" />
 
 </RelativeLayout>

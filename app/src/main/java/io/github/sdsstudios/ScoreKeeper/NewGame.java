@@ -199,7 +199,7 @@ public class NewGame extends AppCompatActivity
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if (spinnerPreset.getSelectedItemPosition() != 0){
-                        loadGame(i+1);
+                        loadGame(spinnerPreset.getSelectedItemPosition());
 
                     }else{
                         reset();
@@ -685,6 +685,10 @@ public class NewGame extends AppCompatActivity
         checkBoxNoTimeLimit.setChecked(true);
         spinnerTimeLimit.setEnabled(true);
         spinnerTimeLimit.setVisibility(View.VISIBLE);
+        createScoreArray();
+        dbHelper.open();
+        dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
+        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
     }
 
 

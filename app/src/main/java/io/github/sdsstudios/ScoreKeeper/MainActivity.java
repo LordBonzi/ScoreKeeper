@@ -267,8 +267,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                isPaused = true;
-                chronometerClick();
                 dialog.dismiss();
                 immersiveMode();
             }
@@ -602,13 +600,14 @@ public class MainActivity extends AppCompatActivity
                                     dbHelper.close();
 
                                     timeLimitReached(stopwatch);
-                                    fabChronometer.setEnabled(true);
                                     buttonP1.setEnabled(true);
                                     buttonP2.setEnabled(true);
                                     bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
                                     bigGameList.setAdapter(bigGameAdapter);
                                     alertDialog.dismiss();
                                     immersiveMode();
+                                    fabChronometer.setEnabled(true);
+
 
                                 } else {
                                     alertDialog.dismiss();
@@ -640,7 +639,6 @@ public class MainActivity extends AppCompatActivity
     public void onChronometerTick(Stopwatch chronometer) {
         timeLimitReached(stopwatch);
     }
-
 
 }
 

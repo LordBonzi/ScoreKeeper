@@ -150,7 +150,6 @@ public class NewGame extends AppCompatActivity
         //RecyclerView Stuff
         // use a linear layout manager
 
-
         //Shared Preferences stuff
 
         SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
@@ -168,15 +167,13 @@ public class NewGame extends AppCompatActivity
             timeLimitArrayNum = new ArrayList();
             timeLimitArrayNum.add(0, "Create...");
             dataHelper.saveSharedPrefs(timeLimitArray, timeLimitArrayNum, this);
-        }
 
+        }
 
         spinnerTimeLimit.setVisibility(View.INVISIBLE);
         displaySpinner(true);
         displaySpinner(false);
     }
-
-
 
     public void displaySpinner(boolean timelimitspinner){
 
@@ -185,6 +182,7 @@ public class NewGame extends AppCompatActivity
             spinnerTimeLimit.setAdapter(timeLimitAdapter);
         }else {
             ArrayList titleArrayList = new ArrayList();
+            titleArrayList.add("No Preset");
 
             for (int i = 1; i <= presetDBAdapter.open().numRows(); i++){
                 presetDBAdapter.open();
@@ -196,21 +194,21 @@ public class NewGame extends AppCompatActivity
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             spinnerPreset.setAdapter(dataAdapter);
-            if (presetDBAdapter.numRows() == 0){
-                NewGame.spinnerPreset.setVisibility(View.INVISIBLE);
-            }
+
             spinnerPreset.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    loadGame(i+1);
+                    if (spinnerPreset.getSelectedItemPosition() != 0){
+                        loadGame(i+1);
+
+                    }else{
+                        reset();
+                    }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
-                    players = new ArrayList();
-                    timeLimit = null;
-                    displayRecyclerView(players);
-                    displaySpinner(true);
+                    reset();
 
                 }
             });
@@ -221,7 +219,7 @@ public class NewGame extends AppCompatActivity
     public void loadGame(int position){
         dataHelper = new DataHelper();
         presetDBAdapter.open();
-        ArrayList presetPlayers = new ArrayList();
+        ArrayList presetPlayers;
         String presetTimeLimit;
         presetPlayers = dataHelper.getPresetPlayerArrayByID(position, presetDBAdapter);
         presetTimeLimit = dataHelper.getPresetStringByID(position, PresetDBAdapter.KEY_TIME_LIMIT, presetDBAdapter);
@@ -245,6 +243,7 @@ public class NewGame extends AppCompatActivity
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_edit_presets).setVisible(true);
+        menu.findItem(R.id.action_reset).setVisible(true);
         return true;
     }
 
@@ -260,19 +259,25 @@ public class NewGame extends AppCompatActivity
             onBackPressed();
             return true;
         }if (id == R.id.action_edit_presets){
-            onEditPresetsClick();
-        }if (id == R.id.action_edit_presets){
             deletePresetsDialog();
+        }if (id == R.id.action_reset){
+            reset();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void onEditPresetsClick(){
+    public void reset(){
+        players.clear();
+        score.clear();
+        displayRecyclerView(players);
+        checkBoxNoTimeLimit.setChecked(false);
+        disableTimeLimitSpinner();
 
     }
 
     public void displayRecyclerView(ArrayList players){
+        playerList.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
         playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
@@ -407,7 +412,7 @@ public class NewGame extends AppCompatActivity
 
     public void deletePresetsDialog(){
         final View dialogView;
-        ArrayList titleArrayList  =new ArrayList();
+        final ArrayList titleArrayList  =new ArrayList();
 
         for (int i = 1; i <= presetDBAdapter.open().numRows(); i++){
             presetDBAdapter.open();
@@ -421,6 +426,17 @@ public class NewGame extends AppCompatActivity
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerViewFragment);
+
+        dialogBuilder.setNeutralButton(R.string.delete_all, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                presetDBAdapter.open();
+                presetDBAdapter.deleteAllPresets();
+                presetDBAdapter.close();
+                displaySpinner(false);
+            }
+        });
+
         dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
 
             @Override
@@ -458,6 +474,16 @@ public class NewGame extends AppCompatActivity
         alertDialog.show();
     }
 
+    public void disableTimeLimitSpinner(){
+        spinnerTimeLimit.setEnabled(false);
+        spinnerTimeLimit.setVisibility(View.INVISIBLE);
+        timeLimit = null;
+        dbHelper.open();
+        timeLimit=null;
+        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+        dbHelper.close();
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonAddPlayer: {
@@ -480,19 +506,12 @@ public class NewGame extends AppCompatActivity
             case R.id.checkBoxNoTimeLimit: {
                 if (checkBoxNoTimeLimit.isChecked()){
                     spinnerTimeLimit.setEnabled(true);
-                    displaySpinner(false);
                     spinnerTimeLimit.setVisibility(View.VISIBLE);
                     dbHelper.open();
                     dbHelper.updateGame(null, timeLimitArrayNum.get(0).toString(),ScoreDBAdapter.KEY_TIMER, gameID);
 
                 }else{
-                    spinnerTimeLimit.setEnabled(false);
-                    spinnerTimeLimit.setVisibility(View.INVISIBLE);
-                    timeLimit = null;
-                    dbHelper.open();
-                    timeLimit=null;
-                    dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-                    dbHelper.close();
+                    disableTimeLimitSpinner();
                 }
 
                 break;
@@ -503,7 +522,6 @@ public class NewGame extends AppCompatActivity
 
                 break;
             }
-
 
         }
     }

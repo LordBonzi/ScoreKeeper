@@ -61,6 +61,17 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         return vh;
     }
 
+    public void clearData() {
+        int size = playerArray.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                removeAt(i);
+            }
+
+            notifyDataSetChanged();
+        }
+    }
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {

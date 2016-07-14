@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_fullscreen) {
-            Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Need to implement properly", Toast.LENGTH_SHORT);
             immersiveMode();
             }
 
@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         immersiveMode();
 
-        if (fabChronometer.isEnabled()) {
+        if (finished) {
             isPaused = true;
             chronometerClick();
             AlertDialog dialog;
@@ -491,9 +491,7 @@ public class MainActivity extends AppCompatActivity
             });
 
             dialog = builder.create();
-            fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-            stopwatch.setTextColor(getResources().getColor(R.color.stop));
-            fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+
             dialog.show();
 
         }else{

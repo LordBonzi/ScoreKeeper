@@ -10,13 +10,13 @@ import android.util.SparseIntArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class HistorySelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     @SuppressWarnings("unused")
-    private static final String TAG = SelectableAdapter.class.getSimpleName();
+    private static final String TAG = HistorySelectableAdapter.class.getSimpleName();
 
     private SparseIntArray selectedItems;
 
-    public SelectableAdapter() {
+    public HistorySelectableAdapter () {
         selectedItems = new SparseIntArray();
     }
 
@@ -26,9 +26,9 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
      * @return true if the item is selected, false otherwise
      */
 
-    public boolean isSelected(int position) {
+    public boolean isSelected(int gameID) {
 
-        return getSelectedItems().contains(position);
+        return getSelectedItems().contains(gameID);
 
     }
 
@@ -38,12 +38,12 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
      */
 
 
-    public void toggleSelection(int position) {
+    public void toggleSelection(int position, int gameID) {
 
-        if (getSelectedItems().contains(position)) {
+        if (getSelectedItems().contains(gameID)) {
             selectedItems.delete(position);
         } else {
-            selectedItems.put(position, position);
+            selectedItems.put(position, gameID);
         }
         notifyItemChanged(position);
     }

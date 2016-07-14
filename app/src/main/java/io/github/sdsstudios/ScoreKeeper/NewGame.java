@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 public class NewGame extends AppCompatActivity
-        implements View.OnClickListener, PresetListener{
+        implements View.OnClickListener, PresetListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener{
 
     public static PlayerListAdapter playerListAdapter;
     private Snackbar snackbar;
@@ -67,6 +66,7 @@ public class NewGame extends AppCompatActivity
     static final String STATE_GAMEID = "gameid";
     private String defaultTitle;
     public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
+    private RecyclerViewArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -420,7 +420,7 @@ public class NewGame extends AppCompatActivity
             presetDBAdapter.close();
         }
 
-        final RecyclerViewArrayAdapter arrayAdapter = new RecyclerViewArrayAdapter(titleArrayList, this);
+        arrayAdapter = new RecyclerViewArrayAdapter(titleArrayList, this, this);
         LayoutInflater inflter = LayoutInflater.from(this);
         final AlertDialog alertDialog;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -443,14 +443,9 @@ public class NewGame extends AppCompatActivity
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                for (int j = 0; j < arrayAdapter.getItemsToDeleteList().size(); j++){
-                    presetDBAdapter.open();
-                    Log.e(TAG, arrayAdapter.getItemsToDeleteList().get(j) + " , "+j);
-                    presetDBAdapter.deletePreset((Integer) arrayAdapter.getItemsToDeleteList().get(j));
-                    presetDBAdapter.close();
-                    displaySpinner(false);
+                arrayAdapter.deleteSelectedGames(presetDBAdapter);
+                displaySpinner(false);
 
-                }
             }
 
         });
@@ -717,7 +712,12 @@ public class NewGame extends AppCompatActivity
         dbHelper.open();
         dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
         dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+        dbHelper.close();
     }
 
 
+    @Override
+    public void onItemClicked(int position) {
+        arrayAdapter.toggleSelection(position);
+    }
 }

@@ -1,12 +1,13 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,11 +23,13 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
     private ArrayList titleArray, itemsToDeleteList = new ArrayList();
     private Context context;
     private DataHelper dataHelper = new DataHelper();
+    private ViewHolder.ClickListener listener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1) {
+    public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1, ViewHolder.ClickListener listener) {
         context = context1;
         this.titleArray = titleArray;
+        this.listener = listener;
 
     }
 
@@ -70,9 +73,13 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
     }
 
-    public void deleteSelectedGames(ScoreDBAdapter dbHelper){
+    public void deleteSelectedGames(PresetDBAdapter presetDBAdapter){
+        Log.e("adapterrecycler", String.valueOf(getSelectedItems()));
         for (int i = 0; i < getSelectedItems().size(); i++){
-            dbHelper.deleteGame(getSelectedItems().get(i));
+            presetDBAdapter.open();
+            int position = getSelectedItems().get(i)+1;
+            presetDBAdapter.deletePreset(position);
+            presetDBAdapter.close();
         }
 
         notifyDataSetChanged();
@@ -95,13 +102,9 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
                 .inflate(R.layout.recyclerview_array_adapter, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(view);
+        ViewHolder vh = new ViewHolder(view, listener);
 
         return vh;
-    }
-
-    public List getItemsToDeleteList(){
-        return itemsToDeleteList;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -112,16 +115,17 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
         // - replace the contents of the view with that element
         holder.textView.setText(titleArray.get(position).toString());
 
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        TypedValue outValue = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-            @Override
-            public void onClick(View view) {
-                itemsToDeleteList.add(position + 1);
-                Log.e("Recyclerviewadap", dataHelper.convertToString(itemsToDeleteList));
-                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.stop));
+        if (isSelected(position)){
+            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.stop));
 
-            }
-        });
+        } else if (!isSelected(position)){
+
+            holder.cardView.setCardBackgroundColor(outValue.resourceId);
+        }
+
 
     }
 
@@ -134,19 +138,36 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @SuppressWarnings("unused")
 
         // each data item is just a string in this case
 
         TextView textView;
-        LinearLayout linearLayout;
+        CardView cardView;
+        ClickListener listener;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, ClickListener listener) {
             super(v);
 
+            this.listener = listener;
             textView = (TextView)v.findViewById(R.id.textView);
-            linearLayout = (LinearLayout)v.findViewById(R.id.linearLayout);
+            cardView = (CardView) v.findViewById(R.id.cardView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (listener != null) {
+
+                listener.onItemClicked(getAdapterPosition());
+            }
+
+        }
+
+
+        public interface ClickListener {
+            public void onItemClicked(int position);
         }
 
     }

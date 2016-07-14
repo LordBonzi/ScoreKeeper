@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>{
+public class HistoryAdapter extends HistorySelectableAdapter<HistoryAdapter.ViewHolder>{
 
     public static List<GameModel> mGameModel;
     private static Context context;

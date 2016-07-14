@@ -65,7 +65,7 @@ public class NewGame extends AppCompatActivity
     static final String STATE_PLAYER_NAME = "player";
     static final String STATE_TIME = "time";
     static final String STATE_GAMEID = "gameid";
-
+    private String defaultTitle;
     public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
 
     @Override
@@ -427,6 +427,8 @@ public class NewGame extends AppCompatActivity
         dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerViewFragment);
 
+        dialogBuilder.setTitle(getResources().getString(R.string.delete_presets));
+        dialogBuilder.setMessage(getResources().getString(R.string.delete_presets_message));
         dialogBuilder.setNeutralButton(R.string.delete_all, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -535,6 +537,12 @@ public class NewGame extends AppCompatActivity
         dialogView = inflter.inflate(R.layout.create_preset_fragment, null);
         final EditText editTextPresetTitle = (EditText) dialogView.findViewById(R.id.editTextPresetTitle);
         dialogBuilder.setPositiveButton(R.string.create, null);
+
+        dialogBuilder.setTitle(getResources().getString(R.string.create_preset));
+        dialogBuilder.setMessage(getResources().getString(R.string.create_preset_message));
+        dialogBuilder.setNeutralButton(R.string.default_title, null);
+
+
         dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
             @Override
@@ -585,6 +593,7 @@ public class NewGame extends AppCompatActivity
 
                 }
 
+                defaultTitle = editTextPresetTitle.getHint().toString();
                  title[0] = editTextPresetTitle.getHint().toString();
 
                 editTextPresetTitle.addTextChangedListener(new TextWatcher() {
@@ -596,6 +605,9 @@ public class NewGame extends AppCompatActivity
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         title[0] = charSequence.toString();
+                        if (charSequence == ""){
+                            title[0]=defaultTitle;
+                        }
 
                     }
 
@@ -617,9 +629,19 @@ public class NewGame extends AppCompatActivity
 
                     }
                 });
+
+
             }
         });
         alertDialog.show();
+        Button b1 = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editTextPresetTitle.setText(defaultTitle);
+            }
+        });
+
 
     }
 
@@ -686,6 +708,12 @@ public class NewGame extends AppCompatActivity
         spinnerTimeLimit.setEnabled(true);
         spinnerTimeLimit.setVisibility(View.VISIBLE);
         createScoreArray();
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        time = sdfDate.format(now);
+        dbHelper.open();
+        dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.close();
         dbHelper.open();
         dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
         dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);

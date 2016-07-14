@@ -122,8 +122,11 @@
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
     <string name="edit_presets">Edit Presets</string>
+    <string name="create_preset_message">What do you want to call it?</string>
+    <string name="delete_presets_message">Select which presets to delete.</string>
     <string name="delete_presets">Delete Presets</string>
     <string name="delete_all">Delete All</string>
+    <string name="default_title">Default Title</string>
 
 
 </resources>

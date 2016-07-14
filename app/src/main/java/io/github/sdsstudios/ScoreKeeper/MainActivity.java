@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity
             displayRecyclerView();
 
         } else {
+
             normal.setVisibility(View.VISIBLE);
 
             textViewP1.setText(String.valueOf(playersArray.get(0)));
@@ -176,6 +177,9 @@ public class MainActivity extends AppCompatActivity
             FirebaseCrash.report(new Exception(e.toString() + ", time:  " + dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)));
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
+            fabChronometer.setEnabled(false);
+            buttonP1.setEnabled(false);
+            buttonP2.setEnabled(false);
             snackbar.show();
         }
 

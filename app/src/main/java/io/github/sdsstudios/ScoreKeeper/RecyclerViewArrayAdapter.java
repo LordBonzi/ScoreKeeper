@@ -118,7 +118,7 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
             public void onClick(View view) {
                 itemsToDeleteList.add(position + 1);
                 Log.e("Recyclerviewadap", dataHelper.convertToString(itemsToDeleteList));
-                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
+                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.stop));
 
             }
         });

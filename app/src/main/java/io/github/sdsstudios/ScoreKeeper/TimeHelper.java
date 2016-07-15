@@ -25,7 +25,7 @@ public class TimeHelper {
 
         try {
             theDate = simpleDateFormat.parse(dateArray);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

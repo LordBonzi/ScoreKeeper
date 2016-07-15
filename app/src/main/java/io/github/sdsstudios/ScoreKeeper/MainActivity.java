@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<BigGameModel> bigGameModels;
     private BigGameModel gameModel;
     private String timeLimitString = null;
-    private boolean finished;
+    private boolean finished = false;
 
     private View dialogView;
     private LayoutInflater inflter = null;
@@ -189,10 +189,11 @@ public class MainActivity extends AppCompatActivity
         editor.apply();
     }
 
-
     private void timeLimitReached(Stopwatch chronometer){
         if (timeLimitString != null) {
+            Log.e(TAG, "timelimitreached");
             if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
+                finished = true;
                 timeLimitDialog();
             }
         }
@@ -226,14 +227,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void timeLimitDialog(){
-        fabChronometer.setEnabled(false);
+
         buttonP1.setEnabled(false);
         buttonP2.setEnabled(false);
         bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
         bigGameList.setAdapter(bigGameAdapter);
-        isPaused = true;
 
-        chronometerClick();
+        if (!isPaused) {
+            isPaused = true;
+            chronometerClick();
+        }
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -399,7 +402,6 @@ public class MainActivity extends AppCompatActivity
         dbHelper.close();
     }
 
-
     public void chronometerClick(){
         if (!isPaused) {
             stopwatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
@@ -407,8 +409,9 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
             stopwatch.setTextColor(getResources().getColor(R.color.start));
             fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
-        }else{
+        }else {
             timeWhenStopped = stopwatch.getBase() - SystemClock.elapsedRealtime();
+            Log.e(TAG, timeWhenStopped + "");
             stopwatch.stop();
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
             stopwatch.setTextColor(getResources().getColor(R.color.stop));
@@ -435,13 +438,17 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.fabChronometer:
-                isPaused = !isPaused;
-                chronometerClick();
+                if (!finished) {
+                    isPaused = !isPaused;
+                    chronometerClick();
+                }
                 break;
 
             case R.id.fabChronometerBig:
-                isPaused = !isPaused;
-                chronometerClick();
+                if (!finished) {
+                    isPaused = !isPaused;
+                    chronometerClick();
+                }
                 break;
         }
 
@@ -451,9 +458,12 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         immersiveMode();
 
-        if (fabChronometer.isEnabled()) {
-            isPaused = true;
-            chronometerClick();
+        if (!finished) {
+            Log.e(TAG, "isnt finsihed");
+            if (!isPaused) {
+                isPaused = true;
+                chronometerClick();
+            }
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -468,6 +478,7 @@ public class MainActivity extends AppCompatActivity
                     dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
                     startActivity(homeIntent);
+
                 }
             });
 
@@ -607,9 +618,10 @@ public class MainActivity extends AppCompatActivity
                                     alertDialog.dismiss();
                                     immersiveMode();
                                     fabChronometer.setEnabled(true);
-
+                                    finished = false;
 
                                 } else {
+                                    finished = true;
                                     alertDialog.dismiss();
                                     immersiveMode();
                                 }
@@ -638,6 +650,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onChronometerTick(Stopwatch chronometer) {
         timeLimitReached(stopwatch);
+        Log.e(TAG, "chronometertick");
     }
 
 }

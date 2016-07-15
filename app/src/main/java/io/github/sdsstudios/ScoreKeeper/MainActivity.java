@@ -31,8 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import java.util.ArrayList;
 
 
@@ -153,12 +151,13 @@ public class MainActivity extends AppCompatActivity
             stopwatch = (Stopwatch) findViewById(R.id.chronometer);
             fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
             fabChronometer.setOnClickListener(this);
-
         }
 
         try {
-            stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
-                    + SystemClock.elapsedRealtime()));
+            if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
+                stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
+                        + SystemClock.elapsedRealtime()));
+            }
 
             timeLimitReached(stopwatch);
 
@@ -174,7 +173,6 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.toString());
-            FirebaseCrash.report(new Exception(e.toString() + ", time:  " + dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)));
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
             fabChronometer.setEnabled(false);
@@ -228,13 +226,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void timeLimitDialog(){
-        finished = true;
-        isPaused = true;
         fabChronometer.setEnabled(false);
         buttonP1.setEnabled(false);
         buttonP2.setEnabled(false);
         bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
         bigGameList.setAdapter(bigGameAdapter);
+        isPaused = true;
+
         chronometerClick();
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -453,7 +451,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         immersiveMode();
 
-        if (finished) {
+        if (fabChronometer.isEnabled()) {
             isPaused = true;
             chronometerClick();
             AlertDialog dialog;

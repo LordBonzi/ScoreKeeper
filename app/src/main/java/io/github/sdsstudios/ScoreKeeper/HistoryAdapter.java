@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class HistoryAdapter extends HistorySelectableAdapter<HistoryAdapter.ViewHolder>{
+public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
 
     public static List<GameModel> mGameModel;
     private static Context context;
@@ -81,6 +81,7 @@ public class HistoryAdapter extends HistorySelectableAdapter<HistoryAdapter.View
 
     public void deleteSelectedGames(ScoreDBAdapter dbHelper){
         for (int i = 0; i < getSelectedItems().size(); i++){
+
             dbHelper.deleteGame(getSelectedItems().get(i));
         }
 

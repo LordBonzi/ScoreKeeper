@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -259,7 +260,12 @@ public class NewGame extends AppCompatActivity
             onBackPressed();
             return true;
         }if (id == R.id.action_edit_presets){
-            deletePresetsDialog();
+            if (presetDBAdapter.numRows() != 0){
+                deletePresetsDialog();
+            }else{
+                Toast.makeText(this, "No Presets Created", Toast.LENGTH_SHORT).show();
+            }
+
         }if (id == R.id.action_reset){
             reset();
         }
@@ -443,7 +449,9 @@ public class NewGame extends AppCompatActivity
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                arrayAdapter.deleteSelectedGames(presetDBAdapter);
+                presetDBAdapter.open();
+                arrayAdapter.deleteSelectedPresets(presetDBAdapter);
+                presetDBAdapter.close();
                 displaySpinner(false);
 
             }
@@ -506,6 +514,7 @@ public class NewGame extends AppCompatActivity
                     spinnerTimeLimit.setVisibility(View.VISIBLE);
                     dbHelper.open();
                     dbHelper.updateGame(null, timeLimitArrayNum.get(0).toString(),ScoreDBAdapter.KEY_TIMER, gameID);
+                    dbHelper.close();
 
                 }else{
                     disableTimeLimitSpinner();
@@ -690,14 +699,20 @@ public class NewGame extends AppCompatActivity
     public void createPreset(String title){
         presetDBAdapter = new PresetDBAdapter(this);
         presetDBAdapter.open();
-        presetDBAdapter.createPreset(players, timeLimit, title);
+        if (spinnerTimeLimit.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
+            presetDBAdapter.open();
+            presetDBAdapter.createPreset(players, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString(), title);
+            presetDBAdapter.close();
+        }else{
+            presetDBAdapter.createPreset(players, timeLimit, title);
+        }
         presetDBAdapter.close();
-
     }
 
     @Override
     public void updateEditText(ArrayList players, String timeLimit) {
         this.players = players;
+        this.timeLimit = timeLimit;
         displayRecyclerView(players);
         checkBoxNoTimeLimit.setChecked(true);
         spinnerTimeLimit.setEnabled(true);
@@ -711,13 +726,13 @@ public class NewGame extends AppCompatActivity
         dbHelper.close();
         dbHelper.open();
         dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
+        dbHelper.open();
         dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
         dbHelper.close();
     }
 
-
     @Override
-    public void onItemClicked(int position) {
-        arrayAdapter.toggleSelection(position);
+    public void onItemClicked(int position, int gameID) {
+        arrayAdapter.toggleSelection(position, gameID);
     }
 }

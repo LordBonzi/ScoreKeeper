@@ -10,13 +10,13 @@ import android.util.SparseIntArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class HistorySelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     @SuppressWarnings("unused")
-    private static final String TAG = HistorySelectableAdapter.class.getSimpleName();
+    private static final String TAG = DatabaseSelectableAdapter.class.getSimpleName();
 
     private SparseIntArray selectedItems;
 
-    public HistorySelectableAdapter () {
+    public DatabaseSelectableAdapter() {
         selectedItems = new SparseIntArray();
     }
 
@@ -36,7 +36,6 @@ public abstract class HistorySelectableAdapter<VH extends RecyclerView.ViewHolde
      * Toggle the selection status of the item at a given position
      * @param position Position of the item to toggle the selection status for
      */
-
 
     public void toggleSelection(int position, int gameID) {
 

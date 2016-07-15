@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArrayAdapter.ViewHolder>{
+public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder>{
 
     private ArrayList titleArray, itemsToDeleteList = new ArrayList();
     private Context context;
@@ -73,16 +72,13 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
     }
 
-    public void deleteSelectedGames(PresetDBAdapter presetDBAdapter){
-        Log.e("adapterrecycler", String.valueOf(getSelectedItems()));
+    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter){
         for (int i = 0; i < getSelectedItems().size(); i++){
-            presetDBAdapter.open();
-            int position = getSelectedItems().get(i)+1;
+            int position = getSelectedItems().get(getSelectedItems().size() - i-1);
             presetDBAdapter.deletePreset(position);
-            presetDBAdapter.close();
         }
-
         notifyDataSetChanged();
+
     }
 
     private void removeRange(int positionStart, int itemCount) {
@@ -118,10 +114,10 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-        if (isSelected(position)){
+        if (isSelected(position+1)){
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.stop));
 
-        } else if (!isSelected(position)){
+        } else if (!isSelected(position+1)){
 
             holder.cardView.setCardBackgroundColor(outValue.resourceId);
         }
@@ -160,14 +156,14 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
         public void onClick(View view) {
             if (listener != null) {
 
-                listener.onItemClicked(getAdapterPosition());
+                listener.onItemClicked(getAdapterPosition(), getAdapterPosition()+1);
             }
 
         }
 
 
         public interface ClickListener {
-            public void onItemClicked(int position);
+            public void onItemClicked(int position, int gameID);
         }
 
     }

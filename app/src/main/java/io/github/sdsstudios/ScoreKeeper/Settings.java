@@ -24,7 +24,7 @@ public class Settings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference;
+    private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference, themesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -46,8 +46,8 @@ public class Settings extends PreferenceActivity{
 
         deletePreference = findPreference("prefDeleteAllGames");
         timeLimitPreference = findPreference("prefDeleteTimeLimit");
-        colorisePreference = findPreference("prefColoriseUnfinishedGames");
         numGamesPreference = findPreference("prefNumGames");
+        themesPreference = findPreference("prefThemes");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -83,14 +83,16 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        colorisePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        themesPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                colorise = !colorise;
-                saveInfo();
+                Intent intent = new Intent(Settings.this, ThemeSettings.class);
+                startActivity(intent);
                 return true;
             }
         });
+
+
 
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -111,7 +113,6 @@ public class Settings extends PreferenceActivity{
         //Shared prefs stuff
 
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
         numGamesToShow = settings.getString("numgamestoshow", "3");
 
     }
@@ -138,7 +139,6 @@ public class Settings extends PreferenceActivity{
 
     private void saveInfo(){
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("prefColoriseUnfinishedGames", colorise);
         editor.putString("numgamestoshow", numGamesToShow);
         editor.apply();
 

@@ -10,15 +10,15 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
-
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="windowActionModeOverlay">false</item>
         <item name="colorPrimaryDark">@color/material_dark</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
-        <item name="android:windowBackground">@drawable/splashscreen</item>
+        <item name="android:background">@drawable/splashscreen</item>
 
     </style>
 

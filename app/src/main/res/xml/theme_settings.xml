@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Dark Theme"
+        android:summary="Use a dark theme for the whole app"
+        android:enabled="false"
+        android:key="prefRunInBackground"/>
+
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/colorise_unfinished"
+        android:enabled="true"
+        android:key="prefColoriseUnfinishedGames"/>
+
+
+
+</PreferenceScreen>
+
+

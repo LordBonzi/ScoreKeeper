@@ -16,5 +16,6 @@
     <color name="button_background">#fff</color>
     <color name="disabled">#bbbbbb</color>
     <color name="multiselect">#E0E0E0</color>
+    <color name="material_dark">#212121</color>
 
 </resources>

@@ -13,6 +13,15 @@
 
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="colorPrimaryDark">@color/material_dark</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

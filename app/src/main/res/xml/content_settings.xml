@@ -25,27 +25,13 @@
         android:enabled="false"
         android:key="prefStats"
         />
-    <PreferenceCategory
+
+    <Preference
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Theme">
-
-        <SwitchPreference
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:title="Dark Theme"
-            android:summary="Use a dark theme for the whole app"
-            android:enabled="false"
-            android:key="prefRunInBackground"/>
-
-        <SwitchPreference
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:title="@string/colorise_unfinished"
-            android:enabled="true"
-            android:key="prefColoriseUnfinishedGames"/>
-
-    </PreferenceCategory>
+        android:title="@string/themes"
+        android:key="prefThemes"
+        />
 
     <PreferenceCategory
         android:layout_height="wrap_content"

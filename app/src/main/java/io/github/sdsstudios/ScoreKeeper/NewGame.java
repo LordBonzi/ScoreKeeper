@@ -68,10 +68,19 @@ public class NewGame extends AppCompatActivity
     private String defaultTitle;
     public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
     private RecyclerViewArrayAdapter arrayAdapter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
+
+        if (darkTheme){
+            setTheme(R.style.DarkTheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
         setContentView(R.layout.content_new_game);
 
         relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
@@ -153,9 +162,9 @@ public class NewGame extends AppCompatActivity
 
         //Shared Preferences stuff
 
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        String timeLimit = sharedPref.getString("timelimitarray", null);
-        String timeLimitnum = sharedPref.getString("timelimitarraynum", null);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        String timeLimit = sharedPreferences.getString("timelimitarray", null);
+        String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
 
         if (timeLimit != null && timeLimitnum !=null) {
 

@@ -9,13 +9,22 @@
 
     <color name="recyerViewBackground">#E0E0E0</color>
     <color name="divider">#E0E0E0</color>
+    <color name="dividerDark">#424242</color>
     <color name="colorTitleText">#ffffffff</color>
     <color name="start">#4CAF50</color>
     <color name="stop">#F44336</color>
     <color name="stop_background">#EF5350</color>
     <color name="button_background">#fff</color>
+    <color name="dark_button_background">@color/dark_item_background</color>
     <color name="disabled">#bbbbbb</color>
     <color name="multiselect">#E0E0E0</color>
+    <color name="darkmultiselect">#424242</color>
     <color name="material_dark">#212121</color>
+
+    <color name="dark_item_background">#303030</color>
+    <color name="light_item_background">#FAFAFA</color>
+    <color name="textColor">#575757</color>
+    <color name="darkTextColor">#e1e1e1</color>
+
 
 </resources>

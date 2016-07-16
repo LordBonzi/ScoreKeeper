@@ -6,21 +6,22 @@
     android:layout_width="match_parent"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:layout_height="48dp">
+    android:layout_height="42dp">
 
     <TextView
         android:id="@+id/textView"
         android:background="?attr/selectableItemBackground"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:clickable="true"
         android:longClickable="true"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:gravity="center_vertical"
         android:text="Demo"
-        android:textColor="#000" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
 
 </RelativeLayout>

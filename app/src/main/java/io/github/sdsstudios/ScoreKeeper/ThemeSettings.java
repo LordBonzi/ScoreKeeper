@@ -20,13 +20,21 @@ public class ThemeSettings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference colorisePreference;
+    private Preference colorisePreference, darkThemePreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private boolean colorise;
+    private boolean colorise, darkTheme;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
+
+        if (darkTheme){
+            setTheme(R.style.DarkTheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -35,6 +43,7 @@ public class ThemeSettings extends PreferenceActivity{
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.theme_settings);
         colorisePreference = findPreference("prefColoriseUnfinishedGames");
+        darkThemePreference = findPreference("prefDarkTheme");
 
         settingsIntent = new Intent(this, Settings.class);
 
@@ -47,11 +56,20 @@ public class ThemeSettings extends PreferenceActivity{
             }
         });
 
+        darkThemePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                darkTheme = !darkTheme;
+                saveInfo();
 
+                return true;
+            }
+        });
 
         //Shared prefs stuff
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
+        darkTheme = settings.getBoolean("prefDarkTheme", false);
     }
 
     @Override
@@ -77,6 +95,7 @@ public class ThemeSettings extends PreferenceActivity{
     private void saveInfo(){
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("prefColoriseUnfinishedGames", colorise);
+        editor.putBoolean("prefDarkTheme", darkTheme);
 
         editor.apply();
 

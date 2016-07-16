@@ -1,7 +1,9 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +35,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private RecyclerView recyclerView;
     private DataHelper dataHelper;
     private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
-    private Toolbar toolbar;
     private HistoryAdapter historyAdapter;
     private static ArrayList<GameModel> gameModel;
     private ActionMode actionMode = null;
@@ -42,10 +42,16 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
+
+        if (darkTheme){
+            setTheme(R.style.DarkTheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
         setContentView(R.layout.activity_history);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = new ScoreDBAdapter(this).open();

@@ -15,9 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,9 +79,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
+
+        if (darkTheme){
+            setTheme(R.style.DarkTheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         builder = new AlertDialog.Builder(this);
@@ -172,7 +176,6 @@ public class MainActivity extends AppCompatActivity
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, e.toString());
             Snackbar snackbar;
             snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
             fabChronometer.setEnabled(false);
@@ -183,7 +186,6 @@ public class MainActivity extends AppCompatActivity
 
         stopwatch.setOnChronometerTickListener(this);
 
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("lastplayedgame", gameID);
         editor.apply();
@@ -191,7 +193,6 @@ public class MainActivity extends AppCompatActivity
 
     private void timeLimitReached(Stopwatch chronometer){
         if (timeLimitString != null) {
-            Log.e(TAG, "timelimitreached");
             if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
                 finished = true;
                 timeLimitDialog();
@@ -411,7 +412,6 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
         }else {
             timeWhenStopped = stopwatch.getBase() - SystemClock.elapsedRealtime();
-            Log.e(TAG, timeWhenStopped + "");
             stopwatch.stop();
             fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
             stopwatch.setTextColor(getResources().getColor(R.color.stop));
@@ -459,7 +459,6 @@ public class MainActivity extends AppCompatActivity
         immersiveMode();
 
         if (!finished) {
-            Log.e(TAG, "isnt finsihed");
             if (!isPaused) {
                 isPaused = true;
                 chronometerClick();
@@ -628,7 +627,6 @@ public class MainActivity extends AppCompatActivity
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Log.e(TAG, e.toString());
                                 Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_time, Toast.LENGTH_SHORT);
                                 toast.show();
                             }
@@ -650,7 +648,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onChronometerTick(Stopwatch chronometer) {
         timeLimitReached(stopwatch);
-        Log.e(TAG, "chronometertick");
     }
 
 }

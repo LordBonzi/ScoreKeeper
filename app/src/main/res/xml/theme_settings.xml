@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:title="Dark Theme"
         android:summary="Use a dark theme for the whole app"
-        android:enabled="false"
-        android:key="prefRunInBackground"/>
+        android:enabled="true"
+        android:key="prefDarkTheme"/>
 
     <SwitchPreference
         android:layout_height="wrap_content"
@@ -17,7 +17,6 @@
         android:title="@string/colorise_unfinished"
         android:enabled="true"
         android:key="prefColoriseUnfinishedGames"/>
-
 
 
 </PreferenceScreen>

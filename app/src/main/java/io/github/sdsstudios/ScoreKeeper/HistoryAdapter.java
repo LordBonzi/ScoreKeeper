@@ -149,12 +149,12 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
                     holder.textViewHistoryInProgress.setAllCaps(true);
 
                     TypedValue outValue = new TypedValue();
-                    context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
                     if (isSelected(gameModel.getGameID()) ) {
-                        holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.multiselect));
+                        context.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
+                        holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                     } else if (!isSelected(gameModel.getGameID()) || actionModeDisabled){
-
+                        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
                         holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                     }
                 }

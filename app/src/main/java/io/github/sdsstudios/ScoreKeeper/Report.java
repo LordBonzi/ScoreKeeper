@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +18,9 @@ public class Report extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_report);
         editTextReport = (EditText)findViewById(R.id.editTextReport);
         buttonReportAction = (Button)findViewById(R.id.buttonReportAction);

@@ -46,7 +46,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"
+            android:background="?attr/dividerColor"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
@@ -72,7 +72,7 @@
         android:text="@string/add_player"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorAccent"
+        android:textColor="?attr/colorAccent"
         android:layout_alignBaseline="@+id/editTextPlayer"
         android:layout_alignBottom="@+id/editTextPlayer"
         android:layout_alignParentRight="true"
@@ -83,8 +83,9 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/spinnerTimeLimit"
         android:visibility="gone"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/spinnerTimeLimit"
         android:layout_below="@+id/relativeLayoutSpinner"
         android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
         android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
@@ -111,7 +112,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/divider"
+                android:background="?attr/dividerColor"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -145,7 +146,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/divider"
+            android:background="?attr/dividerColor"
             android:id="@+id/view2"
             android:layout_alignTop="@+id/buttonAddPlayer"
             android:layout_alignParentLeft="true"
@@ -199,8 +200,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/create_preset"
                 android:visibility="visible"
+                android:textColor="?attr/colorAccent"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:textColor="@color/colorAccent"
                 android:layout_below="@+id/presetTitleLayout"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -211,7 +212,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="#f5f5f5"
+            android:background="?attr/itemBackgroundColor"
             android:layout_height="48sp"
             android:id="@+id/relativeLayout2"
             android:layout_alignParentBottom="true"
@@ -221,7 +222,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/divider"
+                android:background="?attr/dividerColor"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"

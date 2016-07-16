@@ -68,10 +68,14 @@ public class NewGame extends AppCompatActivity
     private String defaultTitle;
     public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
     private RecyclerViewArrayAdapter arrayAdapter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.content_new_game);
 
         relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
@@ -102,7 +106,6 @@ public class NewGame extends AppCompatActivity
         checkBoxNoTimeLimit = (CheckBox) findViewById(R.id.checkBoxNoTimeLimit);
         checkBoxNoTimeLimit.setOnClickListener(this);
         checkBoxNoTimeLimit.setChecked(false);
-
 
         spinnerTimeLimit.setEnabled(false);
         timeLimit = null;
@@ -153,9 +156,9 @@ public class NewGame extends AppCompatActivity
 
         //Shared Preferences stuff
 
-        SharedPreferences sharedPref = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        String timeLimit = sharedPref.getString("timelimitarray", null);
-        String timeLimitnum = sharedPref.getString("timelimitarraynum", null);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        String timeLimit = sharedPreferences.getString("timelimitarray", null);
+        String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
 
         if (timeLimit != null && timeLimitnum !=null) {
 

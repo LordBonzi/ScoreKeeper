@@ -1,7 +1,9 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -9,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,15 +40,17 @@ public class EditGame extends AppCompatActivity {
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
     SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:S");//dd/MM/yyyy
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
+    int accentColor;
 
     private MenuItem menuItemDelete, menuItemGraph, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_edit_game);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle extras = getIntent().getExtras();
@@ -181,6 +184,7 @@ public class EditGame extends AppCompatActivity {
         final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7)||checkValidity(editTextLength.getText().toString(), hourlengthFormat, 10);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
+        final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(PlayerListAdapter.playerArray);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -208,7 +212,11 @@ public class EditGame extends AppCompatActivity {
 
                     invalidSnackbar("You can't have duplicate players!");
 
-                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates){
+                } else if (bNumPlayers) {
+
+                    invalidSnackbar("Must have 2 or more players");
+
+                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
                     dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
                     dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
@@ -322,5 +330,4 @@ public class EditGame extends AppCompatActivity {
 
 
 
-    }
-
+}

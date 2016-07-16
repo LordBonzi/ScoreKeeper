@@ -153,7 +153,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        playerArray.set(position, s.toString());
+                        try {
+                            playerArray.set(position, s.toString());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("Playerlistadapter", e.toString());
+                        }
 
                     }
 
@@ -171,8 +176,12 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        scoreArray.set(position, s.toString());
-
+                        try {
+                            scoreArray.set(position, s.toString());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("Playerlistadapter", e.toString());
+                        }
                     }
 
                     @Override
@@ -199,6 +208,17 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
     }
 
+    public static boolean checkNumberPlayers(ArrayList players){
+        boolean b;
+        if (players.size() < 2){
+            b= true;
+        } else {
+            b = false;
+        }
+
+        return b;
+    }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
@@ -214,7 +234,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         if (activity == 2){
             backupScore = scoreArray.get(position);
             scoreArray.remove(position);
-            Log.e("scorearray remvoed", ""+scoreArray+backupScore);
         }
 
         View.OnClickListener onClickListener = new View.OnClickListener() {

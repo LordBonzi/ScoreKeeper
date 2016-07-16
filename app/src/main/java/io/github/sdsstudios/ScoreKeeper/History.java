@@ -1,7 +1,9 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +35,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private RecyclerView recyclerView;
     private DataHelper dataHelper;
     private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
-    private Toolbar toolbar;
     private HistoryAdapter historyAdapter;
     private static ArrayList<GameModel> gameModel;
     private ActionMode actionMode = null;
@@ -42,10 +42,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_history);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = new ScoreDBAdapter(this).open();
@@ -186,7 +187,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void multiSelectEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
@@ -267,7 +267,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
         if (actionMode == null) {
-            actionMode = ((AppCompatActivity) this).startSupportActionMode(new History.ActionBarCallback());
+            actionMode = startSupportActionMode(new History.ActionBarCallback());
         }
 
         if (actionMode != null) {
@@ -288,7 +288,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     public class ActionBarCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.action_mode, menu);
+            mode.getMenuInflater().inflate(R.menu.action_mode, menu);
 
             return true;
         }

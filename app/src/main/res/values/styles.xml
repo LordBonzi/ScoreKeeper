@@ -1,15 +1,127 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#F5F5F5</item>
+        <item name="colorPrimaryDark">#E0E0E0</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
+
+        <item name="textColor">@color/textColor</item>
+        <item name="dividerColor">@color/divider</item>
+        <item name="itemBackgroundColor">@color/light_item_background</item>
+        <item name="multiSelectBackground">@color/multiselect</item>
+        <item name="buttonBackground">@color/button_background</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.ActionMode</item>
+        <item name="dividerColor">@color/dividerDark</item>
+        <item name="itemBackgroundColor">@color/dark_item_background</item>
+        <item name="multiSelectBackground">@color/darkmultiselect</item>
+        <item name="textColor">@color/darkTextColor</item>
+        <item name="buttonBackground">@color/dark_button_background</item>
+    </style>
+
+    <style name="DarkTheme_Grey" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentGrey</item>
+    </style>
+
+    <style name="DarkTheme_Pink" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentPink</item>
+    </style>
+    <style name="DarkTheme_Yellow" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentYellow</item>
+    </style>
+
+    <style name="DarkTheme_Green" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentGreen</item>
+    </style>
+
+    <style name="DarkTheme_Red" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentRed</item>
+    </style>
+
+    <style name="DarkTheme_Purple" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentPurple</item>
+    </style>
+
+    <style name="DarkTheme_Orange" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentOrange</item>
+    </style>
+
+    <style name="DarkTheme_Blue" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentBlue</item>
+    </style>
+
+
+
+
+
+
+
+    <style name="AppTheme_Grey" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentGrey</item>
+    </style>
+
+    <style name="AppTheme_Pink" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentPink</item>
+    </style>
+    <style name="AppTheme_Yellow" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentYellow</item>
+    </style>
+
+    <style name="AppTheme_Green" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentGreen</item>
+    </style>
+
+    <style name="AppTheme_Red" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentRed</item>
+    </style>
+
+    <style name="AppTheme_Purple" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentPurple</item>
+    </style>
+
+    <style name="AppTheme_Orange" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentOrange</item>
+    </style>
+
+    <style name="AppTheme_Blue" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accentBlue</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="windowActionModeOverlay">false</item>
+        <item name="colorPrimaryDark">@color/material_dark</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+        <item name="android:background">@drawable/splashscreen</item>
 
     </style>
 
@@ -20,7 +132,6 @@
 
     <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/colorPrimary</item>
-        <item name="android:layout_marginBottom">30dp</item>
 
     </style>
 

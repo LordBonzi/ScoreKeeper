@@ -41,13 +41,19 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private RelativeLayout relativeLayoutRecent;
     private String TAG = "Home";
     private int lastPlayedGame;
+    private int accentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_home);
 
         dbHelper = new ScoreDBAdapter(this).open();
+        numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
+        lastPlayedGame = sharedPreferences.getInt("lastplayedgame", dbHelper.getNewestGame());
         newGameIntent = new Intent(this, NewGame.class);
         aboutIntent = new Intent(this, About.class);
         settingsIntent = new Intent(this, Settings.class);
@@ -78,10 +84,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 startActivity(newGameIntent);
             }
         });
-
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
-        lastPlayedGame = sharedPreferences.getInt("lastplayedgame", dbHelper.getNewestGame());
 
         buttonLastGame.setOnClickListener(new View.OnClickListener() {
             @Override

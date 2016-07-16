@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -24,7 +22,7 @@ public class Settings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference;
+    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -34,20 +32,21 @@ public class Settings extends PreferenceActivity{
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.content_settings);
 
         dataHelper = new DataHelper();
 
         deletePreference = findPreference("prefDeleteAllGames");
         timeLimitPreference = findPreference("prefDeleteTimeLimit");
-        colorisePreference = findPreference("prefColoriseUnfinishedGames");
         numGamesPreference = findPreference("prefNumGames");
+        themesPreference = findPreference("prefThemes");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -83,14 +82,16 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        colorisePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        themesPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                colorise = !colorise;
-                saveInfo();
+                Intent intent = new Intent(Settings.this, ThemeSettings.class);
+                startActivity(intent);
                 return true;
             }
         });
+
+
 
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -111,7 +112,6 @@ public class Settings extends PreferenceActivity{
         //Shared prefs stuff
 
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
         numGamesToShow = settings.getString("numgamestoshow", "3");
 
     }
@@ -138,7 +138,6 @@ public class Settings extends PreferenceActivity{
 
     private void saveInfo(){
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("prefColoriseUnfinishedGames", colorise);
         editor.putString("numgamestoshow", numGamesToShow);
         editor.apply();
 
@@ -178,15 +177,6 @@ public class Settings extends PreferenceActivity{
         getDelegate().onDestroy();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(listener);
-    }
-
-
-    private void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
-
-    private void getSupportActionBar() {
-        getDelegate().getSupportActionBar();
     }
 
     private AppCompatDelegate getDelegate() {

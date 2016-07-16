@@ -192,7 +192,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void multiSelectEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
 
@@ -273,7 +272,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
         if (actionMode == null) {
-            actionMode = ((AppCompatActivity) this).startSupportActionMode(new History.ActionBarCallback());
+            actionMode = startSupportActionMode(new History.ActionBarCallback());
         }
 
         if (actionMode != null) {
@@ -294,7 +293,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     public class ActionBarCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.action_mode, menu);
+            mode.getMenuInflater().inflate(R.menu.action_mode, menu);
 
             return true;
         }

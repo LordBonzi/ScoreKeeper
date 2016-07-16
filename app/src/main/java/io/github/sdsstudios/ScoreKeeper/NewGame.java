@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -75,8 +77,18 @@ public class NewGame extends AppCompatActivity
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         setTheme(accentColor);
-        setContentView(R.layout.content_new_game);
+        setContentView(R.layout.activity_new_game);
+        getSupportActionBar();
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(primaryDarkColor);
+        }
 
         relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);

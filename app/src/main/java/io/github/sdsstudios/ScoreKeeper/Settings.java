@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -34,13 +37,22 @@ public class Settings extends PreferenceActivity{
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         setTheme(accentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         addPreferencesFromResource(R.xml.content_settings);
-
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(primaryDarkColor);
+        }
         dataHelper = new DataHelper();
 
         deletePreference = findPreference("prefDeleteAllGames");
@@ -115,7 +127,13 @@ public class Settings extends PreferenceActivity{
         numGamesToShow = settings.getString("numgamestoshow", "3");
 
     }
+    private void setSupportActionBar(@Nullable Toolbar toolbar) {
+        getDelegate().setSupportActionBar(toolbar);
+    }
 
+    private void getSupportActionBar() {
+        getDelegate().getSupportActionBar();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

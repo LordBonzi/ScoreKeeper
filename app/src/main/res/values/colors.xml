@@ -36,4 +36,34 @@
     <color name="accentBlue">#448AFF</color>
 
 
+    <color name="primaryIndigo">@color/colorPrimary</color>
+    <color name="primaryIndigoDark">@color/colorPrimaryDark</color>
+
+    <color name="primaryRed">#F44336</color>
+    <color name="primaryRedDark">#D32F2F</color>
+
+
+    <color name="primaryPurple">#7B1FA2</color>
+    <color name="primaryPurpleDark">#4A148C</color>
+
+
+    <color name="primaryTeal">#009688</color>
+    <color name="primaryTealDark">#00796B</color>
+
+
+    <color name="primaryOrange">#FF9800</color>
+    <color name="primaryOrangeDark">#F57C00</color>
+
+
+    <color name="primaryGrey">#212121</color>
+    <color name="primaryGreyDark">#000000</color>
+
+
+    <color name="primaryWhite">#F5F5F5</color>
+    <color name="primaryWhiteDark">#E0E0E0</color>
+
+
+    <color name="primaryBlue">#1976D2</color>
+    <color name="primaryBlueDark">#0D47A1</color>
+
 </resources>

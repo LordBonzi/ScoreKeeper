@@ -18,6 +18,12 @@
         android:enabled="true"
         android:key="prefAccentColor"/>
 
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Primary Color"
+        android:enabled="true"
+        android:key="prefPrimaryColor"/>
 
 </PreferenceScreen>
 

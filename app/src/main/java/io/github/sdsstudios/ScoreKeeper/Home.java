@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -48,9 +49,17 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         setTheme(accentColor);
         setContentView(R.layout.activity_home);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(primaryDarkColor);
+        }
+        getSupportActionBar();
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        setSupportActionBar(toolbar);
         dbHelper = new ScoreDBAdapter(this).open();
         numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
         lastPlayedGame = sharedPreferences.getInt("lastplayedgame", dbHelper.getNewestGame());

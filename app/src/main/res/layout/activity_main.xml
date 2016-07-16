@@ -20,8 +20,8 @@
 
         </android.support.v7.widget.Toolbar>
 
-
     </android.support.design.widget.AppBarLayout>
+
     <include
         android:layout_marginTop="?attr/actionBarSize"
         layout="@layout/content_main"

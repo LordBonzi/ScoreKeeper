@@ -11,6 +11,14 @@
         android:enabled="true"
         android:key="prefDarkTheme"/>
 
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Classic Scoreboard"
+        android:summary="Use a classic looking scoreboard when playing a game instead of Material Design"
+        android:enabled="true"
+        android:key="prefClassicScoreboard"/>
+
     <Preference
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

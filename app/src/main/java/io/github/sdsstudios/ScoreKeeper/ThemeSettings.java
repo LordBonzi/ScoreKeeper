@@ -26,9 +26,9 @@ public class ThemeSettings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference  darkThemePreference, accentPreference, primaryPreference;
+    private Preference  darkThemePreference, accentPreference, primaryPreference, classicPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private boolean darkTheme;
+    private boolean darkTheme, classicTheme;
     private int accentColor, primaryColor, primaryDarkColor;
     int[] colors = {};
     int[] primaryColors = {};
@@ -36,10 +36,12 @@ public class ThemeSettings extends PreferenceActivity{
     int index;
     int oldColorIndex;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
         darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
         colorIndex();
         accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
@@ -65,6 +67,7 @@ public class ThemeSettings extends PreferenceActivity{
         darkThemePreference = findPreference("prefDarkTheme");
         accentPreference = findPreference("prefAccentColor");
         primaryPreference = findPreference("prefPrimaryColor");
+        classicPreference = findPreference("prefClassicScoreboard");
 
         settingsIntent = new Intent(this, Settings.class);
 
@@ -92,6 +95,15 @@ public class ThemeSettings extends PreferenceActivity{
                 finish();
                 startActivity(intent);
 
+                return true;
+            }
+        });
+
+        classicPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                classicTheme = !classicTheme;
+                saveInfo();
                 return true;
             }
         });
@@ -316,6 +328,7 @@ public class ThemeSettings extends PreferenceActivity{
         editor.putInt("prefAccent", accentColor);
         editor.putInt("prefPrimaryColor", primaryColor);
         editor.putInt("prefPrimaryDarkColor", primaryDarkColor);
+        editor.putBoolean("prefClassicTheme", classicTheme);
 
         editor.apply();
 

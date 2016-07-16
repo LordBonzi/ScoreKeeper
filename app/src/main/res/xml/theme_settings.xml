@@ -11,13 +11,6 @@
         android:enabled="true"
         android:key="prefDarkTheme"/>
 
-    <SwitchPreference
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="@string/colorise_unfinished"
-        android:enabled="true"
-        android:key="prefColoriseUnfinishedGames"/>
-
     <Preference
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

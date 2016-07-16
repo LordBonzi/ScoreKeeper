@@ -1,7 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,9 +23,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     private static Context context;
     private int numGames;
     private GameModel gameModel;
-    private SharedPreferences sharedPreferences;
-    private boolean colorise;
-    private UpdateTabsListener updateTabsListener;
     public static boolean actionModeDisabled = true;
     private ViewHolder.ClickListener clickListener;
     private boolean recentGames;
@@ -112,9 +109,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, clickListener);
-        sharedPreferences = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 
-        colorise = sharedPreferences.getBoolean("prefColoriseUnfinishedGames", false);
 
         return vh;
     }
@@ -136,19 +131,21 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                 if (!recentGames){
 
+                    TypedValue outValue = new TypedValue();
+
                     holder.textViewHistoryType.setText(gameModel.getType());
                     holder.textViewHistoryInProgress.setText(gameModel.getState());
 
                     if (gameModel.getState().equals("Unfinished")) {
+                        TypedValue typedValue = new TypedValue();
 
-                        if (colorise) {
-                            holder.textViewHistoryInProgress.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                        }
+                        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+                        int color = a.getColor(0, 0);
+                        a.recycle();
+                        holder.textViewHistoryInProgress.setTextColor(color);
                     }
 
                     holder.textViewHistoryInProgress.setAllCaps(true);
-
-                    TypedValue outValue = new TypedValue();
 
                     if (isSelected(gameModel.getGameID()) ) {
                         context.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);

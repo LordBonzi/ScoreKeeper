@@ -41,20 +41,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private RelativeLayout relativeLayoutRecent;
     private String TAG = "Home";
     private int lastPlayedGame;
-
-    private boolean darkTheme;
+    private int accentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-
-        if (darkTheme){
-            setTheme(R.style.DarkTheme);
-        }else{
-            setTheme(R.style.AppTheme);
-        }
+        accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_home);
 
         dbHelper = new ScoreDBAdapter(this).open();
@@ -90,8 +84,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 startActivity(newGameIntent);
             }
         });
-
-
 
         buttonLastGame.setOnClickListener(new View.OnClickListener() {
             @Override

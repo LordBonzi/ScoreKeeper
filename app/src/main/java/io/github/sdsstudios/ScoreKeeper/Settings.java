@@ -22,7 +22,7 @@ public class Settings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference deletePreference, timeLimitPreference, colorisePreference, numGamesPreference, themesPreference;
+    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -33,13 +33,8 @@ public class Settings extends PreferenceActivity{
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-
-        if (darkTheme){
-            setTheme(R.style.DarkTheme);
-        }else{
-            setTheme(R.style.AppTheme);
-        }
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);

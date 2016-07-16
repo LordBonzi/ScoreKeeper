@@ -40,6 +40,7 @@ public class EditGame extends AppCompatActivity {
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
     SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:S");//dd/MM/yyyy
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
+    int accentColor;
 
     private MenuItem menuItemDelete, menuItemGraph, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd;
 
@@ -47,13 +48,8 @@ public class EditGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-
-        if (darkTheme){
-            setTheme(R.style.DarkTheme);
-        }else{
-            setTheme(R.style.AppTheme);
-        }
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_edit_game);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

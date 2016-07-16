@@ -43,13 +43,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        boolean darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-
-        if (darkTheme){
-            setTheme(R.style.DarkTheme);
-        }else{
-            setTheme(R.style.AppTheme);
-        }
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        setTheme(accentColor);
         setContentView(R.layout.activity_history);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

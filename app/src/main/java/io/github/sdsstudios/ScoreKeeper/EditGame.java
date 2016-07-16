@@ -188,6 +188,7 @@ public class EditGame extends AppCompatActivity {
         final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7)||checkValidity(editTextLength.getText().toString(), hourlengthFormat, 10);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
+        final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(PlayerListAdapter.playerArray);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -215,7 +216,11 @@ public class EditGame extends AppCompatActivity {
 
                     invalidSnackbar("You can't have duplicate players!");
 
-                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates){
+                } else if (bNumPlayers) {
+
+                    invalidSnackbar("Must have 2 or more players");
+
+                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
                     dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
                     dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);

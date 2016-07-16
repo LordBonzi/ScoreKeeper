@@ -208,6 +208,17 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
     }
 
+    public static boolean checkNumberPlayers(ArrayList players){
+        boolean b;
+        if (players.size() < 2){
+            b= true;
+        } else {
+            b = false;
+        }
+
+        return b;
+    }
+
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

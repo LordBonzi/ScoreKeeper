@@ -1,12 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#F5F5F5</item>
+        <item name="colorPrimaryDark">#E0E0E0</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
@@ -20,10 +19,9 @@
 
     <style name="DarkTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#000</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
         <item name="dividerColor">@color/dividerDark</item>

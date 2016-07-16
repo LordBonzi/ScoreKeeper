@@ -107,7 +107,6 @@ public class NewGame extends AppCompatActivity
         checkBoxNoTimeLimit.setOnClickListener(this);
         checkBoxNoTimeLimit.setChecked(false);
 
-
         spinnerTimeLimit.setEnabled(false);
         timeLimit = null;
         dbHelper.open();

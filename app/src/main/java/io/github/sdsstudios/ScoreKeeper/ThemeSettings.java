@@ -315,6 +315,7 @@ public class ThemeSettings extends PreferenceActivity{
         editor.putBoolean("prefDarkTheme", darkTheme);
         editor.putInt("prefAccent", accentColor);
         editor.putInt("prefPrimaryColor", primaryColor);
+        editor.putInt("prefPrimaryDarkColor", primaryDarkColor);
 
         editor.apply();
 

@@ -47,14 +47,14 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Home"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".ThemeSettings"
             android:label="@string/themes"
             android:parentActivityName=".Settings"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".History"
             android:label="@string/action_history"

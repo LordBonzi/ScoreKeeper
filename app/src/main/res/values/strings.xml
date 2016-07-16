@@ -129,6 +129,8 @@
     <string name="default_title">Default Title</string>
 
     <string name="themes">Themes</string>
+    <string name="_default">Default</string>
+    <string name="okay">OK</string>
 
 
 </resources>

@@ -18,6 +18,13 @@
         android:enabled="true"
         android:key="prefColoriseUnfinishedGames"/>
 
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Accent Color"
+        android:enabled="true"
+        android:key="prefAccentColor"/>
+
 
 </PreferenceScreen>
 

@@ -7,7 +7,7 @@
         android:orderInCategory="10000"
         android:title="@string/action_settings"
         app:showAsAction="never"
-        android:visible="true"/>
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_about"

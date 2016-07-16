@@ -1,17 +1,21 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -20,9 +24,10 @@ public class ThemeSettings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference colorisePreference, darkThemePreference;
+    private Preference colorisePreference, darkThemePreference, accentPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     private boolean colorise, darkTheme;
+    private int accentColor;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -39,11 +44,10 @@ public class ThemeSettings extends PreferenceActivity{
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         addPreferencesFromResource(R.xml.theme_settings);
         colorisePreference = findPreference("prefColoriseUnfinishedGames");
         darkThemePreference = findPreference("prefDarkTheme");
+        accentPreference = findPreference("prefAccentColor");
 
         settingsIntent = new Intent(this, Settings.class);
 
@@ -66,10 +70,70 @@ public class ThemeSettings extends PreferenceActivity{
             }
         });
 
+        accentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final View dialogView;
+
+                LayoutInflater inflter = LayoutInflater.from(getBaseContext());
+                final AlertDialog alertDialog;
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ThemeSettings.this);
+                dialogView = inflter.inflate(R.layout.accent_color_fragment, null);
+
+                final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
+                GridViewAdapter gridViewAdapter = new GridViewAdapter(ThemeSettings.this);
+
+                gridView.setAdapter(gridViewAdapter);
+
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v,
+                                            int position, long id) {
+
+                    }
+                });
+
+
+
+                dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        accentColor = 2;
+                        saveInfo();
+                    }
+                });
+
+                dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+
+                });
+                dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+
+                dialogBuilder.setView(dialogView);
+
+                alertDialog = dialogBuilder.create();
+
+
+                alertDialog.show();
+
+                return true;
+            }
+        });
+
         //Shared prefs stuff
         settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         colorise = settings.getBoolean("prefColoriseUnfinishedGames", false);
         darkTheme = settings.getBoolean("prefDarkTheme", false);
+        accentColor = settings.getInt("prefAccent", 2);
     }
 
     @Override
@@ -96,6 +160,7 @@ public class ThemeSettings extends PreferenceActivity{
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("prefColoriseUnfinishedGames", colorise);
         editor.putBoolean("prefDarkTheme", darkTheme);
+        editor.putInt("prefAccent", accentColor);
 
         editor.apply();
 
@@ -137,14 +202,6 @@ public class ThemeSettings extends PreferenceActivity{
                 .unregisterOnSharedPreferenceChangeListener(listener);
     }
 
-
-    private void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
-
-    private void getSupportActionBar() {
-        getDelegate().getSupportActionBar();
-    }
 
     private AppCompatDelegate getDelegate() {
         if (mDelegate == null) {

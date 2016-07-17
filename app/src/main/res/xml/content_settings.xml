@@ -4,14 +4,6 @@
     android:layout_width="match_parent"
     >
 
-    <SwitchPreference
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="Run in the background"
-        android:summary="Run the game in the background if you leave the app"
-        android:enabled="false"
-        android:key="prefRunInBackground"/>
-
     <ListPreference android:title="Number of games on Homepage"
         android:summary="The number of recent games to show on the homepage"
         android:key="prefNumGames"

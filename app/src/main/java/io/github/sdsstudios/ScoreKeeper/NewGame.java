@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,19 +67,51 @@ public class NewGame extends AppCompatActivity
     static final String STATE_PLAYERS = "playersArray";
     static final String STATE_PLAYER_NAME = "player";
     static final String STATE_TIME = "time";
-    static final String STATE_GAMEID = "gameid";
     private String defaultTitle;
     public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
     private RecyclerViewArrayAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
+    static final String STATE_GAMEID = "gameID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null){
+            loadActivity(savedInstanceState);
+        }else{
+            loadActivity(savedInstanceState);
+
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        stop = false;
+        dbHelper.open();
+        dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
+        createScoreArray();
+        dbHelper.close();
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
+        Log.e(TAG, String.valueOf(players) + " onsavedinstancestae");
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void loadActivity(Bundle savedInstanceState){
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        if (colorNavBar){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+        }
         setTheme(accentColor);
         setContentView(R.layout.activity_new_game);
         getSupportActionBar();
@@ -89,41 +122,84 @@ public class NewGame extends AppCompatActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
+        dbHelper = new ScoreDBAdapter(this);
+        dataHelper = new DataHelper();
+        String timeLimit = sharedPreferences.getString("timelimitarray", null);
+        String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
+
+        if (timeLimit != null && timeLimitnum !=null) {
+
+            timeLimitArray = dataHelper.convertToArray(timeLimit);
+            timeLimitArrayNum = dataHelper.convertToArray(timeLimitnum);
+        }else{
+            timeLimitArray = new ArrayList();
+            timeLimitArray.add(0, "Create...");
+
+            timeLimitArrayNum = new ArrayList();
+            timeLimitArrayNum.add(0, "Create...");
+            dataHelper.saveSharedPrefs(timeLimitArray, timeLimitArrayNum, this);
+
+        }
 
         relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
         spinnerPreset = (Spinner)findViewById(R.id.spinnerPreset);
 
+        checkBoxNoTimeLimit = (CheckBox) findViewById(R.id.checkBoxNoTimeLimit);
+        checkBoxNoTimeLimit.setOnClickListener(this);
+        checkBoxNoTimeLimit.setChecked(false);
+
         buttonCreatePreset = (Button)findViewById(R.id.buttonCreatePreset);
         buttonCreatePreset.setOnClickListener(this);
         buttonCreatePreset.setVisibility(View.VISIBLE);
 
         presetDBAdapter = new PresetDBAdapter(this);
-        dbHelper = new ScoreDBAdapter(this);
 
-        dbHelper.open();
-        dbHelper.createGame(players, time, score, 0, timeLimit);
-        gameID = dbHelper.getNewestGame();
-        dbHelper.close();
-
-        dataHelper = new DataHelper();
         homeIntent = new Intent(this, Home.class);
-
         playerList = (RecyclerView)findViewById(R.id.playerList);
+
+        if (savedInstanceState != null){
+            dbHelper.open();
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            players = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+            score = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+            timeLimit = dataHelper.getStringById( gameID,ScoreDBAdapter.KEY_TIMER, dbHelper);
+            dbHelper.open();
+            dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+            dbHelper.close();
+            if (timeLimit== null){
+                checkBoxNoTimeLimit.setChecked(false);
+                spinnerTimeLimit.setVisibility(View.INVISIBLE);
+            }else{
+                checkBoxNoTimeLimit.setChecked(true);
+                spinnerTimeLimit.setVisibility(View.VISIBLE);
+                spinnerTimeLimit.setSelection(timeLimitArray.indexOf(timeLimit));
+
+            }
+            dbHelper.updateGame(players, null, ScoreDBAdapter.KEY_PLAYERS, gameID);
+            Log.e(TAG, String.valueOf(players));
+            displayRecyclerView(players);
+            dbHelper.close();
+        }else{
+            dbHelper.open();
+            dbHelper.createGame(players, time, score, 0, timeLimit);
+            gameID = dbHelper.getNewestGame();
+            dbHelper.close();
+            spinnerTimeLimit.setVisibility(View.INVISIBLE);
+            displayRecyclerView(players);
+            timeLimit = null;
+            dbHelper.open();
+            dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
+            dbHelper.close();
+        }
+
 
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
 
-        checkBoxNoTimeLimit = (CheckBox) findViewById(R.id.checkBoxNoTimeLimit);
-        checkBoxNoTimeLimit.setOnClickListener(this);
-        checkBoxNoTimeLimit.setChecked(false);
 
-        spinnerTimeLimit.setEnabled(false);
-        timeLimit = null;
-        dbHelper.open();
-        dbHelper.updateGame(null, timeLimit, ScoreDBAdapter.KEY_TIMER, gameID);
-        dbHelper.close();
+
 
         buttonQuit = (Button)findViewById(R.id.buttonQuit);
         buttonQuit.setOnClickListener(this);
@@ -133,23 +209,12 @@ public class NewGame extends AppCompatActivity
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
 
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            players = savedInstanceState.getStringArrayList(STATE_PLAYERS);
-            gameID = savedInstanceState.getInt(STATE_GAMEID);
-            time = savedInstanceState.getString(STATE_TIME);
-            player = savedInstanceState.getString(STATE_PLAYER_NAME);
-            displayRecyclerView(players);
-        } else {
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-            Date now = new Date();
-            time = sdfDate.format(now);
-            dbHelper.open();
-            dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
-            dbHelper.close();
-            players = new ArrayList<>();
-            displayRecyclerView(players);
-        }
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        time = sdfDate.format(now);
+        dbHelper.open();
+        dbHelper.updateGame(null, time, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.close();
 
         editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -168,25 +233,7 @@ public class NewGame extends AppCompatActivity
 
         //Shared Preferences stuff
 
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        String timeLimit = sharedPreferences.getString("timelimitarray", null);
-        String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
 
-        if (timeLimit != null && timeLimitnum !=null) {
-
-            timeLimitArray = dataHelper.convertToArray(timeLimit);
-            timeLimitArrayNum = dataHelper.convertToArray(timeLimitnum);
-        }else{
-            timeLimitArray = new ArrayList();
-            timeLimitArray.add(0, "Create...");
-
-            timeLimitArrayNum = new ArrayList();
-            timeLimitArrayNum.add(0, "Create...");
-            dataHelper.saveSharedPrefs(timeLimitArray, timeLimitArrayNum, this);
-
-        }
-
-        spinnerTimeLimit.setVisibility(View.INVISIBLE);
         displaySpinner(true);
         displaySpinner(false);
     }
@@ -218,13 +265,11 @@ public class NewGame extends AppCompatActivity
                         loadGame(spinnerPreset.getSelectedItemPosition());
 
                     }else{
-                        reset();
                     }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
-                    reset();
 
                 }
             });
@@ -242,13 +287,6 @@ public class NewGame extends AppCompatActivity
         presetDBAdapter.close();
 
         updateEditText(presetPlayers, presetTimeLimit);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        dbHelper.open();
 
     }
 
@@ -371,21 +409,6 @@ public class NewGame extends AppCompatActivity
         super.onPause();
         dbHelper.close();
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-
-        if (gameID != null) {
-            savedInstanceState.putInt(STATE_GAMEID, gameID);
-            savedInstanceState.putStringArrayList(STATE_PLAYERS, players);
-            savedInstanceState.putString(STATE_PLAYER_NAME, player);
-            savedInstanceState.putString(STATE_TIME, time);
-        }
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -729,9 +752,17 @@ public class NewGame extends AppCompatActivity
         this.players = players;
         this.timeLimit = timeLimit;
         displayRecyclerView(players);
-        checkBoxNoTimeLimit.setChecked(true);
-        spinnerTimeLimit.setEnabled(true);
-        spinnerTimeLimit.setVisibility(View.VISIBLE);
+        if (timeLimit!=null) {
+            checkBoxNoTimeLimit.setChecked(true);
+            spinnerTimeLimit.setEnabled(true);
+            spinnerTimeLimit.setVisibility(View.VISIBLE);
+
+        }else{
+            checkBoxNoTimeLimit.setChecked(false);
+            spinnerTimeLimit.setVisibility(View.INVISIBLE);
+            spinnerTimeLimit.setEnabled(false);
+
+        }
         createScoreArray();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();

@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,8 +22,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -66,59 +63,112 @@ public class MainActivity extends AppCompatActivity
     private String timeLimitString = null;
     private boolean finished = false;
     private boolean classicTheme = false;
-
+    private boolean fullScreen = false;
     private View dialogView;
     private LayoutInflater inflter = null;
     private AlertDialog alertDialog;
     private boolean extend = false;
     long timeWhenStopped = 0;
     boolean isPaused = false;
+    private Toolbar toolbar;
+    private int primaryDarkColor;
 
     private SharedPreferences sharedPreferences;
 
     AlertDialog.Builder builder;
 
+    static final String STATE_GAMEID = "gameID";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
 
-        setTheme(accentColor);
-        if(classicTheme){
-            setContentView(R.layout.activity_main_classic);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+        Bundle extras = getIntent().getExtras();
+        gameID = extras.getInt("gameID");
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+            int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+            int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+             primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+            if (colorNavBar){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(primaryDarkColor);
+                }
             }
-        }else {
-            setContentView(R.layout.activity_main);
-            Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-            toolbar.setBackgroundColor(primaryColor);
-            setSupportActionBar(toolbar);
-            getSupportActionBar();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(primaryDarkColor);
+            setTheme(accentColor);
+            if(classicTheme){
+                setContentView(R.layout.activity_main_classic);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+                }
+            }else {
+                setContentView(R.layout.activity_main);
+                toolbar = (Toolbar)findViewById(R.id.toolbar);
+                toolbar.setBackgroundColor(primaryColor);
+                setSupportActionBar(toolbar);
+                getSupportActionBar();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(primaryDarkColor);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(primaryDarkColor);
+                }
             }
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            loadObjects();
+            loadGame();
+        } else {
+            sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+            int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+            int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+
+            setTheme(accentColor);
+            if(classicTheme){
+                setContentView(R.layout.activity_main_classic);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+                }
+            }else {
+                setContentView(R.layout.activity_main);
+                toolbar = (Toolbar)findViewById(R.id.toolbar);
+                toolbar.setBackgroundColor(primaryColor);
+                setSupportActionBar(toolbar);
+                getSupportActionBar();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor(primaryDarkColor);
+                }
+            }
+            loadObjects();
+            loadGame();
         }
 
+    }
+
+    public void loadObjects(){
         builder = new AlertDialog.Builder(this);
 
         dataHelper = new DataHelper();
         timeHelper = new TimeHelper();
 
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
-
         gameModel = new BigGameModel(dbHelper);
 
-        Bundle extras = getIntent().getExtras();
-        gameID = extras.getInt("gameID");
+        dbHelper = new ScoreDBAdapter(this);
+        dbHelper.open();
+    }
 
+    public void loadGame(){
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
 
         smallLayout = new SmallLayout();
@@ -216,7 +266,6 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("lastplayedgame", gameID);
         editor.apply();
-
     }
 
     private void timeLimitReached(Stopwatch chronometer){
@@ -233,6 +282,9 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         chronometerClick();
+        dbHelper.open();
+        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        dbHelper.close();
     }
 
     public void displayRecyclerView(){
@@ -302,7 +354,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                immersiveMode();
             }
         });
 
@@ -362,7 +413,6 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
-                    immersiveMode();
                 }
             });
 
@@ -373,45 +423,22 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_fullscreen) {
-            Toast.makeText(this, "Need to implement properly", Toast.LENGTH_SHORT);
-            immersiveMode();
+            fullScreen = !fullScreen;
+            fullScreen();
+
             }
 
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void immersiveMode(){
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void showSystemBars(){
-        getSupportActionBar().show();
-        Window w = this.getWindow();
-
-        w.setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-
-        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        immersive = !immersive;
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void hideSystemBars(){
-        getSupportActionBar().hide();
-        Window w = this.getWindow();
-        w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        immersive = !immersive;
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -427,7 +454,6 @@ public class MainActivity extends AppCompatActivity
         chronometerClick();
         dbHelper.open();
         dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-        gameModel.closeDB();
         dbHelper.close();
     }
 
@@ -484,7 +510,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        immersiveMode();
+        fullScreen = false;
+        fullScreen();
 
         if (!finished) {
             if (!isPaused) {
@@ -522,7 +549,6 @@ public class MainActivity extends AppCompatActivity
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
-                    immersiveMode();
                 }
             });
 
@@ -643,14 +669,12 @@ public class MainActivity extends AppCompatActivity
                                     bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
                                     bigGameList.setAdapter(bigGameAdapter);
                                     alertDialog.dismiss();
-                                    immersiveMode();
                                     fabChronometer.setEnabled(true);
                                     finished = false;
 
                                 } else {
                                     finished = true;
                                     alertDialog.dismiss();
-                                    immersiveMode();
                                 }
 
                             } catch (Exception e) {
@@ -662,7 +686,6 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 }else{
-                    immersiveMode();
                     dbHelper.open();
                     dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
@@ -671,6 +694,33 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    public void fullScreen() {
+        if (fullScreen) {
+            getSupportActionBar().hide();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+            }
+        }else{
+            getSupportActionBar().show();
+
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+
+        }
     }
 
     @Override

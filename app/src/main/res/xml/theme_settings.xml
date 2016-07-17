@@ -15,9 +15,17 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:title="Classic Scoreboard"
-        android:summary="Use a classic looking scoreboard when playing a game instead of Material Design"
+        android:summary="Use a classic scoreboard theme when playing a game instead of Material Design"
         android:enabled="true"
         android:key="prefClassicScoreboard"/>
+
+    <SwitchPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Color Navigation Bar"
+        android:summary="Apply primary color to navigation bar"
+        android:enabled="false"
+        android:key="prefColorNavBar"/>
 
     <Preference
         android:layout_height="wrap_content"
@@ -32,6 +40,13 @@
         android:title="Primary Color"
         android:enabled="true"
         android:key="prefPrimaryColor"/>
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Default Colors"
+        android:enabled="true"
+        android:key="prefDefaultTheme"/>
 
 </PreferenceScreen>
 

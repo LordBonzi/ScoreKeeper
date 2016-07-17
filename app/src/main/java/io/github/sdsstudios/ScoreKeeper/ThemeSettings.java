@@ -26,7 +26,7 @@ public class ThemeSettings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
-    private Preference  darkThemePreference, accentPreference, primaryPreference, classicPreference;
+    private Preference  darkThemePreference, accentPreference, primaryPreference, classicPreference, defaultThemePreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     private boolean darkTheme, classicTheme;
     private int accentColor, primaryColor, primaryDarkColor;
@@ -35,7 +35,6 @@ public class ThemeSettings extends PreferenceActivity{
     int[] primaryDarkColors = {};
     int index;
     int oldColorIndex;
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,6 +67,7 @@ public class ThemeSettings extends PreferenceActivity{
         accentPreference = findPreference("prefAccentColor");
         primaryPreference = findPreference("prefPrimaryColor");
         classicPreference = findPreference("prefClassicScoreboard");
+        defaultThemePreference = findPreference("prefDefaultTheme");
 
         settingsIntent = new Intent(this, Settings.class);
 
@@ -82,6 +82,24 @@ public class ThemeSettings extends PreferenceActivity{
                 getResources().getColor(R.color.accentBlue)
 
         };
+        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        darkTheme = settings.getBoolean("prefDarkTheme", false);
+        accentColor = settings.getInt("prefAccent", colors[1]);
+
+
+        defaultThemePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                accentColor = colors[1];
+                primaryColor = getPrimaryColors()[0];
+                primaryDarkColor = getPrimaryDarkColors()[0];
+                saveInfo();
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return true;
+            }
+        });
 
         darkThemePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -223,9 +241,7 @@ public class ThemeSettings extends PreferenceActivity{
         });
 
         //Shared prefs stuff
-        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        darkTheme = settings.getBoolean("prefDarkTheme", false);
-        accentColor = settings.getInt("prefAccent", colors[1]);
+
     }
 
     public int[] getPrimaryColors(){

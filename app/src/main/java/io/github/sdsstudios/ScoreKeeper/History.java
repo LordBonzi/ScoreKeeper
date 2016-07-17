@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,11 +45,18 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         setTheme(accentColor);
         setContentView(R.layout.activity_history);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(primaryDarkColor);
+        }
+        getSupportActionBar();
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         dbHelper = new ScoreDBAdapter(this).open();
         dataHelper = new DataHelper();
         newGameIntent = new Intent(this, NewGame.class);

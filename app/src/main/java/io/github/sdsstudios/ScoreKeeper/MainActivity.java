@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -15,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private BigGameModel gameModel;
     private String timeLimitString = null;
     private boolean finished = false;
+    private boolean classicTheme = false;
 
     private View dialogView;
     private LayoutInflater inflter = null;
@@ -72,8 +76,6 @@ public class MainActivity extends AppCompatActivity
 
     private SharedPreferences sharedPreferences;
 
-    private
-
     AlertDialog.Builder builder;
 
     @Override
@@ -81,9 +83,28 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+
         setTheme(accentColor);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(classicTheme){
+            setContentView(R.layout.activity_main_classic);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+            }
+        }else {
+            setContentView(R.layout.activity_main);
+            Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+            toolbar.setBackgroundColor(primaryColor);
+            setSupportActionBar(toolbar);
+            getSupportActionBar();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(primaryDarkColor);
+            }
+        }
 
         builder = new AlertDialog.Builder(this);
 
@@ -179,11 +200,23 @@ public class MainActivity extends AppCompatActivity
             snackbar.show();
         }
 
+        if(classicTheme){
+            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
+
+            // Applying font
+            textViewP1.setTypeface(tf);
+            textViewP2.setTypeface(tf);
+            stopwatch.setTypeface(tf);
+            buttonP1.setTypeface(tf);
+            buttonP2.setTypeface(tf);
+        }
+
         stopwatch.setOnChronometerTickListener(this);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("lastplayedgame", gameID);
         editor.apply();
+
     }
 
     private void timeLimitReached(Stopwatch chronometer){

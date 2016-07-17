@@ -8,8 +8,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:versionCode="9"
-        android:versionName="0.9alpha">
+        android:versionCode="91"
+        android:versionName="0.9.1alpha">
 
         <activity
             android:name=".SplashActivity"
@@ -68,9 +68,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Report">
-
-        </activity>
     </application>
 
 </manifest>

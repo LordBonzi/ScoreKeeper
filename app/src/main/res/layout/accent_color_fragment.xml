@@ -12,7 +12,7 @@
     </GridView>
 
     <TextView
-        android:text="Select an accent color"
+        android:text="Select a color"
         android:layout_below="@+id/gridView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

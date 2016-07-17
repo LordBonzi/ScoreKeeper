@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#F5F5F5</item>
-        <item name="colorPrimaryDark">#E0E0E0</item>
+        <item name="colorPrimary">@color/primaryIndigo</item>
+        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="windowActionModeOverlay">true</item>
@@ -17,10 +17,10 @@
         <item name="buttonBackground">@color/button_background</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat">
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#000</item>
+        <item name="colorPrimary">@color/primaryIndigo</item>
+        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
@@ -30,6 +30,62 @@
         <item name="textColor">@color/darkTextColor</item>
         <item name="buttonBackground">@color/dark_button_background</item>
     </style>
+
+    <style name="Primary_Indigo" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryIndigo</item>
+        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
+    </style>
+
+    <style name="Primary_Red" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryRed</item>
+        <item name="colorPrimaryDark">@color/primaryRedDark</item>
+    </style>
+
+    <style name="Primary_Purple" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryPurple</item>
+        <item name="colorPrimaryDark">@color/primaryPurpleDark</item>
+    </style>
+
+    <style name="Primary_Teal" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryTeal</item>
+        <item name="colorPrimaryDark">@color/primaryTealDark</item>
+    </style>
+
+
+    <style name="Primary_Orange" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryOrange</item>
+        <item name="colorPrimaryDark">@color/primaryOrangeDark</item>
+    </style>
+
+    <style name="Primary_Grey" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#000</item>
+    </style>
+
+    <style name="Primary_White" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#F5F5F5</item>
+        <item name="colorPrimaryDark">#E0E0E0</item>
+    </style>
+
+    <style name="Primary_Blue" parent="DarkTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryDark">@color/primaryBlueDark</item>
+    </style>
+
+
+
+
+
+
+
 
     <style name="DarkTheme_Grey" parent="DarkTheme">
         <!-- Customize your theme here. -->

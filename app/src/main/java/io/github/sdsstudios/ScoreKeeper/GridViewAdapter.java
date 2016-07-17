@@ -15,13 +15,16 @@ import android.widget.ImageView;
 public class GridViewAdapter extends BaseAdapter {
     private Context context;
     private int selected;
-    private final int[] colors;
+    private final int[] colors, rawColors;
+    private boolean accent;
 
 
-    public GridViewAdapter(Context context, int selected, int[] colors){
+    public GridViewAdapter(Context context, int selected, int[] colors, int[] rawColors, boolean accents){
         this.context = context;
         this.selected = selected;
         this.colors = colors;
+        this.rawColors = rawColors;
+        accent=accents;
     }
 
     @Override
@@ -46,17 +49,6 @@ public class GridViewAdapter extends BaseAdapter {
         View gridView = inflater.inflate(R.layout.accent_color_item, null);
         ImageView itemView = (ImageView) gridView.findViewById(R.id.accentColorView);
 
-        int[] rawColors = new int[] {
-                context.getResources().getColor(R.color.accentGrey),
-                context.getResources().getColor(R.color.accentPink),
-                context.getResources().getColor(R.color.accentYellow),
-                context.getResources().getColor(R.color.accentGreen),
-                context.getResources().getColor(R.color.accentRed),
-                context.getResources().getColor(R.color.accentPurple),
-                context.getResources().getColor(R.color.accentOrange),
-                context.getResources().getColor(R.color.accentBlue)
-
-        };
 
 
         itemView.setScaleType(ImageView.ScaleType.CENTER);
@@ -75,7 +67,13 @@ public class GridViewAdapter extends BaseAdapter {
                 selected = position+1;
                 SharedPreferences sharedPreferences = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("prefAccent", colors[selected-1]);
+
+                if (accent) {
+                    editor.putInt("prefAccent", colors[selected - 1]);
+                }else{
+                    editor.putInt("prefPrimaryColor", colors[selected - 1]);
+                    editor.putInt("prefPrimaryDarkColor", rawColors[selected - 1]);
+                }
 
                 editor.apply();
                 notifyDataSetChanged();

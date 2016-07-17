@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:title="Color Navigation Bar"
         android:summary="Apply primary color to navigation bar"
-        android:enabled="true"
+        android:enabled="false"
         android:key="prefColorNavBar"/>
 
     <Preference

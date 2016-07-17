@@ -36,7 +36,6 @@
     <color name="accentPurple">#9575CD</color>
     <color name="accentBlue">#448AFF</color>
 
-
     <color name="primaryIndigo">@color/colorPrimary</color>
     <color name="primaryIndigoDark">@color/colorPrimaryDark</color>
 
@@ -60,8 +59,8 @@
     <color name="primaryGreyDark">#000000</color>
 
 
-    <color name="primaryWhite">#F5F5F5</color>
-    <color name="primaryWhiteDark">#E0E0E0</color>
+    <color name="primaryWhite">#689F38</color>
+    <color name="primaryWhiteDark">#33691E</color>
 
 
     <color name="primaryBlue">#1976D2</color>

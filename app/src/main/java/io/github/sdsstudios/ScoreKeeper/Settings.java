@@ -39,6 +39,12 @@ public class Settings extends PreferenceActivity{
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        if (colorNavBar){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+        }
         setTheme(accentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);

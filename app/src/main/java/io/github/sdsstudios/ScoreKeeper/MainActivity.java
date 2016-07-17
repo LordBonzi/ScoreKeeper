@@ -95,7 +95,12 @@ public class MainActivity extends AppCompatActivity
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
              primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
-
+            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+            if (colorNavBar){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(primaryDarkColor);
+                }
+            }
             setTheme(accentColor);
             if(classicTheme){
                 setContentView(R.layout.activity_main_classic);

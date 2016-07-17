@@ -54,9 +54,11 @@
             android:textColor="#fcd943"
             android:text="100"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/buttonChronometer"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/fabChronometer"
+            android:layout_alignRight="@+id/textViewP1"
+            android:layout_alignEnd="@+id/textViewP1" />
 
         <Button
             android:id="@+id/buttonP2"
@@ -69,9 +71,10 @@
             android:text="100"
             android:layout_alignBaseline="@+id/buttonP1"
             android:layout_alignBottom="@+id/buttonP1"
-            android:layout_toRightOf="@+id/buttonChronometer"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/textViewP2"
+            android:layout_alignStart="@+id/textViewP2" />
 
         <TextView
             android:id="@+id/textViewP1"
@@ -83,7 +86,6 @@
             android:textColor="#fff"
             android:text="Seth"
             android:background="@drawable/classic_scoreboard_background"
-
             android:minWidth="200dp"
             android:textSize="50sp"
             android:layout_marginTop="40dp"

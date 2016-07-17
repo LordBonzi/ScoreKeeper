@@ -70,7 +70,6 @@
     <item
         android:id="@+id/action_fullscreen"
         android:orderInCategory="1000"
-        android:enabled="false"
         android:title="@string/fullscreen"
         android:visible="false"
         app:showAsAction="never"/>

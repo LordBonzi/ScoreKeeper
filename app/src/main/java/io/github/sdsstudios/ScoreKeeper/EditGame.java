@@ -8,16 +8,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,10 @@ public class EditGame extends AppCompatActivity {
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
     int accentColor;
 
-    private MenuItem menuItemDelete, menuItemGraph, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd;
+    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd, menuItemShare;
+    private ShareActionProvider mShareActionProvider;
+    private Intent mShareIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,16 +105,28 @@ public class EditGame extends AppCompatActivity {
         menuItemDelete = menu.findItem(R.id.action_delete);
         menuItemDone = menu.findItem(R.id.action_done);
         menuItemEdit = menu.findItem(R.id.action_edit);
-        menuItemGraph = menu.findItem(R.id.action_graph);
         menuItemCancel = menu.findItem(R.id.action_cancel);
         menuItemAdd = menu.findItem(R.id.action_add);
+        menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
         menu.findItem(R.id.action_delete).setVisible(true);
-        menu.findItem(R.id.action_graph).setVisible(true);
         menu.findItem(R.id.action_edit).setVisible(true);
         menu.findItem(R.id.action_settings).setVisible(false);
+
+       createShareIntent();
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
+        mShareActionProvider.setShareIntent(mShareIntent);
         return true;
     }
+
+    public void createShareIntent(){
+        mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("text/plain");
+        mShareIntent.putExtra(Intent.EXTRA_TEXT, "");
+    }
+
 
     @Override
     protected void onResume() {
@@ -140,9 +156,6 @@ public class EditGame extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
             delete();
-        } else if (id == R.id.action_graph) {
-            Toast toast = Toast.makeText(this, R.string.graph_coming_soon, Toast.LENGTH_LONG);
-            toast.show();
 
         } else if (id == R.id.action_edit) {
             onMenuEditClick();
@@ -166,10 +179,11 @@ public class EditGame extends AppCompatActivity {
 
         menuItemAdd.setVisible(true);
         menuItemDelete.setVisible(false);
-        menuItemGraph.setVisible(false);
         menuItemEdit.setVisible(false);
         menuItemDone.setVisible(true);
         menuItemCancel.setVisible(true);
+        menuItemShare.setVisible(false);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
@@ -247,10 +261,10 @@ public class EditGame extends AppCompatActivity {
                     editTextDate.setEnabled(false);
                     menuItemAdd.setVisible(false);
                     menuItemDelete.setVisible(true);
-                    menuItemGraph.setVisible(true);
                     menuItemDone.setVisible(false);
                     menuItemEdit.setVisible(true);
                     menuItemCancel.setVisible(false);
+                    menuItemShare.setVisible(true);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     dbHelper.close();
                 }
@@ -303,11 +317,11 @@ public class EditGame extends AppCompatActivity {
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
         menuItemDelete.setVisible(true);
-        menuItemGraph.setVisible(true);
         menuItemDone.setVisible(false);
         menuItemEdit.setVisible(true);
         menuItemAdd.setVisible(false);
         menuItemCancel.setVisible(false);
+        menuItemShare.setVisible(true);
 
         displayRecyclerView(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

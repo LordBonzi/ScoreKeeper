@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class Settings extends PreferenceActivity{
@@ -51,6 +52,9 @@ public class Settings extends PreferenceActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
         addPreferencesFromResource(R.xml.content_settings);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);

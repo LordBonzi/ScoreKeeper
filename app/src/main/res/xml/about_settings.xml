@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/version"
+        android:summary="@string/app_version"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/developers"
+        android:key="prefDevelopers"
+
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/translators"
+        android:key="prefTranslators"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/changelog"
+        android:key="prefChangelog"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/googlecommunity"
+        android:key="prefCommunity"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/rate_the_app"
+        android:key="prefRate"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/github"
+        android:key="prefGithub"
+        />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/opensourcelicenses"
+        android:key="prefLicense"
+        />
+</PreferenceScreen>
+
+

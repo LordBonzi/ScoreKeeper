@@ -29,6 +29,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 
 
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity
              primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-            if (colorNavBar){
+            if (colorNavBar && !classicTheme){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setNavigationBarColor(primaryDarkColor);
                 }
@@ -122,6 +124,10 @@ public class MainActivity extends AppCompatActivity
                     getWindow().setNavigationBarColor(primaryDarkColor);
                 }
             }
+            AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+            AdCreator adCreator = new AdCreator(mAdView, this);
+            adCreator.createAd();
+
             gameID = savedInstanceState.getInt(STATE_GAMEID);
             loadObjects();
             loadGame();
@@ -712,7 +718,9 @@ public class MainActivity extends AppCompatActivity
 
             }
         }else{
-            getSupportActionBar().show();
+            if (!classicTheme) {
+                getSupportActionBar().show();
+            }
 
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE

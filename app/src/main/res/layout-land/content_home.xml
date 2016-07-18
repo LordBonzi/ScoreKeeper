@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="io.github.sdsstudios.ScoreKeeper.Home">
 
@@ -97,10 +98,19 @@
         android:text="More"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/adViewHome"
         android:id="@+id/buttonMore"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/homeRecyclerView"
         android:layout_alignStart="@+id/homeRecyclerView" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>

@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">0.9.2alpha</string>
+    <string name="app_version">v1.0 Beta 1</string>
+    <string name="versionCode">1</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
     <string name="edit_game_question">Change Game?</string>
     <string name="player_s_name">Player\'s name</string>
     <string name="add_player">Add Player</string>
-    <string name="_0">0</string>
+    <string name="_0" translatable="false">0</string>
     <string name="date">Date:</string>
     <string name="message">Message</string>
     <string name="report">Report</string>
@@ -20,10 +21,10 @@
     <string name="loser">Loser:</string>
     <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
-    <string name="about_page_info">This is the info page of ScoreKeeper.
-        \n If you encounter any problems, feel free to submit them to our github.
-        \n https://github.com/SDS-Studios/ScoreKeeper
-        \n\n For donate options put a joke about my age and beer
+    <string name="about_page_info">
+        \n If you encounter any problems, feel free to submit themtoo our GitHub repository.
+        \n Feel free to create pull requests and improve our code.
+        \n Please rate and review Score Keeper in the Play Store.
     </string>
     <string name="github">Our Github</string>
     <string name="delete_all_games">Delete All Games</string>
@@ -103,20 +104,12 @@
         <item name="5">5</item>
     </string-array>
 
-        <string name="hello_world">Hello world!</string>
-        <string name="done">Done</string>
-        <string name="menu_settings">Settings</string>
-        <string name="title_activity_main">MainActivity</string>
-
-        <string name="pref_send_report">Send crash reports</string>
-        <string name="pref_send_report_summary">Helps to fix bugs</string>
-        <string name="pref_sync_frequency">Sync frequency</string>
-        <string name="pref_sync_frequency_summary">Set the sync frequency</string>
-        <string name="pref_user_name">Set username</string>
-        <string name="pref_user_name_summary">Set your username</string>
-
-        <string name="pref_user_profile">User Profile</string>
-        <string name="pref_update_setting">Update Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="done">Done</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="pref_user_profile">User Profile</string>
+    <string name="pref_update_setting">Update Settings</string>
     <string name="no_time_limit">Time Limit</string>
     <string name="fullscreen">Fullscreen</string>
     <string name="preset_title">Preset:</string>
@@ -132,6 +125,13 @@
     <string name="themes">Themes</string>
     <string name="_default">Default</string>
     <string name="okay">OK</string>
+    <string name="version">Version</string>
+    <string name="developers">Developers</string>
+    <string name="translators">Translators</string>
+    <string name="changelog">Changelog</string>
+    <string name="googlecommunity">Google+ Community</string>
+    <string name="rate_the_app">Rate and Review</string>
+    <string name="opensourcelicenses">Open Source Licenses</string>
 
 
 </resources>

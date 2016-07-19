@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
@@ -41,23 +42,19 @@ public class MainActivity extends AppCompatActivity
     public static Button buttonP1;
     public static Button buttonP2;
     public static boolean firstTime = true;
-    FloatingActionButton fabChronometer;
-    TextView textViewP1;
-    TextView textViewP2;
-    RecyclerView bigGameList;
+    private FloatingActionButton fabChronometer;
+    private RecyclerView bigGameList;
     String TAG = "MainActivity.class";
     private String time;
-    int gameSize;
-    RelativeLayout normal, big;
-    ArrayList playersArray;
-    ArrayList scoresArray;
+    private int gameSize;
+    private ArrayList playersArray;
+    private ArrayList scoresArray;
     public static DataHelper dataHelper;
-    SmallLayout smallLayout;
-    Intent homeIntent;
+    private SmallLayout smallLayout;
+    private Intent homeIntent;
     ScoreDBAdapter dbHelper;
     private boolean immersive = false;
     private RecyclerView.Adapter bigGameAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private Stopwatch stopwatch;
     private TimeHelper timeHelper;
     private ArrayList<BigGameModel> bigGameModels;
@@ -70,16 +67,14 @@ public class MainActivity extends AppCompatActivity
     private LayoutInflater inflter = null;
     private AlertDialog alertDialog;
     private boolean extend = false;
-    long timeWhenStopped = 0;
-    boolean isPaused = false;
-    private Toolbar toolbar;
-    private int primaryDarkColor;
-
+    private long timeWhenStopped = 0;
+    private boolean isPaused = false;
+    private MenuItem menuItemDiceNum;
     private SharedPreferences sharedPreferences;
 
-    AlertDialog.Builder builder;
+    private AlertDialog.Builder builder;
 
-    static final String STATE_GAMEID = "gameID";
+    private static final String STATE_GAMEID = "gameID";
 
 
     @Override
@@ -90,12 +85,13 @@ public class MainActivity extends AppCompatActivity
         gameID = extras.getInt("gameID");
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 
+        Toolbar toolbar;
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-             primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
             if (colorNavBar && !classicTheme){
@@ -191,13 +187,13 @@ public class MainActivity extends AppCompatActivity
 
         stopwatch = new Stopwatch(this);
 
-        textViewP1 = (TextView) findViewById(R.id.textViewP1);
-        textViewP2 = (TextView) findViewById(R.id.textViewP2);
+        TextView textViewP1 = (TextView) findViewById(R.id.textViewP1);
+        TextView textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
         bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
 
-        normal = (RelativeLayout) findViewById(R.id.layoutNormal);
-        big = (RelativeLayout) findViewById(R.id.layoutBig);
+        RelativeLayout normal = (RelativeLayout) findViewById(R.id.layoutNormal);
+        RelativeLayout big = (RelativeLayout) findViewById(R.id.layoutBig);
 
         playersArray = new ArrayList();
         playersArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -294,7 +290,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void displayRecyclerView(){
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         bigGameList.setLayoutManager(mLayoutManager);
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
@@ -310,6 +306,8 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.action_about).setVisible(true);
         menu.findItem(R.id.action_reset).setVisible(true);
         menu.findItem(R.id.action_fullscreen).setVisible(true);
+        menu.findItem(R.id.action_dice).setVisible(true);
+        menuItemDiceNum = menu.findItem(R.id.action_dice_num);
         return true;
     }
 
@@ -434,8 +432,24 @@ public class MainActivity extends AppCompatActivity
 
             }
 
+        if (id == R.id.action_dice) {
+            if (!menuItemDiceNum.isVisible()){
+                menuItemDiceNum.setVisible(true);
+                Random rand = new Random();
+                int randomNum = rand.nextInt((6 - 1) + 1) + 1;
+                menuItemDiceNum.setTitle(String.valueOf(randomNum));
+            }
+                Random rand = new Random();
+                int randomNum = rand.nextInt((6 - 1) + 1) + 1;
+                menuItemDiceNum.setTitle(String.valueOf(randomNum));
+            }
+
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void diceClick(){
+
     }
 
     @Override

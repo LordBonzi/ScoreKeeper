@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:text="Seth Schroeder"
+        android:text="sds1612"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -38,7 +38,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Built the website and helped Seth along the way by suggesting improvements to the app."
+        android:text="Built the website and helped sds1612 along the way by suggesting improvements to the app."
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_below="@+id/textView4"
         android:layout_alignLeft="@+id/textView"
@@ -49,7 +49,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Alfie Foster"
+        android:text="alfster2012"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:layout_below="@+id/view"

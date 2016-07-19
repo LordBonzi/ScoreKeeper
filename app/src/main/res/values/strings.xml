@@ -10,6 +10,7 @@
     <string name="add_player">Add Player</string>
     <string name="_0" translatable="false">0</string>
     <string name="date">Date:</string>
+    <string name="dice">Dice</string>
     <string name="message">Message</string>
     <string name="report">Report</string>
     <string name="start_game">Start Game</string>
@@ -132,6 +133,7 @@
     <string name="googlecommunity">Google+ Community</string>
     <string name="rate_the_app">Rate and Review</string>
     <string name="opensourcelicenses">Open Source Licenses</string>
+    <string name="max_num_on_dice">Maximum number on dice</string>
 
 
 </resources>

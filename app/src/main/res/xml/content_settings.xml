@@ -41,6 +41,15 @@
 
     </PreferenceCategory>
 
+    <EditTextPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/max_num_on_dice"
+        android:enabled="false"
+        android:summary="Is this necessary?"
+        android:key="prefDeleteTimeLimit"
+        />
+
 
 </PreferenceScreen>
 

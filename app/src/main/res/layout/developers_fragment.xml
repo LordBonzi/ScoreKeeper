@@ -75,8 +75,7 @@
         android:layout_below="@+id/textView3"
         android:layout_toRightOf="@+id/sethGoogleButton"
         android:layout_toEndOf="@+id/sethGoogleButton"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp" />
+/>
 
     <Button
         android:layout_width="wrap_content"
@@ -85,9 +84,8 @@
         android:id="@+id/sethEmailButton"
         android:layout_below="@+id/textView3"
         android:layout_toRightOf="@+id/sethGithubButton"
-        android:layout_toEndOf="@+id/sethGithubButton"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp" />
+        android:layout_toEndOf="@+id/sethGithubButton"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,9 +93,7 @@
         android:id="@+id/alfieEmailButton"
         android:layout_below="@+id/textView5"
         android:layout_toRightOf="@+id/alfieGithubButton"
-        android:layout_toEndOf="@+id/alfieGithubButton"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp" />
+        android:layout_toEndOf="@+id/alfieGithubButton" />
 
     <Button
         android:layout_width="wrap_content"

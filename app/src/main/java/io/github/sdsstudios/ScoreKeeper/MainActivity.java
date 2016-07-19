@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
     private boolean isPaused = false;
     private MenuItem menuItemDiceNum;
     private SharedPreferences sharedPreferences;
+    private int maxNumDice;
 
     private AlertDialog.Builder builder;
 
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
             if (colorNavBar && !classicTheme){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
+
 
             setTheme(accentColor);
             if(classicTheme){
@@ -303,7 +307,6 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
-        menu.findItem(R.id.action_about).setVisible(true);
         menu.findItem(R.id.action_reset).setVisible(true);
         menu.findItem(R.id.action_fullscreen).setVisible(true);
         menu.findItem(R.id.action_dice).setVisible(true);
@@ -436,11 +439,11 @@ public class MainActivity extends AppCompatActivity
             if (!menuItemDiceNum.isVisible()){
                 menuItemDiceNum.setVisible(true);
                 Random rand = new Random();
-                int randomNum = rand.nextInt((6 - 1) + 1) + 1;
+                int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
                 menuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
                 Random rand = new Random();
-                int randomNum = rand.nextInt((6 - 1) + 1) + 1;
+                int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
                 menuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
 

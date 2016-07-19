@@ -25,18 +25,20 @@ public class Settings extends PreferenceActivity{
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
-    private SharedPreferences settings;
-    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference;
+    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference, maxNumOnDicePreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
     private boolean colorise;
     private String numGamesToShow;
+    private SharedPreferences sharedPreferences;
+    private int maxNumDice;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
@@ -69,10 +71,20 @@ public class Settings extends PreferenceActivity{
         timeLimitPreference = findPreference("prefDeleteTimeLimit");
         numGamesPreference = findPreference("prefNumGames");
         themesPreference = findPreference("prefThemes");
+        maxNumOnDicePreference = findPreference("prefDiceMaxNum");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        maxNumOnDicePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                maxNumDice = Integer.valueOf(o.toString());
+                saveInfo();
+                return true;
+            }
+        });
 
         deletePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -133,8 +145,7 @@ public class Settings extends PreferenceActivity{
 
         //Shared prefs stuff
 
-        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        numGamesToShow = settings.getString("numgamestoshow", "3");
+        numGamesToShow = sharedPreferences.getString("numgamestoshow", "3");
 
     }
     private void setSupportActionBar(@Nullable Toolbar toolbar) {
@@ -165,10 +176,10 @@ public class Settings extends PreferenceActivity{
     }
 
     private void saveInfo(){
-        SharedPreferences.Editor editor = settings.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("numgamestoshow", numGamesToShow);
+        editor.putInt("maxNumDice", maxNumDice);
         editor.apply();
-
     }
 
     @Override

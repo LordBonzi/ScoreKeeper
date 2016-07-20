@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.0 Beta 3</string>
-    <string name="versionCode">3</string>
+    <string name="app_version">v1.0 Beta 4</string>
+    <string name="versionCode">4</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
@@ -138,6 +138,7 @@
     <string name="max_score">Winning Score (optional)</string>
     <string name="reverse_scoring">Reverse Scoring</string>
     <string name="has_won">has won</string>
+    <string name="score_interval">Score Interval</string>
 
 
 </resources>

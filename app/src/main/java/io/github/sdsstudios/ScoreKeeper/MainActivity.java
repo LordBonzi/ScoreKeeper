@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean isWon = false;
     private String winner;
+    private int scoreInterval;
     public static int gameID;
     private Button buttonP1;
     private Button buttonP2;
@@ -182,6 +183,10 @@ public class MainActivity extends AppCompatActivity
     public void loadGame(){
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
         maxScore = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
+        scoreInterval = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
+        if(scoreInterval == 0){
+            scoreInterval = 1;
+        }
         int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
         Log.e(TAG, String.valueOf(i));
         reverseScrolling = i == 1;
@@ -318,10 +323,9 @@ public class MainActivity extends AppCompatActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         scoresArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
         bigGameList.setLayoutManager(mLayoutManager);
-        Log.e(TAG, "playerarray " + String.valueOf(playersArray));
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling, scoreInterval);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -644,19 +648,18 @@ public class MainActivity extends AppCompatActivity
 
     public void onScoreButtonClick(Button button){
 
-        Log.e(TAG, String.valueOf(reverseScrolling));
         if (button == buttonP1) {
             if (reverseScrolling){
-                P1Score -= 1;
+                P1Score -= scoreInterval;
             }else {
-                P1Score += 1;
+                P1Score += scoreInterval;
             }
             button.setText(String.valueOf(P1Score));
         }else{
             if (reverseScrolling){
-                P2Score -= 1;
+                P2Score -= scoreInterval;
             }else {
-                P2Score += 1;
+                P2Score += scoreInterval;
             }
             button.setText(String.valueOf(P2Score));
         }
@@ -665,9 +668,8 @@ public class MainActivity extends AppCompatActivity
         }else{
             ft2 = false;
         }
-
         if (maxScore != 0) {
-            if (P1Score == maxScore || P2Score == maxScore) {
+            if (P1Score >= maxScore || P2Score >= maxScore) {
                 finished = true;
                 isPaused = true;
                 chronometerClick();
@@ -690,17 +692,17 @@ public class MainActivity extends AppCompatActivity
 
         if (button == buttonP1 && !ft1 && P1Score != 0){
             if (reverseScrolling){
-                P1Score += 1;
+                P1Score += scoreInterval;
             }else {
-                P1Score -= 1;
+                P1Score -= scoreInterval;
             }
 
             button.setText(String.valueOf(P1Score));
         }else if (button == buttonP2 && !ft2 && P2Score != 0){
             if (reverseScrolling){
-                P2Score += 1;
+                P2Score += scoreInterval;
             }else {
-                P2Score -= 1;
+                P2Score -= scoreInterval;
             }
             button.setText(String.valueOf(P2Score));
         }

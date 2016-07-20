@@ -210,11 +210,7 @@ public class DataHelper {
         dbHelper.open();
         Cursor cursor = dbHelper.fetchPresetById(i);
 
-        if (request.equals(PresetDBAdapter.KEY_MAX_SCORE)) {
-            index = cursor.getColumnIndex(PresetDBAdapter.KEY_MAX_SCORE);
-        } else if (request.equals(PresetDBAdapter.KEY_REVERSE_SCORING)) {
-            index = cursor.getColumnIndex(PresetDBAdapter.KEY_REVERSE_SCORING);
-        }
+        index = cursor.getColumnIndex(request);
 
         try {
             maxscore = cursor.getInt(index);

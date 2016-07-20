@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,7 +48,7 @@ public class NewGame extends AppCompatActivity
     private DataHelper dataHelper;
     private String time = null;
     private String TAG = "NewGame";
-    private EditText editTextPlayer, editTextMaxScore;
+    private EditText editTextPlayer, editTextMaxScore, editTextScoreInterval;
     private Button buttonNewGame, buttonAddPlayer, buttonQuit, buttonCreatePreset;
     private CheckBox checkBoxNoTimeLimit, checkBoxReverseScrolling;
     private RecyclerView playerList;
@@ -72,6 +73,7 @@ public class NewGame extends AppCompatActivity
     static final String STATE_GAMEID = "gameID";
     private int reverseScrolling = 0;
     private int maxScore = 0;
+    private int scoreInterval = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +193,7 @@ public class NewGame extends AppCompatActivity
             dbHelper.close();
         }else{
             dbHelper.open();
-            dbHelper.createGame(players, time, score, 0, timeLimit, maxScore, reverseScrolling);
+            dbHelper.createGame(players, time, score, 0, timeLimit, maxScore, reverseScrolling, scoreInterval);
             gameID = dbHelper.getNewestGame();
             dbHelper.close();
             spinnerTimeLimit.setVisibility(View.INVISIBLE);
@@ -213,6 +215,50 @@ public class NewGame extends AppCompatActivity
         buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
+        editTextScoreInterval = (EditText) findViewById(R.id.editTextScoreInterval);
+        editTextScoreInterval.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    scoreInterval= Integer.parseInt(charSequence.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    scoreInterval = 0;
+
+                }
+
+                dbHelper.open();
+                dbHelper.updateGame(null, null, scoreInterval, ScoreDBAdapter.KEY_SCORE_INTERVAL, gameID);
+                dbHelper.close();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try
+                {
+                    scoreInterval= Integer.parseInt(editable.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    scoreInterval = 0;
+                }
+                dbHelper.open();
+                dbHelper.updateGame(null, null, scoreInterval, ScoreDBAdapter.KEY_SCORE_INTERVAL, gameID);
+                dbHelper.close();
+            }
+        });
+
         editTextMaxScore = (EditText) findViewById(R.id.editTextMaxScore);
         editTextMaxScore.addTextChangedListener(new TextWatcher() {
             @Override
@@ -328,9 +374,10 @@ public class NewGame extends AppCompatActivity
         presetTimeLimit = dataHelper.getPresetStringByID(position, PresetDBAdapter.KEY_TIME_LIMIT, presetDBAdapter);
         int maxscore = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_MAX_SCORE, presetDBAdapter);
         int reversescrolling = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_REVERSE_SCORING, presetDBAdapter);
+        int scoreinterval = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_SCORE_INTERVAL, presetDBAdapter);
         presetDBAdapter.close();
 
-        updateEditText(presetPlayers, presetTimeLimit, maxscore, reversescrolling);
+        updateEditText(presetPlayers, presetTimeLimit, maxscore, reversescrolling, scoreinterval);
 
     }
 
@@ -379,6 +426,8 @@ public class NewGame extends AppCompatActivity
         checkBoxReverseScrolling.setChecked(false);
         editTextMaxScore.setText("");
         editTextMaxScore.setHint(getString(R.string.max_score));
+        editTextScoreInterval.setText("");
+        editTextScoreInterval.setHint(getString(R.string.score_interval));
         spinnerPreset.setSelection(0);
 
     }
@@ -801,16 +850,16 @@ public class NewGame extends AppCompatActivity
         if (spinnerTimeLimit.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
             presetDBAdapter.open();
             presetDBAdapter.createPreset(players, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString()
-                    , title, maxScore, reverseScrolling);
+                    , title, maxScore, reverseScrolling, scoreInterval);
             presetDBAdapter.close();
         }else{
-            presetDBAdapter.createPreset(players, timeLimit, title, maxScore, reverseScrolling);
+            presetDBAdapter.createPreset(players, timeLimit, title, maxScore, reverseScrolling, scoreInterval);
         }
         presetDBAdapter.close();
     }
 
     @Override
-    public void updateEditText(ArrayList players, String timeLimit, int maxScore, int reverseScrolling) {
+    public void updateEditText(ArrayList players, String timeLimit, int maxScore, int reverseScrolling, int scoreInterval) {
         this.players = players;
         this.timeLimit = timeLimit;
         displayRecyclerView(players);
@@ -825,7 +874,13 @@ public class NewGame extends AppCompatActivity
             spinnerTimeLimit.setEnabled(false);
         }
 
-        editTextMaxScore.setText(String.valueOf(maxScore));
+        if (maxScore != 0) {
+            editTextMaxScore.setText(String.valueOf(maxScore));
+        }
+        if (scoreInterval !=0) {
+            editTextScoreInterval.setText(String.valueOf(scoreInterval));
+        }
+
         if (reverseScrolling == 1){
             checkBoxReverseScrolling.setChecked(true);
         }else{

@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 
 public interface PresetListener {
-    void updateEditText(ArrayList players, String timeLimit, int maxscore, int reversescrolling);
+    void updateEditText(ArrayList players, String timeLimit, int maxscore, int reversescrolling, int scoreInterval);
 }

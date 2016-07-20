@@ -16,14 +16,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     ScoreDBAdapter dbHelper;
     ArrayList arrayListScore;
     int gameID;
-    private int maxScore;
+    private int maxScore, scoreInterval;
     private ArrayList<BigGameModel> mBigGameModel;
     private boolean enabled, reverseScrolling;
     private GameListener gameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter,
-                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling) {
+                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling, int scoreInterval) {
 
         mBigGameModel = myDataset;
         dbHelper =dbAdapter;
@@ -33,6 +33,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         this.maxScore = maxScore;
         this.gameListener = gameListener;
         this.reverseScrolling = reverseScrolling;
+        this.scoreInterval = scoreInterval;
     }
 
     // Create new views (invoked by the layout manager)
@@ -69,9 +70,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
                     if (reverseScrolling){
-                        score = buttonScore -= 1;
+                        score = buttonScore -= scoreInterval;
                     }else {
-                        score = buttonScore += 1;
+                        score = buttonScore += scoreInterval;
                     }
 
                     holder.butonScore.setText(String.valueOf(score));
@@ -82,9 +83,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
                     if (maxScore != 0) {
                         for (int i = 0; i < arrayListScore.size(); i++) {
-                            if (arrayListScore.get(i) == String.valueOf(maxScore)) {
-                                gameListener.gameWon(bigGameModel.getPlayers());
+                            if (maxScore < 0) {
+                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) <= maxScore) {
+                                    gameListener.gameWon(bigGameModel.getPlayers());
+                                }
+                            } else if (maxScore >= 0) {
+                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) >= maxScore) {
+                                    gameListener.gameWon(bigGameModel.getPlayers());
+                                }
                             }
+
                         }
                     }
                 }
@@ -98,9 +106,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
                     if (reverseScrolling){
-                        score = buttonScore += 1;
+                        score = buttonScore += scoreInterval;
                     }else {
-                        score = buttonScore -= 1;
+                        score = buttonScore -= scoreInterval;
                     }
                     if (score == -1) {
 

@@ -25,6 +25,7 @@ public class ScoreDBAdapter {
     public static final String KEY_CHRONOMETER = "_chronometer";
     public static final String KEY_MAX_SCORE = "_maxscore";
     public static final String KEY_REVERSE_SCORING = "_reversescoring";
+    public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
@@ -39,11 +40,12 @@ public class ScoreDBAdapter {
                     KEY_CHRONOMETER + " , " +
                     KEY_TIMER + " , " +
                     KEY_MAX_SCORE + " , " +
-                    KEY_REVERSE_SCORING +
+                    KEY_REVERSE_SCORING + " , " +
+                    KEY_SCORE_INTERVAL +
                     " );";
 
     private String[] columnArray = {KEY_ROWID, KEY_PLAYERS,
-            KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE, KEY_REVERSE_SCORING};
+            KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE, KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -125,7 +127,7 @@ public class ScoreDBAdapter {
 
         }else if (request.equals(KEY_TIMER)){
             initialValues.put(request, time_or_completed_or_timeLimit);
-        }else if(request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_MAX_SCORE)){
+        }else if(request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_MAX_SCORE) || request.equals(KEY_SCORE_INTERVAL)){
             initialValues.put(request, maxscore);
         }
 
@@ -136,7 +138,7 @@ public class ScoreDBAdapter {
     }
 
     public long createGame(ArrayList players, String time, ArrayList score, int completed, String timeLimit
-                            , int maxScore, int reverseScrolling) {
+                            , int maxScore, int reverseScrolling, int scoreinterval) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -152,6 +154,7 @@ public class ScoreDBAdapter {
         initialValues.put(KEY_TIMER, timeLimit);
         initialValues.put(KEY_MAX_SCORE, maxScore);
         initialValues.put(KEY_REVERSE_SCORING, reverseScrolling);
+        initialValues.put(KEY_SCORE_INTERVAL, scoreinterval);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

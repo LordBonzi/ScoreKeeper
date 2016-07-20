@@ -75,7 +75,9 @@ public class GameModel{
                     if (i != arrayListPlayer.size()-1){
                         p += ",";
                     }
-                }                     s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+                }
+
+                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() > 10){
                 t = "Huge Game";

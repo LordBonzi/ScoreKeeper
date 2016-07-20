@@ -43,7 +43,7 @@ public class DataHelper {
         dbHelper.open();
         Cursor cursor = dbHelper.fetchGamesById(i);
 
-        index = cursor.getColumnIndex(PresetDBAdapter.KEY_MAX_SCORE);
+        index = cursor.getColumnIndex(request);
 
         try {
             maxscore = cursor.getInt(index);

@@ -226,11 +226,11 @@ public class ScoreDBAdapter {
     public Cursor fetchGamesById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
-            mCursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE},
+            mCursor = mDb.query(SQLITE_TABLE, columnArray,
                     null, null, null, null, null);
 
         } else {
-            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_SCORE, KEY_PLAYERS, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE},
+            mCursor = mDb.query(true, SQLITE_TABLE, columnArray,
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
         }

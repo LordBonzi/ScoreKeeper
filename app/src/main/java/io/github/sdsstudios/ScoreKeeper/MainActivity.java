@@ -183,12 +183,8 @@ public class MainActivity extends AppCompatActivity
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
         maxScore = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
         int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
-        if (i==1){
-            reverseScrolling = true;
-        }else {
-            reverseScrolling = false;
-        }
-
+        Log.e(TAG, String.valueOf(i));
+        reverseScrolling = i == 1;
 
         homeIntent = new Intent(this, Home.class);
 
@@ -325,7 +321,7 @@ public class MainActivity extends AppCompatActivity
         Log.e(TAG, "playerarray " + String.valueOf(playersArray));
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -345,8 +341,7 @@ public class MainActivity extends AppCompatActivity
 
         buttonP1.setEnabled(false);
         buttonP2.setEnabled(false);
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false, maxScore, this);
-        bigGameList.setAdapter(bigGameAdapter);
+        displayRecyclerView(false);
 
         if (!isPaused) {
             isPaused = true;
@@ -649,11 +644,20 @@ public class MainActivity extends AppCompatActivity
 
     public void onScoreButtonClick(Button button){
 
+        Log.e(TAG, String.valueOf(reverseScrolling));
         if (button == buttonP1) {
-            P1Score += 1;
+            if (reverseScrolling){
+                P1Score -= 1;
+            }else {
+                P1Score += 1;
+            }
             button.setText(String.valueOf(P1Score));
         }else{
-            P2Score += 1;
+            if (reverseScrolling){
+                P2Score -= 1;
+            }else {
+                P2Score += 1;
+            }
             button.setText(String.valueOf(P2Score));
         }
         if (button == buttonP1) {
@@ -685,10 +689,19 @@ public class MainActivity extends AppCompatActivity
     public void onScoreButtonLongClick(Button button){
 
         if (button == buttonP1 && !ft1 && P1Score != 0){
-            P1Score -= 1;
+            if (reverseScrolling){
+                P1Score += 1;
+            }else {
+                P1Score -= 1;
+            }
+
             button.setText(String.valueOf(P1Score));
         }else if (button == buttonP2 && !ft2 && P2Score != 0){
-            P2Score -= 1;
+            if (reverseScrolling){
+                P2Score += 1;
+            }else {
+                P2Score -= 1;
+            }
             button.setText(String.valueOf(P2Score));
         }
 
@@ -815,8 +828,7 @@ public class MainActivity extends AppCompatActivity
                                     timeLimitReached(stopwatch);
                                     buttonP1.setEnabled(true);
                                     buttonP2.setEnabled(true);
-                                    bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true, maxScore, MainActivity.this);
-                                    bigGameList.setAdapter(bigGameAdapter);
+                                    displayRecyclerView(true);
                                     alertDialog.dismiss();
                                     fabChronometer.setEnabled(true);
                                     finished = false;

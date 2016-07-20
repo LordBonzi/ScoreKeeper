@@ -18,11 +18,13 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     int gameID;
     private int maxScore;
     private ArrayList<BigGameModel> mBigGameModel;
-    private boolean enabled;
+    private boolean enabled, reverseScrolling;
     private GameListener gameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter, int id, boolean menabled, int maxScore, GameListener gameListener) {
+    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter,
+                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling) {
+
         mBigGameModel = myDataset;
         dbHelper =dbAdapter;
         arrayListScore = score;
@@ -30,6 +32,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         enabled = menabled;
         this.maxScore = maxScore;
         this.gameListener = gameListener;
+        this.reverseScrolling = reverseScrolling;
     }
 
     // Create new views (invoked by the layout manager)
@@ -65,7 +68,12 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     int buttonScore = 0;
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    score = buttonScore += 1;
+                    if (reverseScrolling){
+                        score = buttonScore -= 1;
+                    }else {
+                        score = buttonScore += 1;
+                    }
+
                     holder.butonScore.setText(String.valueOf(score));
                     arrayListScore.set(position, String.valueOf(score));
                     dbHelper.open();
@@ -89,8 +97,11 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     int buttonScore = 0;
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    score = buttonScore -= 1;
-
+                    if (reverseScrolling){
+                        score = buttonScore += 1;
+                    }else {
+                        score = buttonScore -= 1;
+                    }
                     if (score == -1) {
 
                     } else {

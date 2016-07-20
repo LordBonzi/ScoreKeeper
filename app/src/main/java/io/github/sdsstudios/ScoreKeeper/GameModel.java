@@ -70,7 +70,7 @@ public class GameModel{
 
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
                 t = "Group Game";
-                for (int j = 0; i < arrayListPlayer.size(); j++){
+                for (int j = 0; j < arrayListPlayer.size(); j++){
                     p += arrayListPlayer.get(j);
                     if (i != arrayListPlayer.size()-1){
                         p += ",";
@@ -79,8 +79,8 @@ public class GameModel{
 
             }else if (arrayListPlayer.size() > 10){
                 t = "Huge Game";
-                for (int j = 0; i < arrayListPlayer.size(); j++){
-                    p += arrayListPlayer.get(j);
+                for (int k = 0; k < arrayListPlayer.size(); k++){
+                    p += arrayListPlayer.get(k);
                     if (i != arrayListPlayer.size()-1){
                         p += ",";
                     }

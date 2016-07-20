@@ -112,7 +112,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                         }else{
                             mDbHelper.open();
-                            mDbHelper.updateGame(playerArray, null, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+                            mDbHelper.updateGame(playerArray, null,0, ScoreDBAdapter.KEY_PLAYERS, mGameID);
                             mDbHelper.close();
                             holder.editTextPlayer.setEnabled(false);
                             holder.buttonEdit.setImageResource(R.mipmap.ic_create_black_24dp);
@@ -256,6 +256,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             snackbar.show();
         }
 
+        mDbHelper.open().updateGame(playerArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+        mDbHelper.close();
     }
 
     public void undoPlayerRemoval() {

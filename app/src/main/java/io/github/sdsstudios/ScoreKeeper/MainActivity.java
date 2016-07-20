@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,31 +37,33 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener{
+        implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
+                    ,BigGameAdapter.GameListener{
 
+    private boolean isWon = false;
+    private String winner;
     public static int gameID;
-    public static Button buttonP1;
-    public static Button buttonP2;
-    public static boolean firstTime = true;
+    private Button buttonP1;
+    private Button buttonP2;
+    private TextView textViewP1, textViewP2;
+    private boolean ft1, ft2;
+    private int P1Score, P2Score;
     private FloatingActionButton fabChronometer;
     private RecyclerView bigGameList;
+    private boolean finished = false;
     String TAG = "MainActivity.class";
-    private String time;
     private int gameSize;
     private ArrayList playersArray;
     private ArrayList scoresArray;
     public static DataHelper dataHelper;
-    private SmallLayout smallLayout;
     private Intent homeIntent;
     ScoreDBAdapter dbHelper;
-    private boolean immersive = false;
     private RecyclerView.Adapter bigGameAdapter;
     private Stopwatch stopwatch;
     private TimeHelper timeHelper;
     private ArrayList<BigGameModel> bigGameModels;
     private BigGameModel gameModel;
     private String timeLimitString = null;
-    private boolean finished = false;
     private boolean classicTheme = false;
     private boolean fullScreen = false;
     private View dialogView;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     private MenuItem menuItemDiceNum;
     private SharedPreferences sharedPreferences;
     private int maxNumDice;
+    private int maxScore;
+    private boolean reverseScrolling;
 
     private AlertDialog.Builder builder;
 
@@ -176,8 +181,14 @@ public class MainActivity extends AppCompatActivity
 
     public void loadGame(){
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
+        maxScore = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
+        int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
+        if (i==1){
+            reverseScrolling = true;
+        }else {
+            reverseScrolling = false;
+        }
 
-        smallLayout = new SmallLayout();
 
         homeIntent = new Intent(this, Home.class);
 
@@ -191,8 +202,8 @@ public class MainActivity extends AppCompatActivity
 
         stopwatch = new Stopwatch(this);
 
-        TextView textViewP1 = (TextView) findViewById(R.id.textViewP1);
-        TextView textViewP2 = (TextView) findViewById(R.id.textViewP2);
+        textViewP1 = (TextView) findViewById(R.id.textViewP1);
+        textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
         bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
 
@@ -207,8 +218,6 @@ public class MainActivity extends AppCompatActivity
 
         gameSize = playersArray.size();
 
-        smallLayout.onCreate(buttonP1, buttonP2, dbHelper, gameID, dataHelper);
-
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
 
@@ -216,12 +225,25 @@ public class MainActivity extends AppCompatActivity
             fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
             fabChronometer.setOnClickListener(this);
 
-            displayRecyclerView();
+            try {
+                displayRecyclerView(true);
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e(TAG, e.toString());
+            }
+
 
         } else {
 
             normal.setVisibility(View.VISIBLE);
+            P1Score = Integer.valueOf(scoresArray.get(0).toString());
+            P2Score = Integer.valueOf(scoresArray.get(1).toString());
+            ft1 = true;
+            ft2 = true;
 
+            buttonP1.setText(String.valueOf(P1Score));
+            buttonP2.setText(String.valueOf(P2Score));
             textViewP1.setText(String.valueOf(playersArray.get(0)));
             textViewP2.setText(String.valueOf(playersArray.get(1)));
             stopwatch = (Stopwatch) findViewById(R.id.chronometer);
@@ -274,14 +296,17 @@ public class MainActivity extends AppCompatActivity
         editor.apply();
     }
 
-    private void timeLimitReached(Stopwatch chronometer){
+    private boolean timeLimitReached(Stopwatch chronometer){
+        boolean b=false;
         if (timeLimitString != null) {
             if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
                 finished = true;
+                b = true;
                 timeLimitDialog();
             }
         }
 
+        return  b;
     }
 
     @Override
@@ -289,16 +314,18 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         chronometerClick();
         dbHelper.open();
-        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
         dbHelper.close();
     }
 
-    public void displayRecyclerView(){
+    public void displayRecyclerView(boolean enabled){
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        scoresArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
         bigGameList.setLayoutManager(mLayoutManager);
+        Log.e(TAG, "playerarray " + String.valueOf(playersArray));
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -318,7 +345,7 @@ public class MainActivity extends AppCompatActivity
 
         buttonP1.setEnabled(false);
         buttonP2.setEnabled(false);
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, false, maxScore, this);
         bigGameList.setAdapter(bigGameAdapter);
 
         if (!isPaused) {
@@ -383,6 +410,7 @@ public class MainActivity extends AppCompatActivity
             onBackPressed();
             return true;
         }
+
         if (id == R.id.action_reset) {
             isPaused = true;
             chronometerClick();
@@ -402,17 +430,22 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     if (gameSize > 2) {
-                        displayRecyclerView();
+                        displayRecyclerView(true);
                     } else {
-                        smallLayout.onCreate(buttonP1, buttonP2, dbHelper, gameID, dataHelper);
-                    }
+                        P1Score = Integer.valueOf(scoresArray.get(0).toString());
+                        P2Score = Integer.valueOf(scoresArray.get(1).toString());
+                        ft1 = true;
+                        ft2 = true;
+
+                        buttonP1.setText(String.valueOf(P1Score));
+                        buttonP2.setText(String.valueOf(P2Score));                    }
 
                     stopwatch.setBase(SystemClock.elapsedRealtime());
                     timeWhenStopped = 0;
 
                     dbHelper.open();
-                    dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
-                    dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(scoresArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     dbHelper.close();
                 }
             });
@@ -451,10 +484,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void diceClick(){
-
-    }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
@@ -476,7 +505,7 @@ public class MainActivity extends AppCompatActivity
         isPaused = true;
         chronometerClick();
         dbHelper.open();
-        dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
         dbHelper.close();
     }
 
@@ -501,16 +530,16 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonP1:
-                smallLayout.onClick(buttonP1, dbHelper, gameID);
+                onScoreButtonClick(buttonP1);
                 dbHelper.open();
-                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 dbHelper.close();
                 break;
 
             case R.id.buttonP2:
-                smallLayout.onClick(buttonP2, dbHelper, gameID);
+                onScoreButtonClick(buttonP2);
                 dbHelper.open();
-                dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                 dbHelper.close();
                 break;
 
@@ -527,6 +556,7 @@ public class MainActivity extends AppCompatActivity
                     chronometerClick();
                 }
                 break;
+
         }
 
     }
@@ -544,6 +574,7 @@ public class MainActivity extends AppCompatActivity
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+
             builder.setTitle(R.string.quit_game);
 
             builder.setMessage(R.string.quit_game_message);
@@ -551,8 +582,8 @@ public class MainActivity extends AppCompatActivity
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dbHelper.open();
-                    dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                    dbHelper.updateGame(null, "0", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, "0",0, ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
                     startActivity(homeIntent);
 
@@ -562,8 +593,8 @@ public class MainActivity extends AppCompatActivity
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dbHelper.open();
-                    dbHelper.updateGame(null, stopwatch.getText().toString(), ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                    dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, "1",0, ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
                     startActivity(homeIntent);
                 }
@@ -579,9 +610,105 @@ public class MainActivity extends AppCompatActivity
 
             dialog.show();
 
-        }else{
+        }
+
+        if(isWon){
+            winnerDialog(winner);
+        }
+        if (timeLimitReached(stopwatch)){
             timeLimitDialog();
             }
+    }
+
+    public void winnerDialog(String winner){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(winner + " " + getString(R.string.has_won));
+
+        builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dbHelper.open();
+                dbHelper.updateGame(null, stopwatch.getText().toString(),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                dbHelper.updateGame(null, "1",0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+                dbHelper.close();
+                startActivity(homeIntent);
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+
+        dialog.show();
+    }
+
+    public void onScoreButtonClick(Button button){
+
+        if (button == buttonP1) {
+            P1Score += 1;
+            button.setText(String.valueOf(P1Score));
+        }else{
+            P2Score += 1;
+            button.setText(String.valueOf(P2Score));
+        }
+        if (button == buttonP1) {
+            ft1 = false;
+        }else{
+            ft2 = false;
+        }
+
+        if (maxScore != 0) {
+            if (P1Score == maxScore || P2Score == maxScore) {
+                finished = true;
+                isPaused = true;
+                chronometerClick();
+                buttonP1.setEnabled(false);
+                buttonP2.setEnabled(false);
+                if (P1Score == maxScore) {
+                    winner = playersArray.get(0).toString();
+                } else {
+                    winner = playersArray.get(1).toString();
+
+                }
+                isWon = true;
+                winnerDialog(winner);
+            }
+        }
+
+        updateScores();
+    }
+    public void onScoreButtonLongClick(Button button){
+
+        if (button == buttonP1 && !ft1 && P1Score != 0){
+            P1Score -= 1;
+            button.setText(String.valueOf(P1Score));
+        }else if (button == buttonP2 && !ft2 && P2Score != 0){
+            P2Score -= 1;
+            button.setText(String.valueOf(P2Score));
+        }
+
+        if (button == buttonP1){
+            ft1 = false;
+        }else {
+            ft2 = false;
+
+        }
+
+        updateScores();
+    }
+
+    public void updateScores(){
+        scoresArray.set(0, String.valueOf(P1Score));
+        scoresArray.set(1, String.valueOf(P2Score));
+
+        dbHelper.open();
+        dbHelper.updateGame(scoresArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
+        dbHelper.close();
     }
 
     @Override
@@ -589,12 +716,11 @@ public class MainActivity extends AppCompatActivity
 
         switch (v.getId()) {
             case R.id.buttonP1:
-                smallLayout.onLongClick(buttonP1, dbHelper, gameID);
+                onScoreButtonLongClick(buttonP1);
                 break;
 
             case R.id.buttonP2:
-                smallLayout.onLongClick(buttonP2, dbHelper, gameID);
-
+                onScoreButtonLongClick(buttonP2);
                 break;
         }
 
@@ -683,13 +809,13 @@ public class MainActivity extends AppCompatActivity
                                 if (!timeLimitString.equals("00:00:00:0")) {
 
                                     dbHelper.open();
-                                    dbHelper.updateGame(null, timeLimitString, ScoreDBAdapter.KEY_TIMER, gameID);
+                                    dbHelper.updateGame(null, timeLimitString,0, ScoreDBAdapter.KEY_TIMER, gameID);
                                     dbHelper.close();
 
                                     timeLimitReached(stopwatch);
                                     buttonP1.setEnabled(true);
                                     buttonP2.setEnabled(true);
-                                    bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true);
+                                    bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, true, maxScore, MainActivity.this);
                                     bigGameList.setAdapter(bigGameAdapter);
                                     alertDialog.dismiss();
                                     fabChronometer.setEnabled(true);
@@ -710,7 +836,7 @@ public class MainActivity extends AppCompatActivity
 
                 }else{
                     dbHelper.open();
-                    dbHelper.updateGame(null, "1", ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.updateGame(null, "1",0, ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
                     startActivity(homeIntent);
 
@@ -753,71 +879,17 @@ public class MainActivity extends AppCompatActivity
         timeLimitReached(stopwatch);
     }
 
+    @Override
+    public void gameWon(String winner) {
+        this.winner = winner;
+        finished = true;
+        isPaused = true;
+        chronometerClick();
+        isWon = true;
+        winnerDialog(winner);
+
+        displayRecyclerView(false);
+
+    }
 }
 
-class SmallLayout{
-    public static Integer P1Score , P2Score;
-    public static ArrayList scoresArray;
-    public static boolean ft1;
-    public static boolean ft2;
-
-    public void onCreate(Button b1, Button b2, ScoreDBAdapter dbHelper, int gameID, DataHelper dataHelper){
-        scoresArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
-        P1Score = Integer.valueOf(scoresArray.get(0).toString());
-        P2Score = Integer.valueOf(scoresArray.get(1).toString());
-        ft1 = MainActivity.firstTime;
-        ft2 = MainActivity.firstTime;
-
-        b1.setText(String.valueOf(P1Score));
-        b2.setText(String.valueOf(P2Score));
-    }
-
-    public void onClick(Button button, ScoreDBAdapter dbHelper, int id){
-
-        if (button == MainActivity.buttonP1){
-            P1Score += 1;
-            button.setText(String.valueOf(P1Score));
-        }else {
-            P2Score += 1;
-            button.setText(String.valueOf(P2Score));
-        }
-
-        if (button == MainActivity.buttonP1){
-            ft1 = false;
-        }else {
-            ft2 = false;
-
-        }
-
-        updateScores(dbHelper, id);
-    }
-    public void onLongClick(Button button, ScoreDBAdapter dbHelper, int id){
-
-        if (button == MainActivity.buttonP1 && !ft1 && P1Score != 0){
-            P1Score -= 1;
-            button.setText(String.valueOf(P1Score));
-        }else if (button == MainActivity.buttonP2 && !ft2 && P2Score != 0){
-            P2Score -= 1;
-            button.setText(String.valueOf(P2Score));
-        }
-
-        if (button == MainActivity.buttonP1){
-            ft1 = false;
-        }else {
-            ft2 = false;
-
-        }
-
-        updateScores(dbHelper, id);
-    }
-
-    public void updateScores(ScoreDBAdapter dbHelper, int id){
-        scoresArray.set(0, String.valueOf(P1Score));
-        scoresArray.set(1, String.valueOf(P2Score));
-
-        dbHelper.open();
-        dbHelper.updateGame(scoresArray, null, ScoreDBAdapter.KEY_SCORE, id);
-        dbHelper.close();
-    }
-
-}

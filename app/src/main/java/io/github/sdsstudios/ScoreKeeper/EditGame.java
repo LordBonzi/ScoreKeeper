@@ -253,8 +253,8 @@ public class EditGame extends AppCompatActivity {
 
                 }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
-                    dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
-                    dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
+                    dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
                         if (PlayerListAdapter.playerArray.get(i).equals("")){
                             PlayerListAdapter.playerArray.remove(i);
@@ -263,8 +263,8 @@ public class EditGame extends AppCompatActivity {
 
                     }
 
-                    dbHelper.updateGame(PlayerListAdapter.playerArray,null, ScoreDBAdapter.KEY_PLAYERS, gameID);
-                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(PlayerListAdapter.playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
                     editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
                     editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
                     displayRecyclerView(0);

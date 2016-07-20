@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -135,15 +134,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                     holder.textViewHistoryType.setText(gameModel.getType());
                     holder.textViewHistoryInProgress.setText(gameModel.getState());
-
-                    if (gameModel.getState().equals("Unfinished")) {
-                        TypedValue typedValue = new TypedValue();
-
-                        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
-                        int color = a.getColor(0, 0);
-                        a.recycle();
-                        holder.textViewHistoryInProgress.setTextColor(color);
-                    }
 
                     holder.textViewHistoryInProgress.setAllCaps(true);
 

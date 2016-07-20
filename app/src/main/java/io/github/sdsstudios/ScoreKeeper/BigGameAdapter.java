@@ -16,17 +16,20 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     ScoreDBAdapter dbHelper;
     ArrayList arrayListScore;
     int gameID;
+    private int maxScore;
     private ArrayList<BigGameModel> mBigGameModel;
     private boolean enabled;
-
+    private GameListener gameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter, int id, boolean menabled) {
+    public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter, int id, boolean menabled, int maxScore, GameListener gameListener) {
         mBigGameModel = myDataset;
         dbHelper =dbAdapter;
         arrayListScore = score;
         gameID = id;
         enabled = menabled;
+        this.maxScore = maxScore;
+        this.gameListener = gameListener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -66,9 +69,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     holder.butonScore.setText(String.valueOf(score));
                     arrayListScore.set(position, String.valueOf(score));
                     dbHelper.open();
-                    dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(arrayListScore, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
                     dbHelper.close();
 
+                    if (maxScore != 0) {
+                        for (int i = 0; i < arrayListScore.size(); i++) {
+                            if (arrayListScore.get(i) == String.valueOf(maxScore)) {
+                                gameListener.gameWon(bigGameModel.getPlayers());
+                            }
+                        }
+                    }
                 }
             });
 
@@ -87,7 +97,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                         holder.butonScore.setText(String.valueOf(score));
                         arrayListScore.set(position, String.valueOf(score));
                         dbHelper.open();
-                        dbHelper.updateGame(arrayListScore, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                        dbHelper.updateGame(arrayListScore, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
                         dbHelper.close();
                     }
 
@@ -100,9 +110,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         }
     }
 
-    public void closeDB(){
-        dbHelper.close();
-    }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -125,5 +132,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             butonScore = (Button) v.findViewById(R.id.listButtonScore);
 
         }
+    }
+
+    public interface GameListener{
+        void gameWon(String winner);
     }
 }

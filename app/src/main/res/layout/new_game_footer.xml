@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:background="?attr/itemBackgroundColor"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:windowSoftInputMode="adjustPan"
+    android:id="@+id/relativeLayout2"
+    android:layout_below="@id/editTextMaxScore"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/dividerColor"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/view" />
+
+    <Button
+        android:id="@+id/buttonNewGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="16sp"
+        android:layout_marginEnd="16sp"
+        android:drawablePadding="8dp"
+        android:layout_below="@+id/adViewHome"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableRight="@drawable/stepper_right"
+        android:drawableEnd="@drawable/stepper_right"
+        android:paddingLeft="5sp"
+        android:paddingStart="5sp"
+        android:paddingRight="5sp"
+        android:paddingEnd="5sp"
+        android:text="@string/start_game"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_below="@+id/view"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/buttonQuit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/stepper_left"
+        android:drawableStart="@drawable/stepper_left"
+        android:paddingLeft="5sp"
+        android:paddingStart="5sp"
+        android:paddingRight="5sp"
+        android:paddingEnd="5sp"
+        android:text="@string/quit"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:layout_below="@+id/adViewHome"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

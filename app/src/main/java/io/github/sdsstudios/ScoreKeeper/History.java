@@ -235,6 +235,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         }
 
         displayRecyclerView();
+        if (dbHelper.open().numRows() == 0){
+            dbHelper.close();
+            Intent home = new Intent(this, Home.class);
+            startActivity(home);
+        }
     }
 
     @Override

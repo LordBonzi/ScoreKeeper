@@ -134,6 +134,10 @@
     <string name="rate_the_app">Rate and Review</string>
     <string name="opensourcelicenses">Open Source Licenses</string>
     <string name="max_num_on_dice">Maximum number on dice</string>
+    <string name="advanced_options">Advanced Options:</string>
+    <string name="max_score">Winning Score (optional)</string>
+    <string name="reverse_scoring">Reverse Scoring</string>
+    <string name="has_won">has won</string>
 
 
 </resources>

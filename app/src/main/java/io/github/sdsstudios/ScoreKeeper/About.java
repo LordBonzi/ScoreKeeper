@@ -273,9 +273,15 @@ public class About extends PreferenceActivity {
         File sdcard = Environment.getExternalStorageDirectory();
         File file = null;
         if (type == 1) {
-            file = new File(sdcard, "/changelog_scorekeeper.txt");
+            file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
+            file = new File(sdcard, "/ScoreKeeper/changelog_scorekeeper.txt");
+
         }else if(type == 2){
-            file = new File(sdcard, "/license_scorekeeper.txt");
+            file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
+            file = new File(sdcard, "/ScoreKeeper/license_scorekeeper.txt");
+
         }
         StringBuilder text = new StringBuilder();
         try {

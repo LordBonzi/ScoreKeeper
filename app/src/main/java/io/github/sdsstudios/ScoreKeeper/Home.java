@@ -134,10 +134,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         verifyStoragePermissions(this);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
+            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
         }
 
 
@@ -154,16 +154,16 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                     REQUEST_EXTERNAL_STORAGE
             );
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
+            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
         }else{
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
+            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
 
         }
 

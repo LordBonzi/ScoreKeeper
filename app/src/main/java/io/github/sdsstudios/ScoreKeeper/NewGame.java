@@ -172,6 +172,7 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onGlobalLayout() {
                 cardViewOptionsHeight = cardViewOptions.getMeasuredHeight();
+                toggleCardViewnHeight(cardViewOptionsHeight, cardViewOptions, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
                 removeOnGlobalLayoutListener(cardViewOptions, this);
@@ -183,11 +184,13 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onGlobalLayout() {
                 cardViewTimeLimitHeight = cardViewTimeLimit.getMeasuredHeight();
+                toggleCardViewnHeight(cardViewTimeLimitHeight, cardViewTimeLimit, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
                 removeOnGlobalLayoutListener(cardViewTimeLimit, this);
             }
         });
+
 
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
@@ -247,7 +250,6 @@ public class NewGame extends AppCompatActivity
             dbHelper.close();
         }
 
-
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
 
@@ -306,7 +308,6 @@ public class NewGame extends AppCompatActivity
         editTextScoreInterval.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -315,11 +316,8 @@ public class NewGame extends AppCompatActivity
                 {
                     scoreInterval= Integer.parseInt(charSequence.toString());
                 }
-                catch (NumberFormatException e)
-                {
-
+                catch (NumberFormatException e) {
                     scoreInterval = 0;
-
                 }
 
                 dbHelper.open();
@@ -400,12 +398,6 @@ public class NewGame extends AppCompatActivity
                 return false;
             }
         });
-
-        //RecyclerView Stuff
-        // use a linear layout manager
-
-        //Shared Preferences stuff
-
 
         displaySpinner(true);
         displaySpinner(false);

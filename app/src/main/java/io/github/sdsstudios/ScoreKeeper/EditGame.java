@@ -138,7 +138,6 @@ public class EditGame extends AppCompatActivity {
         mShareIntent.putExtra(Intent.EXTRA_TEXT, "");
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();

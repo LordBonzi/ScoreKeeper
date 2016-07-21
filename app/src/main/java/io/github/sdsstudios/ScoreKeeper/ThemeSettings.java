@@ -19,27 +19,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.android.gms.ads.AdView;
 
 public class ThemeSettings extends PreferenceActivity{
     private Intent settingsIntent;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
-    private SharedPreferences settings;
+    private SharedPreferences sharedPreferences;
     private Preference  darkThemePreference, accentPreference, primaryPreference, classicPreference, defaultThemePreference, colorNavBarPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     private boolean darkTheme, classicTheme, colorNavBar;
     private int accentColor, primaryColor, primaryDarkColor;
-    int[] colors = {};
-    int[] primaryColors = {};
-    int[] primaryDarkColors = {};
-    int index;
-    int oldColorIndex;
+    private int[] colors = {};
+    private int[] primaryColors = {};
+    private int[] primaryDarkColors = {};
+    private int index;
+    private int oldColorIndex;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
         darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
         colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
@@ -55,6 +54,9 @@ public class ThemeSettings extends PreferenceActivity{
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
@@ -89,9 +91,8 @@ public class ThemeSettings extends PreferenceActivity{
                 getResources().getColor(R.color.accentBlue)
 
         };
-        settings = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        darkTheme = settings.getBoolean("prefDarkTheme", false);
-        accentColor = settings.getInt("prefAccent", colors[1]);
+        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
+        accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             colorNavBarPreference.setEnabled(true);
@@ -152,7 +153,7 @@ public class ThemeSettings extends PreferenceActivity{
         accentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                accentColor = settings.getInt("prefAccent", colors[1]);
+                accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
 
 
                 final View dialogView;
@@ -208,8 +209,8 @@ public class ThemeSettings extends PreferenceActivity{
         primaryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                primaryColor = settings.getInt("prefPrimaryColor", getPrimaryColors()[1]);
-                primaryDarkColor = settings.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[1]);
+                primaryColor = sharedPreferences.getInt("prefPrimaryColor", getPrimaryColors()[1]);
+                primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[1]);
 
                 final View dialogView;
 
@@ -360,7 +361,7 @@ public class ThemeSettings extends PreferenceActivity{
     }
 
     private void saveInfo(){
-        SharedPreferences.Editor editor = settings.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("prefDarkTheme", darkTheme);
         editor.putInt("prefAccent", accentColor);
         editor.putInt("prefPrimaryColor", primaryColor);

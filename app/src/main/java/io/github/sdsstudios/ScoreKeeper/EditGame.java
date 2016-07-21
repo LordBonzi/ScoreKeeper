@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.google.android.gms.ads.AdView;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +67,9 @@ public class EditGame extends AppCompatActivity {
         }
         setTheme(accentColor);
         setContentView(R.layout.activity_edit_game);
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
         getSupportActionBar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
@@ -248,8 +253,8 @@ public class EditGame extends AppCompatActivity {
 
                 }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
-                    dbHelper.updateGame(null, newDate, ScoreDBAdapter.KEY_TIME, gameID);
-                    dbHelper.updateGame(null, newLength, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame(null, newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
+                    dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
                         if (PlayerListAdapter.playerArray.get(i).equals("")){
                             PlayerListAdapter.playerArray.remove(i);
@@ -258,8 +263,8 @@ public class EditGame extends AppCompatActivity {
 
                     }
 
-                    dbHelper.updateGame(PlayerListAdapter.playerArray,null, ScoreDBAdapter.KEY_PLAYERS, gameID);
-                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(PlayerListAdapter.playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
                     editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
                     editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
                     displayRecyclerView(0);

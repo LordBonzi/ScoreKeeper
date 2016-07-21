@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private HistoryAdapter historyAdapter;
     private static ArrayList<GameModel> gameModel;
     private ActionMode actionMode = null;
+    private int primaryDarkColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -55,6 +57,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         }
         setTheme(accentColor);
         setContentView(R.layout.activity_history);
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
@@ -225,8 +230,16 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     @Override
     public void multiSelectDisabled() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(primaryDarkColor);
+        }
 
         displayRecyclerView();
+        if (dbHelper.open().numRows() == 0){
+            dbHelper.close();
+            Intent home = new Intent(this, Home.class);
+            startActivity(home);
+        }
     }
 
     @Override

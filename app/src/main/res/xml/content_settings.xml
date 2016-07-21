@@ -18,7 +18,15 @@
         android:title="@string/themes"
         android:key="prefThemes"
         />
-
+    <EditTextPreference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/max_num_on_dice"
+        android:defaultValue="6"
+        android:inputType="number"
+        android:summary="Change the max amount of numbers on the dice"
+        android:key="prefDiceMaxNum"
+        />
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -30,16 +38,9 @@
             android:key="prefDeleteAllGames"
             />
 
-        <Preference
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:title="@string/delete_time_limit"
-            android:enabled="false"
-            android:summary="Is this necessary?"
-            android:key="prefDeleteTimeLimit"
-            />
-
     </PreferenceCategory>
+
+
 
 
 </PreferenceScreen>

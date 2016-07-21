@@ -36,6 +36,27 @@ public class DataHelper {
         return str;
     }
 
+    public int getIntByID(int i, String request, ScoreDBAdapter dbHelper){
+
+        int maxscore = 0;
+        int index = 1;
+        dbHelper.open();
+        Cursor cursor = dbHelper.fetchGamesById(i);
+
+        index = cursor.getColumnIndex(request);
+
+        try {
+            maxscore = cursor.getInt(index);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("DataHelper", e.toString());
+        }
+
+        dbHelper.close();
+        cursor.close();
+        return maxscore;
+    }
+
     public ArrayList getArrayById(String request, int gameID, ScoreDBAdapter dbHelper){
         ArrayList array;
         dbHelper.open();
@@ -180,6 +201,27 @@ public class DataHelper {
         dbHelper.close();
         cursor.close();
         return s;
+    }
+
+    public int getPresetIntByID(int i, String request, PresetDBAdapter dbHelper){
+
+        int maxscore = 0;
+        int index = 1;
+        dbHelper.open();
+        Cursor cursor = dbHelper.fetchPresetById(i);
+
+        index = cursor.getColumnIndex(request);
+
+        try {
+            maxscore = cursor.getInt(index);
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e("DataHelper", e.toString());
+        }
+
+        dbHelper.close();
+        cursor.close();
+        return maxscore;
     }
 
     public ArrayList getPresetPlayerArrayByID(int gameID,  PresetDBAdapter dbHelper){

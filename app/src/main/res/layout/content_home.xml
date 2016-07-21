@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.github.sdsstudios.ScoreKeeper.Home">
+    tools:context="io.github.sdsstudios.ScoreKeeper.Home"
+    tools:ignore="MergeRootFrame">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -54,8 +56,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonMore"
+        android:layout_above="@+id/adViewHome"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -100,5 +102,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
 />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 
 </RelativeLayout>

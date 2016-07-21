@@ -1,11 +1,14 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -44,6 +48,12 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private int lastPlayedGame;
     private int accentColor;
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +69,13 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         }
         setTheme(accentColor);
         setContentView(R.layout.activity_home);
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
+
         getSupportActionBar();
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
@@ -117,8 +131,43 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         displayRecyclerView();
 
-    }
+        verifyStoragePermissions(this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
+            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
 
+            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
+            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+        }
+
+
+    }
+    public void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
+            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
+
+            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
+            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+        }else{
+            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
+            new DownloadFileFromURL("/changelog_scorekeeper.txt").execute(file_url);
+
+            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
+            new DownloadFileFromURL("/license_scorekeeper.txt").execute(downloadUrl);
+
+        }
+
+    }
     public void displayRecyclerView(){
         dbHelper.open();
 
@@ -153,7 +202,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         settingsMenuItem = menu.findItem(R.id.action_settings);
+        MenuItem aboutMenuItem = menu.findItem(R.id.action_about);
         settingsMenuItem.setVisible(true);
+        aboutMenuItem.setVisible(true);
 
         return true;
     }
@@ -162,9 +213,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     protected void onResume() {
         super.onResume();
         dbHelper.open();
-
     }
-
     @Override
     protected void onPause() {
         super.onPause();

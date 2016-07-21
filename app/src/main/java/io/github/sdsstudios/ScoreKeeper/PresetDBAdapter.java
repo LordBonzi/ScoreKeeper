@@ -20,6 +20,10 @@ public class PresetDBAdapter {
     public static final String KEY_PLAYERS = "_players";
     public static final String KEY_TIME_LIMIT = "_timelimit";
     public static final String KEY_TITLE = "_title";
+    public static final String KEY_MAX_SCORE = "_maxscore";
+    public static final String KEY_REVERSE_SCORING = "_reversescoring";
+    public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
+    public static final String KEY_DIFF_TO_WIN = "_difftowin";
     public static final String SQLITE_TABLE = "presets";
     private static final String TAG = "PresetDBAdapter";
     private static final String DATABASE_NAME = "PresetDatabase";
@@ -29,9 +33,14 @@ public class PresetDBAdapter {
                     KEY_ROWID + " ," +
                     KEY_PLAYERS + "," +
                     KEY_TIME_LIMIT + "," +
-                    KEY_TITLE +
+                    KEY_TITLE + "," +
+                    KEY_MAX_SCORE + "," +
+                    KEY_REVERSE_SCORING + " , " +
+                    KEY_SCORE_INTERVAL + " , " +
+                    KEY_DIFF_TO_WIN +
                     " );";
 
+    private String[] columnArray ={KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE, KEY_MAX_SCORE, KEY_REVERSE_SCORING,KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -63,23 +72,26 @@ public class PresetDBAdapter {
         return str;
     }
 
-    public void updatePreset(ArrayList players, String timelimitortitle, String request, int id) {
+    public void updatePreset(ArrayList players, String timelimitortitle, int maxscore ,String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
-        if (request == KEY_PLAYERS){
+        if (request.equals(KEY_PLAYERS)){
             initialValues.put(request, convertToString(players));
         }else if(request == KEY_TIME_LIMIT|| request == KEY_TITLE){
             initialValues.put(request, timelimitortitle);
 
+        }else if(request.equals(KEY_MAX_SCORE) || request.equals(KEY_REVERSE_SCORING)){
+            initialValues.put(request, maxscore);
         }
+
         open();
         mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
         close();
 
     }
 
-    public long createPreset(ArrayList players, String timelimit, String title) {
+    public long createPreset(ArrayList players, String timelimit, String title, int maxscore, int reversescroling, int scoreinterval, int difftowin) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -92,12 +104,16 @@ public class PresetDBAdapter {
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_TIME_LIMIT, timelimit);
         initialValues.put(KEY_TITLE, title);
+        initialValues.put(KEY_MAX_SCORE, maxscore);
+        initialValues.put(KEY_REVERSE_SCORING, reversescroling);
+        initialValues.put(KEY_SCORE_INTERVAL, scoreinterval);
+        initialValues.put(KEY_DIFF_TO_WIN, difftowin);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
     public int numRows(){
-        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE}, null, null, null, null, null);
+        Cursor cursor = mDb.query(SQLITE_TABLE, columnArray, null, null, null, null, null);
 
         return  cursor.getCount();
     }
@@ -106,7 +122,7 @@ public class PresetDBAdapter {
 
         open();
         mDb.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
-        Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE}, null, null, null, null, null);
+        Cursor cursor = mDb.query(SQLITE_TABLE, columnArray, null, null, null, null, null);
 
         for (int i = 1; i <= numRows(); i++){
             ContentValues initialValues = new ContentValues();
@@ -132,10 +148,10 @@ public class PresetDBAdapter {
     public Cursor fetchPresetById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
-            Cursor cursor = mDb.query(SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE}, null, null, null, null, null);
+            Cursor cursor = mDb.query(SQLITE_TABLE, columnArray, null, null, null, null, null);
 
         } else {
-            mCursor = mDb.query(true, SQLITE_TABLE, new String[]{KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE},
+            mCursor = mDb.query(true, SQLITE_TABLE, columnArray,
                     KEY_ROWID + " like '%" + id + "%'", null,
                     null, null, null, null);
         }

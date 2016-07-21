@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity
     private boolean scoreDifference(int score){
         boolean b = false;
         for (int i = 0; i < scoresArray.size(); i++){
-            if (diffToWin != 0) {
+            if (maxScore != 0) {
                 if (Math.abs(score - Integer.valueOf(String.valueOf(scoresArray.get(i)))) >= diffToWin) {
                     b = true;
                 }

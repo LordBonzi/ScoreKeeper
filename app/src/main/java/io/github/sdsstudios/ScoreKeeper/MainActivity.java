@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity
     private int maxNumDice;
     private int maxScore;
     private boolean reverseScrolling;
+    private int diffToWin;
 
     private AlertDialog.Builder builder;
 
@@ -184,11 +185,13 @@ public class MainActivity extends AppCompatActivity
         timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
         maxScore = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
         scoreInterval = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
+        diffToWin = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
         if(scoreInterval == 0){
             scoreInterval = 1;
+        }if(diffToWin == 0){
+            diffToWin = 1;
         }
         int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
-        Log.e(TAG, String.valueOf(i));
         reverseScrolling = i == 1;
 
         homeIntent = new Intent(this, Home.class);
@@ -325,7 +328,7 @@ public class MainActivity extends AppCompatActivity
         bigGameList.setLayoutManager(mLayoutManager);
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray,  scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling, scoreInterval);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling, scoreInterval, diffToWin);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -668,7 +671,7 @@ public class MainActivity extends AppCompatActivity
         }else{
             ft2 = false;
         }
-        if (maxScore != 0) {
+        if (maxScore != 0  && Math.abs(P1Score-P2Score) >= diffToWin) {
             if (P1Score >= maxScore || P2Score >= maxScore) {
                 finished = true;
                 isPaused = true;

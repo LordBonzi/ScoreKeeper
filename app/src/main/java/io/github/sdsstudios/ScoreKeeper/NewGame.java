@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,8 +9,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 public class NewGame extends AppCompatActivity
-        implements View.OnClickListener, PresetListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener{
+        implements View.OnClickListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener{
 
     public static PlayerListAdapter playerListAdapter;
     private Snackbar snackbar;
@@ -48,7 +54,7 @@ public class NewGame extends AppCompatActivity
     private DataHelper dataHelper;
     private String time = null;
     private String TAG = "NewGame";
-    private EditText editTextPlayer, editTextMaxScore, editTextScoreInterval;
+    private EditText editTextPlayer, editTextMaxScore, editTextScoreInterval, editTextDiffToWin;
     private Button buttonNewGame, buttonAddPlayer, buttonQuit, buttonCreatePreset;
     private CheckBox checkBoxNoTimeLimit, checkBoxReverseScrolling;
     private RecyclerView playerList;
@@ -67,13 +73,19 @@ public class NewGame extends AppCompatActivity
     private List timeLimitArrayNum;
     private String timeLimitCondensed = "";
     private String defaultTitle;
-    public static RelativeLayout relativeLayout, relativeLayoutCustomGame;
+    public static RelativeLayout relativeLayout;
     private RecyclerViewArrayAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
     static final String STATE_GAMEID = "gameID";
     private int reverseScrolling = 0;
     private int maxScore = 0;
     private int scoreInterval = 1;
+    private int diffToWin = 0;
+
+    private RelativeLayout optionsHeader, timeLimitHeader;
+    private NestedScrollView scrollView;
+    private CardView cardViewOptions, cardViewTimeLimit;
+    private int cardViewOptionsHeight, cardViewTimeLimitHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +157,36 @@ public class NewGame extends AppCompatActivity
 
         }
 
-        relativeLayoutCustomGame = (RelativeLayout)findViewById(R.id.relativeLayoutCustomGame);
+        scrollView = (NestedScrollView) findViewById(R.id.scrollView);
+
+        optionsHeader = (RelativeLayout) findViewById(R.id.optionsHeader);
+        optionsHeader.setOnClickListener(this);
+
+        timeLimitHeader = (RelativeLayout) findViewById(R.id.timeLimitHeader);
+        timeLimitHeader.setOnClickListener(this);
+
+        cardViewOptions= (CardView)findViewById(R.id.cardViewOptions);
+        cardViewOptions.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                cardViewOptionsHeight = cardViewOptions.getMeasuredHeight();
+                // Do whatever you want with h
+                // Remove the listener so it is not called repeatedly
+                removeOnGlobalLayoutListener(cardViewOptions, this);
+            }
+        });
+
+        cardViewTimeLimit= (CardView)findViewById(R.id.cardViewTimeLimit);
+        cardViewTimeLimit.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                cardViewTimeLimitHeight = cardViewTimeLimit.getMeasuredHeight();
+                // Do whatever you want with h
+                // Remove the listener so it is not called repeatedly
+                removeOnGlobalLayoutListener(cardViewTimeLimit, this);
+            }
+        });
+
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
         spinnerPreset = (Spinner)findViewById(R.id.spinnerPreset);
@@ -193,7 +234,7 @@ public class NewGame extends AppCompatActivity
             dbHelper.close();
         }else{
             dbHelper.open();
-            dbHelper.createGame(players, time, score, 0, timeLimit, maxScore, reverseScrolling, scoreInterval);
+            dbHelper.createGame(players, time, score, 0, timeLimit, maxScore, reverseScrolling, scoreInterval, diffToWin);
             gameID = dbHelper.getNewestGame();
             dbHelper.close();
             spinnerTimeLimit.setVisibility(View.INVISIBLE);
@@ -215,6 +256,50 @@ public class NewGame extends AppCompatActivity
         buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
+        editTextDiffToWin = (EditText) findViewById(R.id.editTextDiffToWin);
+        editTextDiffToWin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    diffToWin= Integer.parseInt(charSequence.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    diffToWin = 0;
+
+                }
+
+                dbHelper.open();
+                dbHelper.updateGame(null, null, diffToWin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
+                dbHelper.close();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try
+                {
+                    diffToWin= Integer.parseInt(editable.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    diffToWin = 0;
+                }
+                dbHelper.open();
+                dbHelper.updateGame(null, null, diffToWin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
+                dbHelper.close();
+            }
+        });
+
         editTextScoreInterval = (EditText) findViewById(R.id.editTextScoreInterval);
         editTextScoreInterval.addTextChangedListener(new TextWatcher() {
             @Override
@@ -230,8 +315,7 @@ public class NewGame extends AppCompatActivity
                 }
                 catch (NumberFormatException e)
                 {
-                    e.printStackTrace();
-                    Log.e(TAG, e.toString());
+
                     scoreInterval = 0;
 
                 }
@@ -249,8 +333,7 @@ public class NewGame extends AppCompatActivity
                 }
                 catch (NumberFormatException e)
                 {
-                    e.printStackTrace();
-                    Log.e(TAG, e.toString());
+
                     scoreInterval = 0;
                 }
                 dbHelper.open();
@@ -326,6 +409,41 @@ public class NewGame extends AppCompatActivity
         displaySpinner(false);
     }
 
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            removeLayoutListenerJB(v, victim);
+        } else removeLayoutListener(v, victim);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
+    }
+
+    public void preDrawCardView(final CardView cardView, final int height){
+        cardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                ViewGroup.LayoutParams layoutParams = null;
+
+                cardView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                layoutParams = cardView.getLayoutParams();
+                layoutParams.height = height * 2;
+
+                cardView.setLayoutParams(layoutParams);
+
+                return true;
+            }
+        });
+    }
+
     public void displaySpinner(boolean timelimitspinner){
 
         if (timelimitspinner) {
@@ -375,9 +493,10 @@ public class NewGame extends AppCompatActivity
         int maxscore = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_MAX_SCORE, presetDBAdapter);
         int reversescrolling = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_REVERSE_SCORING, presetDBAdapter);
         int scoreinterval = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_SCORE_INTERVAL, presetDBAdapter);
+        int diffToWin = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_DIFF_TO_WIN, presetDBAdapter);
         presetDBAdapter.close();
 
-        updateEditText(presetPlayers, presetTimeLimit, maxscore, reversescrolling, scoreinterval);
+        updateEditText(presetPlayers, presetTimeLimit, maxscore, reversescrolling, scoreinterval, diffToWin);
 
     }
 
@@ -428,6 +547,8 @@ public class NewGame extends AppCompatActivity
         editTextMaxScore.setHint(getString(R.string.max_score));
         editTextScoreInterval.setText("");
         editTextScoreInterval.setHint(getString(R.string.score_interval));
+        editTextDiffToWin.setText("");
+        editTextDiffToWin.setHint(getString(R.string.diff_to_win));
         spinnerPreset.setSelection(0);
 
     }
@@ -677,7 +798,67 @@ public class NewGame extends AppCompatActivity
                 break;
             }
 
+            case R.id.optionsHeader:{
+                toggleCardViewnHeight(cardViewOptionsHeight, cardViewOptions, scrollView.getBottom());
+                break;
+            }
+
+            case R.id.timeLimitHeader:{
+                toggleCardViewnHeight(cardViewTimeLimitHeight, cardViewTimeLimit, 0);
+                break;
+            }
+
         }
+    }
+
+    private void toggleCardViewnHeight(int height, CardView cardView, int scrollTo) {
+
+        if (cardView.getHeight() != height) {
+            // expand
+
+            expandView(height, cardView, scrollTo); //'height' is the height of screen which we have measured already.
+
+        } else {
+            // collapse
+            collapseView(cardView);
+
+        }
+    }
+
+    public void collapseView(final CardView cardView) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(cardView.getMeasuredHeightAndState(), 96);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
+                layoutParams.height = val;
+                cardView.setLayoutParams(layoutParams);
+
+            }
+        });
+        anim.start();
+    }
+    public void expandView(int height, final CardView cardView, final int scrollTo) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(cardView.getMeasuredHeightAndState(),
+                height);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
+                layoutParams.height = val;
+                cardView.setLayoutParams(layoutParams);
+                if (scrollTo != 0) {
+                    scrollView.scrollTo(0, scrollTo);
+                }
+
+            }
+        });
+        anim.start();
+
     }
 
     public void createPresetDialog() {
@@ -800,17 +981,16 @@ public class NewGame extends AppCompatActivity
     public void createNewGame(ArrayList players, boolean startGame) {
             mainActivityIntent = new Intent(this, MainActivity.class);
             stop = false;
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            };
 
             //snackbar must have 2 or more players
 
             if (players.size() < 2) {
-
-                View.OnClickListener onClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        snackbar.dismiss();
-                    }
-                };
 
                 snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
@@ -818,17 +998,12 @@ public class NewGame extends AppCompatActivity
             } else {
                 if (dataHelper.checkDuplicates(players)) {
 
-                    View.OnClickListener onClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            snackbar.dismiss();
-                        }
-                    };
 
                     snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", onClickListener);
                     snackbar.show();
-                } else {
+
+                }else {
                     createScoreArray();
 
                     if (startGame) {
@@ -850,18 +1025,21 @@ public class NewGame extends AppCompatActivity
         if (spinnerTimeLimit.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
             presetDBAdapter.open();
             presetDBAdapter.createPreset(players, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString()
-                    , title, maxScore, reverseScrolling, scoreInterval);
+                    , title, maxScore, reverseScrolling, scoreInterval, diffToWin);
             presetDBAdapter.close();
         }else{
-            presetDBAdapter.createPreset(players, timeLimit, title, maxScore, reverseScrolling, scoreInterval);
+            presetDBAdapter.createPreset(players, timeLimit, title, maxScore, reverseScrolling, scoreInterval, diffToWin);
         }
         presetDBAdapter.close();
     }
 
-    @Override
-    public void updateEditText(ArrayList players, String timeLimit, int maxScore, int reverseScrolling, int scoreInterval) {
+    public void updateEditText(ArrayList players, String timeLimit, int maxScore, int reverseScrolling, int scoreInterval, int difftowin) {
         this.players = players;
         this.timeLimit = timeLimit;
+        this.maxScore = maxScore;
+        this.reverseScrolling = reverseScrolling;
+        this.scoreInterval = scoreInterval;
+        this.diffToWin = difftowin;
         displayRecyclerView(players);
         if (timeLimit!=null) {
             checkBoxNoTimeLimit.setChecked(true);
@@ -879,6 +1057,10 @@ public class NewGame extends AppCompatActivity
         }
         if (scoreInterval !=0) {
             editTextScoreInterval.setText(String.valueOf(scoreInterval));
+        }
+
+        if (difftowin !=0) {
+            editTextDiffToWin.setText(String.valueOf(difftowin));
         }
 
         if (reverseScrolling == 1){

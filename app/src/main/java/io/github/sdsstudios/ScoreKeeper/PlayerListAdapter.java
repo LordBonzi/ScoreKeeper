@@ -258,6 +258,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         mDbHelper.open().updateGame(playerArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, mGameID);
         mDbHelper.close();
+
     }
 
     public void undoPlayerRemoval() {

@@ -16,14 +16,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     ScoreDBAdapter dbHelper;
     ArrayList arrayListScore;
     int gameID;
-    private int maxScore, scoreInterval;
+    private int maxScore, scoreInterval, diffToWin;
     private ArrayList<BigGameModel> mBigGameModel;
     private boolean enabled, reverseScrolling;
     private GameListener gameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BigGameAdapter(ArrayList<BigGameModel> myDataset, ArrayList score, ScoreDBAdapter dbAdapter,
-                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling, int scoreInterval) {
+                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling, int scoreInterval, int diffToWin) {
 
         mBigGameModel = myDataset;
         dbHelper =dbAdapter;
@@ -34,6 +34,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         this.gameListener = gameListener;
         this.reverseScrolling = reverseScrolling;
         this.scoreInterval = scoreInterval;
+        this.diffToWin = diffToWin;
     }
 
     // Create new views (invoked by the layout manager)
@@ -84,17 +85,20 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     if (maxScore != 0) {
                         for (int i = 0; i < arrayListScore.size(); i++) {
                             if (maxScore < 0) {
-                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) <= maxScore) {
+                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) <= maxScore && scoreDifference(score)) {
                                     gameListener.gameWon(bigGameModel.getPlayers());
                                 }
+
                             } else if (maxScore >= 0) {
-                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) >= maxScore) {
+                                if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) >= maxScore&& scoreDifference(score)) {
                                     gameListener.gameWon(bigGameModel.getPlayers());
                                 }
+
                             }
 
                         }
                     }
+
                 }
             });
 
@@ -127,6 +131,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         }else{
             holder.butonScore.setEnabled(false);
         }
+    }
+
+    private boolean scoreDifference(int score){
+        boolean b = false;
+        for (int i = 0; i < arrayListScore.size(); i++){
+            if (Math.abs(score-Integer.valueOf(String.valueOf(arrayListScore.get(i)))) >= diffToWin){
+                b = true;
+            }
+        }
+        return  b;
     }
 
 

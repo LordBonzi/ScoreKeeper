@@ -7,3 +7,6 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
 - Themeing (Dark and Light theme, Custom accent and primary colors)
 - An other scoreboard (Basketball style)
 
+## 1.0 Beta 4 
+### Added
+ - Changed Layout of new Game screen, definaly  a relexe candidate

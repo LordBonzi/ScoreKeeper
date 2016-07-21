@@ -298,6 +298,33 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("lastplayedgame", gameID);
         editor.apply();
+
+        for (int a = 0; a < scoresArray.size(); a++) {
+            if (maxScore < 0) {
+                if (Integer.valueOf(String.valueOf(scoresArray.get(a))) <= maxScore
+                        && scoreDifference(Integer.valueOf(String.valueOf(scoresArray.get(a))))){
+                    gameWon(String.valueOf(playersArray.get(a)));
+                }
+
+            } else if (maxScore >= 0) {
+                if (Integer.valueOf(String.valueOf(scoresArray.get(a))) >= maxScore
+                        && scoreDifference(Integer.valueOf(String.valueOf(scoresArray.get(a))))) {
+                    gameWon(String.valueOf(playersArray.get(a)));
+                }
+
+            }
+
+        }
+    }
+
+    private boolean scoreDifference(int score){
+        boolean b = false;
+        for (int i = 0; i < scoresArray.size(); i++){
+            if (Math.abs(score-Integer.valueOf(String.valueOf(scoresArray.get(i)))) >= diffToWin){
+                b = true;
+            }
+        }
+        return  b;
     }
 
     private boolean timeLimitReached(Stopwatch chronometer){

@@ -76,6 +76,7 @@ public class NewGame extends AppCompatActivity
     public static RelativeLayout relativeLayout;
     private RecyclerViewArrayAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
+    private boolean classicTheme;
     static final String STATE_GAMEID = "gameID";
     private int reverseScrolling = 0;
     private int maxScore = 0;
@@ -120,6 +121,7 @@ public class NewGame extends AppCompatActivity
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
@@ -995,9 +997,12 @@ public class NewGame extends AppCompatActivity
                 snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
                 snackbar.show();
-            } else {
+            }else if(classicTheme && players.size() > 2){
+                snackbar = Snackbar.make(relativeLayout, "No more than 2 players for Classic Theme", Snackbar.LENGTH_SHORT)
+                        .setAction("Dismiss", onClickListener);
+                snackbar.show();
+            }else{
                 if (dataHelper.checkDuplicates(players)) {
-
 
                     snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", onClickListener);

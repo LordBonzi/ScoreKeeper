@@ -118,17 +118,6 @@
                     android:id="@+id/timeLimitHeader"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:tint="@color/textColor"
-                        android:background="@android:color/transparent"
-                        android:src="@mipmap/ic_expand_more_black_24dp"/>
                     <TextView
                         android:text="@string/time_limit"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -197,17 +186,7 @@
                     android:id="@+id/optionsHeader"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:tint="@color/textColor"
-                        android:background="@android:color/transparent"
-                        android:src="@mipmap/ic_expand_more_black_24dp"/>
+
                     <TextView
                         android:text="@string/advanced_options"
                         android:layout_marginLeft="16dp"

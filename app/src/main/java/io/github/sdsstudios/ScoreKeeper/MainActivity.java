@@ -303,6 +303,7 @@ public class MainActivity extends AppCompatActivity
             if (maxScore < 0) {
                 if (Integer.valueOf(String.valueOf(scoresArray.get(a))) <= maxScore
                         && scoreDifference(Integer.valueOf(String.valueOf(scoresArray.get(a))))){
+
                     gameWon(String.valueOf(playersArray.get(a)));
                 }
 
@@ -320,8 +321,10 @@ public class MainActivity extends AppCompatActivity
     private boolean scoreDifference(int score){
         boolean b = false;
         for (int i = 0; i < scoresArray.size(); i++){
-            if (Math.abs(score-Integer.valueOf(String.valueOf(scoresArray.get(i)))) >= diffToWin){
-                b = true;
+            if (diffToWin != 0) {
+                if (Math.abs(score - Integer.valueOf(String.valueOf(scoresArray.get(i)))) >= diffToWin) {
+                    b = true;
+                }
             }
         }
         return  b;

@@ -192,15 +192,15 @@ public class About extends PreferenceActivity {
                     }
                 });
 
-                sethGithub.setOnClickListener(new View.OnClickListener() {
+                alfieGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/118423554132509773191"));
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/109721482231084676815"));
                         startActivity(browserIntent);
                     }
                 });
 
-                alfieGoogle.setOnClickListener(new View.OnClickListener() {
+                sethGithub.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/orgs/SDS-Studios"));
@@ -273,9 +273,15 @@ public class About extends PreferenceActivity {
         File sdcard = Environment.getExternalStorageDirectory();
         File file = null;
         if (type == 1) {
-            file = new File(sdcard, "/changelog_scorekeeper.txt");
+            file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
+            file = new File(sdcard, "/ScoreKeeper/changelog_scorekeeper.txt");
+
         }else if(type == 2){
-            file = new File(sdcard, "/license_scorekeeper.txt");
+            file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
+            file = new File(sdcard, "/ScoreKeeper/license_scorekeeper.txt");
+
         }
         StringBuilder text = new StringBuilder();
         try {

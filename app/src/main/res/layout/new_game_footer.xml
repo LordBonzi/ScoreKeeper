@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
     android:background="?attr/itemBackgroundColor"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:windowSoftInputMode="adjustPan"
     android:id="@+id/relativeLayout2"
@@ -9,15 +8,6 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/dividerColor"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/view" />
 
     <Button
         android:id="@+id/buttonNewGame"
@@ -39,15 +29,6 @@
         android:text="@string/start_game"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp" />
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewHome"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"
-        android:layout_below="@+id/view"
-        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/buttonQuit"

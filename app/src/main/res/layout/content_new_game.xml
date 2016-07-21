@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:fillViewport="true"
     android:id="@+id/scrollView"
@@ -75,7 +76,7 @@
                         android:id="@+id/playerList"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -118,17 +119,6 @@
                     android:id="@+id/timeLimitHeader"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:tint="@color/textColor"
-                        android:background="@android:color/transparent"
-                        android:src="@mipmap/ic_expand_more_black_24dp"/>
                     <TextView
                         android:text="@string/time_limit"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -149,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:visibility="visible"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="16dp"
                     android:id="@+id/spinnerTimeLimit"
                     android:layout_below="@+id/timeLimitHeader"
                     android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
@@ -164,7 +154,7 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_below="@+id/timeLimitHeader"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_alignParentStart="true" />
 
             </RelativeLayout>
@@ -197,17 +187,7 @@
                     android:id="@+id/optionsHeader"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true">
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerHorizontal="true"
-                        android:tint="@color/textColor"
-                        android:background="@android:color/transparent"
-                        android:src="@mipmap/ic_expand_more_black_24dp"/>
+
                     <TextView
                         android:text="@string/advanced_options"
                         android:layout_marginLeft="16dp"
@@ -280,7 +260,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/reverse_scoring"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="16dp"
                         android:layout_below="@+id/editTextDiffToWin"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_alignLeft="@+id/editTextDiffToWin"
@@ -338,6 +318,7 @@
                         android:layout_height="48dp"
                         android:id="@+id/spinnerPreset"
                         android:visibility="visible"
+                        android:layout_marginBottom="16dp"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_below="@+id/presetHeader"
                         android:layout_toLeftOf="@+id/buttonCreatePreset" />
@@ -362,7 +343,28 @@
 
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="4dp"
+            android:id="@+id/cardViewAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewOptions"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp">
 
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adViewHome"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                ads:adSize="BANNER"
+                android:layout_gravity="center"
+                ads:adUnitId="@string/banner_ad_unit_id"
+                android:layout_below="@+id/view"
+                android:layout_centerHorizontal="true" />
+
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 

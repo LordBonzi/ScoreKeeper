@@ -27,6 +27,7 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
      * Before starting background thread
      * Show Progress Bar Dialog
      * */
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();

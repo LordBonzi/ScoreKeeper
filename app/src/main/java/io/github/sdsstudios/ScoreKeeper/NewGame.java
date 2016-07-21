@@ -76,6 +76,7 @@ public class NewGame extends AppCompatActivity
     public static RelativeLayout relativeLayout;
     private RecyclerViewArrayAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
+    private boolean classicTheme;
     static final String STATE_GAMEID = "gameID";
     private int reverseScrolling = 0;
     private int maxScore = 0;
@@ -120,6 +121,7 @@ public class NewGame extends AppCompatActivity
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
@@ -170,6 +172,7 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onGlobalLayout() {
                 cardViewOptionsHeight = cardViewOptions.getMeasuredHeight();
+                toggleCardViewnHeight(cardViewOptionsHeight, cardViewOptions, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
                 removeOnGlobalLayoutListener(cardViewOptions, this);
@@ -181,11 +184,13 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onGlobalLayout() {
                 cardViewTimeLimitHeight = cardViewTimeLimit.getMeasuredHeight();
+                toggleCardViewnHeight(cardViewTimeLimitHeight, cardViewTimeLimit, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
                 removeOnGlobalLayoutListener(cardViewTimeLimit, this);
             }
         });
+
 
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
@@ -245,7 +250,6 @@ public class NewGame extends AppCompatActivity
             dbHelper.close();
         }
 
-
         buttonNewGame = (Button)findViewById(R.id.buttonNewGame);
         buttonNewGame.setOnClickListener(this);
 
@@ -304,7 +308,6 @@ public class NewGame extends AppCompatActivity
         editTextScoreInterval.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -313,11 +316,8 @@ public class NewGame extends AppCompatActivity
                 {
                     scoreInterval= Integer.parseInt(charSequence.toString());
                 }
-                catch (NumberFormatException e)
-                {
-
+                catch (NumberFormatException e) {
                     scoreInterval = 0;
-
                 }
 
                 dbHelper.open();
@@ -398,12 +398,6 @@ public class NewGame extends AppCompatActivity
                 return false;
             }
         });
-
-        //RecyclerView Stuff
-        // use a linear layout manager
-
-        //Shared Preferences stuff
-
 
         displaySpinner(true);
         displaySpinner(false);
@@ -995,9 +989,12 @@ public class NewGame extends AppCompatActivity
                 snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
                 snackbar.show();
-            } else {
+            }else if(classicTheme && players.size() > 2){
+                snackbar = Snackbar.make(relativeLayout, "No more than 2 players for Classic Theme", Snackbar.LENGTH_SHORT)
+                        .setAction("Dismiss", onClickListener);
+                snackbar.show();
+            }else{
                 if (dataHelper.checkDuplicates(players)) {
-
 
                     snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                             .setAction("Dismiss", onClickListener);

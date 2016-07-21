@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:title="Classic Scoreboard"
-        android:summary="Use a classic scoreboard theme when playing a game instead of Material Design"
+        android:summary="Use a classic scoreboard theme when playing a game instead of Material Design (Only 2 Players)"
         android:enabled="true"
         android:key="prefClassicScoreboard"/>
 

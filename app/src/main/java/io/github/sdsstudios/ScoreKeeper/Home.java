@@ -182,6 +182,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                     relativeLayoutRecent.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                 }else{
+                    relativeLayoutRecent.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     historyAdapter = new HistoryAdapter(gameModel, this, this, true);
                     recyclerView.setAdapter(historyAdapter);
                 }

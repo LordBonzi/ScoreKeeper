@@ -31,7 +31,7 @@
         <activity
             android:name=".NewGame"
             android:label="@string/new_game"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Home"

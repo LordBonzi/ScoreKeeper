@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
@@ -133,13 +135,15 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         verifyStoragePermissions(this);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
             new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
         }
-
 
     }
     public void verifyStoragePermissions(Activity activity) {
@@ -153,12 +157,18 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
             new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
         }else{
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, "/ScoreKeeper");
+            file.mkdirs();
             String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
             new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
 

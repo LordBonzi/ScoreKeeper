@@ -141,6 +141,7 @@
     <string name="diff_to_win">Score Diff. to win (optional)</string>
     <string name="must_be_negative">Must be negative</string>
     <string name="add_remove_players">Add/Remove Players</string>
+    <string name="stopwatch">Stopwatch</string>
 
 
 </resources>

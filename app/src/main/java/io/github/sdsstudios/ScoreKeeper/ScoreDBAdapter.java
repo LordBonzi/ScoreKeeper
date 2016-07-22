@@ -27,6 +27,7 @@ public class ScoreDBAdapter {
     public static final String KEY_REVERSE_SCORING = "_reversescoring";
     public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
     public static final String KEY_DIFF_TO_WIN = "_difftowin";
+    public static final String KEY_STOPWATCH = "_stopwatch";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
@@ -43,11 +44,13 @@ public class ScoreDBAdapter {
                     KEY_MAX_SCORE + " , " +
                     KEY_REVERSE_SCORING + " , " +
                     KEY_SCORE_INTERVAL + " , " +
-                    KEY_DIFF_TO_WIN +
+                    KEY_DIFF_TO_WIN + " , " +
+                    KEY_STOPWATCH +
                     " );";
 
-    private String[] columnArray = {KEY_ROWID, KEY_PLAYERS,
-            KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE, KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN};
+    private String[] columnArray = {KEY_ROWID, KEY_PLAYERS
+            , KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE
+            , KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -113,7 +116,7 @@ public class ScoreDBAdapter {
         }
     }
 
-    public void updateGame(ArrayList array, String time_or_completed_or_timeLimit, int maxscore, String request, int id) {
+    public void updateGame(ArrayList array, String time_or_completed_or_timeLimit, int maxscoreorstopwatch, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -130,8 +133,8 @@ public class ScoreDBAdapter {
         }else if (request.equals(KEY_TIMER)){
             initialValues.put(request, time_or_completed_or_timeLimit);
         }else if(request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_MAX_SCORE) || request.equals(KEY_SCORE_INTERVAL)
-                || request.equals(KEY_DIFF_TO_WIN)){
-            initialValues.put(request, maxscore);
+                    || request.equals(KEY_STOPWATCH) || request.equals(KEY_DIFF_TO_WIN)){
+            initialValues.put(request, maxscoreorstopwatch);
         }
 
         open();
@@ -141,7 +144,7 @@ public class ScoreDBAdapter {
     }
 
     public long createGame(ArrayList players, String time, ArrayList score, int completed, String timeLimit
-                            , int maxScore, int reverseScrolling, int scoreinterval, int diffToWin) {
+                            , int maxScore, int reverseScrolling, int scoreinterval, int diffToWin, int stopwatch) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -159,6 +162,7 @@ public class ScoreDBAdapter {
         initialValues.put(KEY_REVERSE_SCORING, reverseScrolling);
         initialValues.put(KEY_SCORE_INTERVAL, scoreinterval);
         initialValues.put(KEY_DIFF_TO_WIN, diffToWin);
+        initialValues.put(KEY_STOPWATCH, stopwatch);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

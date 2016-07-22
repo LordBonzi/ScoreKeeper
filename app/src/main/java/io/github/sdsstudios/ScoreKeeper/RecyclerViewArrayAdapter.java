@@ -84,14 +84,16 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
         }else if (activity == 2){
             Log.e("Arrayadapter", "f"+getSelectedItems());
-            Log.e("Arrayadapter", "f"+arrayList);
+            int oldSize = arrayList.size();
             for (int i = 0; i < getSelectedItems().size(); i++){
                 if (arrayList.size() > 2) {
-                    int position = getSelectedItems().get(getSelectedItems().size() - i - 2);
-                    arrayList.remove(getSelectedItems().get(position));
+                    int position = getSelectedItems().get(i)-1 -(oldSize-arrayList.size());
+                    arrayList.remove(position);
+                    Log.e("Arrayadapter", "f"+arrayList);
+
                 }
-                Log.e("Arrayadapter", "f"+arrayList);
             }
+
             ScoreDBAdapter dbAdapter = new ScoreDBAdapter(context);
             dbAdapter.open().updateGame(arrayList, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
             dbAdapter.close();

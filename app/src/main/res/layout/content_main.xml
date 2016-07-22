@@ -38,8 +38,7 @@
             android:id="@+id/buttonChronometerBig"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
             android:layout_above="@+id/fabChronometerBig"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp">
+            android:layout_centerHorizontal="true">
 
             <io.github.sdsstudios.ScoreKeeper.Stopwatch
                 android:id="@+id/chronometerBig"

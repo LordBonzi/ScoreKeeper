@@ -115,6 +115,13 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/action_add_players"
+        android:orderInCategory="10"
+        android:title="@string/add_remove_players"
+        android:visible="false"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/menu_item_share"
         app:showAsAction="ifRoom"
         android:visible="false"

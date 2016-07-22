@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +20,18 @@ import java.util.List;
  */
 public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder>{
 
-    private ArrayList titleArray, itemsToDeleteList = new ArrayList();
+    private ArrayList arrayList;
     private Context context;
     private DataHelper dataHelper = new DataHelper();
     private ViewHolder.ClickListener listener;
+    private int activity;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1, ViewHolder.ClickListener listener) {
+    public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
         context = context1;
-        this.titleArray = titleArray;
+        this.arrayList = titleArray;
         this.listener = listener;
+        this.activity =  activity;
 
     }
 
@@ -72,10 +75,26 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
     }
 
-    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter){
-        for (int i = 0; i < getSelectedItems().size(); i++){
-            int position = getSelectedItems().get(getSelectedItems().size() - i-1);
-            presetDBAdapter.deletePreset(position);
+    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter, int gameID){
+        if (activity == 1){
+            for (int i = 0; i < getSelectedItems().size(); i++){
+                int position = getSelectedItems().get(getSelectedItems().size() - i-1);
+                presetDBAdapter.deletePreset(position);
+            }
+
+        }else if (activity == 2){
+            Log.e("Arrayadapter", "f"+getSelectedItems());
+            Log.e("Arrayadapter", "f"+arrayList);
+            for (int i = 0; i < getSelectedItems().size(); i++){
+                if (arrayList.size() > 2) {
+                    int position = getSelectedItems().get(getSelectedItems().size() - i - 2);
+                    arrayList.remove(getSelectedItems().get(position));
+                }
+                Log.e("Arrayadapter", "f"+arrayList);
+            }
+            ScoreDBAdapter dbAdapter = new ScoreDBAdapter(context);
+            dbAdapter.open().updateGame(arrayList, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+            dbAdapter.close();
         }
         notifyDataSetChanged();
 
@@ -83,7 +102,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
     private void removeRange(int positionStart, int itemCount) {
         for (int i = 0; i < itemCount; ++i) {
-            titleArray.remove(positionStart);
+            arrayList.remove(positionStart);
         }
         notifyItemRangeRemoved(positionStart, itemCount);
     }
@@ -109,7 +128,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(titleArray.get(position).toString());
+        holder.textView.setText(arrayList.get(position).toString());
 
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -128,7 +147,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return titleArray.size();
+        return arrayList.size();
     }
 
     // Provide a reference to the views for each data item

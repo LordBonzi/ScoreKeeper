@@ -676,7 +676,7 @@ public class NewGame extends AppCompatActivity
             presetDBAdapter.close();
         }
 
-        arrayAdapter = new RecyclerViewArrayAdapter(titleArrayList, this, this);
+        arrayAdapter = new RecyclerViewArrayAdapter(titleArrayList, this, this, 1);
         LayoutInflater inflter = LayoutInflater.from(this);
         final AlertDialog alertDialog;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -700,7 +700,7 @@ public class NewGame extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 presetDBAdapter.open();
-                arrayAdapter.deleteSelectedPresets(presetDBAdapter);
+                arrayAdapter.deleteSelectedPresets(presetDBAdapter, 0);
                 presetDBAdapter.close();
                 displaySpinner(false);
 
@@ -724,7 +724,6 @@ public class NewGame extends AppCompatActivity
         recyclerView.setLayoutManager(mLayoutManager);
 
         recyclerView.setAdapter(arrayAdapter);
-
 
         alertDialog.show();
     }
@@ -868,7 +867,6 @@ public class NewGame extends AppCompatActivity
         dialogBuilder.setTitle(getResources().getString(R.string.create_preset));
         dialogBuilder.setMessage(getResources().getString(R.string.create_preset_message));
         dialogBuilder.setNeutralButton(R.string.default_title, null);
-
 
         dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 

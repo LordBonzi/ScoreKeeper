@@ -38,7 +38,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
-                    ,BigGameAdapter.GameListener{
+                    ,BigGameAdapter.GameListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener{
 
     private boolean isWon = false;
     private String winner;
@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity
     private int maxScore;
     private boolean reverseScrolling;
     private int diffToWin;
+    private RecyclerViewArrayAdapter arrayAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private AlertDialog.Builder builder;
 
@@ -370,6 +372,7 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.action_reset).setVisible(true);
         menu.findItem(R.id.action_fullscreen).setVisible(true);
         menu.findItem(R.id.action_dice).setVisible(true);
+        menu.findItem(R.id.action_add_players).setVisible(true);
         menuItemDiceNum = menu.findItem(R.id.action_dice_num);
         return true;
     }
@@ -512,8 +515,58 @@ public class MainActivity extends AppCompatActivity
                 menuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
 
+        if (id == R.id.action_add_players) {
+            deletePlayersDialog();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deletePlayersDialog(){
+        isPaused = true;
+        chronometerClick();
+        final View dialogView;
+
+        arrayAdapter = new RecyclerViewArrayAdapter(playersArray, this, this, 2);
+        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog alertDialog;
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerViewFragment);
+
+        dialogBuilder.setTitle(getResources().getString(R.string.delete_presets));
+        dialogBuilder.setMessage(getResources().getString(R.string.delete_presets_message));
+
+        dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                arrayAdapter.deleteSelectedPresets(null, gameID);
+                displayRecyclerView(true);
+
+            }
+
+        });
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+        dialogBuilder.setView(dialogView);
+
+        alertDialog = dialogBuilder.create();
+        mLayoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.setAdapter(arrayAdapter);
+
+
+        alertDialog.show();
     }
 
     @Override
@@ -937,6 +990,11 @@ public class MainActivity extends AppCompatActivity
 
         displayRecyclerView(false);
 
+    }
+
+    @Override
+    public void onItemClicked(int position, int gameID) {
+        arrayAdapter.toggleSelection(position, gameID);
     }
 }
 

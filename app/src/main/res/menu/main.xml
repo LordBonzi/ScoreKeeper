@@ -67,7 +67,7 @@
         android:orderInCategory="0"
         android:visible="false"
         android:icon="@mipmap/ic_add_white_48dp"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_reset"
@@ -114,12 +114,6 @@
         android:visible="false"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_add_players"
-        android:orderInCategory="10"
-        android:title="@string/add_remove_players"
-        android:visible="false"
-        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_item_share"

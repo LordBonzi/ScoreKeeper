@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder>{
+public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder> {
 
     private ArrayList arrayList;
     private Context context;
@@ -26,12 +25,13 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     private ViewHolder.ClickListener listener;
     private int activity;
 
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
         context = context1;
         this.arrayList = titleArray;
         this.listener = listener;
-        this.activity =  activity;
+        this.activity = activity;
 
     }
 
@@ -55,41 +55,39 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
                 positions.remove(0);
             } else {
 
-                    int count = 1;
-                    while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
-                        ++count;
-                    }
+                int count = 1;
+                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
+                    ++count;
+                }
 
-                    if (count == 1) {
-                        removeItem(positions.get(0));
-                    } else {
-                        removeRange(positions.get(count - 1), count);
-                    }
+                if (count == 1) {
+                    removeItem(positions.get(0));
+                } else {
+                    removeRange(positions.get(count - 1), count);
+                }
 
-                    for (int i = 0; i < count; ++i) {
-                        positions.remove(0);
-                    }
+                for (int i = 0; i < count; ++i) {
+                    positions.remove(0);
+                }
 
             }
         }
 
     }
 
-    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter, int gameID){
-        if (activity == 1){
-            for (int i = 0; i < getSelectedItems().size(); i++){
-                int position = getSelectedItems().get(getSelectedItems().size() - i-1);
+    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter, int gameID) {
+        if (activity == 1) {
+            for (int i = 0; i < getSelectedItems().size(); i++) {
+                int position = getSelectedItems().get(getSelectedItems().size() - i - 1);
                 presetDBAdapter.deletePreset(position);
             }
 
-        }else if (activity == 2){
-            Log.e("Arrayadapter", "f"+getSelectedItems());
+        } else if (activity == 2) {
             int oldSize = arrayList.size();
-            for (int i = 0; i < getSelectedItems().size(); i++){
+            for (int i = 0; i < getSelectedItems().size(); i++) {
                 if (arrayList.size() > 2) {
-                    int position = getSelectedItems().get(i)-1 -(oldSize-arrayList.size());
+                    int position = getSelectedItems().get(i) - 1 - (oldSize - arrayList.size());
                     arrayList.remove(position);
-                    Log.e("Arrayadapter", "f"+arrayList);
 
                 }
             }
@@ -109,14 +107,18 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
         notifyItemRangeRemoved(positionStart, itemCount);
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+                                         int viewType) {
         // create a new view
 
-        View view;
+
+        View view = null;
+
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_array_adapter, parent, false);
+
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, listener);
@@ -125,7 +127,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
@@ -135,10 +137,10 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-        if (isSelected(position+1)){
+        if (isSelected(position + 1)) {
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.stop));
 
-        } else if (!isSelected(position+1)){
+        } else if (!isSelected(position + 1)) {
 
             holder.cardView.setCardBackgroundColor(outValue.resourceId);
         }
@@ -155,12 +157,12 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @SuppressWarnings("unused")
 
         // each data item is just a string in this case
 
-        TextView textView;
+                TextView textView;
         CardView cardView;
         ClickListener listener;
 
@@ -168,7 +170,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
             super(v);
 
             this.listener = listener;
-            textView = (TextView)v.findViewById(R.id.textView);
+            textView = (TextView) v.findViewById(R.id.textView);
             cardView = (CardView) v.findViewById(R.id.cardView);
             itemView.setOnClickListener(this);
         }
@@ -177,19 +179,15 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
         public void onClick(View view) {
             if (listener != null) {
 
-                listener.onItemClicked(getAdapterPosition(), getAdapterPosition()+1);
+                listener.onItemClicked(getAdapterPosition(), getAdapterPosition() + 1);
             }
 
         }
 
 
         public interface ClickListener {
-            public void onItemClicked(int position, int gameID);
+            void onItemClicked(int position, int gameID);
         }
 
     }
-
-
-
-
 }

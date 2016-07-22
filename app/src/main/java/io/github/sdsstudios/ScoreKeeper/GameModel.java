@@ -72,8 +72,8 @@ public class GameModel{
                 t = "Group Game";
                 for (int j = 0; j < arrayListPlayer.size(); j++){
                     p += arrayListPlayer.get(j);
-                    if (i != arrayListPlayer.size()-1){
-                        p += ",";
+                    if (j != arrayListPlayer.size()-1){
+                        p += ", ";
                     }
                 }
 
@@ -83,8 +83,8 @@ public class GameModel{
                 t = "Huge Game";
                 for (int k = 0; k < arrayListPlayer.size(); k++){
                     p += arrayListPlayer.get(k);
-                    if (i != arrayListPlayer.size()-1){
-                        p += ",";
+                    if (k != arrayListPlayer.size()-1){
+                        p += ", ";
                     }
                 }
                 s = arrayListScore.get(0) + ":" + arrayListScore.get(1);

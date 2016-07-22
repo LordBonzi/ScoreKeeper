@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -157,12 +158,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         // each data item is just a string in this case
         public TextView textViewPlayer;
         public Button butonScore;
+        public ImageButton imageButton;
 
 
         public ViewHolder(View v) {
             super(v);
             textViewPlayer = (TextView)v.findViewById(R.id.listTextViewPlayer);
             butonScore = (Button) v.findViewById(R.id.listButtonScore);
+            imageButton = (ImageButton)v.findViewById(R.id.buttonDelete);
 
         }
     }

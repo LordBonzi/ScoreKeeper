@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,6 +84,9 @@ public class MainActivity extends AppCompatActivity
     private int diffToWin;
     private RecyclerViewArrayAdapter arrayAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RelativeLayout content;
+    private CoordinatorLayout coordinatorLayout;
+    private int contentTopMargin;
 
     private AlertDialog.Builder builder;
 
@@ -161,6 +167,7 @@ public class MainActivity extends AppCompatActivity
                 setSupportActionBar(toolbar);
                 getSupportActionBar();
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
                 }
@@ -197,6 +204,8 @@ public class MainActivity extends AppCompatActivity
         reverseScrolling = i == 1;
 
         homeIntent = new Intent(this, Home.class);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        content = (RelativeLayout)findViewById(R.id.content);
 
         buttonP1 = (Button) findViewById(R.id.buttonP1);
         buttonP1.setOnClickListener(this);
@@ -372,7 +381,7 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.action_reset).setVisible(true);
         menu.findItem(R.id.action_fullscreen).setVisible(true);
         menu.findItem(R.id.action_dice).setVisible(true);
-        menu.findItem(R.id.action_add_players).setVisible(true);
+        menu.findItem(R.id.action_add).setVisible(true);
         menuItemDiceNum = menu.findItem(R.id.action_dice_num);
         return true;
     }
@@ -515,14 +524,14 @@ public class MainActivity extends AppCompatActivity
                 menuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
 
-        if (id == R.id.action_add_players) {
-            deletePlayersDialog();
+        if (id == R.id.action_add) {
+            addPlayerDialog();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void deletePlayersDialog(){
+    public void addPlayerDialog(){
         isPaused = true;
         chronometerClick();
         final View dialogView;
@@ -534,8 +543,8 @@ public class MainActivity extends AppCompatActivity
         dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerViewFragment);
 
-        dialogBuilder.setTitle(getResources().getString(R.string.delete_presets));
-        dialogBuilder.setMessage(getResources().getString(R.string.delete_presets_message));
+        dialogBuilder.setTitle(getResources().getString(R.string.delete_players));
+        dialogBuilder.setMessage(getResources().getString(R.string.delete_players_message));
 
         dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
 
@@ -959,18 +968,42 @@ public class MainActivity extends AppCompatActivity
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+                coordinatorLayout.setFitsSystemWindows(false);
+
             }
+
+            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 0, 0, 0);
+            content.setLayoutParams(params);
+
         }else{
             if (!classicTheme) {
                 getSupportActionBar().show();
             }
 
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-
+                coordinatorLayout.setFitsSystemWindows(true);
+            }
+            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                    CoordinatorLayout.LayoutParams.MATCH_PARENT
+            );
+            TypedValue outValue = new TypedValue();
+            getTheme().resolveAttribute(android.R.attr.actionBarSize, outValue, true);
+            int[] attr = new int[] { android.R.attr.actionBarSize };
+            TypedArray a = obtainStyledAttributes(outValue.data, attr);
+            contentTopMargin = a.getDimensionPixelSize(0, -1);
+            Log.e(TAG, contentTopMargin + "");
+            params.setMargins(0, contentTopMargin, 0, 0);
+            content.setLayoutParams(params);
         }
     }
 

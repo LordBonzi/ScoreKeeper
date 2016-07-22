@@ -994,7 +994,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClicked(int position, int gameID) {
-        arrayAdapter.toggleSelection(position, gameID);
+
+        if (arrayAdapter.getSelectedItems().contains(gameID)) {
+            arrayAdapter.toggleSelection(position, gameID);
+
+        }else{
+            if (playersArray.size() - arrayAdapter.getSelectedItems().size() > 2) {
+                arrayAdapter.toggleSelection(position,gameID);
+            } else {
+                Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
 

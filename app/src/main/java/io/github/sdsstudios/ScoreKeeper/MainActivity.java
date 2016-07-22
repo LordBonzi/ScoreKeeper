@@ -460,7 +460,10 @@ public class MainActivity extends AppCompatActivity
                     for (int i = 0; i < scoresArray.size(); i++) {
                         scoresArray.set(i, 0);
                     }
-
+                    dbHelper.open();
+                    dbHelper.updateGame(scoresArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.close();
                     if (gameSize > 2) {
                         displayRecyclerView(true);
                     } else {
@@ -475,10 +478,7 @@ public class MainActivity extends AppCompatActivity
                     stopwatch.setBase(SystemClock.elapsedRealtime());
                     timeWhenStopped = 0;
 
-                    dbHelper.open();
-                    dbHelper.updateGame(scoresArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
-                    dbHelper.updateGame(null, String.valueOf(stopwatch.getTimeElapsed()),0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                    dbHelper.close();
+
                 }
             });
 

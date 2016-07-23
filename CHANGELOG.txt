@@ -2,7 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
-## 1.0 Beta 1 - 5 
+## 1.0 Beta 6 23/7/16
+### Added
+ - changed colour of toolbar when playing a game so the text color adapts to the theme
+ - delete players in game
+ - add players in game
+ - added alfster2012's website to about
+ - stopwatch is now optional
+ - edit player and their score in game
+ - importing and exporting databases works.
+ 
+### Bug Fixes
+ - games bigger than 2 players not resetting
+ - layout of the in game layout
+ - full screen functions the way you would expect
+ - scrolling while editing games
+
+## 1.0 Beta 1 - 5 21/7/16
 ### Added
  - Created about activity
  - Added dice when playing game.

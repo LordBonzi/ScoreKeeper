@@ -147,6 +147,10 @@
     <string name="stopwatch">Stopwatch</string>
     <string name="export">Export</string>
     <string name="_import">Import</string>
+    <string name="import_games">Import</string>
+    <string name="import_games_message">The database must be in /ScoreKeeper folder. It will delete all of your games.</string>
+    <string name="export_games">Export</string>
+    <string name="export_games_message">You can find it in the "ScoreKeeper" folder.</string>
 
 
 </resources>

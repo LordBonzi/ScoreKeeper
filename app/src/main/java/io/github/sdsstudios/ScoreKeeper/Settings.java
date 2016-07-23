@@ -25,6 +25,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 public class Settings extends PreferenceActivity{
@@ -32,7 +33,8 @@ public class Settings extends PreferenceActivity{
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
-    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference, maxNumOnDicePreference, exportPreference;
+    private Preference deletePreference, timeLimitPreference, numGamesPreference
+            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -72,6 +74,7 @@ public class Settings extends PreferenceActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
+
         dataHelper = new DataHelper();
 
         deletePreference = findPreference("prefDeleteAllGames");
@@ -80,6 +83,7 @@ public class Settings extends PreferenceActivity{
         themesPreference = findPreference("prefThemes");
         maxNumOnDicePreference = findPreference("prefDiceMaxNum");
         exportPreference = findPreference("prefExport");
+        importPreference = findPreference("prefImport");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -88,8 +92,61 @@ public class Settings extends PreferenceActivity{
         exportPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                writeToSD();
-                return true;            }
+                builder.setTitle(getResources().getString(R.string.export_games));
+
+                builder.setMessage(R.string.export_games_message);
+
+                builder.setPositiveButton(R.string.export, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            exportDatabase();
+                            Toast.makeText(Settings.this, "Successfully exported games to /ScoreKeeper", Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();                return true;
+            }
+
+        });
+
+        importPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.import_games));
+
+                builder.setMessage(R.string.import_games_message);
+
+                builder.setPositiveButton(R.string._import, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            importDatabase();
+                            Toast.makeText(Settings.this, "Successfully imported games", Toast.LENGTH_SHORT).show();
+                        }catch (IOException e){
+                            Toast.makeText(Settings.this, "Is the database in /ScoreKeeper folder?", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+                return true;
+            }
 
         });
 
@@ -163,7 +220,7 @@ public class Settings extends PreferenceActivity{
 
     }
 
-    private void writeToSD(){
+    private void exportDatabase(){
         File sd = Environment.getExternalStorageDirectory();
         String DB_PATH;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -190,6 +247,32 @@ public class Settings extends PreferenceActivity{
                 e.printStackTrace();
                 Log.e("Settings", e.toString());
             }
+        }
+    }
+
+    private void importDatabase() throws IOException {
+        File sd = Environment.getExternalStorageDirectory();
+        String DB_PATH;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+        }
+        else {
+            DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
+        }
+
+        if (sd.canWrite()) {
+            String currentDBPath = "ScoreKeeper";
+            String backupDBPath = "/ScoreKeeper/ScoreKeeper.db";
+            File currentDB = new File(sd, backupDBPath);
+            File backupDB = new File(DB_PATH, currentDBPath);
+
+            FileChannel src = new FileInputStream(currentDB).getChannel();
+            FileChannel dst = new FileOutputStream(backupDB).getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
+
+
         }
     }
 

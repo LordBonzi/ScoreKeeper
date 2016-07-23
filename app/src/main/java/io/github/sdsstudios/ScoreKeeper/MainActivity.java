@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private Button buttonP1;
     private Button buttonP2;
     private TextView textViewP1, textViewP2;
+    private ImageButton buttonEditP1, buttonEditP2;
     private boolean ft1, ft2;
     private int P1Score, P2Score;
     private FloatingActionButton fabChronometer;
@@ -88,7 +90,8 @@ public class MainActivity extends AppCompatActivity
     private RelativeLayout content, big, normal;
     private CoordinatorLayout coordinatorLayout;
     private int contentTopMargin;
-    String newPlayer = null;
+    private String newPlayer = null;
+    private String newScore = null;
     private boolean stopwatchBoolean = false;
 
     private AlertDialog.Builder builder;
@@ -222,6 +225,12 @@ public class MainActivity extends AppCompatActivity
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         buttonP2.setOnClickListener(this);
         buttonP2.setOnLongClickListener(this);
+
+        buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
+        buttonEditP1.setOnClickListener(this);
+
+        buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
+        buttonEditP2.setOnClickListener(this);
 
         stopwatch = new Stopwatch(this);
 
@@ -486,6 +495,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+
     public void addPlayerDialog() {
         isPaused = true;
         chronometerClick();
@@ -499,7 +510,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    addPlayers(alertDialog);
+                addPlayers(alertDialog);
 
                 return false;
             }
@@ -664,6 +675,15 @@ public class MainActivity extends AppCompatActivity
                     isPaused = !isPaused;
                     chronometerClick();
                 }
+                break;
+
+            case R.id.buttonEditP1:
+                editPlayerDialog(0);
+                break;
+
+            case R.id.buttonEditP2:
+                editPlayerDialog(1);
+
                 break;
 
         }
@@ -1069,6 +1089,124 @@ public class MainActivity extends AppCompatActivity
         chronometerClick();
     }
 
+    @Override
+    public void editPlayer(int position) {
+        editPlayerDialog(position);
+    }
+
+    public void editPlayerDialog(final int position){
+        isPaused = true;
+        chronometerClick();
+        final View dialogView;
+
+        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogView = inflter.inflate(R.layout.edit_player_fragment, null);
+        final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
+        final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);
+        editTextPlayer.setHint(String.valueOf(playersArray.get(position)));
+        editTextScore.setHint(String.valueOf(scoresArray.get(position)));
+
+        dialogBuilder.setPositiveButton(R.string.done, null);
+
+        dialogBuilder.setTitle(getResources().getString(R.string.edit_player));
+
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+
+        alertDialog = dialogBuilder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                editTextPlayer.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        newPlayer = String.valueOf(charSequence);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                    }
+                });
+
+                editTextScore.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        newScore = String.valueOf(charSequence);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                    }
+                });
+
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        String oldPlayer = String.valueOf(playersArray.get(position));
+                        String oldScore = String.valueOf(scoresArray.get(position));
+
+                        if (newPlayer == null || newPlayer.equals("")) {
+                            newPlayer = oldPlayer;
+                        }
+                        if (newScore == null || newScore.equals("")) {
+                            newScore = oldScore;
+                        }
+
+                        playersArray.set(position, newPlayer);
+                        if (dataHelper.checkDuplicates(playersArray)) {
+                            playersArray.set(position, oldPlayer);
+                            dbHelper.open().updateGame(playersArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                            dbHelper.close();
+                            Toast.makeText(MainActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            scoresArray.set(position, newScore);
+                            dbHelper.open().updateGame(playersArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                            dbHelper.open().updateGame(scoresArray, null, 0, ScoreDBAdapter.KEY_SCORE, gameID);
+                            dbHelper.close();
+                            alertDialog.dismiss();
+
+                            if (stopwatchBoolean) {
+                                dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                            }
+
+                            dbHelper.close();
+                            gameSize = playersArray.size();
+                            selectLayout();
+                            isPaused = true;
+                            chronometerClick();
+                        }
+
+                    }
+
+                });
+            }
+
+        });
+        alertDialog.show();
+    }
     private void selectLayout(){
         if (gameSize > 2) {
             big.setVisibility(View.VISIBLE);
@@ -1131,6 +1269,7 @@ public class MainActivity extends AppCompatActivity
                 buttonP2.setEnabled(false);
                 snackbar.show();
             }
+
         }else{
             if (gameSize > 2) {
                 CardView cardView = (CardView)findViewById(R.id.buttonChronometerBig);
@@ -1138,13 +1277,12 @@ public class MainActivity extends AppCompatActivity
                 bigGameList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
             }else{
-                CardView cardView = (CardView)findViewById(R.id.buttonChronometerBig);
+                CardView cardView = (CardView)findViewById(R.id.buttonChronometer);
                 cardView.setVisibility(View.INVISIBLE);
             }
             stopwatch.setVisibility(View.INVISIBLE);
             fabChronometer.setVisibility(View.INVISIBLE);
         }
     }
-
 }
 

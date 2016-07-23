@@ -116,6 +116,7 @@
     <string name="preset_title">Preset:</string>
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
+    <string name="edit_player">Edit Player</string>
     <string name="edit_presets">Edit Presets</string>
     <string name="create_preset_message">What do you want to call it?</string>
     <string name="delete_presets_message">Select which presets to delete.</string>

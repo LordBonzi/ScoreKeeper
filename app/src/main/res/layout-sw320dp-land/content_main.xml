@@ -82,25 +82,69 @@
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_above="@+id/adViewHome"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-
         <TextView
             android:id="@+id/textViewP2"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
+            android:layout_marginTop="4dp"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/buttonP2"
-            android:layout_alignStart="@+id/buttonP2"
             android:layout_below="@+id/buttonP2"
             android:gravity="center"
             android:maxLines="1"
             android:text="Seth"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignLeft="@+id/buttonP2"
+            android:layout_alignStart="@+id/buttonP2"
+            android:layout_toLeftOf="@+id/buttonEditP2"
+            android:layout_toStartOf="@+id/buttonEditP2" />
+
+        <TextView
+            android:id="@+id/textViewP1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/buttonP1"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:maxLines="1"
+            android:text="Alfie"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:layout_toStartOf="@+id/buttonEditP1"
+            android:layout_toLeftOf="@+id/buttonEditP1" />
+        <ImageButton
+            android:id="@+id/buttonEditP1"
+            android:layout_width="30dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="100"
+            android:clickable="true"
+            android:src="@mipmap/ic_create_black_24dp"
+            android:tint="@color/textColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:layout_below="@+id/buttonP1"
+            android:layout_alignRight="@+id/buttonP1"
+            />
+
+        <ImageButton
+            android:id="@+id/buttonEditP2"
+            android:layout_width="30dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="100"
+            android:clickable="true"
+            android:src="@mipmap/ic_create_black_24dp"
+            android:tint="@color/textColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:layout_below="@+id/buttonP2"
+            android:layout_alignRight="@+id/buttonP2"
+            />
 
         <Button
             android:id="@+id/buttonP2"
@@ -156,20 +200,6 @@
             android:layout_above="@+id/buttonChronometer"
             android:layout_marginBottom="16dp"
             android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:id="@+id/textViewP1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="Alfie"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_below="@+id/buttonP1"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/buttonP1"
-            android:layout_alignEnd="@+id/buttonP1" />
 
 
     </RelativeLayout>

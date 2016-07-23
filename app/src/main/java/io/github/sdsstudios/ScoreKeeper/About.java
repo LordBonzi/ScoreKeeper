@@ -183,6 +183,7 @@ public class About extends PreferenceActivity {
                 Button alfieGithub = (Button) dialogView.findViewById(R.id.alfieGithubButton);
                 Button sethEmail = (Button) dialogView.findViewById(R.id.sethEmailButton);
                 Button alfieEmail = (Button) dialogView.findViewById(R.id.alfieEmailButton);
+                Button alfieWebsite = (Button) dialogView.findViewById(R.id.alfieWebsiteButton);
 
                 sethGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -212,6 +213,14 @@ public class About extends PreferenceActivity {
                     @Override
                     public void onClick(View view) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alfster2012"));
+                        startActivity(browserIntent);
+                    }
+                });
+
+                alfieWebsite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://alfster2012.me/"));
                         startActivity(browserIntent);
                     }
                 });

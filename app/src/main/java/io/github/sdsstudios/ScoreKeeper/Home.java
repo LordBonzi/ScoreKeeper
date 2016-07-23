@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -259,9 +260,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
     @Override
     public void onItemClicked(int position, int gameID) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("gameID", gameID);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("gameID", gameID);
+            startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG);
+        }
     }
 
     @Override

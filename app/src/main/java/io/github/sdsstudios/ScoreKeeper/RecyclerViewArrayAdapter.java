@@ -83,18 +83,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
             }
 
         } else if (activity == 2) {
-            int oldSize = arrayList.size();
-            for (int i = 0; i < getSelectedItems().size(); i++) {
-                if (arrayList.size() > 2) {
-                    int position = getSelectedItems().get(i) - 1 - (oldSize - arrayList.size());
-                    arrayList.remove(position);
 
-                }
-            }
-
-            ScoreDBAdapter dbAdapter = new ScoreDBAdapter(context);
-            dbAdapter.open().updateGame(arrayList, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
-            dbAdapter.close();
         }
         notifyDataSetChanged();
 
@@ -183,7 +172,6 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
             }
 
         }
-
 
         public interface ClickListener {
             void onItemClicked(int position, int gameID);

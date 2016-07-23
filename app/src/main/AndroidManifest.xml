@@ -67,7 +67,7 @@
             android:label="@string/game_info"
             android:parentActivityName=".History"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
     </application>
 

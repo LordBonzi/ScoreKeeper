@@ -129,6 +129,13 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }
             });
 
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gameListener.deletePlayer(position);
+                }
+            });
+
         }else{
             holder.butonScore.setEnabled(false);
         }
@@ -172,5 +179,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
     public interface GameListener{
         void gameWon(String winner);
+        void deletePlayer(int position);
     }
 }

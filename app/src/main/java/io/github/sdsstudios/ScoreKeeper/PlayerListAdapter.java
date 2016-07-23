@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -29,7 +28,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     private int mGameID;
     private int activity;
     private int editable;
-    private CoordinatorLayout coordinatorLayout;
     private RelativeLayout relativeLayout;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -43,7 +41,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         if(activity == 1){
             relativeLayout = NewGame.relativeLayout;
         } else if (activity == 2) {
-            coordinatorLayout = EditGame.editGameLayout;
+            relativeLayout = EditGame.editGameLayout;
         }
     }
 
@@ -99,8 +97,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                             playerArray.set(position, backup);
 
 
-                            if (coordinatorLayout != null) {
-                                snackbar = Snackbar.make(coordinatorLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                            if (relativeLayout != null) {
+                                snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                                         .setAction("Dismiss", onClickListener);
                                 snackbar.show();
                             }else{
@@ -246,8 +244,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, playerArray.size());
 
-        if (coordinatorLayout != null) {
-            snackbar = Snackbar.make(coordinatorLayout, "Player removed.", Snackbar.LENGTH_LONG)
+        if (relativeLayout != null) {
+            snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
             snackbar.show();
         }else{
@@ -256,8 +254,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             snackbar.show();
         }
 
-        mDbHelper.open().updateGame(playerArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, mGameID);
-        mDbHelper.close();
 
     }
 
@@ -267,8 +263,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         scoreArray.add(scoreArray.size(), backupScore);
 
-        if (coordinatorLayout != null) {
-            snackbar = Snackbar.make(coordinatorLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+        if (relativeLayout != null) {
+            snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
             snackbar.show();
         }else{
             snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);

@@ -83,7 +83,6 @@ public class NewGame extends AppCompatActivity
     private int scoreInterval = 1;
     private int diffToWin = 0;
     private int stopwatch = 0;
-
     private RelativeLayout optionsHeader, timeLimitHeader;
     private NestedScrollView scrollView;
     private CardView cardViewOptions, cardViewTimeLimit;
@@ -604,7 +603,6 @@ public class NewGame extends AppCompatActivity
 
             dbHelper.open();
             dbHelper.updateGame(players, null,0, ScoreDBAdapter.KEY_PLAYERS,gameID);
-            dbHelper.updateGame(null, "00:00:00:0",0, ScoreDBAdapter.KEY_CHRONOMETER,gameID);
             dbHelper.close();
 
             // specify an adapter (see also next example)
@@ -976,7 +974,6 @@ public class NewGame extends AppCompatActivity
                     }
                 });
 
-
             }
         });
         alertDialog.show();
@@ -987,7 +984,6 @@ public class NewGame extends AppCompatActivity
                 editTextPresetTitle.setText(defaultTitle);
             }
         });
-
 
     }
 
@@ -1023,6 +1019,12 @@ public class NewGame extends AppCompatActivity
                     createScoreArray();
 
                     if (startGame) {
+                        if (checkBoxStopwatch.isChecked()) {
+                            dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                        }else {
+                            dbHelper.updateGame(null, null, 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                        }
+
                         mainActivityIntent.putExtra("gameID", gameID);
                         startActivity(mainActivityIntent);
                         finish();

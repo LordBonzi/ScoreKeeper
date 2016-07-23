@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,14 +34,13 @@ import java.io.IOException;
 
 public class About extends PreferenceActivity {
 
-    private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private SharedPreferences settings;
     private Intent homeIntent;
     private Preference changeLogPreference, developersPreference, translatorsPreference, communityPreference, ratePreference, githubPreference, licensePreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     private boolean darkTheme, classicTheme, colorNavBar;
-    private int accentColor, primaryColor, primaryDarkColor;
+    private int accentColor;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -183,6 +181,7 @@ public class About extends PreferenceActivity {
                 Button alfieGithub = (Button) dialogView.findViewById(R.id.alfieGithubButton);
                 Button sethEmail = (Button) dialogView.findViewById(R.id.sethEmailButton);
                 Button alfieEmail = (Button) dialogView.findViewById(R.id.alfieEmailButton);
+                Button alfieWebsite = (Button) dialogView.findViewById(R.id.alfieWebsiteButton);
 
                 sethGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -212,6 +211,14 @@ public class About extends PreferenceActivity {
                     @Override
                     public void onClick(View view) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alfster2012"));
+                        startActivity(browserIntent);
+                    }
+                });
+
+                alfieWebsite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://alfster2012.me/"));
                         startActivity(browserIntent);
                     }
                 });
@@ -328,19 +335,6 @@ public class About extends PreferenceActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveInfo(){
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("prefDarkTheme", darkTheme);
-        editor.putInt("prefAccent", accentColor);
-        editor.putInt("prefPrimaryColor", primaryColor);
-        editor.putInt("prefPrimaryDarkColor", primaryDarkColor);
-        editor.putBoolean("prefClassicTheme", classicTheme);
-        editor.putBoolean("prefColorNavBar", colorNavBar);
-
-        editor.apply();
-
     }
 
     @Override

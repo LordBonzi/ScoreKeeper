@@ -86,7 +86,6 @@ public class DataHelper {
         boolean duplicate = false;
 
         Set<Integer> set = new HashSet<Integer>(arrayList);
-
         if(set.size() < arrayList.size()){
             duplicate = true;
         }

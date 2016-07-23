@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
@@ -13,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,12 +22,19 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+
 public class Settings extends PreferenceActivity{
     private ScoreDBAdapter dbHelper;
     private Intent homeIntent;
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
-    private Preference deletePreference, timeLimitPreference, numGamesPreference, themesPreference, maxNumOnDicePreference;
+    private Preference deletePreference, timeLimitPreference, numGamesPreference
+            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -43,7 +52,7 @@ public class Settings extends PreferenceActivity{
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        if (colorNavBar){
+        if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
@@ -58,13 +67,14 @@ public class Settings extends PreferenceActivity{
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
         addPreferencesFromResource(R.xml.content_settings);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
+
         dataHelper = new DataHelper();
 
         deletePreference = findPreference("prefDeleteAllGames");
@@ -72,16 +82,78 @@ public class Settings extends PreferenceActivity{
         numGamesPreference = findPreference("prefNumGames");
         themesPreference = findPreference("prefThemes");
         maxNumOnDicePreference = findPreference("prefDiceMaxNum");
+        exportPreference = findPreference("prefExport");
+        importPreference = findPreference("prefImport");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        exportPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.export_games));
+
+                builder.setMessage(R.string.export_games_message);
+
+                builder.setPositiveButton(R.string.export, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            exportDatabase();
+                            Toast.makeText(Settings.this, "Successfully exported games to /ScoreKeeper", Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();                return true;
+            }
+
+        });
+
+        importPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.import_games));
+
+                builder.setMessage(R.string.import_games_message);
+
+                builder.setPositiveButton(R.string._import, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            importDatabase();
+                            Toast.makeText(Settings.this, "Successfully imported games", Toast.LENGTH_SHORT).show();
+                        }catch (IOException e){
+                            Toast.makeText(Settings.this, "Is the database in /ScoreKeeper folder?", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+                return true;
+            }
+
+        });
+
         maxNumOnDicePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                maxNumDice = Integer.valueOf(o.toString());
-                saveInfo();
+
                 return true;
             }
         });
@@ -137,7 +209,6 @@ public class Settings extends PreferenceActivity{
 
         });
 
-
         dbHelper = new ScoreDBAdapter(this);
         dbHelper.open();
 
@@ -148,6 +219,63 @@ public class Settings extends PreferenceActivity{
         numGamesToShow = sharedPreferences.getString("numgamestoshow", "3");
 
     }
+
+    private void exportDatabase(){
+        File sd = Environment.getExternalStorageDirectory();
+        String DB_PATH;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+        }
+        else {
+            DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
+        }
+
+        if (sd.canWrite()) {
+            String currentDBPath = "ScoreKeeper";
+            String backupDBPath = "/ScoreKeeper/ScoreKeeper.db";
+            File currentDB = new File(DB_PATH, currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
+
+            try{
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("Settings", e.toString());
+            }
+        }
+    }
+
+    private void importDatabase() throws IOException {
+        File sd = Environment.getExternalStorageDirectory();
+        String DB_PATH;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+        }
+        else {
+            DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
+        }
+
+        if (sd.canWrite()) {
+            String currentDBPath = "ScoreKeeper";
+            String backupDBPath = "/ScoreKeeper/ScoreKeeper.db";
+            File currentDB = new File(sd, backupDBPath);
+            File backupDB = new File(DB_PATH, currentDBPath);
+
+            FileChannel src = new FileInputStream(currentDB).getChannel();
+            FileChannel dst = new FileOutputStream(backupDB).getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
+
+
+        }
+    }
+
     private void setSupportActionBar(@Nullable Toolbar toolbar) {
         getDelegate().setSupportActionBar(toolbar);
     }

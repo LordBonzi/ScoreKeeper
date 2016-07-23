@@ -13,11 +13,20 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextPresetTitle"
-        android:imeOptions="actionDone"
+        android:id="@+id/editTextPlayer"
         android:inputType="text"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextScore"
+        android:inputType="number"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editTextPlayer"
         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

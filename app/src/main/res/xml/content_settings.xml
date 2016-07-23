@@ -27,6 +27,19 @@
         android:summary="Change the max amount of numbers on the dice"
         android:key="prefDiceMaxNum"
         />
+
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/export"
+        android:key="prefExport"
+        />
+    <Preference
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="@string/_import"
+        android:key="prefImport"
+        />
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

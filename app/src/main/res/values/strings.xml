@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.0 Beta 5</string>
-    <string name="versionCode">5</string>
+    <string name="app_version">v1.0 Beta 6</string>
+    <string name="versionCode">6</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
@@ -116,10 +116,13 @@
     <string name="preset_title">Preset:</string>
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
+    <string name="edit_player">Edit Player</string>
     <string name="edit_presets">Edit Presets</string>
     <string name="create_preset_message">What do you want to call it?</string>
     <string name="delete_presets_message">Select which presets to delete.</string>
     <string name="delete_presets">Delete Presets</string>
+    <string name="delete_players_message">Select which players to delete.</string>
+    <string name="delete_players">Delete Players</string>
     <string name="delete_all">Delete All</string>
     <string name="default_title">Default Title</string>
     <string name="themes">Themes</string>
@@ -140,6 +143,14 @@
     <string name="score_interval">Score Interval (optional)</string>
     <string name="diff_to_win">Score Diff. to win (optional)</string>
     <string name="must_be_negative">Must be negative</string>
+    <string name="add_remove_players">Add/Remove Players</string>
+    <string name="stopwatch">Stopwatch</string>
+    <string name="export">Export</string>
+    <string name="_import">Import</string>
+    <string name="import_games">Import</string>
+    <string name="import_games_message">The database must be in /ScoreKeeper folder. It will delete all of your games.</string>
+    <string name="export_games">Export</string>
+    <string name="export_games_message">You can find it in the "ScoreKeeper" folder.</string>
 
 
 </resources>

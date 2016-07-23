@@ -24,6 +24,7 @@ public class PresetDBAdapter {
     public static final String KEY_REVERSE_SCORING = "_reversescoring";
     public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
     public static final String KEY_DIFF_TO_WIN = "_difftowin";
+    public static final String KEY_STOPWATCH = "_stopwatch";
     public static final String SQLITE_TABLE = "presets";
     private static final String TAG = "PresetDBAdapter";
     private static final String DATABASE_NAME = "PresetDatabase";
@@ -37,10 +38,12 @@ public class PresetDBAdapter {
                     KEY_MAX_SCORE + "," +
                     KEY_REVERSE_SCORING + " , " +
                     KEY_SCORE_INTERVAL + " , " +
-                    KEY_DIFF_TO_WIN +
+                    KEY_DIFF_TO_WIN + " , " +
+                    KEY_STOPWATCH +
                     " );";
 
-    private String[] columnArray ={KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE, KEY_MAX_SCORE, KEY_REVERSE_SCORING,KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN};
+    private String[] columnArray ={KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE, KEY_MAX_SCORE
+                                    , KEY_REVERSE_SCORING,KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -72,7 +75,7 @@ public class PresetDBAdapter {
         return str;
     }
 
-    public void updatePreset(ArrayList players, String timelimitortitle, int maxscore ,String request, int id) {
+    public void updatePreset(ArrayList players, String timelimitortitle, int maxscoreorstopwatch ,String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -81,8 +84,8 @@ public class PresetDBAdapter {
         }else if(request == KEY_TIME_LIMIT|| request == KEY_TITLE){
             initialValues.put(request, timelimitortitle);
 
-        }else if(request.equals(KEY_MAX_SCORE) || request.equals(KEY_REVERSE_SCORING)){
-            initialValues.put(request, maxscore);
+        }else if(request.equals(KEY_MAX_SCORE) || request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_STOPWATCH)){
+            initialValues.put(request, maxscoreorstopwatch);
         }
 
         open();
@@ -91,7 +94,8 @@ public class PresetDBAdapter {
 
     }
 
-    public long createPreset(ArrayList players, String timelimit, String title, int maxscore, int reversescroling, int scoreinterval, int difftowin) {
+    public long createPreset(ArrayList players, String timelimit, String title, int maxscore, int reversescroling
+                            , int scoreinterval, int difftowin, int stopwatch) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -108,6 +112,7 @@ public class PresetDBAdapter {
         initialValues.put(KEY_REVERSE_SCORING, reversescroling);
         initialValues.put(KEY_SCORE_INTERVAL, scoreinterval);
         initialValues.put(KEY_DIFF_TO_WIN, difftowin);
+        initialValues.put(KEY_STOPWATCH, stopwatch);
 
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

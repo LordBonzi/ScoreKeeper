@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.ads.AdView;
 
@@ -41,7 +41,7 @@ public class EditGame extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private PlayerListAdapter playerListAdapter;
     private ArrayList players;
-    public static CoordinatorLayout editGameLayout;
+    public static RelativeLayout editGameLayout;
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
     SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:S");//dd/MM/yyyy
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
@@ -91,7 +91,7 @@ public class EditGame extends AppCompatActivity {
 
         editTextDate = (EditText) findViewById(R.id.editTextDate);
         editTextLength = (EditText) findViewById(R.id.editTextLength);
-        editGameLayout = (CoordinatorLayout) findViewById(R.id.edit_game_content);
+        editGameLayout = (RelativeLayout) findViewById(R.id.edit_game_content);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 

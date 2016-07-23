@@ -98,6 +98,15 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Website"
+        android:id="@+id/alfieWebsiteButton"
+        android:layout_below="@+id/textView5"
+        android:layout_toRightOf="@+id/alfieEmailButton"
+        android:layout_toEndOf="@+id/alfieEmailButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Github"
         android:id="@+id/alfieGithubButton"
         android:layout_below="@+id/textView5"

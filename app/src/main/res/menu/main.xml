@@ -67,7 +67,7 @@
         android:orderInCategory="0"
         android:visible="false"
         android:icon="@mipmap/ic_add_white_48dp"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_reset"
@@ -113,6 +113,7 @@
         android:title="@string/delete_presets"
         android:visible="false"
         app:showAsAction="never"/>
+
 
     <item
         android:id="@+id/menu_item_share"

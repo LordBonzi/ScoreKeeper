@@ -188,7 +188,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
+                GameModel gModel = new GameModel();
+                gameModel = gModel.createGameModel(numGamesToShow, 1, this, dbHelper);
                 if (gameModel.isEmpty()){
                     relativeLayoutRecent.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);

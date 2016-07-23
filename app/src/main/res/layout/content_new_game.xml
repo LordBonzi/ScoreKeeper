@@ -272,7 +272,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/stopwatch"
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/editTextDiffToWin"
                         android:layout_toRightOf="@+id/checkBoxReverseScoring"
                         android:layout_toEndOf="@+id/checkBoxReverseScoring" />
 

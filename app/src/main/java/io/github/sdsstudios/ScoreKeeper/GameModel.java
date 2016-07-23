@@ -16,6 +16,9 @@ public class GameModel{
     private String mProgress;
     private int gameID;
 
+    public GameModel(){
+
+    }
 
     public GameModel(String players, String score, String date, String type, String progress, int gameIDm) {
         super();
@@ -27,7 +30,7 @@ public class GameModel{
         gameID = gameIDm;
     }
 
-    public static ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
+    public ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
         String p, s ,d ,t, progress = null;
@@ -117,7 +120,6 @@ public class GameModel{
                     t += " ·";
                     gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
 
-
                     dbHelper.close();
                 }
 
@@ -131,14 +133,14 @@ public class GameModel{
                 }
                 t += " ·";
 
-                gameModelArrayList.add(new GameModel(p , s , d, t, progress, gameID));
+                gameModelArrayList.add(new GameModel(p, s, d, t, progress, gameID));
+
                 dbHelper.close();
 
             }
 
-
-
         }
+
         dbHelper.close();
         return gameModelArrayList;
     }
@@ -165,6 +167,7 @@ public class GameModel{
     public int getGameID() {
         return gameID;
     }
+
 
 
 }

@@ -266,6 +266,7 @@
                         android:layout_alignLeft="@+id/editTextDiffToWin"
                         android:layout_alignStart="@+id/editTextDiffToWin" />
 
+
                     <CheckBox
                         android:id="@+id/checkBoxStopwatch"
                         android:layout_width="wrap_content"

@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -282,7 +281,6 @@ public class NewGame extends AppCompatActivity
                 catch (NumberFormatException e)
                 {
                     e.printStackTrace();
-                    Log.e(TAG, e.toString());
                     diffToWin = 0;
 
                 }
@@ -301,7 +299,6 @@ public class NewGame extends AppCompatActivity
                 catch (NumberFormatException e)
                 {
                     e.printStackTrace();
-                    Log.e(TAG, e.toString());
                     diffToWin = 0;
                 }
                 dbHelper.open();

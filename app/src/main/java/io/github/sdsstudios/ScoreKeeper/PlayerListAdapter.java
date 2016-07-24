@@ -48,7 +48,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType) {
+                                         int viewType) {
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.player_list_adapter, parent, false);
@@ -245,10 +245,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRangeChanged(position, playerArray.size());
 
         if (relativeLayout != null) {
-            snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", onClickListener);
-            snackbar.show();
-        }else{
             snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
             snackbar.show();

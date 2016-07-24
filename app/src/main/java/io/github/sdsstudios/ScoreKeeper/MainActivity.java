@@ -1030,6 +1030,14 @@ public class MainActivity extends AppCompatActivity
             if (!classicTheme) {
                 getSupportActionBar().show();
             }
+            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+
+            if (colorNavBar && !classicTheme) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(primaryDarkColor);
+                }
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 getWindow().getDecorView().setSystemUiVisibility(

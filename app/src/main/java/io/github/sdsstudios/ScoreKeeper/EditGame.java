@@ -608,6 +608,7 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
         stopwatch = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_STOPWATCH, dbHelper);
         scoreInterval = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
+        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
 
         editTextMaxScore.setText("");
         editTextScoreInterval.setText("");

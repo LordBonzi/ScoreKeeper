@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:gravity="center"
         android:text="Seth"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_toRightOf="@+id/buttonEdit"
         android:layout_toEndOf="@+id/buttonEdit"
         />

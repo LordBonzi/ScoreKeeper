@@ -231,21 +231,26 @@ public class MainActivity extends AppCompatActivity
         buttonP2.setOnClickListener(this);
         buttonP2.setOnLongClickListener(this);
 
-        buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
-        buttonEditP1.setOnClickListener(this);
 
-        buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
-        buttonEditP2.setOnClickListener(this);
+        if (!classicTheme) {
+            buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
+            buttonEditP1.setOnClickListener(this);
+
+            buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
+            buttonEditP2.setOnClickListener(this);
+        }
 
         stopwatch = new Stopwatch(this);
 
         textViewP1 = (TextView) findViewById(R.id.textViewP1);
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
-        bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
+        if (!classicTheme) {
+            bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
 
-        normal = (RelativeLayout) findViewById(R.id.layoutNormal);
-        big = (RelativeLayout) findViewById(R.id.layoutBig);
+            normal = (RelativeLayout) findViewById(R.id.layoutNormal);
+            big = (RelativeLayout) findViewById(R.id.layoutBig);
+        }
 
         playersArray = new ArrayList();
         playersArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -1029,27 +1034,28 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (!classicTheme) {
                 getSupportActionBar().show();
-            }
-            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
 
-            if (colorNavBar && !classicTheme) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
+                boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+                int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+
+                if (colorNavBar && !classicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
                 }
-            }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-                coordinatorLayout.setFitsSystemWindows(true);
-            }
+                    coordinatorLayout.setFitsSystemWindows(true);
+                }
 
-            if (params != null) {
-                content.setLayoutParams(params);
+                if (params != null) {
+                    content.setLayoutParams(params);
+                }
             }
         }
     }
@@ -1232,8 +1238,10 @@ public class MainActivity extends AppCompatActivity
 
         } else {
 
-            normal.setVisibility(View.VISIBLE);
-            big.setVisibility(View.INVISIBLE);
+            if (!classicTheme) {
+                normal.setVisibility(View.VISIBLE);
+                big.setVisibility(View.INVISIBLE);
+            }
             P1Score = Integer.valueOf(scoresArray.get(0).toString());
             P2Score = Integer.valueOf(scoresArray.get(1).toString());
             ft1 = true;
@@ -1248,12 +1256,12 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setOnClickListener(this);
         }
 
-
             if (stopwatchBoolean) {
             try {
                 if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) == null
                         || dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper).equals("") && stopwatchBoolean) {
                     dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.close();
                 }
 
                     if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {

@@ -272,9 +272,9 @@
             android:layout_below="@+id/cardViewLength"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_alignRight="@+id/cardViewDate"
-            android:layout_alignEnd="@+id/cardViewDate">
+            android:layout_alignEnd="@+id/cardViewDate"
+            android:layout_alignBottom="@+id/cardViewOptions">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -345,8 +345,7 @@
             android:layout_below="@+id/cardViewOptions"
             android:layout_width="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true">
+            android:layout_height="50dp">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adViewHome2"

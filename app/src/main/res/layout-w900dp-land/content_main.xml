@@ -17,7 +17,7 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingRight="8dp"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <com.google.android.gms.ads.AdView
@@ -54,7 +54,8 @@
                 android:layout_width="530dp"
                 android:layout_height="140dp"
                 android:clickable="true"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:focusableInTouchMode="true"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
@@ -62,6 +63,8 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp">
                 <io.github.sdsstudios.ScoreKeeper.Stopwatch
                     android:id="@+id/chronometerBig"
@@ -83,6 +86,7 @@
                 android:layout_below="@+id/buttonChronometerBig"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/fabChronometerBig"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="98dp"
                 android:layout_marginStart="98dp" />
 
@@ -95,7 +99,7 @@
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:paddingLeft="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
@@ -136,8 +140,8 @@
 
         <Button
             android:id="@+id/buttonP2"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
             android:background="?attr/buttonBackground"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -147,8 +151,8 @@
 
         <Button
             android:id="@+id/buttonP1"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
             android:background="?attr/buttonBackground"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"

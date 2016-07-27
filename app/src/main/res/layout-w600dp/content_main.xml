@@ -18,7 +18,7 @@
         android:id="@+id/layoutBig"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_above="@+id/adViewHome"
         >
 
@@ -33,18 +33,20 @@
             android:layout_centerHorizontal="true" />
 
         <android.support.v7.widget.CardView
-            android:layout_width="250dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:focusableInTouchMode="true"
             android:id="@+id/buttonChronometerBig"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
             android:layout_above="@+id/fabChronometerBig"
             android:layout_centerHorizontal="true">
 
             <io.github.sdsstudios.ScoreKeeper.Stopwatch
                 android:id="@+id/chronometerBig"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
                 android:layout_width="match_parent"
+                android:layout_gravity="center"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_centerHorizontal="true" />
@@ -67,7 +69,7 @@
         android:id="@+id/layoutNormal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_above="@+id/adViewHome"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -85,8 +87,8 @@
             android:maxLines="1"
             android:text="Seth"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_alignRight="@+id/buttonChronometer"
-            android:layout_alignEnd="@+id/buttonChronometer" />
+            android:layout_toLeftOf="@+id/buttonEditP2"
+            android:layout_toStartOf="@+id/buttonEditP2" />
 
         <TextView
             android:id="@+id/textViewP1"
@@ -100,37 +102,55 @@
             android:maxLines="1"
             android:text="Alfie"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_toStartOf="@+id/buttonEditP1"
+            android:layout_toLeftOf="@+id/buttonEditP1" />
+        <ImageButton
+            android:id="@+id/buttonEditP1"
+            android:layout_width="30dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="100"
+            android:clickable="true"
+            android:src="@mipmap/ic_create_black_24dp"
+            android:tint="@color/textColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:layout_below="@+id/buttonP1"
             android:layout_alignRight="@+id/buttonP1"
-            android:layout_alignEnd="@+id/buttonP1" />
+            />
 
-        <Button
-            android:id="@+id/buttonP2"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="?attr/buttonBackground"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
-            android:text="3"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+        <ImageButton
+            android:id="@+id/buttonEditP2"
+            android:layout_width="30dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:text="100"
+            android:clickable="true"
+            android:src="@mipmap/ic_create_black_24dp"
+            android:tint="@color/textColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:layout_below="@+id/buttonP2"
+            android:layout_alignRight="@+id/buttonP2"
+            />
 
         <Button
             android:id="@+id/buttonP1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:background="?attr/buttonBackground"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:gravity="center"
             android:text="100"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display4" />
+
 
 
         <android.support.v7.widget.CardView
-            android:layout_width="300dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
             android:clickable="true"
             android:focusableInTouchMode="true"
             android:id="@+id/buttonChronometer"
@@ -141,7 +161,7 @@
 
             <io.github.sdsstudios.ScoreKeeper.Stopwatch
                 android:id="@+id/chronometer"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -159,33 +179,17 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true" />
 
-        <ImageButton
-            android:id="@+id/buttonEditP1"
-            android:layout_width="30dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_height="30dp"
-            android:text="100"
-            android:clickable="true"
-            android:src="@mipmap/ic_create_black_24dp"
-            android:tint="@color/textColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        <Button
+            android:id="@+id/buttonP2"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:background="?attr/buttonBackground"
+            android:gravity="center"
+            android:text="3"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display4"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/buttonP1"
-            android:layout_toEndOf="@+id/buttonP1" />
-
-        <ImageButton
-            android:id="@+id/buttonEditP2"
-            android:layout_width="30dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_height="30dp"
-            android:text="100"
-            android:clickable="true"
-            android:src="@mipmap/ic_create_black_24dp"
-            android:tint="@color/textColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/buttonP2"
-            android:layout_toStartOf="@+id/buttonP2" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
     </RelativeLayout>

@@ -261,7 +261,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             snackbar.show();
         }
 
-
     }
 
     public void undoPlayerRemoval() {

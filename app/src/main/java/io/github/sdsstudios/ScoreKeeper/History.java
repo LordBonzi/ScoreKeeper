@@ -185,7 +185,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
+                GameModel gModel = new GameModel();
+                gameModel = gModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
                 historyAdapter = new HistoryAdapter(gameModel, this, this, false);
                 recyclerView.setAdapter(historyAdapter);
             } else {

@@ -14,10 +14,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.ads.AdView;
@@ -27,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class EditGame extends AppCompatActivity {
+public class EditGame extends AppCompatActivity implements View.OnClickListener{
     String date;
     int gameID;
     private String lengthStr =null;
@@ -43,14 +47,20 @@ public class EditGame extends AppCompatActivity {
     private ArrayList players;
     public static RelativeLayout editGameLayout;
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat lengthFormat = new SimpleDateFormat("mm:ss:S");//dd/MM/yyyy
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
+    private EditText  editTextMaxScore, editTextScoreInterval, editTextDiffToWin;
+    private CheckBox  checkBoxReverseScrolling, checkBoxStopwatch;
     int accentColor;
-
+    boolean bLength = false;
     private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd, menuItemShare;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
-
+    private ImageButton buttonHelpLength, buttonHelpDate;
+    private int reverseScrolling = 0;
+    private int maxScore = 0;
+    private int scoreInterval = 1;
+    private int diffToWin = 0;
+    private int stopwatch = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +70,22 @@ public class EditGame extends AppCompatActivity {
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
         }
+
         setTheme(accentColor);
         setContentView(R.layout.activity_edit_game);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
+
+        AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
+        AdCreator adCreator2 = new AdCreator(mAdView2, this);
+        adCreator2.createAd();
         getSupportActionBar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
@@ -93,10 +109,31 @@ public class EditGame extends AppCompatActivity {
         editTextLength = (EditText) findViewById(R.id.editTextLength);
         editGameLayout = (RelativeLayout) findViewById(R.id.edit_game_content);
 
+        buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
+        buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
+        buttonHelpDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
+            }
+        });
+        buttonHelpLength.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog(getString(R.string.length_help), getString(R.string.length_help_message));
+            }
+        });
+
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 
         arrayListPlayers = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
         arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+        maxScore = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
+        reverseScrolling = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
+        diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
+        stopwatch = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_STOPWATCH, dbHelper);
+        scoreInterval = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
 
         date = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
 
@@ -105,8 +142,76 @@ public class EditGame extends AppCompatActivity {
         editTextLength.setEnabled(false);
         editTextDate.setEnabled(false);
 
-        displayRecyclerView(0);
+        checkBoxReverseScrolling = (CheckBox) findViewById(R.id.checkBoxReverseScoring);
+        checkBoxReverseScrolling.setOnClickListener(this);
 
+        checkBoxStopwatch = (CheckBox) findViewById(R.id.checkBoxStopwatch);
+        checkBoxStopwatch.setOnClickListener(this);
+
+        editTextDiffToWin = (EditText) findViewById(R.id.editTextDiffToWin);
+        editTextMaxScore = (EditText) findViewById(R.id.editTextMaxScore);
+        editTextScoreInterval = (EditText) findViewById(R.id.editTextScoreInterval);
+
+        if (maxScore != 0) {
+            editTextMaxScore.setText(String.valueOf(maxScore));
+        }
+        if (scoreInterval !=0 && scoreInterval !=1) {
+            editTextScoreInterval.setText(String.valueOf(scoreInterval));
+        }
+
+        if (diffToWin !=0) {
+            editTextDiffToWin.setText(String.valueOf(diffToWin));
+        }
+
+        if (reverseScrolling == 1){
+            checkBoxReverseScrolling.setChecked(true);
+        }else{
+            checkBoxReverseScrolling.setChecked(false);
+        }
+
+        if (stopwatch == 1){
+            checkBoxStopwatch.setChecked(true);
+        }else{
+            checkBoxStopwatch.setChecked(false);
+        }
+
+        displayRecyclerView(0);
+        checkBoxReverseScrolling.setEnabled(false);
+        checkBoxStopwatch.setEnabled(false);
+        editTextDate.setEnabled(false);
+        editTextLength.setEnabled(false);
+        editTextDiffToWin.setEnabled(false);
+        editTextMaxScore.setEnabled(false);
+        editTextScoreInterval.setEnabled(false);
+
+    }
+    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.checkBoxReverseScoring: {
+                if (checkBoxReverseScrolling.isChecked()){
+                    reverseScrolling =1;
+                }else{
+                    reverseScrolling = 0;
+                }
+
+
+                break;
+            }
+            case R.id.checkBoxStopwatch: {
+                if (checkBoxStopwatch.isChecked()){
+                    stopwatch =1;
+                }else{
+                    stopwatch = 0;
+                }
+
+
+                break;
+            }
+
+        }
     }
 
     @Override
@@ -183,6 +288,25 @@ public class EditGame extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void helpDialog(String title, String message){
+        AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+        builder.setTitle(title);
+
+        builder.setMessage(message);
+
+        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
     public void onMenuEditClick() {
         editTextLength.setEnabled(true);
         editTextDate.setEnabled(true);
@@ -194,11 +318,122 @@ public class EditGame extends AppCompatActivity {
         menuItemCancel.setVisible(true);
         menuItemShare.setVisible(false);
 
+        checkBoxReverseScrolling.setEnabled(true);
+        checkBoxStopwatch.setEnabled(true);
+        editTextDate.setEnabled(true);
+        editTextLength.setEnabled(true);
+        editTextDiffToWin.setEnabled(true);
+        editTextMaxScore.setEnabled(true);
+        editTextScoreInterval.setEnabled(true);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
         editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         displayRecyclerView(1);
+
+        editTextDiffToWin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    diffToWin= Integer.parseInt(charSequence.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    diffToWin = 0;
+
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try
+                {
+                    diffToWin= Integer.parseInt(editable.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    e.printStackTrace();
+                    diffToWin = 0;
+                }
+
+            }
+        });
+
+        editTextScoreInterval = (EditText) findViewById(R.id.editTextScoreInterval);
+        editTextScoreInterval.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    scoreInterval= Integer.parseInt(charSequence.toString());
+                }
+                catch (NumberFormatException e) {
+                    scoreInterval = 0;
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try
+                {
+                    scoreInterval= Integer.parseInt(editable.toString());
+                }
+                catch (NumberFormatException e)
+                {
+
+                    scoreInterval = 0;
+                }
+
+            }
+        });
+
+        editTextMaxScore.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    maxScore= Integer.parseInt(charSequence.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    // handle the exception
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try
+                {
+                    maxScore= Integer.parseInt(editable.toString());
+                }
+                catch (NumberFormatException e)
+                {
+                    // handle the exception
+                }
+            }
+        });
     }
 
     public void displayRecyclerView(int editable) {
@@ -211,14 +446,40 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuDoneClick() {
+        for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
+            if (PlayerListAdapter.playerArray.get(i).equals("")){
+                PlayerListAdapter.playerArray.remove(i);
+                PlayerListAdapter.scoreArray.remove(i);
+            }
 
+        }
+
+        playerListAdapter.notifyDataSetChanged();
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
+
+        if (!checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
+            dbHelper.open().updateGame(null, null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.close();
+            bLength = true;
+            invalidSnackbar(getString(R.string.invalid_time));
+
+        }else if (newLength.length() == 0|| newLength.equals("")){
+            bLength = false;
+            dbHelper.open().updateGame(null, null, 0, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.close();
+
+        }else if(checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
+            bLength = false;
+            dbHelper.open().updateGame(null, null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.close();
+        }
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
-        final boolean bLength = checkValidity(editTextLength.getText().toString(), lengthFormat, 7)||checkValidity(editTextLength.getText().toString(), hourlengthFormat, 10);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
         final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(PlayerListAdapter.playerArray);
+
+
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -230,17 +491,12 @@ public class EditGame extends AppCompatActivity {
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                Log.i("positivebutton", ""+PlayerListAdapter.playerArray);
-
                 if (bCheckEmpty) {
 
                     invalidSnackbar("You can't have empty names!");
 
                 }else if (!bDateAndTime) {
                     invalidSnackbar(getString(R.string.invalid_date_and_time));
-
-                } else if (!bLength){
-                    invalidSnackbar(getString(R.string.invalid_time));
 
                 } else if (bCheckDuplicates) {
 
@@ -250,22 +506,26 @@ public class EditGame extends AppCompatActivity {
 
                     invalidSnackbar("Must have 2 or more players");
 
-                }else if (!bCheckEmpty && bDateAndTime && bLength && !bCheckDuplicates && !bNumPlayers){
+                }else if (!bCheckEmpty && bDateAndTime && !bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
                     dbHelper.updateGame(null, newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
-                    dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                    for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
-                        if (PlayerListAdapter.playerArray.get(i).equals("")){
-                            PlayerListAdapter.playerArray.remove(i);
-                            PlayerListAdapter.scoreArray.remove(i);
-                        }
-
-                    }
 
                     dbHelper.updateGame(PlayerListAdapter.playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
                     dbHelper.updateGame(PlayerListAdapter.scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null, maxScore, ScoreDBAdapter.KEY_MAX_SCORE, gameID);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null, scoreInterval, ScoreDBAdapter.KEY_SCORE_INTERVAL, gameID);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null, diffToWin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null,reverseScrolling,ScoreDBAdapter.KEY_REVERSE_SCORING, gameID);
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null,stopwatch,ScoreDBAdapter.KEY_STOPWATCH, gameID);
                     editTextLength.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
                     editTextDate.setText(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
+
                     displayRecyclerView(0);
                     editTextLength.setEnabled(false);
                     editTextDate.setEnabled(false);
@@ -275,6 +535,13 @@ public class EditGame extends AppCompatActivity {
                     menuItemEdit.setVisible(true);
                     menuItemCancel.setVisible(false);
                     menuItemShare.setVisible(true);
+                    checkBoxReverseScrolling.setEnabled(false);
+                    checkBoxStopwatch.setEnabled(false);
+                    editTextDate.setEnabled(false);
+                    editTextLength.setEnabled(false);
+                    editTextDiffToWin.setEnabled(false);
+                    editTextMaxScore.setEnabled(false);
+                    editTextScoreInterval.setEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     dbHelper.close();
                 }
@@ -293,7 +560,6 @@ public class EditGame extends AppCompatActivity {
         dialog.show();
 
     }
-
 
     public boolean checkValidity(String string, SimpleDateFormat simpleDateFormat, int length) {
         boolean validity = false;
@@ -332,7 +598,47 @@ public class EditGame extends AppCompatActivity {
         menuItemAdd.setVisible(false);
         menuItemCancel.setVisible(false);
         menuItemShare.setVisible(true);
+        checkBoxReverseScrolling.setEnabled(false);
+        checkBoxStopwatch.setEnabled(false);
+        editTextDate.setEnabled(false);
+        editTextLength.setEnabled(false);
 
+        maxScore = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
+        reverseScrolling = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
+        diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
+        stopwatch = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_STOPWATCH, dbHelper);
+        scoreInterval = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
+        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
+
+        editTextMaxScore.setText("");
+        editTextScoreInterval.setText("");
+        editTextDiffToWin.setText("");
+
+        if (maxScore != 0) {
+            editTextMaxScore.setText(String.valueOf(maxScore));
+        }
+        if (scoreInterval !=0) {
+            editTextScoreInterval.setText(String.valueOf(scoreInterval));
+        }
+
+        if (diffToWin !=0) {
+            editTextDiffToWin.setText(String.valueOf(diffToWin));
+        }
+
+        if (reverseScrolling == 1){
+            checkBoxReverseScrolling.setChecked(true);
+        }else{
+            checkBoxReverseScrolling.setChecked(false);
+        }
+
+        if (stopwatch == 1){
+            checkBoxStopwatch.setChecked(true);
+        }else{
+            checkBoxStopwatch.setChecked(false);
+        }
+        editTextDiffToWin.setEnabled(false);
+        editTextMaxScore.setEnabled(false);
+        editTextScoreInterval.setEnabled(false);
         displayRecyclerView(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

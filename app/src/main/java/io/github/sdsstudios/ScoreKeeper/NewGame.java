@@ -282,7 +282,6 @@ public class NewGame extends AppCompatActivity
                 catch (NumberFormatException e)
                 {
                     e.printStackTrace();
-                    Log.e(TAG, e.toString());
                     diffToWin = 0;
 
                 }
@@ -301,7 +300,6 @@ public class NewGame extends AppCompatActivity
                 catch (NumberFormatException e)
                 {
                     e.printStackTrace();
-                    Log.e(TAG, e.toString());
                     diffToWin = 0;
                 }
                 dbHelper.open();
@@ -425,25 +423,6 @@ public class NewGame extends AppCompatActivity
         v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
     }
 
-    public void preDrawCardView(final CardView cardView, final int height){
-        cardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-
-            @Override
-            public boolean onPreDraw() {
-                ViewGroup.LayoutParams layoutParams = null;
-
-                cardView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                layoutParams = cardView.getLayoutParams();
-                layoutParams.height = height * 2;
-
-                cardView.setLayoutParams(layoutParams);
-
-                return true;
-            }
-        });
-    }
-
     public void displaySpinner(boolean timelimitspinner){
 
         if (timelimitspinner) {
@@ -559,13 +538,14 @@ public class NewGame extends AppCompatActivity
         playerList.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
+        Log.e(TAG, String.valueOf(players));
         playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
         playerList.setAdapter(playerListAdapter);
 
     }
 
     public void addPlayers(){
-        player = editTextPlayer.getText().toString();
+        player = editTextPlayer.getText().toString().trim();
         boolean duplicates;
         players.add(players.size(), player);
         duplicates = dataHelper.checkDuplicates(players);
@@ -584,7 +564,7 @@ public class NewGame extends AppCompatActivity
             snackbar.show();
         }
 
-        if (player.equals("")){
+        if (player.equals("") || player.equals(" ") || player == null){
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -597,7 +577,7 @@ public class NewGame extends AppCompatActivity
             snackbar = Snackbar.make(relativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             snackbar.show();
-        }else if (!duplicates){
+        }else if (!duplicates && !player.equals("") && !player.equals(" ") && player != null){
 
             editTextPlayer.setText("");
 
@@ -609,6 +589,19 @@ public class NewGame extends AppCompatActivity
             playerListAdapter.notifyItemInserted(players.size());
             playerListAdapter.notifyDataSetChanged();
 
+        }else{
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            };
+
+            players.remove(players.size() -1);
+
+            snackbar = Snackbar.make(relativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            snackbar.show();
         }
 
     }

@@ -48,7 +48,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                           int viewType) {
+                                         int viewType) {
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.player_list_adapter, parent, false);
@@ -78,6 +78,15 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         if (activity == 1) {
             holder.layout.setVisibility(View.VISIBLE);
+            Log.e("Playerlistadapter", String.valueOf(playerArray) + playerArray.size());
+
+            for (int i = 0; i < playerArray.size(); i++){
+                if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
+                    playerArray.remove(i);
+                }
+            }
+
+            Log.e("Playerlistadapter", String.valueOf(playerArray) + playerArray.size());
             holder.editTextPlayer.setText(playerArray.get(position));
             holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,7 +115,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                                         .setAction("Dismiss", onClickListener);
                                 snackbar.show();
                             }
-
 
                         }else{
                             mDbHelper.open();
@@ -155,7 +163,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                             playerArray.set(position, s.toString());
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("Playerlistadapter", e.toString());
                         }
 
                     }
@@ -178,7 +185,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                             scoreArray.set(position, s.toString());
                         }catch (Exception e){
                             e.printStackTrace();
-                            Log.e("Playerlistadapter", e.toString());
                         }
                     }
 
@@ -220,6 +226,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
+        for (int i = 0; i < playerArray.size(); i++){
+            if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
+                playerArray.remove(i);
+            }
+        }
         return playerArray.size();
     }
 
@@ -248,12 +259,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
             snackbar.show();
-        }else{
-            snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", onClickListener);
-            snackbar.show();
         }
-
 
     }
 

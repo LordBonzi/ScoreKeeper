@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -85,8 +84,8 @@ public class NewGame extends AppCompatActivity
     private int stopwatch = 0;
     private RelativeLayout optionsHeader, timeLimitHeader;
     private NestedScrollView scrollView;
-    private CardView cardViewOptions, cardViewTimeLimit;
-    private int cardViewOptionsHeight, cardViewTimeLimitHeight;
+    private int optionsHeight, timeLimitHeight;
+    private RelativeLayout optionsContent, timeLimitContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +142,7 @@ public class NewGame extends AppCompatActivity
         dbHelper = new ScoreDBAdapter(this);
         dataHelper = new DataHelper();
         String timeLimit = sharedPreferences.getString("timelimitarray", null);
-        String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
+        final String timeLimitnum = sharedPreferences.getString("timelimitarraynum", null);
 
         if (timeLimit != null && timeLimitnum !=null) {
 
@@ -167,27 +166,28 @@ public class NewGame extends AppCompatActivity
         timeLimitHeader = (RelativeLayout) findViewById(R.id.timeLimitHeader);
         timeLimitHeader.setOnClickListener(this);
 
-        cardViewOptions= (CardView)findViewById(R.id.cardViewOptions);
-        cardViewOptions.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        optionsContent = (RelativeLayout)findViewById(R.id.relativeLayoutOptions);
+        timeLimitContent = (RelativeLayout)findViewById(R.id.relativeLayoutTimeLimit);
+
+        optionsContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                cardViewOptionsHeight = cardViewOptions.getMeasuredHeight();
-                toggleCardViewnHeight(cardViewOptionsHeight, cardViewOptions, 0);
+                optionsHeight = optionsContent.getMeasuredHeight();
+                toggleCardViewHeight(optionsHeight, optionsContent, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
-                removeOnGlobalLayoutListener(cardViewOptions, this);
+                removeOnGlobalLayoutListener(optionsContent, this);
             }
         });
 
-        cardViewTimeLimit= (CardView)findViewById(R.id.cardViewTimeLimit);
-        cardViewTimeLimit.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        timeLimitContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                cardViewTimeLimitHeight = cardViewTimeLimit.getMeasuredHeight();
-                toggleCardViewnHeight(cardViewTimeLimitHeight, cardViewTimeLimit, 0);
+                timeLimitHeight = timeLimitContent.getMeasuredHeight();
+                toggleCardViewHeight(timeLimitHeight, timeLimitContent, 0);
                 // Do whatever you want with h
                 // Remove the listener so it is not called repeatedly
-                removeOnGlobalLayoutListener(cardViewTimeLimit, this);
+                removeOnGlobalLayoutListener(timeLimitContent, this);
             }
         });
 
@@ -804,58 +804,57 @@ public class NewGame extends AppCompatActivity
             }
 
             case R.id.optionsHeader:{
-                toggleCardViewnHeight(cardViewOptionsHeight, cardViewOptions, scrollView.getBottom());
+                toggleCardViewHeight(optionsHeight, optionsContent, scrollView.getBottom());
                 break;
             }
-
             case R.id.timeLimitHeader:{
-                toggleCardViewnHeight(cardViewTimeLimitHeight, cardViewTimeLimit, 0);
+                toggleCardViewHeight(timeLimitHeight, timeLimitContent, scrollView.getBottom());
                 break;
             }
 
         }
     }
 
-    private void toggleCardViewnHeight(int height, CardView cardView, int scrollTo) {
+    private void toggleCardViewHeight(int height, RelativeLayout layout, int scrollTo) {
 
-        if (cardView.getHeight() != height) {
+        if (layout.getHeight() != height) {
             // expand
 
-            expandView(height, cardView, scrollTo); //'height' is the height of screen which we have measured already.
+            expandView(height, layout, scrollTo); //'height' is the height of screen which we have measured already.
 
         } else {
             // collapse
-            collapseView(cardView);
+            collapseView(layout);
 
         }
     }
 
-    public void collapseView(final CardView cardView) {
+    public void collapseView(final RelativeLayout layout) {
 
-        ValueAnimator anim = ValueAnimator.ofInt(cardView.getMeasuredHeightAndState(), 96);
+        ValueAnimator anim = ValueAnimator.ofInt(timeLimitHeight, 0);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
                 layoutParams.height = val;
-                cardView.setLayoutParams(layoutParams);
+                layout.setLayoutParams(layoutParams);
 
             }
         });
         anim.start();
     }
-    public void expandView(int height, final CardView cardView, final int scrollTo) {
+    public void expandView(int height, final RelativeLayout layout, final int scrollTo) {
 
-        ValueAnimator anim = ValueAnimator.ofInt(cardView.getMeasuredHeightAndState(),
+        ValueAnimator anim = ValueAnimator.ofInt(layout.getMeasuredHeightAndState(),
                 height);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
                 layoutParams.height = val;
-                cardView.setLayoutParams(layoutParams);
+                layout.setLayoutParams(layoutParams);
                 if (scrollTo != 0) {
                     scrollView.scrollTo(0, scrollTo);
                 }

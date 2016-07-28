@@ -156,7 +156,7 @@
     <string name="length_help">Length Help</string>
     <string name="length_help_message">E.g. 12:59:58:3
      hour:minute:second:millisecond</string>
-
+    <string name="turn_off">Turn Off</string>
 
 </resources>
 

@@ -2,6 +2,7 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -260,14 +262,45 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     @Override
-    public void onItemClicked(int position, int gameID) {
-        try {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("gameID", gameID);
-            startActivity(intent);
-        }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG);
+    public void onItemClicked(int position, final int gameID) {
+        boolean classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+        if (classicTheme){
+            AlertDialog dialog;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("2 Players only for classic theme");
+            builder.setMessage("Do you want to turn off classic theme and start the game?");
+
+            builder.setPositiveButton(R.string.turn_off, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("prefClassicTheme", false);
+                    editor.apply();
+
+                    Intent intent = new Intent(Home.this, MainActivity.class);
+                    intent.putExtra("gameID", gameID);
+                    startActivity(intent);
+                }
+            });
+
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog = builder.create();
+
+            dialog.show();
+        }else {
+            try {
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("gameID", gameID);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 

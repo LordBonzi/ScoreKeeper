@@ -196,7 +196,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
             relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayoutHistoryAdapter);
             color = v.getResources().getColor(R.color.colorAccent);
             inProgress = v.getResources().getString(R.string.unfinished);
-            completed = v.getResources().getString(R.string.completed);
+            completedhttp://askubuntu.com/questions/134035/how-do-i-get-the-latest-gimp-version-available = v.getResources().getString(R.string.completed);
 
             this.listener = listener;
 

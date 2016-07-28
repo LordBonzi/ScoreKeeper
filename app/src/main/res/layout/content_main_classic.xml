@@ -100,8 +100,6 @@
             android:minWidth="200dp"
             android:background="@drawable/classic_scoreboard_background"
             android:textSize="30sp"
-            android:layout_alignBaseline="@+id/textViewP1"
-            android:layout_alignBottom="@+id/textViewP1"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

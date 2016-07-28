@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * Created by Seth Schroeder on 28/05/2016.
@@ -53,9 +54,13 @@ public class TimeHelper {
         Long timeLong = 0L;
 
         DateFormat f = new SimpleDateFormat("hh:mm:ss:S");
+        f.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date d = f.parse(time);
         timeLong = d.getTime();
 
+        if (!TimeZone.getTimeZone("GMT").inDaylightTime(d)){
+            timeLong = timeLong - 3600000;
+        }
         return timeLong;
     }
 

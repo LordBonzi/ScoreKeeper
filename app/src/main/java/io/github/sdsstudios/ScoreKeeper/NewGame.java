@@ -1014,7 +1014,7 @@ public class NewGame extends AppCompatActivity
                         if (checkBoxStopwatch.isChecked()) {
                             dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                         }else {
-                            dbHelper.updateGame(null, null, 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                            dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                         }
 
                         mainActivityIntent.putExtra("gameID", gameID);

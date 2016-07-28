@@ -139,31 +139,31 @@
 
                 </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/relativeLayoutTimeLimit"
-                android:layout_below="@+id/timeLimitHeader">
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:visibility="visible"
-                    android:layout_marginBottom="16dp"
-                    android:id="@+id/spinnerTimeLimit"
-                    android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
-                    android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxNoTimeLimit"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/no_time_limit"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_marginLeft="16dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="16dp"
-                    android:layout_alignParentStart="true" />
+                    android:id="@+id/relativeLayoutTimeLimit"
+                    android:layout_below="@+id/timeLimitHeader">
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:visibility="visible"
+                        android:layout_marginBottom="16dp"
+                        android:id="@+id/spinnerTimeLimit"
+                        android:layout_toEndOf="@+id/checkBoxNoTimeLimit"
+                        android:layout_toRightOf="@+id/checkBoxNoTimeLimit" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxNoTimeLimit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_time_limit"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_marginLeft="16dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="16dp"
+                        android:layout_alignParentStart="true" />
 
 
                 </RelativeLayout>

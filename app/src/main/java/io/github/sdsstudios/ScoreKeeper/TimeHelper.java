@@ -41,6 +41,7 @@ public class TimeHelper {
 
         if (day){
             dateStr = timeFormat.format(myCal.getTime());
+
         }else if(year){
             dateStr = yearFormat.format(myCal.getTime());
 

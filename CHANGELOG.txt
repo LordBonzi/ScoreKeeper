@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.0 Beta 8 28/7/16
+### Bug Fixes
+ - cardviews in NewGame not collapsing to the same height on all screen sizes
+
+
 ## 1.0 Beta 7 27/7/16
 ### Added
  - huge overhaul to EditGame

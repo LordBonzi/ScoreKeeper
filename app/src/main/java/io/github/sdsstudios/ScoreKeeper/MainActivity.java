@@ -116,11 +116,7 @@ public class MainActivity extends AppCompatActivity
             classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
             maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-            if (colorNavBar && !classicTheme) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
-                }
-            }
+
             setTheme(accentColor);
             if (classicTheme) {
                 setContentView(R.layout.activity_main_classic);
@@ -138,8 +134,10 @@ public class MainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
+                if (colorNavBar && !classicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
                 }
             }
             AdView mAdView;
@@ -157,6 +155,7 @@ public class MainActivity extends AppCompatActivity
             loadGame();
         } else {
             sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
@@ -181,6 +180,11 @@ public class MainActivity extends AppCompatActivity
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
+                }
+                if (colorNavBar && !classicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
                 }
             }
             loadObjects();

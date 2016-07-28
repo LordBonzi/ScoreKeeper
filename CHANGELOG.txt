@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.0 Beta 7 27/7/16
+### Added
+ - huge overhaul to EditGame
+ - optimise ingame layout for all screen sizes
+ - optimised NewGame for all screen sizes
+ - adapt and optimise in-ganme layout for all screen sizes
+ 
+### Bug Fixes
+ - stopwatch not displaying properly
+ - stopswatch doesnt start after turning it on in EditGame
+ - navbar not changing colour after disabling fullscreen
+ - crashes when enabling classic theme
+ - score array isnt updated to the old one when cancelling editing game
+ - adding a blank player when rotating in NewGame
+ - cardviews not displaying properly in NewGame and GameInfo
+ - margins for views on large screens were way to big
+
 ## 1.0 Beta 6 23/7/16
 ### Added
  - changed colour of toolbar when playing a game so the text color adapts to the theme

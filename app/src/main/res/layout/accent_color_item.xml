@@ -4,11 +4,14 @@
     android:layout_height="80dp"
     android:layout_width="80dp"
     android:clickable="true"
+    android:gravity="center"
+    android:layout_gravity="center"
     >
 
     <ImageView
         android:layout_height="80dp"
         android:layout_width="80dp"
+        android:foregroundGravity="center"
         android:clickable="true"
         android:src="@null"
         android:id="@+id/accentColorView" />

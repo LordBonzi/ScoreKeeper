@@ -996,10 +996,6 @@ public class NewGame extends AppCompatActivity
                 snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
                 snackbar.show();
-            }else if(classicTheme && players.size() > 2){
-                snackbar = Snackbar.make(relativeLayout, "No more than 2 players for Classic Theme", Snackbar.LENGTH_SHORT)
-                        .setAction("Dismiss", onClickListener);
-                snackbar.show();
             }else{
                 if (dataHelper.checkDuplicates(players)) {
 

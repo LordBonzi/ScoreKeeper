@@ -270,37 +270,13 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        boolean classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
-                        if (classicTheme) {
-                            AlertDialog dialog2;
-                            AlertDialog.Builder builder = new AlertDialog.Builder(History.this);
 
-                            builder.setTitle("2 Players only for classic theme");
-                            builder.setMessage("Do you want to turn off classic theme and start the game?");
-
-                            builder.setPositiveButton(R.string.turn_off, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putBoolean("prefClassicTheme", false);
-                                    editor.apply();
-
-                                    Intent intent = new Intent(History.this, MainActivity.class);
-                                    intent.putExtra("gameID", gameID);
-                                    startActivity(intent);
-                                }
-                            });
-
-                            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            dialog2 = builder.create();
-
-                            dialog2.show();
-                        }
+                        Intent intent = new Intent(History.this, MainActivity.class);
+                        intent.putExtra("gameID", gameID);
+                        startActivity(intent);
                     }
+
+
                 });
 
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

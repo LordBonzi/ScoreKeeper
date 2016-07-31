@@ -33,7 +33,7 @@ public class GameModel{
     public ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
-        String p, s ,d ,t, progress = null;
+        String p, s ,d ,t, progress;
         int gameID;
 
         ArrayList arrayListPlayer;
@@ -51,8 +51,8 @@ public class GameModel{
         for (int i = 1; i <= dbHelper.open().numRows(); i++) {
             progress = "";
             p = "";
-            s = null;
-            t = null;
+            s = "";
+            t = "";
 
             arrayListPlayer = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
             arrayListScore = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
@@ -78,9 +78,11 @@ public class GameModel{
                     if (j != arrayListPlayer.size()-1){
                         p += ", ";
                     }
+                    s += arrayListScore.get(j);
+                    if (j != arrayListPlayer.size()-1){
+                        s += " : ";
+                    }
                 }
-
-                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() > 10){
                 t = "Huge Game";
@@ -90,7 +92,6 @@ public class GameModel{
                         p += ", ";
                     }
                 }
-                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
 
             }else if (arrayListPlayer.size() == 1){
                 t = "Game is too small. How did you make it this small. it is a bug. you must report it.";

@@ -5,7 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,11 @@ import java.util.Set;
 /**
  * Created by seth on 08/05/16.
  */
-public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>{
+public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>
+        implements EditGame.PlayerListListener{
     Snackbar snackbar = null;
     private String backup, backupScore;
-    public static ArrayList<String> playerArray, scoreArray;
+    public ArrayList<String> playerArray, scoreArray;
     public ScoreDBAdapter mDbHelper;
     private int mGameID;
     private int activity;
@@ -59,17 +59,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         return vh;
     }
 
-    public void clearData() {
-        int size = playerArray.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                removeAt(i);
-            }
-
-            notifyDataSetChanged();
-        }
-    }
-
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -78,15 +67,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
         if (activity == 1) {
             holder.layout.setVisibility(View.VISIBLE);
-            Log.e("Playerlistadapter", String.valueOf(playerArray) + playerArray.size());
 
-            for (int i = 0; i < playerArray.size(); i++){
-                if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
-                    playerArray.remove(i);
-                }
-            }
 
-            Log.e("Playerlistadapter", String.valueOf(playerArray) + playerArray.size());
+
             holder.editTextPlayer.setText(playerArray.get(position));
             holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -226,11 +209,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        for (int i = 0; i < playerArray.size(); i++){
-            if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
-                playerArray.remove(i);
-            }
-        }
         return playerArray.size();
     }
 
@@ -283,16 +261,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     }
 
-    public static void newPlayer(PlayerListAdapter playerListAdapter){
-
-        playerArray.add(playerArray.size(), "".trim());
-        scoreArray.add(scoreArray.size(), "0");
-
-        playerListAdapter.notifyItemInserted(playerArray.size());
-        playerListAdapter.notifyItemRangeChanged(playerArray.size(), playerArray.size());
-    }
-
-    public static boolean checkDuplicates(ArrayList arrayList){
+    public boolean checkDuplicates(ArrayList arrayList){
         boolean duplicate = false;
 
         Set<Integer> set = new HashSet<Integer>(arrayList);
@@ -304,10 +273,39 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         return duplicate;
     }
 
+    @Override
+    public void addPlayer() {
+        playerArray.add(playerArray.size(), "");
+        scoreArray.add(scoreArray.size(), "0");
+        notifyItemInserted(playerArray.size());
+
+    }
+
+    @Override
+    public ArrayList getPlayerArray() {
+        return playerArray;
+    }
+
+    @Override
+    public ArrayList getScoreArray() {
+        return scoreArray;
+    }
+
+    @Override
+    public void deleteEmptyPlayers(ArrayList playerArray) {
+        for (int i = 0; i < playerArray.size(); i++){
+            if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
+                playerArray.remove(i);
+                scoreArray.remove(i);
+            }
+        }
+        this.playerArray = playerArray;
+    }
+
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public EditText editTextPlayer, editTextPlayerExt, editTextScoreExt;
         public ImageButton buttonDelete;
@@ -332,5 +330,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
 
 
+
     }
+
+
 }

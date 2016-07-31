@@ -996,10 +996,6 @@ public class NewGame extends AppCompatActivity
                 snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
                 snackbar.show();
-            }else if(classicTheme && players.size() > 2){
-                snackbar = Snackbar.make(relativeLayout, "No more than 2 players for Classic Theme", Snackbar.LENGTH_SHORT)
-                        .setAction("Dismiss", onClickListener);
-                snackbar.show();
             }else{
                 if (dataHelper.checkDuplicates(players)) {
 
@@ -1014,7 +1010,7 @@ public class NewGame extends AppCompatActivity
                         if (checkBoxStopwatch.isChecked()) {
                             dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                         }else {
-                            dbHelper.updateGame(null, null, 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                            dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                         }
 
                         mainActivityIntent.putExtra("gameID", gameID);

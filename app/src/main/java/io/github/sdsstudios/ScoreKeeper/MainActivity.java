@@ -113,14 +113,12 @@ public class MainActivity extends AppCompatActivity
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            dataHelper = new DataHelper();
+            dbHelper = new ScoreDBAdapter(this).open();
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
             maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-            if (colorNavBar && !classicTheme) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
-                }
-            }
+
             setTheme(accentColor);
             if (classicTheme) {
                 setContentView(R.layout.activity_main_classic);
@@ -128,7 +126,9 @@ public class MainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(getResources().getColor(R.color.black));
                 }
+
             } else {
+
                 setContentView(R.layout.activity_main);
                 toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setBackgroundColor(primaryColor);
@@ -138,17 +138,21 @@ public class MainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
+
+                if (colorNavBar && !classicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
                 }
             }
+
             AdView mAdView;
             if (gameSize > 2) {
                 mAdView = (AdView) findViewById(R.id.adViewHome2);
             }else{
                 mAdView = (AdView) findViewById(R.id.adViewHome);
-
             }
+
             AdCreator adCreator = new AdCreator(mAdView, this);
             adCreator.createAd();
 
@@ -157,12 +161,14 @@ public class MainActivity extends AppCompatActivity
             loadGame();
         } else {
             sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            dbHelper = new ScoreDBAdapter(this);
+            dataHelper = new DataHelper();
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
             maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
-
 
             setTheme(accentColor);
             if (classicTheme) {
@@ -181,6 +187,11 @@ public class MainActivity extends AppCompatActivity
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
+                }
+                if (colorNavBar && !classicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
                 }
             }
             loadObjects();
@@ -1006,6 +1017,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void fullScreen() {
+
         if (fullScreen) {
             params = content.getLayoutParams();
             getSupportActionBar().hide();

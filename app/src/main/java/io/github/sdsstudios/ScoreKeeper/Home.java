@@ -65,11 +65,13 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
         }
+
         setTheme(accentColor);
         setContentView(R.layout.activity_home);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
@@ -260,17 +262,16 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     @Override
-    public void onItemClicked(int position, int gameID) {
+    public void onItemClicked(int position, final int gameID) {
         try {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("gameID", gameID);
             startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG);
+            Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG).show();
         }
     }
-
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
         return false;

@@ -41,11 +41,12 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private static ArrayList<GameModel> gameModel;
     private ActionMode actionMode = null;
     private int primaryDarkColor;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
@@ -261,7 +262,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(getBaseContext(), EditGame.class);
+                        Intent intent = new Intent(History.this, EditGame.class);
                         intent.putExtra("gameID", gameID);
                         startActivity(intent);
                     }
@@ -269,10 +270,13 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+
+                        Intent intent = new Intent(History.this, MainActivity.class);
                         intent.putExtra("gameID", gameID);
                         startActivity(intent);
                     }
+
+
                 });
 
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.0 Beta 9 31/7/16
+### Added
+ - optimise classic scoreboard theme for all screens 
+ - the list of players on a list item now scrolls horizontally
+ - show the scores of all players in list item
+ - improved code in EditGame.class 
+ 
+### Bug Fixes
+ - stopwatch doesnt start at the same time for all timezones
+ - navigation bar not changing color when starting a game
+ - max number on dice not changing
+ - the tick on selected color in theme settings wasn't centered
+ - app crashes when continuing  a game with more than 2 players with classic theme enabled
+
 ## 1.0 Beta 8 28/7/16
 ### Bug Fixes
  - cardviews in NewGame not collapsing to the same height on all screen sizes

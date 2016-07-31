@@ -30,13 +30,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class EditGame extends AppCompatActivity implements View.OnClickListener{
+public class EditGame extends AppCompatActivity
+        implements View.OnClickListener{
     String date;
     int gameID;
     private String lengthStr =null;
     private EditText editTextLength, editTextDate;
-    private ArrayList arrayListPlayers, arrayListScores;
+    private ArrayList<String> playerArray, scoreArray;
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
     private DataHelper dataHelper;
@@ -44,7 +47,6 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private PlayerListAdapter playerListAdapter;
-    private ArrayList players;
     public static RelativeLayout editGameLayout;
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
     SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
@@ -127,8 +129,8 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 
-        arrayListPlayers = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+        playerArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+        scoreArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
         maxScore = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
         reverseScrolling = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
         diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
@@ -185,7 +187,7 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         editTextScoreInterval.setEnabled(false);
 
     }
-    
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -229,7 +231,7 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         menu.findItem(R.id.action_edit).setVisible(true);
         menu.findItem(R.id.action_settings).setVisible(false);
 
-       createShareIntent();
+        createShareIntent();
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
         mShareActionProvider.setShareIntent(mShareIntent);
@@ -282,7 +284,7 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
             onMenuCancelClick();
 
         } else if (id == R.id.action_add){
-            PlayerListAdapter.newPlayer(playerListAdapter);
+            playerListAdapter.addPlayer();
         }
 
         return super.onOptionsItemSelected(item);
@@ -439,22 +441,16 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
     public void displayRecyclerView(int editable) {
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        players = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-        playerListAdapter = new PlayerListAdapter(players, arrayListScores, dbHelper, gameID, 2, editable);
+        playerArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
+        playerListAdapter = new PlayerListAdapter(playerArray, scoreArray, dbHelper, gameID, 2, editable);
         recyclerView.setAdapter(playerListAdapter);
-
     }
 
     public void onMenuDoneClick() {
-        for (int i = 1; i < PlayerListAdapter.playerArray.size(); i++){
-            if (PlayerListAdapter.playerArray.get(i).equals("")){
-                PlayerListAdapter.playerArray.remove(i);
-                PlayerListAdapter.scoreArray.remove(i);
-            }
+        playerListAdapter.deleteEmptyPlayers(playerArray);
+        playerArray = playerListAdapter.getPlayerArray();
+        scoreArray = playerListAdapter.getScoreArray();
 
-        }
-
-        playerListAdapter.notifyDataSetChanged();
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
 
@@ -476,10 +472,8 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         }
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = PlayerListAdapter.checkDuplicates(PlayerListAdapter.playerArray);
-        final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(PlayerListAdapter.playerArray);
-
-
+        final boolean bCheckDuplicates = checkDuplicates(playerArray);
+        final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(playerArray);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -490,6 +484,9 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
 
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                playerListAdapter.deleteEmptyPlayers(playerArray);
+                playerArray = playerListAdapter.getPlayerArray();
+                scoreArray = playerListAdapter.getScoreArray();
 
                 if (bCheckEmpty) {
 
@@ -510,8 +507,8 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
                     dbHelper.open();
                     dbHelper.updateGame(null, newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
 
-                    dbHelper.updateGame(PlayerListAdapter.playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
-                    dbHelper.updateGame(PlayerListAdapter.scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.updateGame(playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                    dbHelper.updateGame(scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
                     dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     dbHelper.open();
                     dbHelper.updateGame(null, null, maxScore, ScoreDBAdapter.KEY_MAX_SCORE, gameID);
@@ -551,7 +548,6 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                displayRecyclerView(1);
                 dialog.dismiss();
             }
         });
@@ -608,7 +604,7 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
         stopwatch = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_STOPWATCH, dbHelper);
         scoreInterval = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
-        arrayListScores = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
+        scoreArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
 
         editTextMaxScore.setText("");
         editTextScoreInterval.setText("");
@@ -668,6 +664,23 @@ public class EditGame extends AppCompatActivity implements View.OnClickListener{
         dialog.show();
     }
 
+    public boolean checkDuplicates(ArrayList arrayList){
 
+        boolean duplicate = false;
 
+        Set<Integer> set = new HashSet<Integer>(arrayList);
+
+        if(set.size() < arrayList.size()){
+            duplicate = true;
+        }
+
+        return duplicate;
+    }
+
+    public interface PlayerListListener{
+        void addPlayer();
+        ArrayList getPlayerArray();
+        ArrayList getScoreArray();
+        void deleteEmptyPlayers(ArrayList playerArray);
+    }
 }

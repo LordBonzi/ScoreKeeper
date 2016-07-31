@@ -52,6 +52,7 @@ public class Settings extends PreferenceActivity{
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+
         if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
@@ -153,7 +154,8 @@ public class Settings extends PreferenceActivity{
         maxNumOnDicePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-
+                maxNumDice = Integer.valueOf(String.valueOf(o));
+                saveInfo();
                 return true;
             }
         });

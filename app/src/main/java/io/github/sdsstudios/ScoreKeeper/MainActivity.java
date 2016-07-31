@@ -113,7 +113,9 @@ public class MainActivity extends AppCompatActivity
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            dataHelper = new DataHelper();
+            dbHelper = new ScoreDBAdapter(this).open();
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
             maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
             boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
 
@@ -124,7 +126,9 @@ public class MainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(getResources().getColor(R.color.black));
                 }
+
             } else {
+
                 setContentView(R.layout.activity_main);
                 toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setBackgroundColor(primaryColor);
@@ -134,19 +138,21 @@ public class MainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setStatusBarColor(primaryDarkColor);
                 }
+
                 if (colorNavBar && !classicTheme) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setNavigationBarColor(primaryDarkColor);
                     }
                 }
             }
+
             AdView mAdView;
             if (gameSize > 2) {
                 mAdView = (AdView) findViewById(R.id.adViewHome2);
             }else{
                 mAdView = (AdView) findViewById(R.id.adViewHome);
-
             }
+
             AdCreator adCreator = new AdCreator(mAdView, this);
             adCreator.createAd();
 
@@ -159,9 +165,10 @@ public class MainActivity extends AppCompatActivity
             int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
             int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
             int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
+            dbHelper = new ScoreDBAdapter(this);
+            dataHelper = new DataHelper();
+            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
             maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
-
 
             setTheme(accentColor);
             if (classicTheme) {

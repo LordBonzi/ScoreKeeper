@@ -38,7 +38,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Built the website and helped sds1612 along the way by suggesting improvements to the app."
+        android:text="Built the website and helped along the way by suggesting improvements to the app."
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_below="@+id/textView4"
         android:layout_alignLeft="@+id/textView"

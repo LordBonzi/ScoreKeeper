@@ -7,7 +7,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - Splashscreen locked in portrait mode
 
 ## 1.0 31/7/16
- - INITIAL RELEASE!
+ - INITIAL RELEASE! https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper
 
 ## 1.0 Beta 9 31/7/16
 ### Added

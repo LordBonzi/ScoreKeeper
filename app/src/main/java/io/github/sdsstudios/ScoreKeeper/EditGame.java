@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
@@ -219,22 +220,28 @@ public class EditGame extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        menuItemDelete = menu.findItem(R.id.action_delete);
-        menuItemDone = menu.findItem(R.id.action_done);
-        menuItemEdit = menu.findItem(R.id.action_edit);
-        menuItemCancel = menu.findItem(R.id.action_cancel);
-        menuItemAdd = menu.findItem(R.id.action_add);
-        menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
-        menu.findItem(R.id.action_delete).setVisible(true);
-        menu.findItem(R.id.action_edit).setVisible(true);
-        menu.findItem(R.id.action_settings).setVisible(false);
+        try {
+            getMenuInflater().inflate(R.menu.main, menu);
+            menuItemDelete = menu.findItem(R.id.action_delete);
+            menuItemDone = menu.findItem(R.id.action_done);
+            menuItemEdit = menu.findItem(R.id.action_edit);
+            menuItemCancel = menu.findItem(R.id.action_cancel);
+            menuItemAdd = menu.findItem(R.id.action_add);
+            menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
-        createShareIntent();
-        // Fetch and store ShareActionProvider
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
-        mShareActionProvider.setShareIntent(mShareIntent);
+            menu.findItem(R.id.action_delete).setVisible(true);
+            menu.findItem(R.id.action_edit).setVisible(true);
+            menu.findItem(R.id.action_settings).setVisible(false);
+
+            createShareIntent();
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
+            mShareActionProvider.setShareIntent(mShareIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 

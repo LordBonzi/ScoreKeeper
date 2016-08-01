@@ -272,6 +272,16 @@ public class About extends PreferenceActivity {
             }
         });
 
+
+        ratePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
+                startActivity(browserIntent);
+                return true;
+            }
+        });
+
     }
 
 

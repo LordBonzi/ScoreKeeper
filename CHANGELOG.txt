@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.0 31/7/16
+ - INITIAL RELEASE!
+
 ## 1.0 Beta 9 31/7/16
 ### Added
  - optimise classic scoreboard theme for all screens 

@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.0.1 31/7/16
+### Bug Fixes
+ - Splashscreen locked in portrait mode
+
 ## 1.0 31/7/16
  - INITIAL RELEASE!
 

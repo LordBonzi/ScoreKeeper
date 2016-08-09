@@ -66,6 +66,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp">
+
                 <io.github.sdsstudios.ScoreKeeper.Stopwatch
                     android:id="@+id/chronometerBig"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display4"

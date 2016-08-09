@@ -54,7 +54,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private int lastPlayedGame;
     private int accentColor;
     private boolean reviewLaterBool;
-
+    private DataHelper dataHelper = new DataHelper();
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -133,9 +133,13 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             }
         });
 
-        if (dbHelper.numRows() == 0 ){
+        if (dbHelper.numRows() == 0){
             relativeLayoutRecent.setVisibility(View.INVISIBLE);
             buttonMore.setVisibility(View.INVISIBLE);
+            buttonLastGame.setVisibility(View.INVISIBLE);
+        }
+        if (anyUnfinishedGames()){
+            relativeLayoutRecent.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
 
@@ -158,6 +162,21 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         }
 
     }
+
+    public boolean anyUnfinishedGames(){
+        boolean unfinishedGames = false;
+
+
+        for (int i = 1; i < dbHelper.open().numRows(); i++){
+            if (dataHelper.getIntByID(i, ScoreDBAdapter.KEY_COMPLETED, dbHelper.open()) == 0){
+                unfinishedGames = true;
+            }
+        }
+
+        dbHelper.close();
+        return unfinishedGames;
+    }
+
     public void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);

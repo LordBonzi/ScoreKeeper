@@ -138,7 +138,6 @@ public class DataHelper {
 
             }
             timeLimitCondensed = stringBuilder.toString();
-
         }
 
         return timeLimitCondensed;

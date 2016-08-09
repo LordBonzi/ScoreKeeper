@@ -2,14 +2,17 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +53,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private String TAG = "Home";
     private int lastPlayedGame;
     private int accentColor;
+    private boolean reviewLaterBool;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -65,6 +69,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        reviewLaterBool = sharedPreferences.getBoolean("reviewlater", true);
 
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -134,6 +139,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
 
+        if (dbHelper.open().numRows() > 2 && reviewLaterBool){
+            createReviewDialog();
+        }
+
         displayRecyclerView();
 
         verifyStoragePermissions(this);
@@ -181,6 +190,53 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         }
 
     }
+
+    private void createReviewDialog(){
+        final AlertDialog dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.please_review);
+
+        builder.setMessage(R.string.review_message);
+
+        builder.setPositiveButton(R.string.review, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
+                startActivity(browserIntent);
+                reviewLaterBool = false;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("reviewlater", reviewLaterBool);
+                editor.apply();
+            }
+        });
+
+        builder.setNeutralButton(R.string.remind_me_later, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                reviewLaterBool = true;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("reviewlater", reviewLaterBool);
+                editor.apply();
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                reviewLaterBool = false;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("reviewlater", reviewLaterBool);
+                editor.apply();
+                dialog.dismiss();
+            }
+        });
+
+        dialog = builder.create();
+
+        dialog.show();
+    }
+
     public void displayRecyclerView(){
         dbHelper.open();
 

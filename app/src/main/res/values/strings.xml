@@ -13,6 +13,9 @@
     <string name="dice">Dice</string>
     <string name="no">No</string>
     <string name="message">Message</string>
+    <string name="unfinish">Continue</string>
+    <string name="complete">Complete</string>
+    <string name="no_translaters">No Translators yet. :)</string>
     <string name="remind_me_later">Later</string>
     <string name="report">Report</string>
     <string name="start_game">Start Game</string>
@@ -161,7 +164,7 @@
     <string name="turn_off">Turn Off</string>
     <string name="review">Review</string>
     <string name="please_review">Please Rate and Review</string>
-    <string name="review_message">Please Rate and Review my app. Any feedback will be appreciated and I can only improve Score Keeper if you talk to me.</string>
+    <string name="review_message">Please Rate and Review my app. Any feedback will be appreciated and if there is anything which does not satisfy you, please tell me.</string>
 
 </resources>
 

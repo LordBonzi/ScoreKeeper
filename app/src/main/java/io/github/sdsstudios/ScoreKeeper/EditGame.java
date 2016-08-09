@@ -55,7 +55,8 @@ public class EditGame extends AppCompatActivity
     private CheckBox  checkBoxReverseScrolling, checkBoxStopwatch;
     int accentColor;
     boolean bLength = false;
-    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd, menuItemShare;
+    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd
+            , menuItemShare, menuItemComplete;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private ImageButton buttonHelpLength, buttonHelpDate;
@@ -64,6 +65,7 @@ public class EditGame extends AppCompatActivity
     private int scoreInterval = 1;
     private int diffToWin = 0;
     private int stopwatch = 0;
+    private boolean completed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +202,6 @@ public class EditGame extends AppCompatActivity
                     reverseScrolling = 0;
                 }
 
-
                 break;
             }
             case R.id.checkBoxStopwatch: {
@@ -228,11 +229,22 @@ public class EditGame extends AppCompatActivity
             menuItemEdit = menu.findItem(R.id.action_edit);
             menuItemCancel = menu.findItem(R.id.action_cancel);
             menuItemAdd = menu.findItem(R.id.action_add);
+            menuItemComplete = menu.findItem(R.id.complete_game);
             menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_settings).setVisible(false);
+            menuItemComplete.setVisible(true);
+
+            if (dataHelper.getCompletedById(gameID, dbHelper.open()) == 0){
+                menuItemComplete.setTitle(R.string.complete);
+                completed = true;
+            }else{
+                menuItemComplete.setTitle(R.string.unfinish);
+                completed = false;
+            }
+
 
             createShareIntent();
             // Fetch and store ShareActionProvider
@@ -244,6 +256,7 @@ public class EditGame extends AppCompatActivity
         }
         return true;
     }
+
 
     public void createShareIntent(){
         mShareIntent = new Intent();
@@ -270,6 +283,16 @@ public class EditGame extends AppCompatActivity
         dbHelper.close();
     }
 
+    public void completeGame(){
+        if (completed) {
+            dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+        }else{
+            dbHelper.updateGame(null, "0", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+        }
+
+        dbHelper.close();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -292,6 +315,9 @@ public class EditGame extends AppCompatActivity
 
         } else if (id == R.id.action_add){
             playerListAdapter.addPlayer();
+
+        }else if (id == R.id.complete_game){
+            completeGame();
         }
 
         return super.onOptionsItemSelected(item);
@@ -326,6 +352,7 @@ public class EditGame extends AppCompatActivity
         menuItemDone.setVisible(true);
         menuItemCancel.setVisible(true);
         menuItemShare.setVisible(false);
+        menuItemComplete.setVisible(false);
 
         checkBoxReverseScrolling.setEnabled(true);
         checkBoxStopwatch.setEnabled(true);
@@ -539,6 +566,7 @@ public class EditGame extends AppCompatActivity
                     menuItemEdit.setVisible(true);
                     menuItemCancel.setVisible(false);
                     menuItemShare.setVisible(true);
+                    menuItemComplete.setVisible(true);
                     checkBoxReverseScrolling.setEnabled(false);
                     checkBoxStopwatch.setEnabled(false);
                     editTextDate.setEnabled(false);
@@ -601,6 +629,7 @@ public class EditGame extends AppCompatActivity
         menuItemAdd.setVisible(false);
         menuItemCancel.setVisible(false);
         menuItemShare.setVisible(true);
+        menuItemComplete.setVisible(true);
         checkBoxReverseScrolling.setEnabled(false);
         checkBoxStopwatch.setEnabled(false);
         editTextDate.setEnabled(false);

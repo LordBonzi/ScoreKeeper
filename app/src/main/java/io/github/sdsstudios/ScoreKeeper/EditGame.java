@@ -49,8 +49,8 @@ public class EditGame extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private PlayerListAdapter playerListAdapter;
     public static RelativeLayout editGameLayout;
-    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
+    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
     private EditText  editTextMaxScore, editTextScoreInterval, editTextDiffToWin;
     private CheckBox  checkBoxReverseScrolling, checkBoxStopwatch;
     int accentColor;

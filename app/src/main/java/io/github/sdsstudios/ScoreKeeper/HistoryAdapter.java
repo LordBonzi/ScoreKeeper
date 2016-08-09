@@ -2,6 +2,7 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,20 +60,20 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
                 positions.remove(0);
             } else {
 
-                    int count = 1;
-                    while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
-                        ++count;
-                    }
+                int count = 1;
+                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
+                    ++count;
+                }
 
-                    if (count == 1) {
-                        removeItem(positions.get(0));
-                    } else {
-                        removeRange(positions.get(count - 1), count);
-                    }
+                if (count == 1) {
+                    removeItem(positions.get(0));
+                } else {
+                    removeRange(positions.get(count - 1), count);
+                }
 
-                    for (int i = 0; i < count; ++i) {
-                        positions.remove(0);
-                    }
+                for (int i = 0; i < count; ++i) {
+                    positions.remove(0);
+                }
 
             }
         }
@@ -93,7 +98,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+                                         int viewType) {
         // create a new view
 
         View view;
@@ -119,6 +124,33 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+
+        Collections.sort(mGameModel, new Comparator<GameModel>() {
+            @Override
+            public int compare(GameModel r1, GameModel r2) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date1 = null;
+                Date date2 = null;
+                DataHelper dataHelper = new DataHelper();
+
+                try {
+                    date1 = df.parse(dataHelper.getStringById(r1.getGameID(), ScoreDBAdapter.KEY_TIME, new ScoreDBAdapter(context)));
+                    date2 = df.parse(dataHelper.getStringById(r2.getGameID(), ScoreDBAdapter.KEY_TIME, new ScoreDBAdapter(context)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.e("historyadapter", e.toString());
+                }
+
+                int i= 0;
+
+                if (date1 != null) {
+                    i = date1.compareTo(date2);
+                }
+
+                return i;
+
+            }
+        });
 
         if (mGameModel.size() == 0){
 

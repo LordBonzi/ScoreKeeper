@@ -39,7 +39,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -194,8 +196,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             }
+
             loadObjects();
             loadGame();
+
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+            Date now = new Date();
+            String time = sdfDate.format(now);
+            dbHelper.open();
+            dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+            dbHelper.close();
         }
 
     }

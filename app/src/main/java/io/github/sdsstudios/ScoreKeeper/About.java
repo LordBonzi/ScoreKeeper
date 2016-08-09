@@ -85,6 +85,15 @@ public class About extends PreferenceActivity {
 
         homeIntent = new Intent(this, Home.class);
 
+        translatorsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(About.this, R.string.no_translaters, Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+
         communityPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -252,8 +261,6 @@ public class About extends PreferenceActivity {
                         startActivity(send);
                     }
                 });
-
-
 
                 dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
 

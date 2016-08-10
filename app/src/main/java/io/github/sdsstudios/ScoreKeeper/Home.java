@@ -138,7 +138,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             buttonMore.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
-        if (anyUnfinishedGames()){
+        if (!anyUnfinishedGames()){
             relativeLayoutRecent.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
@@ -165,7 +165,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
     public boolean anyUnfinishedGames(){
         boolean unfinishedGames = false;
-
 
         for (int i = 1; i < dbHelper.open().numRows(); i++){
             if (dataHelper.getIntByID(i, ScoreDBAdapter.KEY_COMPLETED, dbHelper.open()) == 0){

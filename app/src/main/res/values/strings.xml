@@ -165,6 +165,8 @@
     <string name="review">Review</string>
     <string name="please_review">Please Rate and Review</string>
     <string name="review_message">Please Rate and Review my app. Any feedback will be appreciated and if there is anything which does not satisfy you, please tell me.</string>
+    <string name="game">Game</string>
+    <string name="events">Events</string>
 
 </resources>
 

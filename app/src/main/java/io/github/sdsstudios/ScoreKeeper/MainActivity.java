@@ -523,6 +523,7 @@ public class MainActivity extends AppCompatActivity
             addPlayerDialog();
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -1278,7 +1279,7 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setOnClickListener(this);
         }
 
-            if (stopwatchBoolean) {
+        if (stopwatchBoolean) {
             try {
                 if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) == null
                         || dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper).equals("") && stopwatchBoolean) {
@@ -1286,31 +1287,31 @@ public class MainActivity extends AppCompatActivity
                     dbHelper.close();
                 }
 
-                    if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
-                        stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
-                                + SystemClock.elapsedRealtime()));
-                    }
-
-                    timeLimitReached(stopwatch);
-
-                    if (finished) {
-
-                    } else {
-                        stopwatch.start();
-                        fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
-                        stopwatch.setTextColor(getResources().getColor(R.color.start));
-                        fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
-                    }
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Snackbar snackbar;
-                    snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
-                    fabChronometer.setEnabled(false);
-                    buttonP1.setEnabled(false);
-                    buttonP2.setEnabled(false);
-                    snackbar.show();
+                if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
+                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
+                            + SystemClock.elapsedRealtime()));
                 }
+
+                timeLimitReached(stopwatch);
+
+                if (finished) {
+
+                } else {
+                    stopwatch.start();
+                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                    stopwatch.setTextColor(getResources().getColor(R.color.start));
+                    fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                Snackbar snackbar;
+                snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
+                fabChronometer.setEnabled(false);
+                buttonP1.setEnabled(false);
+                buttonP2.setEnabled(false);
+                snackbar.show();
+            }
 
 
         }else{

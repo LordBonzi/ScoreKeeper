@@ -7,7 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -27,6 +26,7 @@ public class ScoreDBAdapter {
     public static final String KEY_REVERSE_SCORING = "_reversescoring";
     public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
     public static final String KEY_DIFF_TO_WIN = "_difftowin";
+    public static final String KEY_EVENTS = "_events";
     public static final String KEY_STOPWATCH = "_stopwatch";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
@@ -45,12 +45,13 @@ public class ScoreDBAdapter {
                     KEY_REVERSE_SCORING + " , " +
                     KEY_SCORE_INTERVAL + " , " +
                     KEY_DIFF_TO_WIN + " , " +
-                    KEY_STOPWATCH +
+                    KEY_STOPWATCH + " , " +
+                    KEY_EVENTS +
                     " );";
 
     private String[] columnArray = {KEY_ROWID, KEY_PLAYERS
             , KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE
-            , KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH};
+            , KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH, KEY_EVENTS};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -80,40 +81,6 @@ public class ScoreDBAdapter {
         String str = TextUtils.join(",", array);
 
         return str;
-    }
-
-    public boolean createColumn(String columnName){
-        boolean b;
-        try {
-            Cursor cursor = mDb.rawQuery("ALTER TABLE " + SQLITE_TABLE +" ADD COLUMN COLNew " + columnName +" ;", columnArray);
-            cursor.close();
-            b = true;
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e(TAG, e.toString());
-            b = false;
-        }
-
-        return b;
-    }
-
-    public boolean existsColumnInTable(String column) {
-        Cursor mCursor = null;
-        try {
-            // Query 1 row
-            mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE + " LIMIT 0", null);
-
-            // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
-            if (mCursor.getColumnIndex(column) != -1)
-                return true;
-            else
-                return false;
-
-        } catch (Exception Exp) {
-            return false;
-        } finally {
-            if (mCursor != null) mCursor.close();
-        }
     }
 
     public void updateGame(ArrayList array, String time_or_completed_or_timeLimit, int maxscoreorstopwatch, String request, int id) {
@@ -193,20 +160,6 @@ public class ScoreDBAdapter {
         return value;
     }
 
-    public String checkIfAllColumnsExist(){
-        String string = null;
-        for (int i = 0; i < columnArray.length;i++){
-            try {
-                Log.e(TAG, "SDF" + existsColumnInTable(columnArray[i]));
-                existsColumnInTable(columnArray[i]);
-            }catch (Exception e){
-                string = columnArray[i];
-            }
-        }
-
-        return string;
-    }
-
     public boolean deleteGame(int id){
 
         open();
@@ -265,11 +218,14 @@ public class ScoreDBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-            String upgradeQuery = "ALTER TABLE " + SQLITE_TABLE + " ADD COLUMN " + KEY_MAX_SCORE + " TEXT";
-            if (oldVersion == 1 && newVersion == 2)
-                db.execSQL(upgradeQuery);
-            onCreate(db);
+            String upgradeQuery = "ALTER TABLE " + SQLITE_TABLE +" ADD COLUMN " + KEY_EVENTS;
+            if (newVersion > oldVersion) {
+                try {
+                    db.execSQL(upgradeQuery);
+                }catch (Exception e){
+
+                }
+            }
         }
     }
 

@@ -14,10 +14,10 @@ import java.util.TimeZone;
 
 public class TimeHelper {
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");//dd/MM/yyyy
-    SimpleDateFormat weekFormat = new SimpleDateFormat("d MMM");//dd/MM/yyyy
-    SimpleDateFormat yearFormat = new SimpleDateFormat("d MMM yyyy");//dd/MM/yyyy
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    SimpleDateFormat weekFormat = new SimpleDateFormat("d MMM");
+    SimpleDateFormat yearFormat = new SimpleDateFormat("d MMM yyyy");
     Calendar currentDate = Calendar.getInstance();
     private String dateStr = null;
     private Date theDate;

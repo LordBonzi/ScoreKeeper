@@ -46,6 +46,10 @@
                 android:id="@+id/chronometerBig"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display4"
                 android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:layout_gravity="center"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -166,6 +170,10 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_below="@+id/fabChronometer"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:layout_centerHorizontal="true" />
         </android.support.v7.widget.CardView>
 
@@ -189,7 +197,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display4"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            />
 
 
     </RelativeLayout>

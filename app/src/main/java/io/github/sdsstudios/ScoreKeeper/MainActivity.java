@@ -39,7 +39,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
@@ -194,8 +196,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             }
+
             loadObjects();
             loadGame();
+
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+            Date now = new Date();
+            String time = sdfDate.format(now);
+            dbHelper.open();
+            dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+            dbHelper.close();
         }
 
     }
@@ -512,6 +522,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_add) {
             addPlayerDialog();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -1268,7 +1279,7 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setOnClickListener(this);
         }
 
-            if (stopwatchBoolean) {
+        if (stopwatchBoolean) {
             try {
                 if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) == null
                         || dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper).equals("") && stopwatchBoolean) {
@@ -1276,31 +1287,31 @@ public class MainActivity extends AppCompatActivity
                     dbHelper.close();
                 }
 
-                    if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
-                        stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
-                                + SystemClock.elapsedRealtime()));
-                    }
-
-                    timeLimitReached(stopwatch);
-
-                    if (finished) {
-
-                    } else {
-                        stopwatch.start();
-                        fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
-                        stopwatch.setTextColor(getResources().getColor(R.color.start));
-                        fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
-                    }
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                    Snackbar snackbar;
-                    snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
-                    fabChronometer.setEnabled(false);
-                    buttonP1.setEnabled(false);
-                    buttonP2.setEnabled(false);
-                    snackbar.show();
+                if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
+                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
+                            + SystemClock.elapsedRealtime()));
                 }
+
+                timeLimitReached(stopwatch);
+
+                if (finished) {
+
+                } else {
+                    stopwatch.start();
+                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                    stopwatch.setTextColor(getResources().getColor(R.color.start));
+                    fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                Snackbar snackbar;
+                snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
+                fabChronometer.setEnabled(false);
+                buttonP1.setEnabled(false);
+                buttonP2.setEnabled(false);
+                snackbar.show();
+            }
 
 
         }else{

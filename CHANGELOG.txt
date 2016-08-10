@@ -2,14 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
-## 1.0.1 31/7/16
+## 1.0.5 09/08/16
+### Added
+ - Review dialog
+
+## 1.0.4 01/08/16
+### Bug Fixes
+ - app crashed when editing game
+
+## 1.0.1 31/07/16
 ### Bug Fixes
  - Splashscreen locked in portrait mode
 
-## 1.0 31/7/16
- - INITIAL RELEASE!
+## 1.0 31/07/16
+ - INITIAL RELEASE! https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper
 
-## 1.0 Beta 9 31/7/16
+## 1.0 Beta 9 31/07/16
 ### Added
  - optimise classic scoreboard theme for all screens 
  - the list of players on a list item now scrolls horizontally
@@ -23,12 +31,12 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - the tick on selected color in theme settings wasn't centered
  - app crashes when continuing  a game with more than 2 players with classic theme enabled
 
-## 1.0 Beta 8 28/7/16
+## 1.0 Beta 8 28/07/16
 ### Bug Fixes
  - cardviews in NewGame not collapsing to the same height on all screen sizes
 
 
-## 1.0 Beta 7 27/7/16
+## 1.0 Beta 7 27/07/16
 ### Added
  - huge overhaul to EditGame
  - optimise ingame layout for all screen sizes
@@ -45,7 +53,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - cardviews not displaying properly in NewGame and GameInfo
  - margins for views on large screens were way to big
 
-## 1.0 Beta 6 23/7/16
+## 1.0 Beta 6 23/07/16
 ### Added
  - changed colour of toolbar when playing a game so the text color adapts to the theme
  - delete players in game
@@ -61,7 +69,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - full screen functions the way you would expect
  - scrolling while editing games
 
-## 1.0 Beta 1 - 5 21/7/16
+## 1.0 Beta 1 - 5 21/07/16
 ### Added
  - Created about activity
  - Added dice when playing game.
@@ -80,7 +88,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - Rotating works properly
  - Colour navigation bar
  
-## 0.9.2 17/7/16
+## 0.9.2 17/07/16
 ### Added
 - Themeing (Dark and Light theme, Custom accent and primary colors)
 - An other scoreboard (Basketball style)

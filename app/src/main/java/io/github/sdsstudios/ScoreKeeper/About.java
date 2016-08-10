@@ -85,6 +85,15 @@ public class About extends PreferenceActivity {
 
         homeIntent = new Intent(this, Home.class);
 
+        translatorsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Toast.makeText(About.this, R.string.no_translaters, Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
+
         communityPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -253,8 +262,6 @@ public class About extends PreferenceActivity {
                     }
                 });
 
-
-
                 dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
 
                     @Override
@@ -268,6 +275,16 @@ public class About extends PreferenceActivity {
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
 
+                return true;
+            }
+        });
+
+
+        ratePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
+                startActivity(browserIntent);
                 return true;
             }
         });

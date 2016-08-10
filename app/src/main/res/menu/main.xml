@@ -17,6 +17,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/complete_game"
+        android:orderInCategory="5000"
+        android:title="@string/complete"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_history"
         android:orderInCategory="1"
         android:title="@string/action_history"
@@ -113,6 +120,13 @@
         android:title="@string/delete_presets"
         android:visible="false"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_events"
+        android:orderInCategory="1"
+        android:title="@string/events"
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
 
 
     <item

@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
@@ -48,13 +49,14 @@ public class EditGame extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private PlayerListAdapter playerListAdapter;
     public static RelativeLayout editGameLayout;
-    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");//dd/MM/yyyy
+    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
     private EditText  editTextMaxScore, editTextScoreInterval, editTextDiffToWin;
     private CheckBox  checkBoxReverseScrolling, checkBoxStopwatch;
     int accentColor;
     boolean bLength = false;
-    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd, menuItemShare;
+    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd
+            , menuItemShare, menuItemComplete;
     private ShareActionProvider mShareActionProvider;
     private Intent mShareIntent;
     private ImageButton buttonHelpLength, buttonHelpDate;
@@ -63,6 +65,7 @@ public class EditGame extends AppCompatActivity
     private int scoreInterval = 1;
     private int diffToWin = 0;
     private int stopwatch = 0;
+    private boolean completed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,7 +202,6 @@ public class EditGame extends AppCompatActivity
                     reverseScrolling = 0;
                 }
 
-
                 break;
             }
             case R.id.checkBoxStopwatch: {
@@ -219,24 +221,42 @@ public class EditGame extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        menuItemDelete = menu.findItem(R.id.action_delete);
-        menuItemDone = menu.findItem(R.id.action_done);
-        menuItemEdit = menu.findItem(R.id.action_edit);
-        menuItemCancel = menu.findItem(R.id.action_cancel);
-        menuItemAdd = menu.findItem(R.id.action_add);
-        menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
-        menu.findItem(R.id.action_delete).setVisible(true);
-        menu.findItem(R.id.action_edit).setVisible(true);
-        menu.findItem(R.id.action_settings).setVisible(false);
+        try {
+            getMenuInflater().inflate(R.menu.main, menu);
+            menuItemDelete = menu.findItem(R.id.action_delete);
+            menuItemDone = menu.findItem(R.id.action_done);
+            menuItemEdit = menu.findItem(R.id.action_edit);
+            menuItemCancel = menu.findItem(R.id.action_cancel);
+            menuItemAdd = menu.findItem(R.id.action_add);
+            menuItemComplete = menu.findItem(R.id.complete_game);
+            menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true);
 
-        createShareIntent();
-        // Fetch and store ShareActionProvider
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
-        mShareActionProvider.setShareIntent(mShareIntent);
+            menu.findItem(R.id.action_delete).setVisible(true);
+            menu.findItem(R.id.action_edit).setVisible(true);
+            menu.findItem(R.id.action_settings).setVisible(false);
+            menuItemComplete.setVisible(true);
+
+            if (dataHelper.getCompletedById(gameID, dbHelper.open()) == 0){
+                menuItemComplete.setTitle(R.string.complete);
+                completed = true;
+            }else{
+                menuItemComplete.setTitle(R.string.unfinish);
+                completed = false;
+            }
+
+
+            createShareIntent();
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
+            mShareActionProvider.setShareIntent(mShareIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
+
 
     public void createShareIntent(){
         mShareIntent = new Intent();
@@ -263,6 +283,16 @@ public class EditGame extends AppCompatActivity
         dbHelper.close();
     }
 
+    public void completeGame(){
+        if (completed) {
+            dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+        }else{
+            dbHelper.updateGame(null, "0", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+        }
+
+        dbHelper.close();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -285,6 +315,9 @@ public class EditGame extends AppCompatActivity
 
         } else if (id == R.id.action_add){
             playerListAdapter.addPlayer();
+
+        }else if (id == R.id.complete_game){
+            completeGame();
         }
 
         return super.onOptionsItemSelected(item);
@@ -319,6 +352,7 @@ public class EditGame extends AppCompatActivity
         menuItemDone.setVisible(true);
         menuItemCancel.setVisible(true);
         menuItemShare.setVisible(false);
+        menuItemComplete.setVisible(false);
 
         checkBoxReverseScrolling.setEnabled(true);
         checkBoxStopwatch.setEnabled(true);
@@ -532,6 +566,7 @@ public class EditGame extends AppCompatActivity
                     menuItemEdit.setVisible(true);
                     menuItemCancel.setVisible(false);
                     menuItemShare.setVisible(true);
+                    menuItemComplete.setVisible(true);
                     checkBoxReverseScrolling.setEnabled(false);
                     checkBoxStopwatch.setEnabled(false);
                     editTextDate.setEnabled(false);
@@ -594,6 +629,7 @@ public class EditGame extends AppCompatActivity
         menuItemAdd.setVisible(false);
         menuItemCancel.setVisible(false);
         menuItemShare.setVisible(true);
+        menuItemComplete.setVisible(true);
         checkBoxReverseScrolling.setEnabled(false);
         checkBoxStopwatch.setEnabled(false);
         editTextDate.setEnabled(false);

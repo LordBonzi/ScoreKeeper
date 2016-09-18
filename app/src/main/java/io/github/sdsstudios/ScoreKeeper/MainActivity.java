@@ -13,6 +13,11 @@ import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -61,10 +66,11 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fabChronometer;
     private RecyclerView bigGameList;
     private boolean finished = false;
-    String TAG = "MainActivity.class";
+    private String TAG = "MainActivity.class";
     private int gameSize;
     private ArrayList playersArray;
     private ArrayList scoresArray;
+    private ArrayList mSetArray;
     public static DataHelper dataHelper;
     private Intent homeIntent;
     ScoreDBAdapter dbHelper;
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private int maxNumDice;
     private int maxScore;
-    private boolean reverseScrolling;
+    private boolean reverseScoring;
     private int diffToWin;
     private RecyclerView.LayoutManager mLayoutManager;
     private RelativeLayout content, big, normal;
@@ -96,118 +102,94 @@ public class MainActivity extends AppCompatActivity
     private boolean stopwatchBoolean = false;
     private ViewGroup.LayoutParams params;
     private AlertDialog.Builder builder;
-
+    private RecyclerView mRecyclerViewSets;
+    private SetAdapter mSetAdapter;
+    private int mNumSets;
     private static final String STATE_GAMEID = "gameID";
+    private TabLayout mTabLayout;
+
+    //tabsStuff
+    private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toolbar toolbar;
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+// Restore value of members from saved state
+        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        dataHelper = new DataHelper();
+        dbHelper = new ScoreDBAdapter(this).open();
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
+        maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
 
-        Toolbar toolbar;
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-            int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-            int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            dataHelper = new DataHelper();
-            dbHelper = new ScoreDBAdapter(this).open();
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
-            maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
-            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-
-            setTheme(accentColor);
-            if (classicTheme) {
-                setContentView(R.layout.activity_main_classic);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-                }
-
-            } else {
-
-                setContentView(R.layout.activity_main);
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setBackgroundColor(primaryColor);
-                setSupportActionBar(toolbar);
-                getSupportActionBar();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(primaryDarkColor);
-                }
-
-                if (colorNavBar && !classicTheme) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setNavigationBarColor(primaryDarkColor);
-                    }
-                }
+        setTheme(accentColor);
+        if (classicTheme) {
+            setContentView(R.layout.activity_main_classic);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.black));
             }
 
-            AdView mAdView;
-            if (gameSize > 2) {
-                mAdView = (AdView) findViewById(R.id.adViewHome2);
-            }else{
-                mAdView = (AdView) findViewById(R.id.adViewHome);
-            }
-
-            AdCreator adCreator = new AdCreator(mAdView, this);
-            adCreator.createAd();
-
-            gameID = savedInstanceState.getInt(STATE_GAMEID);
-            loadObjects();
-            loadGame();
         } else {
-            sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-            boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-            int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-            int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-            int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-            dbHelper = new ScoreDBAdapter(this);
-            dataHelper = new DataHelper();
-            classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
-            maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
 
-            setTheme(accentColor);
-            if (classicTheme) {
-                setContentView(R.layout.activity_main_classic);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-                }
-            } else {
-                setContentView(R.layout.activity_main);
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setBackgroundColor(primaryColor);
-                setSupportActionBar(toolbar);
-                getSupportActionBar();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(primaryDarkColor);
-                }
-                if (colorNavBar && !classicTheme) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setNavigationBarColor(primaryDarkColor);
-                    }
-                }
+            setContentView(R.layout.activity_main);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setBackgroundColor(primaryColor);
+            setSupportActionBar(toolbar);
+            getSupportActionBar();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(primaryDarkColor);
             }
 
-            loadObjects();
-            loadGame();
-
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
-            Date now = new Date();
-            String time = sdfDate.format(now);
-            dbHelper.open();
-            dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
-            dbHelper.close();
+            if (colorNavBar && !classicTheme) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(primaryDarkColor);
+                }
+            }
         }
 
+        AdView mAdView;
+        if (gameSize > 2) {
+            mAdView = (AdView) findViewById(R.id.adViewHome2);
+        }else{
+            mAdView = (AdView) findViewById(R.id.adViewHome);
+        }
+
+        AdCreator adCreator = new AdCreator(mAdView, this);
+        adCreator.createAd();
+
+        loadObjects();
+        loadGame();
+
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        Date now = new Date();
+        String time = sdfDate.format(now);
+        dbHelper.open();
+        dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.close();
+
+        if (savedInstanceState != null) {
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+        }
+
+    }
+
+    public void populateSetRecyclerView(){
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewSets.setLayoutManager(mLayoutManager);
+        mSetAdapter = new SetAdapter(mSetArray, this, playersArray.size(), mNumSets);
+        mRecyclerViewSets.setAdapter(mSetAdapter);
     }
 
     public void loadObjects() {
@@ -234,11 +216,13 @@ public class MainActivity extends AppCompatActivity
         if (scoreInterval == 0) {
             scoreInterval = 1;
         }
+
         if (diffToWin == 0) {
             diffToWin = 1;
         }
+
         int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
-        reverseScrolling = i == 1;
+        reverseScoring = i == 1;
 
         homeIntent = new Intent(this, Home.class);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
@@ -251,7 +235,6 @@ public class MainActivity extends AppCompatActivity
         buttonP2 = (Button) findViewById(R.id.buttonP2);
         buttonP2.setOnClickListener(this);
         buttonP2.setOnLongClickListener(this);
-
 
         if (!classicTheme) {
             buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
@@ -266,12 +249,7 @@ public class MainActivity extends AppCompatActivity
         textViewP1 = (TextView) findViewById(R.id.textViewP1);
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
-        if (!classicTheme) {
-            bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
-
-            normal = (RelativeLayout) findViewById(R.id.layoutNormal);
-            big = (RelativeLayout) findViewById(R.id.layoutBig);
-        }
+        mRecyclerViewSets = (RecyclerView)findViewById(R.id.recyclerViewSets);
 
         playersArray = new ArrayList();
         playersArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -279,11 +257,69 @@ public class MainActivity extends AppCompatActivity
         scoresArray = new ArrayList();
         scoresArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
 
+        mSetArray = new ArrayList();
+        mSetArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SETS, gameID, dbHelper);
+
+        mNumSets = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_NUM_SETS, dbHelper);
+
         gameSize = playersArray.size();
 
-        selectLayout();
 
-        if (classicTheme) {
+        if (!classicTheme) {
+            bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
+
+            normal = (RelativeLayout) findViewById(R.id.layoutNormal);
+            big = (RelativeLayout) findViewById(R.id.layoutBig);
+
+            mSectionsPagerAdapter = new MainActivity.SectionsPagerAdapter(getSupportFragmentManager());
+
+            // Set up the ViewPager with the sections adapter.
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+            mTabLayout = (TabLayout) findViewById(R.id.tabs);
+            mTabLayout.setupWithViewPager(mViewPager);
+
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                    switch (position){
+                        case 0:
+                            findViewById(R.id.gameRelativeLayout).setVisibility(View.VISIBLE);
+                            mRecyclerViewSets.setVisibility(View.INVISIBLE);
+                            break;
+
+                        case 1:
+                            if (mSetArray.size() != 0) {
+                                findViewById(R.id.gameRelativeLayout).setVisibility(View.INVISIBLE);
+                                mRecyclerViewSets.setVisibility(View.VISIBLE);
+
+                            }else{
+
+                                Toast.makeText(MainActivity.this, "No Games completed. ;)", Toast.LENGTH_SHORT).show();
+                            }
+
+                            break;
+
+                        case 2:
+                            Toast.makeText(MainActivity.this, "Coming Soon ;)", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            populateSetRecyclerView();
+
+        }else{
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
 
             // Applying font
@@ -293,6 +329,8 @@ public class MainActivity extends AppCompatActivity
             buttonP1.setTypeface(tf);
             buttonP2.setTypeface(tf);
         }
+
+        selectLayout();
 
         stopwatch.setOnChronometerTickListener(this);
 
@@ -305,18 +343,20 @@ public class MainActivity extends AppCompatActivity
                 if (Integer.valueOf(String.valueOf(scoresArray.get(a))) <= maxScore
                         && scoreDifference(Integer.valueOf(String.valueOf(scoresArray.get(a))))) {
 
-                    gameWon(String.valueOf(playersArray.get(a)));
+                    gameWon(String.valueOf(playersArray.get(a)), mNumSets > 1  && mSetArray.size() / playersArray.size() < mNumSets);
                 }
 
             } else if (maxScore >= 0) {
                 if (Integer.valueOf(String.valueOf(scoresArray.get(a))) >= maxScore
                         && scoreDifference(Integer.valueOf(String.valueOf(scoresArray.get(a))))) {
-                    gameWon(String.valueOf(playersArray.get(a)));
+                    gameWon(String.valueOf(playersArray.get(a)), mNumSets > 1  && mSetArray.size() / playersArray.size() < mNumSets);
                 }
 
             }
 
         }
+
+
     }
 
     private boolean scoreDifference(int score) {
@@ -362,7 +402,7 @@ public class MainActivity extends AppCompatActivity
         bigGameList.setLayoutManager(mLayoutManager);
         bigGameModels = BigGameModel.createGameModel(playersArray.size(), playersArray, scoresArray);
 
-        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScrolling, scoreInterval, diffToWin);
+        bigGameAdapter = new BigGameAdapter(bigGameModels, scoresArray, dbHelper, gameID, enabled, maxScore, this, reverseScoring, scoreInterval, diffToWin);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -740,6 +780,8 @@ public class MainActivity extends AppCompatActivity
 
             builder.setMessage(R.string.quit_game_message);
 
+
+
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dbHelper.open();
@@ -759,6 +801,7 @@ public class MainActivity extends AppCompatActivity
                     if (stopwatchBoolean) {
                         dbHelper.updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
                     }
+
                     dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
                     dbHelper.close();
                     startActivity(homeIntent);
@@ -778,29 +821,20 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (isWon) {
-            winnerDialog(winner);
+            winnerDialog(winner, true);
         }
+
         if (timeLimitReached(stopwatch)) {
             timeLimitDialog();
         }
     }
 
-    public void winnerDialog(String winner) {
+    public void winnerDialog(String winner, boolean saveNewSet) {
+
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(winner + " " + getString(R.string.has_won));
-
-        builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dbHelper.open();
-                if (stopwatchBoolean) {
-                    dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                }                dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                dbHelper.close();
-                startActivity(homeIntent);
-            }
-        });
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -808,22 +842,94 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        if (mNumSets > 1 && mSetArray.size() / playersArray.size() < mNumSets && saveNewSet) {
+            for (int i = 0; i < scoresArray.size(); i++){
+                mSetArray.add(scoresArray.get(i));
+            }
+
+            populateSetRecyclerView();
+
+            dbHelper.open().updateGame(mSetArray, null, 0, ScoreDBAdapter.KEY_SETS, gameID);
+            dbHelper.close();
+
+            builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finished = false;
+                    isPaused = false;
+                    chronometerClick();
+                    buttonP1.setEnabled(true);
+                    buttonP2.setEnabled(true);
+                    isWon = false;
+
+                    for (int i = 0; i < scoresArray.size(); i++){
+                        scoresArray.set(i, "0");
+                    }
+
+                    dbHelper.open();
+                    dbHelper.updateGame(scoresArray, null, 0, ScoreDBAdapter.KEY_SCORE, gameID);
+                    dbHelper.close();
+
+                    if (playersArray.size() == 2){
+                        P1Score = 0;
+                        P2Score = 0;
+                        buttonP1.setText(String.valueOf(P1Score));
+                        buttonP2.setText(String.valueOf(P2Score));
+                    }else{
+                        displayRecyclerView(true);
+                    }
+
+                }
+            });
+
+            builder.setNeutralButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dbHelper.open();
+                    if (stopwatchBoolean) {
+                        dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    }                dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.close();
+                    startActivity(homeIntent);
+                }
+            });
+
+        }else{
+
+            builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dbHelper.open();
+                    if (stopwatchBoolean) {
+                        dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    }                dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+                    dbHelper.close();
+                    startActivity(homeIntent);
+                }
+            });
+        }
+
         dialog = builder.create();
 
         dialog.show();
+
+        finished = true;
+        isPaused = true;
+        chronometerClick();
+        buttonP1.setEnabled(false);
+        buttonP2.setEnabled(false);
+        isWon = true;
+
     }
 
     public void onScoreButtonClick(Button button) {
 
         if (button == buttonP1) {
-            if (reverseScrolling) {
+            if (reverseScoring) {
                 P1Score -= scoreInterval;
             } else {
                 P1Score += scoreInterval;
             }
             button.setText(String.valueOf(P1Score));
         } else {
-            if (reverseScrolling) {
+            if (reverseScoring) {
                 P2Score -= scoreInterval;
             } else {
                 P2Score += scoreInterval;
@@ -835,13 +941,9 @@ public class MainActivity extends AppCompatActivity
         } else {
             ft2 = false;
         }
+
         if (maxScore != 0 && Math.abs(P1Score - P2Score) >= diffToWin) {
             if (P1Score >= maxScore || P2Score >= maxScore) {
-                finished = true;
-                isPaused = true;
-                chronometerClick();
-                buttonP1.setEnabled(false);
-                buttonP2.setEnabled(false);
                 if (P1Score == maxScore) {
                     winner = playersArray.get(0).toString();
                 } else {
@@ -849,7 +951,8 @@ public class MainActivity extends AppCompatActivity
 
                 }
                 isWon = true;
-                winnerDialog(winner);
+                updateScores();
+                winnerDialog(winner, true);
             }
         }
 
@@ -859,7 +962,7 @@ public class MainActivity extends AppCompatActivity
     public void onScoreButtonLongClick(Button button) {
 
         if (button == buttonP1 && !ft1 && P1Score != 0) {
-            if (reverseScrolling) {
+            if (reverseScoring) {
                 P1Score += scoreInterval;
             } else {
                 P1Score -= scoreInterval;
@@ -867,7 +970,7 @@ public class MainActivity extends AppCompatActivity
 
             button.setText(String.valueOf(P1Score));
         } else if (button == buttonP2 && !ft2 && P2Score != 0) {
-            if (reverseScrolling) {
+            if (reverseScoring) {
                 P2Score += scoreInterval;
             } else {
                 P2Score -= scoreInterval;
@@ -1051,7 +1154,8 @@ public class MainActivity extends AppCompatActivity
                     CoordinatorLayout.LayoutParams.WRAP_CONTENT,
                     CoordinatorLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(0, 0, 0, 0);
+
+            params.setMargins(0, mTabLayout.getHeight(), 0, 0);
             content.setLayoutParams(params);
 
         } else {
@@ -1079,6 +1183,9 @@ public class MainActivity extends AppCompatActivity
                 if (params != null) {
                     content.setLayoutParams(params);
                 }
+
+                mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+
             }
         }
     }
@@ -1089,13 +1196,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void gameWon(String winner) {
+    public void gameWon(String winner, boolean startNewSet) {
         this.winner = winner;
         finished = true;
         isPaused = true;
         chronometerClick();
         isWon = true;
-        winnerDialog(winner);
+        winnerDialog(winner, startNewSet);
         displayRecyclerView(false);
 
     }
@@ -1326,6 +1433,80 @@ public class MainActivity extends AppCompatActivity
             }
             stopwatch.setVisibility(View.INVISIBLE);
             fabChronometer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+
+        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = null;
+            container.setVisibility(View.INVISIBLE);
+            return rootView;
+        }
+
+
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return MainActivity.PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getString(R.string.game);
+                case 1:
+                    return getString(R.string.sets);
+                case 2:
+                    return getString(R.string.time_line);
+
+            }
+            return null;
         }
     }
 }

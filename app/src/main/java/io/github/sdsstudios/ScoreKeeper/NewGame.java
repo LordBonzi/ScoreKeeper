@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,9 +52,9 @@ public class NewGame extends AppCompatActivity
     private DataHelper dataHelper;
     private String time = null;
     private String TAG = "NewGame";
-    private EditText editTextPlayer, editTextMaxScore, editTextScoreInterval, editTextDiffToWin;
+    private EditText editTextPlayer;
     private Button buttonNewGame, buttonAddPlayer, buttonQuit, buttonCreatePreset;
-    private CheckBox checkBoxNoTimeLimit, checkBoxReverseScrolling, checkBoxStopwatch;
+    private CheckBox checkBoxNoTimeLimit;
     private RecyclerView playerList;
     private String player;
     private ArrayList players = new ArrayList<>();
@@ -77,15 +76,13 @@ public class NewGame extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private boolean classicTheme;
     static final String STATE_GAMEID = "gameID";
-    private int reverseScrolling = 0;
-    private int maxScore = 0;
-    private int scoreInterval = 1;
-    private int diffToWin = 0;
-    private int stopwatch = 0;
     private RelativeLayout optionsHeader, timeLimitHeader;
     private NestedScrollView scrollView;
     private int optionsHeight, timeLimitHeight;
     private RelativeLayout optionsContent, timeLimitContent;
+
+    private List<EditTextOption> mEditTextOptions = new ArrayList<>();
+    private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,14 +197,6 @@ public class NewGame extends AppCompatActivity
         checkBoxNoTimeLimit.setOnClickListener(this);
         checkBoxNoTimeLimit.setChecked(false);
 
-        checkBoxReverseScrolling = (CheckBox) findViewById(R.id.checkBoxReverseScoring);
-        checkBoxReverseScrolling.setOnClickListener(this);
-        checkBoxReverseScrolling.setChecked(false);
-
-        checkBoxStopwatch = (CheckBox) findViewById(R.id.checkBoxStopwatch);
-        checkBoxStopwatch.setOnClickListener(this);
-        checkBoxStopwatch.setChecked(false);
-
         buttonCreatePreset = (Button)findViewById(R.id.buttonCreatePreset);
         buttonCreatePreset.setOnClickListener(this);
         buttonCreatePreset.setVisibility(View.VISIBLE);
@@ -217,16 +206,46 @@ public class NewGame extends AppCompatActivity
         homeIntent = new Intent(this, Home.class);
         playerList = (RecyclerView)findViewById(R.id.playerList);
 
+        mEditTextOptions.add(new EditTextOption((EditText) findViewById(R.id.editTextNumSets), 0, ScoreDBAdapter.KEY_NUM_SETS, getString(R.string.num_sets)));
+        mEditTextOptions.add(new EditTextOption((EditText) findViewById(R.id.editTextDiffToWin), 0, ScoreDBAdapter.KEY_DIFF_TO_WIN, getString(R.string.diff_to_win)));
+        mEditTextOptions.add(new EditTextOption((EditText) findViewById(R.id.editTextMaxScore), 0, ScoreDBAdapter.KEY_MAX_SCORE, getString(R.string.max_score)));
+        mEditTextOptions.add(new EditTextOption((EditText) findViewById(R.id.editTextScoreInterval), 0, ScoreDBAdapter.KEY_SCORE_INTERVAL, getString(R.string.score_interval)));
+
+        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) findViewById(R.id.checkBoxReverseScoring)
+                , 0, ScoreDBAdapter.KEY_REVERSE_SCORING, getString(R.string.reverse_scoring)));
+
+        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) findViewById(R.id.checkBoxStopwatch)
+                , 0, ScoreDBAdapter.KEY_STOPWATCH, getString(R.string.time_limit)));
+
         if (savedInstanceState != null){
             dbHelper.open();
             gameID = savedInstanceState.getInt(STATE_GAMEID);
             players = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
             score = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
             timeLimit = dataHelper.getStringById( gameID,ScoreDBAdapter.KEY_TIMER, dbHelper);
-            maxScore = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
-            reverseScrolling = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
-            diffToWin = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
-            stopwatch = dataHelper.getIntByID( gameID,ScoreDBAdapter.KEY_STOPWATCH, dbHelper);
+
+            for (EditTextOption editTextOption : mEditTextOptions){
+                editTextOption.setmData(dataHelper.getIntByID(gameID,editTextOption.getmDatabaseColumn(), dbHelper));
+            }
+
+            for (final CheckBoxOption c : mCheckBoxOptions){
+                c.getmCheckBox().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (c.getmCheckBox().isChecked()){
+                            c.setmData(1);
+                        }else{
+                            c.setmData(0);
+                        }
+                        dbHelper.open();
+                        dbHelper.updateGame(null, null,c.getmData(),c.getmDatabaseColumn(), gameID);
+                        dbHelper.close();
+
+                    }
+                });
+                c.getmCheckBox().setChecked(false);
+            }
+
             dbHelper.open();
             dbHelper.updateGame(null, timeLimit, 0, ScoreDBAdapter.KEY_TIMER, gameID);
             dbHelper.close();
@@ -245,7 +264,7 @@ public class NewGame extends AppCompatActivity
             dbHelper.close();
         }else{
             dbHelper.open();
-            dbHelper.createGame(players, time, score, 0, timeLimit, maxScore, reverseScrolling, scoreInterval, diffToWin,stopwatch);
+            dbHelper.createGame(players, time, score, 0, timeLimit, mEditTextOptions, mCheckBoxOptions);
             gameID = dbHelper.getNewestGame();
             dbHelper.close();
             spinnerTimeLimit.setVisibility(View.INVISIBLE);
@@ -266,123 +285,38 @@ public class NewGame extends AppCompatActivity
         buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
-        editTextDiffToWin = (EditText) findViewById(R.id.editTextDiffToWin);
-        editTextDiffToWin.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                try
-                {
-                    diffToWin= Integer.parseInt(charSequence.toString());
-                }
-                catch (NumberFormatException e)
-                {
-                    e.printStackTrace();
-                    diffToWin = 0;
+        for (final EditTextOption e: mEditTextOptions){
+            e.getmEditText().addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                 }
 
-                dbHelper.open();
-                dbHelper.updateGame(null, null, diffToWin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
-                dbHelper.close();
-            }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    try
+                    {
+                        e.setmData(Integer.parseInt(charSequence.toString()));
+                    }
+                    catch (NumberFormatException error)
+                    {
+                        error.printStackTrace();
+                        e.setmData(0);
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try
-                {
-                    diffToWin= Integer.parseInt(editable.toString());
-                }
-                catch (NumberFormatException e)
-                {
-                    e.printStackTrace();
-                    diffToWin = 0;
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null, diffToWin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
-                dbHelper.close();
-            }
-        });
+                    }
 
-        editTextScoreInterval = (EditText) findViewById(R.id.editTextScoreInterval);
-        editTextScoreInterval.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                try
-                {
-                    scoreInterval= Integer.parseInt(charSequence.toString());
-                }
-                catch (NumberFormatException e) {
-                    scoreInterval = 0;
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null, e.getmData(), e.getmDatabaseColumn(), gameID);
+                    dbHelper.close();
                 }
 
-                dbHelper.open();
-                dbHelper.updateGame(null, null, scoreInterval, ScoreDBAdapter.KEY_SCORE_INTERVAL, gameID);
-                dbHelper.close();
-            }
+                @Override
+                public void afterTextChanged(Editable editable) {
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try
-                {
-                    scoreInterval= Integer.parseInt(editable.toString());
                 }
-                catch (NumberFormatException e)
-                {
-
-                    scoreInterval = 0;
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null, scoreInterval, ScoreDBAdapter.KEY_SCORE_INTERVAL, gameID);
-                dbHelper.close();
-            }
-        });
-
-        editTextMaxScore = (EditText) findViewById(R.id.editTextMaxScore);
-        editTextMaxScore.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                try
-                {
-                    maxScore= Integer.parseInt(charSequence.toString());
-                }
-                catch (NumberFormatException e)
-                {
-                    // handle the exception
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null, maxScore, ScoreDBAdapter.KEY_MAX_SCORE, gameID);
-                dbHelper.close();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try
-                {
-                    maxScore= Integer.parseInt(editable.toString());
-                }
-                catch (NumberFormatException e)
-                {
-                    // handle the exception
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null, maxScore, ScoreDBAdapter.KEY_MAX_SCORE, gameID);
-                dbHelper.close();
-            }
-        });
+            });
+        }
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
@@ -448,7 +382,6 @@ public class NewGame extends AppCompatActivity
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if (spinnerPreset.getSelectedItemPosition() != 0){
                         loadGame(spinnerPreset.getSelectedItemPosition());
-
                     }else{
                     }
                 }
@@ -469,14 +402,20 @@ public class NewGame extends AppCompatActivity
         String presetTimeLimit;
         presetPlayers = dataHelper.getPresetPlayerArrayByID(position, presetDBAdapter);
         presetTimeLimit = dataHelper.getPresetStringByID(position, PresetDBAdapter.KEY_TIME_LIMIT, presetDBAdapter);
-        int maxscore = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_MAX_SCORE, presetDBAdapter);
-        int reversescrolling = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_REVERSE_SCORING, presetDBAdapter);
-        int scoreinterval = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_SCORE_INTERVAL, presetDBAdapter);
-        int diffToWin = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_DIFF_TO_WIN, presetDBAdapter);
-        int stopwatch = dataHelper.getPresetIntByID(position, PresetDBAdapter.KEY_STOPWATCH, presetDBAdapter);
+
+        for (EditTextOption e : mEditTextOptions){
+            e.setmData(dataHelper.getPresetIntByID(position, e.getmDatabaseColumn(), presetDBAdapter));
+        }
+
+        for (CheckBoxOption c : mCheckBoxOptions){
+            c.setmData(dataHelper.getPresetIntByID(position, c.getmDatabaseColumn(), presetDBAdapter));
+        }
+
         presetDBAdapter.close();
 
-        updateEditText(presetPlayers, presetTimeLimit, maxscore, reversescrolling, scoreinterval, diffToWin, stopwatch);
+        editTextPlayer.setText("");
+
+        updateEditText(presetPlayers, presetTimeLimit);
 
     }
 
@@ -522,14 +461,16 @@ public class NewGame extends AppCompatActivity
         displayRecyclerView(players);
         checkBoxNoTimeLimit.setChecked(false);
         disableTimeLimitSpinner();
-        checkBoxReverseScrolling.setChecked(false);
-        checkBoxStopwatch.setChecked(false);
-        editTextMaxScore.setText("");
-        editTextMaxScore.setHint(getString(R.string.max_score));
-        editTextScoreInterval.setText("");
-        editTextScoreInterval.setHint(getString(R.string.score_interval));
-        editTextDiffToWin.setText("");
-        editTextDiffToWin.setHint(getString(R.string.diff_to_win));
+
+        for (CheckBoxOption c : mCheckBoxOptions){
+            c.getmCheckBox().setChecked(false);
+        }
+
+        for (EditTextOption editTextOption: mEditTextOptions){
+            editTextOption.getmEditText().setText("");
+            editTextOption.getmEditText().setHint(editTextOption.getmHint());
+        }
+
         spinnerPreset.setSelection(0);
 
     }
@@ -538,7 +479,6 @@ public class NewGame extends AppCompatActivity
         playerList.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
-        Log.e(TAG, String.valueOf(players));
         playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
         playerList.setAdapter(playerListAdapter);
 
@@ -772,30 +712,6 @@ public class NewGame extends AppCompatActivity
                 break;
             }
 
-            case R.id.checkBoxReverseScoring: {
-                if (checkBoxReverseScrolling.isChecked()){
-                    reverseScrolling =1;
-                }else{
-                    reverseScrolling = 0;
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null,reverseScrolling,ScoreDBAdapter.KEY_REVERSE_SCORING, gameID);
-                dbHelper.close();
-
-                break;
-            }
-            case R.id.checkBoxStopwatch: {
-                if (checkBoxStopwatch.isChecked()){
-                    stopwatch =1;
-                }else{
-                    stopwatch = 0;
-                }
-                dbHelper.open();
-                dbHelper.updateGame(null, null,stopwatch,ScoreDBAdapter.KEY_STOPWATCH, gameID);
-                dbHelper.close();
-
-                break;
-            }
 
             case R.id.buttonCreatePreset:{
                 createNewGame(players, false);
@@ -1007,11 +923,6 @@ public class NewGame extends AppCompatActivity
                     createScoreArray();
 
                     if (startGame) {
-                        if (checkBoxStopwatch.isChecked()) {
-                            dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                        }else {
-                            dbHelper.updateGame(null, "00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                        }
 
                         mainActivityIntent.putExtra("gameID", gameID);
                         startActivity(mainActivityIntent);
@@ -1030,23 +941,21 @@ public class NewGame extends AppCompatActivity
         presetDBAdapter.open();
         if (spinnerTimeLimit.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
             presetDBAdapter.open();
+
             presetDBAdapter.createPreset(players, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString()
-                    , title, maxScore, reverseScrolling, scoreInterval, diffToWin, stopwatch);
+                    , title, mEditTextOptions, mCheckBoxOptions);
+
             presetDBAdapter.close();
         }else{
-            presetDBAdapter.createPreset(players, timeLimit, title, maxScore, reverseScrolling, scoreInterval, diffToWin, stopwatch);
+            presetDBAdapter.createPreset(players, timeLimit, title, mEditTextOptions, mCheckBoxOptions);
         }
         presetDBAdapter.close();
     }
 
-    public void updateEditText(ArrayList players, String timeLimit, int maxScore, int reverseScrolling, int scoreInterval, int difftowin, int stopwatch) {
+    public void updateEditText(ArrayList players, String timeLimit) {
+
         this.players = players;
         this.timeLimit = timeLimit;
-        this.maxScore = maxScore;
-        this.reverseScrolling = reverseScrolling;
-        this.scoreInterval = scoreInterval;
-        this.diffToWin = difftowin;
-        this.stopwatch = stopwatch;
 
         displayRecyclerView(players);
         if (timeLimit!=null) {
@@ -1060,27 +969,18 @@ public class NewGame extends AppCompatActivity
             spinnerTimeLimit.setEnabled(false);
         }
 
-        if (maxScore != 0) {
-            editTextMaxScore.setText(String.valueOf(maxScore));
-        }
-        if (scoreInterval !=0) {
-            editTextScoreInterval.setText(String.valueOf(scoreInterval));
-        }
-
-        if (difftowin !=0) {
-            editTextDiffToWin.setText(String.valueOf(difftowin));
+        for (EditTextOption e : mEditTextOptions){
+            if (e.getmData() != 0){
+                e.getmEditText().setText(String.valueOf(e.getmData()));
+            }
         }
 
-        if (reverseScrolling == 1){
-            checkBoxReverseScrolling.setChecked(true);
-        }else{
-            checkBoxReverseScrolling.setChecked(false);
-        }
-
-        if (stopwatch == 1){
-            checkBoxStopwatch.setChecked(true);
-        }else{
-            checkBoxStopwatch.setChecked(false);
+        for (CheckBoxOption c : mCheckBoxOptions){
+            if (c.getmData() == 1){
+                c.getmCheckBox().setChecked(true);
+            }else{
+                c.getmCheckBox().setChecked(false);
+            }
         }
 
         createScoreArray();
@@ -1089,21 +989,22 @@ public class NewGame extends AppCompatActivity
         time = sdfDate.format(now);
         dbHelper.open();
         dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+
         dbHelper.open();
         dbHelper.updateGame(players, null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+
         dbHelper.open();
         dbHelper.updateGame(null, timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
-        dbHelper.open();
-        dbHelper.updateGame(null, null,maxScore, ScoreDBAdapter.KEY_MAX_SCORE, gameID);
-        dbHelper.open();
-        dbHelper.updateGame(null, null,reverseScrolling, ScoreDBAdapter.KEY_REVERSE_SCORING, gameID);
-        dbHelper.close();
-        dbHelper.open();
-        dbHelper.updateGame(null, null,difftowin, ScoreDBAdapter.KEY_DIFF_TO_WIN, gameID);
-        dbHelper.close();
-        dbHelper.open();
-        dbHelper.updateGame(null, null,stopwatch, ScoreDBAdapter.KEY_STOPWATCH, gameID);
-        dbHelper.close();
+
+        for (EditTextOption e : mEditTextOptions){
+            dbHelper.open();
+            dbHelper.updateGame(null, null,e.getmData(), e.getmDatabaseColumn(), gameID);
+        }
+
+        for (CheckBoxOption c : mCheckBoxOptions){
+            dbHelper.open();
+            dbHelper.updateGame(null, null,c.getmData(), c.getmDatabaseColumn(), gameID);
+        }
     }
 
     @Override

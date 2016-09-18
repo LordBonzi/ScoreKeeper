@@ -259,12 +259,27 @@
                         android:layout_alignRight="@+id/editTextScoreInterval"
                         android:layout_alignEnd="@+id/editTextScoreInterval" />
 
+                    <EditText
+                        android:id="@+id/editTextNumSets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/num_sets"
+                        android:imeOptions="actionDone"
+                        android:inputType="number|numberSigned"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:paddingTop="@dimen/activity_vertical_margin"
+                        android:layout_below="@+id/editTextDiffToWin"
+                        android:layout_alignLeft="@+id/editTextScoreInterval"
+                        android:layout_alignStart="@+id/editTextScoreInterval"
+                        android:layout_alignRight="@+id/editTextScoreInterval"
+                        android:layout_alignEnd="@+id/editTextScoreInterval" />
+
                     <CheckBox
                         android:id="@+id/checkBoxReverseScoring"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/reverse_scoring"
-                        android:layout_below="@+id/editTextDiffToWin"
+                        android:layout_below="@+id/editTextNumSets"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_alignLeft="@+id/editTextDiffToWin"
                         android:layout_alignStart="@+id/editTextDiffToWin" />
@@ -277,7 +292,7 @@
                         android:text="@string/stopwatch"
                         android:layout_marginBottom="16dp"
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_below="@+id/editTextDiffToWin"
+                        android:layout_below="@+id/editTextNumSets"
                         android:layout_toRightOf="@+id/checkBoxReverseScoring"
                         android:layout_toEndOf="@+id/checkBoxReverseScoring" />
 

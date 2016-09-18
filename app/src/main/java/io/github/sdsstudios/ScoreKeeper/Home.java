@@ -143,13 +143,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
 
-        if (dbHelper.open().numRows() > 2 && reviewLaterBool){
+        if (dbHelper.open().numRows() == 1 && reviewLaterBool){
             createReviewDialog();
         }
 
         displayRecyclerView();
 
         verifyStoragePermissions(this);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             File sdcard = Environment.getExternalStorageDirectory();
             File file = new File(sdcard, "/ScoreKeeper");

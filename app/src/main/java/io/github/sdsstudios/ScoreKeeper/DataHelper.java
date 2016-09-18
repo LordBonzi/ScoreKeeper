@@ -58,15 +58,20 @@ public class DataHelper {
     }
 
     public ArrayList getArrayById(String request, int gameID, ScoreDBAdapter dbHelper){
-        ArrayList array;
+        ArrayList array = new ArrayList();
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchGamesById(gameID);
         dbHelper.close();
         int index = cursor.getColumnIndex(request);
+        
         String s = cursor.getString(index);
-        String[] strValues = s.split(",");
-        array = new ArrayList<>(Arrays.asList(strValues));
+        
+        if (s != null) {
+            String[] strValues = s.split(",");
+            array = new ArrayList<>(Arrays.asList(strValues));
+        }
+        
         cursor.close();
 
         return array;

@@ -62,7 +62,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         holder.butonScore.setText(bigGameModel.getScore());
 
         if (enabled) {
-
             holder.butonScore.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -87,12 +86,12 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                         for (int i = 0; i < arrayListScore.size(); i++) {
                             if (maxScore < 0) {
                                 if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) <= maxScore && scoreDifference(score)) {
-                                    gameListener.gameWon(bigGameModel.getPlayers());
+                                    gameListener.gameWon(bigGameModel.getPlayers(), true);
                                 }
 
                             } else if (maxScore >= 0) {
                                 if (Integer.valueOf(String.valueOf(arrayListScore.get(i))) >= maxScore&& scoreDifference(score)) {
-                                    gameListener.gameWon(bigGameModel.getPlayers());
+                                    gameListener.gameWon(bigGameModel.getPlayers(), true);
                                 }
 
                             }
@@ -186,7 +185,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     }
 
     public interface GameListener{
-        void gameWon(String winner);
+        void gameWon(String winner, boolean justWon);
         void deletePlayer(int position);
         void editPlayer(int position);
     }

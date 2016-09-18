@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -25,6 +26,7 @@ public class PresetDBAdapter {
     public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
     public static final String KEY_DIFF_TO_WIN = "_difftowin";
     public static final String KEY_STOPWATCH = "_stopwatch";
+    public static final String KEY_NUM_SETS = "_numsets";
     public static final String SQLITE_TABLE = "presets";
     private static final String TAG = "PresetDBAdapter";
     private static final String DATABASE_NAME = "PresetDatabase";
@@ -39,11 +41,12 @@ public class PresetDBAdapter {
                     KEY_REVERSE_SCORING + " , " +
                     KEY_SCORE_INTERVAL + " , " +
                     KEY_DIFF_TO_WIN + " , " +
-                    KEY_STOPWATCH +
+                    KEY_STOPWATCH + " , " +
+                    KEY_NUM_SETS +
                     " );";
 
     private String[] columnArray ={KEY_ROWID, KEY_PLAYERS, KEY_TIME_LIMIT, KEY_TITLE, KEY_MAX_SCORE
-                                    , KEY_REVERSE_SCORING,KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH};
+                                    , KEY_REVERSE_SCORING,KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH, KEY_NUM_SETS};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -94,8 +97,8 @@ public class PresetDBAdapter {
 
     }
 
-    public long createPreset(ArrayList players, String timelimit, String title, int maxscore, int reversescroling
-                            , int scoreinterval, int difftowin, int stopwatch) {
+    public long createPreset(ArrayList players, String timelimit, String title, List<EditTextOption> editTextOptions
+            , List<CheckBoxOption> checkBoxOptions) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -108,12 +111,13 @@ public class PresetDBAdapter {
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_TIME_LIMIT, timelimit);
         initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_MAX_SCORE, maxscore);
-        initialValues.put(KEY_REVERSE_SCORING, reversescroling);
-        initialValues.put(KEY_SCORE_INTERVAL, scoreinterval);
-        initialValues.put(KEY_DIFF_TO_WIN, difftowin);
-        initialValues.put(KEY_STOPWATCH, stopwatch);
 
+        for (EditTextOption e : editTextOptions){
+            initialValues.put(e.getmDatabaseColumn(), e.getmData());
+        }
+        for (CheckBoxOption c : checkBoxOptions){
+            initialValues.put(c.getmDatabaseColumn(), c.getmData());
+        }
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 

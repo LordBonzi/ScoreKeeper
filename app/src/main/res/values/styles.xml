@@ -81,12 +81,6 @@
     </style>
 
 
-
-
-
-
-
-
     <style name="DarkTheme_Grey" parent="DarkTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentGrey</item>
@@ -96,6 +90,7 @@
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentPink</item>
     </style>
+
     <style name="DarkTheme_Yellow" parent="DarkTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentYellow</item>
@@ -127,11 +122,6 @@
     </style>
 
 
-
-
-
-
-
     <style name="AppTheme_Grey" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentGrey</item>
@@ -141,6 +131,7 @@
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentPink</item>
     </style>
+
     <style name="AppTheme_Yellow" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentYellow</item>
@@ -172,7 +163,8 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark
+        </item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/material_dark</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="colorPrimaryDark">@color/material_dark</item>

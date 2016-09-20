@@ -9,6 +9,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - update review dialog message
 
 ### Bug Fixes
+ - deletes other duplicate player if trying to add a duplicate player in New Game
  - buttons in 2 player games will be clickable after closing the ""[insert player] has won" dialog shown when entering a game which has already been won.
  - renamed boolean reverseScrolling to reverseScoring.
  - editTextPlayer in NewGame didnt delete text when loading preset

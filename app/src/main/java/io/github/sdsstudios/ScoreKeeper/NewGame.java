@@ -497,7 +497,8 @@ public class NewGame extends AppCompatActivity
                     snackbar.dismiss();
                 }
             };
-            players.remove(players.size() -1);
+
+            players.remove(players.size() - 1);
 
             snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
@@ -529,19 +530,6 @@ public class NewGame extends AppCompatActivity
             playerListAdapter.notifyItemInserted(players.size());
             playerListAdapter.notifyDataSetChanged();
 
-        }else{
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    snackbar.dismiss();
-                }
-            };
-
-            players.remove(players.size() -1);
-
-            snackbar = Snackbar.make(relativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            snackbar.show();
         }
 
     }

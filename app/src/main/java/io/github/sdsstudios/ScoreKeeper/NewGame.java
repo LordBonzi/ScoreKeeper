@@ -587,6 +587,7 @@ public class NewGame extends AppCompatActivity
 
     public void createScoreArray(){
         score.clear();
+        score = new ArrayList<>();
 
         while (score.size() < players.size()){
             score.add("0");

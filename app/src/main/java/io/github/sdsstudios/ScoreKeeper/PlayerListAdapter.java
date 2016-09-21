@@ -244,7 +244,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public void undoPlayerRemoval() {
 
         playerArray.add(playerArray.size(), backup);
-
         scoreArray.add(scoreArray.size(), backupScore);
 
         if (relativeLayout != null) {

@@ -641,6 +641,7 @@ public class MainActivity extends AppCompatActivity
         alertDialog.show();
 
     }
+
     private void addPlayers(AlertDialog alertDialog){
         playersArray.add(newPlayer);
         if (dataHelper.checkDuplicates(playersArray)){
@@ -654,11 +655,19 @@ public class MainActivity extends AppCompatActivity
             dbHelper.open().updateGame(playersArray, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
             dbHelper.open().updateGame(scoresArray, null, 0, ScoreDBAdapter.KEY_SCORE, gameID);
             dbHelper.close();
+
+            for (int i = 0; i < playersArray.size() - 1; i++){
+                mSetArray.set(i + playersArray.size(), "0");
+            }
+
+            dbHelper.open().updateGame(mSetArray, null, 0, ScoreDBAdapter.KEY_SETS, gameID);
+
             alertDialog.dismiss();
 
             if (stopwatchBoolean) {
                 dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
             }
+
             dbHelper.close();
             gameSize = playersArray.size();
             selectLayout();
@@ -1223,6 +1232,13 @@ public class MainActivity extends AppCompatActivity
         dbHelper.open().updateGame(scoresArray, null, 0, ScoreDBAdapter.KEY_SCORE, gameID);
         dbHelper.close();
 
+        for (int i = 0; i < mSetArray.size(); i++){
+            mSetArray.set(i + playersArray.size(), "0");
+        }
+
+        dbHelper.open().updateGame(mSetArray, null, 0, ScoreDBAdapter.KEY_SETS, gameID);
+
+
         if (stopwatchBoolean) {
             dbHelper.open().updateGame(null, stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
             dbHelper.close();
@@ -1468,7 +1484,6 @@ public class MainActivity extends AppCompatActivity
             container.setVisibility(View.INVISIBLE);
             return rootView;
         }
-
 
     }
 

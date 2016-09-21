@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -118,6 +119,10 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         return vh;
     }
 
+    public int getItemID(int position){
+        return mGameModel.get(mGameModel.size() - position - 1).getGameID();
+    }
+
     // Replace the contents of a view (invoked by the layout manager)
 
     @Override
@@ -153,6 +158,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         });
 
         if (mGameModel.size() == 0){
+            Toast.makeText(context, "How did you start History? There are no games!!!. Email developer in About", Toast.LENGTH_LONG).show();
 
         }else if(mGameModel.size() > 0){
 
@@ -184,7 +190,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
 
 
-            }catch (Exception ignored){
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("History Adapter", e.toString());
 
             }
 
@@ -233,7 +241,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-
 
         }
 

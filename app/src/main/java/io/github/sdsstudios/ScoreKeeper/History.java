@@ -341,8 +341,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                     gamesDeleted();
                     mode.finish();
 
-                    return true;
-
                 case R.id.action_delete_all:
                     dbHelper.open();
                     dbHelper.deleteAllgames();
@@ -352,7 +350,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                     mode.finish();
 
-                    return true;
+                case R.id.action_select_all:
+                    historyAdapter.clearSelection();
+                    for (int i = 0; i < historyAdapter.getItemCount(); i++){
+                        toggleSelection(i,historyAdapter.getItemID(i));
+                    }
 
             }
 

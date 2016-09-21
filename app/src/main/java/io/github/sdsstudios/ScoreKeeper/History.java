@@ -343,10 +343,20 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                     return true;
 
-                default:
+                case R.id.action_delete_all:
+                    dbHelper.open();
+                    dbHelper.deleteAllgames();
+                    dbHelper.close();
 
-                    return false;
+                    startActivity(new Intent(getBaseContext(), Home.class));
+
+                    mode.finish();
+
+                    return true;
+
             }
+
+            return true;
         }
 
         @Override

@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -62,42 +63,63 @@ public class GameModel{
             d = dateHelper.gameDate(date);
 
             if (arrayListPlayer.size() == 2){
-                t = "2 Player Game";
-                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
-                s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+                try {
+                    t = "2 Player Game";
+                    p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
+                    s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+                }catch (Exception e){
+                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
+                }
 
             }else if (arrayListPlayer.size() == 3){
-                t = "3 Player Game";
-                p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1) + " vs " + arrayListPlayer.get(2);
-                s = arrayListScore.get(0) + " : " + arrayListScore.get(1) + " : " + arrayListScore.get(2);
-
+                try {
+                    t = "3 Player Game";
+                    p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1) + " vs " + arrayListPlayer.get(2);
+                    s = arrayListScore.get(0) + " : " + arrayListScore.get(1) + " : " + arrayListScore.get(2);
+                }catch (Exception e){
+                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
+                }
             }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
-                t = "Group Game";
-                for (int j = 0; j < arrayListPlayer.size(); j++){
-                    p += arrayListPlayer.get(j);
-                    if (j != arrayListPlayer.size()-1){
-                        p += ", ";
+                try {
+
+                    t = "Group Game";
+                    for (int j = 0; j < arrayListPlayer.size(); j++){
+                        p += arrayListPlayer.get(j);
+                        if (j != arrayListPlayer.size()-1){
+                            p += ", ";
+                        }
+                        s += arrayListScore.get(j);
+                        if (j != arrayListPlayer.size()-1){
+                            s += " : ";
+                        }
                     }
-                    s += arrayListScore.get(j);
-                    if (j != arrayListPlayer.size()-1){
-                        s += " : ";
-                    }
+                }catch (Exception e){
+                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
 
             }else if (arrayListPlayer.size() > 10){
-                t = "Huge Game";
-                for (int k = 0; k < arrayListPlayer.size(); k++){
-                    p += arrayListPlayer.get(k);
-                    if (k != arrayListPlayer.size()-1){
-                        p += ", ";
+                try {
+
+                    t = "Huge Game";
+                    for (int k = 0; k < arrayListPlayer.size(); k++){
+                        p += arrayListPlayer.get(k);
+                        if (k != arrayListPlayer.size()-1){
+                            p += ", ";
+                        }
                     }
+                }catch (Exception e){
+                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
 
             }else if (arrayListPlayer.size() == 1){
-                t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
-                p = String.valueOf(arrayListPlayer.get(0));
-                s = String.valueOf(arrayListScore.get(0));
+                try {
 
+                    t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
+                    p = String.valueOf(arrayListPlayer.get(0));
+                    s = String.valueOf(arrayListScore.get(0));
+                }catch (Exception e){
+                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (activity == 1){

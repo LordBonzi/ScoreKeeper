@@ -101,9 +101,11 @@ public class ScoreDBAdapter {
 
         }else if (request.equals(KEY_TIMER)){
             initialValues.put(request, time_or_completed_or_timeLimit);
+
         }else if(request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_MAX_SCORE) || request.equals(KEY_SCORE_INTERVAL)
                     || request.equals(KEY_STOPWATCH) || request.equals(KEY_DIFF_TO_WIN) || request.equals(KEY_NUM_SETS)){
             initialValues.put(request, maxscoreorstopwatch);
+
         }else{
             initialValues.put(request, convertToString(array));
         }
@@ -126,6 +128,7 @@ public class ScoreDBAdapter {
         }else{
             initialValues.put(KEY_ROWID, getNewestGame() + 1);
         }
+
         initialValues.put(KEY_PLAYERS, convertToString(players));
         initialValues.put(KEY_SCORE, convertToString(score));
         initialValues.put(KEY_TIME, time);

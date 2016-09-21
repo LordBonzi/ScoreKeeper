@@ -18,7 +18,6 @@ public class GridViewAdapter extends BaseAdapter {
     private final int[] colors, rawColors;
     private boolean accent;
 
-
     public GridViewAdapter(Context context, int selected, int[] colors, int[] rawColors, boolean accents){
         this.context = context;
         this.selected = selected;
@@ -48,8 +47,6 @@ public class GridViewAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView = inflater.inflate(R.layout.accent_color_item, null);
         ImageView itemView = (ImageView) gridView.findViewById(R.id.accentColorView);
-
-
 
         itemView.setScaleType(ImageView.ScaleType.CENTER);
 

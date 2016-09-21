@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
  */
 
 public class DataHelper {
-
     public List convertToArray(String s){
         List arrayList = null;
 
@@ -64,7 +63,7 @@ public class DataHelper {
         Cursor cursor = dbHelper.fetchGamesById(gameID);
         dbHelper.close();
         int index = cursor.getColumnIndex(request);
-        
+
         String s = cursor.getString(index);
         
         if (s != null) {

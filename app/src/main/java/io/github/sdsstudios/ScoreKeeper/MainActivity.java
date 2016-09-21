@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -102,11 +103,12 @@ public class MainActivity extends AppCompatActivity
     private boolean stopwatchBoolean = false;
     private ViewGroup.LayoutParams params;
     private AlertDialog.Builder builder;
-    private RecyclerView mRecyclerViewSets;
     private SetAdapter mSetAdapter;
     private int mNumSets;
     private static final String STATE_GAMEID = "gameID";
     private TabLayout mTabLayout;
+
+    private GridView mSetGridView;
 
     //tabsStuff
     private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
@@ -185,11 +187,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void populateSetRecyclerView(){
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewSets.setLayoutManager(mLayoutManager);
-        mSetAdapter = new SetAdapter(mSetArray, this, playersArray.size(), mNumSets);
-        mRecyclerViewSets.setAdapter(mSetAdapter);
+    public void populateSetGridView(){
+        mSetGridView.setNumColumns(playersArray.size());
+        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mSetArray, playersArray, this);
+        mSetGridView.setAdapter(setGridViewAdapter);
     }
 
     public void loadObjects() {
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity
         textViewP1 = (TextView) findViewById(R.id.textViewP1);
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
-        mRecyclerViewSets = (RecyclerView)findViewById(R.id.recyclerViewSets);
+        mSetGridView = (GridView)findViewById(R.id.setGridView);
 
         playersArray = new ArrayList();
         playersArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
@@ -263,7 +264,6 @@ public class MainActivity extends AppCompatActivity
         mNumSets = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_NUM_SETS, dbHelper);
 
         gameSize = playersArray.size();
-
 
         if (!classicTheme) {
             bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity
             mTabLayout.setupWithViewPager(mViewPager);
 
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 }
@@ -291,13 +292,15 @@ public class MainActivity extends AppCompatActivity
                     switch (position){
                         case 0:
                             findViewById(R.id.gameRelativeLayout).setVisibility(View.VISIBLE);
-                            mRecyclerViewSets.setVisibility(View.INVISIBLE);
+                            mSetGridView.setVisibility(View.INVISIBLE);
                             break;
 
                         case 1:
                             if (mSetArray.size() != 0) {
                                 findViewById(R.id.gameRelativeLayout).setVisibility(View.INVISIBLE);
-                                mRecyclerViewSets.setVisibility(View.VISIBLE);
+                                mSetGridView.setVisibility(View.VISIBLE);
+
+                                populateSetGridView();
 
                             }else{
 
@@ -317,7 +320,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            populateSetRecyclerView();
 
         }else{
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
@@ -847,8 +849,6 @@ public class MainActivity extends AppCompatActivity
                 mSetArray.add(scoresArray.get(i));
             }
 
-            populateSetRecyclerView();
-
             dbHelper.open().updateGame(mSetArray, null, 0, ScoreDBAdapter.KEY_SETS, gameID);
             dbHelper.close();
 
@@ -1214,6 +1214,7 @@ public class MainActivity extends AppCompatActivity
         if (playersArray.size() > 2) {
             playersArray.remove(position);
             scoresArray.remove(position);
+
         } else {
             Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
         }

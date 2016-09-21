@@ -215,7 +215,9 @@ public class NewGame extends AppCompatActivity
                 , 0, ScoreDBAdapter.KEY_REVERSE_SCORING, getString(R.string.reverse_scoring)));
 
         mCheckBoxOptions.add(new CheckBoxOption((CheckBox) findViewById(R.id.checkBoxStopwatch)
-                , 0, ScoreDBAdapter.KEY_STOPWATCH, getString(R.string.time_limit)));
+                , 0, ScoreDBAdapter.KEY_STOPWATCH, getString(R.string.stopwatch)));
+
+
 
         if (savedInstanceState != null){
             dbHelper.open();
@@ -228,23 +230,7 @@ public class NewGame extends AppCompatActivity
                 editTextOption.setmData(dataHelper.getIntByID(gameID,editTextOption.getmDatabaseColumn(), dbHelper));
             }
 
-            for (final CheckBoxOption c : mCheckBoxOptions){
-                c.getmCheckBox().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (c.getmCheckBox().isChecked()){
-                            c.setmData(1);
-                        }else{
-                            c.setmData(0);
-                        }
-                        dbHelper.open();
-                        dbHelper.updateGame(null, null,c.getmData(),c.getmDatabaseColumn(), gameID);
-                        dbHelper.close();
 
-                    }
-                });
-                c.getmCheckBox().setChecked(false);
-            }
 
             dbHelper.open();
             dbHelper.updateGame(null, timeLimit, 0, ScoreDBAdapter.KEY_TIMER, gameID);
@@ -285,6 +271,24 @@ public class NewGame extends AppCompatActivity
         buttonAddPlayer.setOnClickListener(this);
 
         editTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
+
+        for (final CheckBoxOption c : mCheckBoxOptions){
+            c.getmCheckBox().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (c.getmCheckBox().isChecked()){
+                        c.setmData(1);
+                    }else{
+                        c.setmData(0);
+                    }
+                    dbHelper.open();
+                    dbHelper.updateGame(null, null,c.getmData(),c.getmDatabaseColumn(), gameID);
+                    dbHelper.close();
+
+                }
+            });
+            c.getmCheckBox().setChecked(false);
+        }
 
         for (final EditTextOption e: mEditTextOptions){
             e.getmEditText().addTextChangedListener(new TextWatcher() {

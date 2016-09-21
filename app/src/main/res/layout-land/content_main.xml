@@ -232,15 +232,11 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
     </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recyclerViewSets"
-        android:layout_alignParentTop="true"
-        android:visibility="gone"
-        />
-
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/setGridView"
+            android:visibility="gone"/>
 </RelativeLayout>
 
 </RelativeLayout>

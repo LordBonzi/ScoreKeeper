@@ -7,6 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +82,26 @@ public class ScoreDBAdapter {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
+    }
+
+    public void updatePlayers(List<Player> playerList, int gameID){
+        ContentValues initialValues = new ContentValues();
+        String arrayList = null;
+
+        try {
+            Gson gson = new Gson();
+            arrayList = gson.toJson(playerList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+        }
+
+
+        initialValues.put(KEY_PLAYERS, arrayList);
+        open();
+        DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + gameID, null);
+        close();
     }
 
     public String convertToString(ArrayList array) {

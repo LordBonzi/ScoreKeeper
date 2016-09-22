@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,6 +30,29 @@ public class DataHelper {
         arrayList = new ArrayList<>(Arrays.asList(strValues));
 
         return arrayList;
+    }
+
+    public List<Player> getPlayerArray(int id, ScoreDBAdapter dbHelper){
+
+        dbHelper.open();
+        Cursor cursor = dbHelper.fetchGamesById(id);
+
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_PLAYERS);
+
+        List<Player> playerList = new ArrayList<>();
+        try {
+
+            Gson gson = new Gson();
+
+            Type type = new TypeToken<List<Player>>(){}.getType();
+            playerList = gson.fromJson(cursor.getString(index), type);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataHelper.class", e.toString());
+        }
+
+        return playerList ;
     }
 
     public String convertToString(List array) {

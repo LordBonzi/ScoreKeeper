@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -343,6 +344,15 @@ public class NewGame extends AppCompatActivity
 
         displaySpinner(true);
         displaySpinner(false);
+
+        List<Player> playerList= new ArrayList<>();
+
+        playerList.add(new Player("test", 1, new ArrayList<Integer>()));
+        dbHelper.updatePlayers(playerList, gameID);
+
+        playerList = dataHelper.getPlayerArray(gameID, dbHelper);
+        Log.e(TAG, playerList.get(0).getmName());
+        Log.e(TAG, "" +playerList.get(0).getmScore());
     }
 
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {

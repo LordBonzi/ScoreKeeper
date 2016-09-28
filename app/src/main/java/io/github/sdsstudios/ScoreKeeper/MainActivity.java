@@ -572,7 +572,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                addPlayers(alertDialog);
+                addPlayer(alertDialog);
 
                 return false;
             }
@@ -619,7 +619,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onClick(View view) {
-                        addPlayers(alertDialog);
+                        addPlayer(alertDialog);
 
                     }
                 });
@@ -630,7 +630,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void addPlayers(AlertDialog alertDialog){
+    private void addPlayer(AlertDialog alertDialog){
         mPlayersArray.add(newPlayer);
         if (dataHelper.checkDuplicates(mPlayersArray)){
             mPlayersArray.remove(mPlayersArray.size()-1);
@@ -640,12 +640,7 @@ public class MainActivity extends AppCompatActivity
 
         }else {
 
-            dbHelper.open().updatePlayers(mPlayersArray, gameID);
-
-            for (int i = 0; i < mPlayersArray.size() - 1; i++){
-                Player p = mPlayersArray.get(i);
-                p.setScoreForSet(mPlayersArray.size(), 0);
-            }
+            mPlayersArray.get(mPlayersArray.size() - 1).createNewSet(mPlayersArray.get(0).getmSetScores().size());
 
             dbHelper.open().updatePlayers(mPlayersArray, gameID);
 

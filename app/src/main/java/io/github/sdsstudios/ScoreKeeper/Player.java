@@ -42,6 +42,13 @@ public class Player {
         mSetScores.set(index, score);
     }
 
+    public void createNewSet(int numSets){
+        for (int i = 0; i < numSets; i++){
+            addSet(0);
+        }
+
+    }
+
     public void addSet(int score){
         mSetScores.add(score);
     }

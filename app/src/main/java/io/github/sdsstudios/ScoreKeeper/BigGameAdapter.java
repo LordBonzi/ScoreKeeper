@@ -27,7 +27,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                           int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling, int scoreInterval, int diffToWin) {
 
         this.mPlayerArray = mPlayerArray;
-        dbHelper =dbAdapter;
+        dbHelper = dbAdapter;
         gameID = id;
         enabled = menabled;
         this.maxScore = maxScore;
@@ -40,7 +40,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                        int viewType) {
+                                         int viewType) {
         // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.big_game_adapter, parent, false);
@@ -69,9 +69,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     int buttonScore = 0;
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    if (reverseScrolling){
+                    if (reverseScrolling) {
                         score = buttonScore -= scoreInterval;
-                    }else {
+                    } else {
                         score = buttonScore += scoreInterval;
                     }
 
@@ -80,20 +80,19 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     dbHelper.open().updatePlayers(mPlayerArray, gameID);
 
                     if (maxScore != 0) {
-                        for (int i = 0; i < mPlayerArray.size(); i++) {
-                            if (maxScore < 0) {
-                                if (p.getmScore() <= maxScore && scoreDifference(score)) {
-                                    gameListener.gameWon(p.getmName());
-                                }
+                        if (maxScore < 0) {
+                            if (p.getmScore() <= maxScore && scoreDifference(score)) {
+                                gameListener.gameWon(p.getmName());
+                            }
 
-                            } else if (maxScore >= 0) {
-                                if (p.getmScore() >= maxScore&& scoreDifference(score)) {
-                                    gameListener.gameWon(p.getmName());
-                                }
-
+                        } else if (maxScore >= 0) {
+                            if (p.getmScore() >= maxScore && scoreDifference(score)) {
+                                gameListener.gameWon(p.getmName());
                             }
 
                         }
+
+
                     }
 
                 }
@@ -106,9 +105,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     int buttonScore = 0;
 
                     buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    if (reverseScrolling){
+                    if (reverseScrolling) {
                         score = buttonScore += scoreInterval;
-                    }else {
+                    } else {
                         score = buttonScore -= scoreInterval;
                     }
                     if (score == -1) {
@@ -137,19 +136,19 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }
             });
 
-        }else{
+        } else {
             holder.butonScore.setEnabled(false);
         }
     }
 
-    private boolean scoreDifference(int score){
+    private boolean scoreDifference(int score) {
         boolean b = false;
-        for (int i = 0; i < mPlayerArray.size(); i++){
-            if (Math.abs(score-Integer.valueOf(String.valueOf(mPlayerArray.get(i).getmScore()))) >= diffToWin){
+        for (int i = 0; i < mPlayerArray.size(); i++) {
+            if (Math.abs(score - Integer.valueOf(String.valueOf(mPlayerArray.get(i).getmScore()))) >= diffToWin) {
                 b = true;
             }
         }
-        return  b;
+        return b;
     }
 
 
@@ -171,17 +170,19 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
         public ViewHolder(View v) {
             super(v);
-            textViewPlayer = (TextView)v.findViewById(R.id.listTextViewPlayer);
+            textViewPlayer = (TextView) v.findViewById(R.id.listTextViewPlayer);
             butonScore = (Button) v.findViewById(R.id.listButtonScore);
-            imageButton = (ImageButton)v.findViewById(R.id.buttonDelete);
-            editButton = (ImageButton)v.findViewById(R.id.buttonEdit);
+            imageButton = (ImageButton) v.findViewById(R.id.buttonDelete);
+            editButton = (ImageButton) v.findViewById(R.id.buttonEdit);
 
         }
     }
 
-    public interface GameListener{
+    public interface GameListener {
         void gameWon(String winner);
+
         void deletePlayer(int position);
+
         void editPlayer(int position);
     }
 }

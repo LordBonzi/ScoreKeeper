@@ -88,8 +88,8 @@
     <string name="quit_setup_question">Quit Setup?</string>
     <string name="quit_setup_message">Are you sure you want to quit setting up game. Nothing will save.</string>
 
-    <string name="time_limit_reached">Time Limit Reached</string>
-    <string name="time_limit_question">The time limit has been reached. Do you want to finish the game or extend the time limit?</string>
+    <string name="time_limit_reached">Time up!</string>
+    <string name="time_limit_question">Time is up! Do you want to finish the game or extend the time limit?</string>
 
     <string name="colorise_unfinished">Colorize Unfinished Games</string>
 

@@ -185,10 +185,8 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
                 }
 
                 holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-                holder.textViewHistoryScore.setText(gameModel.getScore());
-                holder.textViewHistoryDate.setText(gameModel.getDate());
-
-
+                holder.textViewHistoryScore.setText(gameModel.getmScore());
+                holder.textViewHistoryDate.setText(String.valueOf(gameModel.getDate()));
 
             }catch (Exception e){
                 e.printStackTrace();

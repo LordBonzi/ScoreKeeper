@@ -57,11 +57,9 @@ public class NewGame extends AppCompatActivity
     private Button buttonNewGame, buttonAddPlayer, buttonQuit, buttonCreatePreset;
     private CheckBox checkBoxNoTimeLimit;
     private RecyclerView playerList;
-    private String player;
-    private ArrayList players = new ArrayList<>();
-    private ArrayList<String> score = new ArrayList<>();
+    private List<Player> mPlayerArray = new ArrayList<>();
     private Integer gameID;
-    private Intent homeIntent, mainActivityIntent;
+    private Intent homeIntent;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScoreDBAdapter dbHelper;
     private boolean stop = true;
@@ -103,8 +101,7 @@ public class NewGame extends AppCompatActivity
         // Save the user's current game state
         stop = false;
         dbHelper.open();
-        dbHelper.updateGame(players, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
-        createScoreArray();
+        dbHelper.updatePlayers(mPlayerArray, gameID);
         dbHelper.close();
         savedInstanceState.putInt(STATE_GAMEID, gameID);
 
@@ -223,8 +220,7 @@ public class NewGame extends AppCompatActivity
         if (savedInstanceState != null){
             dbHelper.open();
             gameID = savedInstanceState.getInt(STATE_GAMEID);
-            players = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-            score = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+            mPlayerArray = dataHelper.getPlayerArray(gameID, dbHelper);
             timeLimit = dataHelper.getStringById( gameID,ScoreDBAdapter.KEY_TIMER, dbHelper);
 
             for (EditTextOption editTextOption : mEditTextOptions){
@@ -234,7 +230,7 @@ public class NewGame extends AppCompatActivity
 
 
             dbHelper.open();
-            dbHelper.updateGame(null, timeLimit, 0, ScoreDBAdapter.KEY_TIMER, gameID);
+            dbHelper.updateGame(timeLimit, 0, ScoreDBAdapter.KEY_TIMER, gameID);
             dbHelper.close();
             if (timeLimit== null){
                 checkBoxNoTimeLimit.setChecked(false);
@@ -243,22 +239,21 @@ public class NewGame extends AppCompatActivity
                 checkBoxNoTimeLimit.setChecked(true);
                 spinnerTimeLimit.setVisibility(View.VISIBLE);
                 spinnerTimeLimit.setSelection(timeLimitArray.indexOf(timeLimit));
-
             }
 
-            dbHelper.updateGame(players, null, 0, ScoreDBAdapter.KEY_PLAYERS, gameID);
-            displayRecyclerView(players);
+            dbHelper.updatePlayers(mPlayerArray, gameID);
+            displayRecyclerView(mPlayerArray);
             dbHelper.close();
         }else{
             dbHelper.open();
-            dbHelper.createGame(players, time, score, 0, timeLimit, mEditTextOptions, mCheckBoxOptions);
+            dbHelper.createGame(mPlayerArray, time, 0, timeLimit, mEditTextOptions, mCheckBoxOptions);
             gameID = dbHelper.getNewestGame();
             dbHelper.close();
             spinnerTimeLimit.setVisibility(View.INVISIBLE);
-            displayRecyclerView(players);
+            displayRecyclerView(mPlayerArray);
             timeLimit = null;
             dbHelper.open();
-            dbHelper.updateGame(null, timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
+            dbHelper.updateGame(timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
             dbHelper.close();
         }
 
@@ -283,7 +278,7 @@ public class NewGame extends AppCompatActivity
                         c.setmData(0);
                     }
                     dbHelper.open();
-                    dbHelper.updateGame(null, null,c.getmData(),c.getmDatabaseColumn(), gameID);
+                    dbHelper.updateGame(null,c.getmData(),c.getmDatabaseColumn(), gameID);
                     dbHelper.close();
 
                 }
@@ -312,7 +307,7 @@ public class NewGame extends AppCompatActivity
                     }
 
                     dbHelper.open();
-                    dbHelper.updateGame(null, null, e.getmData(), e.getmDatabaseColumn(), gameID);
+                    dbHelper.updateGame(null, e.getmData(), e.getmDatabaseColumn(), gameID);
                     dbHelper.close();
                 }
 
@@ -327,7 +322,7 @@ public class NewGame extends AppCompatActivity
         Date now = new Date();
         time = sdfDate.format(now);
         dbHelper.open();
-        dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.updateGame(time,0, ScoreDBAdapter.KEY_TIME, gameID);
         dbHelper.close();
 
         editTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -345,14 +340,6 @@ public class NewGame extends AppCompatActivity
         displaySpinner(true);
         displaySpinner(false);
 
-        List<Player> playerList= new ArrayList<>();
-
-        playerList.add(new Player("test", 1, new ArrayList<Integer>()));
-        dbHelper.updatePlayers(playerList, gameID);
-
-        playerList = dataHelper.getPlayerArray(gameID, dbHelper);
-        Log.e(TAG, playerList.get(0).getmName());
-        Log.e(TAG, "" +playerList.get(0).getmScore());
     }
 
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
@@ -470,9 +457,8 @@ public class NewGame extends AppCompatActivity
     }
 
     public void reset(){
-        players.clear();
-        score.clear();
-        displayRecyclerView(players);
+        mPlayerArray.clear();
+        displayRecyclerView(mPlayerArray);
         checkBoxNoTimeLimit.setChecked(false);
         disableTimeLimitSpinner();
 
@@ -489,22 +475,22 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    public void displayRecyclerView(ArrayList players){
+    public void displayRecyclerView(List<Player> players){
         playerList.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         playerList.setLayoutManager(mLayoutManager);
-        playerListAdapter = new PlayerListAdapter(players, score, dbHelper, gameID, 1, 0);
+        playerListAdapter = new PlayerListAdapter(players, dbHelper, gameID, 1, 0);
         playerList.setAdapter(playerListAdapter);
 
     }
 
-    public void addPlayers(){
-        player = editTextPlayer.getText().toString().trim();
+    public void addPlayers() {
+        String playerName = editTextPlayer.getText().toString().trim();
         boolean duplicates;
-        players.add(players.size(), player);
-        duplicates = dataHelper.checkDuplicates(players);
+        mPlayerArray.add(new Player(playerName, 0, new ArrayList<Integer>()));
+        duplicates = dataHelper.checkDuplicates(mPlayerArray);
 
-        if (duplicates){
+        if (duplicates) {
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -512,14 +498,14 @@ public class NewGame extends AppCompatActivity
                 }
             };
 
-            players.remove(players.size() - 1);
+            mPlayerArray.remove(mPlayerArray.size() - 1);
 
             snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             snackbar.show();
         }
 
-        if (player.equals("") || player.equals(" ") || player == null){
+        if (playerName.equals("") || playerName.equals(" ")) {
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -527,21 +513,21 @@ public class NewGame extends AppCompatActivity
                 }
             };
 
-            players.remove(players.size() -1);
+            mPlayerArray.remove(mPlayerArray.size() - 1);
 
             snackbar = Snackbar.make(relativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             snackbar.show();
-        }else if (!duplicates && !player.equals("") && !player.equals(" ") && player != null){
+        } else if (!duplicates && !playerName.equals("") && !playerName.equals(" ")) {
 
             editTextPlayer.setText("");
 
             dbHelper.open();
-            dbHelper.updateGame(players, null,0, ScoreDBAdapter.KEY_PLAYERS,gameID);
+            dbHelper.updatePlayers(mPlayerArray, gameID);
             dbHelper.close();
 
             // specify an adapter (see also next example)
-            playerListAdapter.notifyItemInserted(players.size());
+            playerListAdapter.notifyItemInserted(mPlayerArray.size());
             playerListAdapter.notifyDataSetChanged();
 
         }
@@ -593,20 +579,6 @@ public class NewGame extends AppCompatActivity
 
         dialog = builder.create();
         dialog.show();
-    }
-
-    public void createScoreArray(){
-        score.clear();
-        score = new ArrayList<>();
-
-        while (score.size() < players.size()){
-            score.add("0");
-        }
-
-        dbHelper.open();
-        dbHelper.updateGame(score, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
-        dbHelper.close();
-
     }
 
     public void deletePresetsDialog(){
@@ -677,7 +649,7 @@ public class NewGame extends AppCompatActivity
         timeLimit = null;
         dbHelper.open();
         timeLimit=null;
-        dbHelper.updateGame(null, timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
+        dbHelper.updateGame(timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
         dbHelper.close();
     }
 
@@ -694,7 +666,7 @@ public class NewGame extends AppCompatActivity
             }
 
             case R.id.buttonNewGame: {
-                createNewGame(players, true);
+                createNewGame(mPlayerArray, true);
 
                 break;
 
@@ -705,7 +677,7 @@ public class NewGame extends AppCompatActivity
                     spinnerTimeLimit.setEnabled(true);
                     spinnerTimeLimit.setVisibility(View.VISIBLE);
                     dbHelper.open();
-                    dbHelper.updateGame(null, timeLimitArrayNum.get(0).toString(),0,ScoreDBAdapter.KEY_TIMER, gameID);
+                    dbHelper.updateGame(timeLimitArrayNum.get(0).toString(),0,ScoreDBAdapter.KEY_TIMER, gameID);
                     dbHelper.close();
 
                 }else{
@@ -717,7 +689,7 @@ public class NewGame extends AppCompatActivity
 
 
             case R.id.buttonCreatePreset:{
-                createNewGame(players, false);
+                createNewGame(mPlayerArray, false);
 
                 break;
             }
@@ -815,36 +787,36 @@ public class NewGame extends AppCompatActivity
             public void onShow(DialogInterface dialogInterface) {
                 final String[] title = new String[1];
 
-                if (players.size() == 2){
-                    editTextPresetTitle.setHint(players.get(0) + " vs " + players.get(1));
+                if (mPlayerArray.size() == 2){
+                    editTextPresetTitle.setHint(mPlayerArray.get(0) + " vs " + mPlayerArray.get(1));
 
-                }else if (players.size() == 3){
-                    editTextPresetTitle.setHint(players.get(0) + " vs " + players.get(1) + " vs " + players.get(2));
+                }else if (mPlayerArray.size() == 3){
+                    editTextPresetTitle.setHint(mPlayerArray.get(0) + " vs " + mPlayerArray.get(1) + " vs " + mPlayerArray.get(2));
 
-                }else if (players.size() > 3 && players.size() < 10){
+                }else if (mPlayerArray.size() > 3 && mPlayerArray.size() < 10){
                     String playerTitle = "";
-                    for (int i = 0; i < players.size(); i++){
-                        playerTitle += players.get(i);
-                        if (i != players.size()-1){
+                    for (int i = 0; i < mPlayerArray.size(); i++){
+                        playerTitle += mPlayerArray.get(i);
+                        if (i != mPlayerArray.size()-1){
                             playerTitle += ",";
                         }
                     }
 
                     editTextPresetTitle.setHint(playerTitle);
 
-                }else if (players.size() > 10){
+                }else if (mPlayerArray.size() > 10){
                     String playerTitle = "";
-                    for (int i = 0; i < players.size(); i++){
-                        playerTitle += players.get(i);
-                        if (i != players.size()-1){
+                    for (int i = 0; i < mPlayerArray.size(); i++){
+                        playerTitle += mPlayerArray.get(i);
+                        if (i != mPlayerArray.size()-1){
                             playerTitle += ",";
                         }
                     }
 
                     editTextPresetTitle.setHint(playerTitle);
 
-                }else if (players.size() == 1){
-                    editTextPresetTitle.setHint(String.valueOf(players.get(0)));
+                }else if (mPlayerArray.size() == 1){
+                    editTextPresetTitle.setHint(String.valueOf(mPlayerArray.get(0)));
 
                 }
 
@@ -898,8 +870,8 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    public void createNewGame(ArrayList players, boolean startGame) {
-            mainActivityIntent = new Intent(this, MainActivity.class);
+    public void createNewGame(List<Player> players, boolean startGame) {
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
             stop = false;
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
@@ -923,7 +895,6 @@ public class NewGame extends AppCompatActivity
                     snackbar.show();
 
                 }else {
-                    createScoreArray();
 
                     if (startGame) {
 
@@ -945,19 +916,19 @@ public class NewGame extends AppCompatActivity
         if (spinnerTimeLimit.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
             presetDBAdapter.open();
 
-            presetDBAdapter.createPreset(players, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString()
+            presetDBAdapter.createPreset(mPlayerArray, timeLimitArrayNum.get(spinnerTimeLimit.getSelectedItemPosition()).toString()
                     , title, mEditTextOptions, mCheckBoxOptions);
 
             presetDBAdapter.close();
         }else{
-            presetDBAdapter.createPreset(players, timeLimit, title, mEditTextOptions, mCheckBoxOptions);
+            presetDBAdapter.createPreset(mPlayerArray, timeLimit, title, mEditTextOptions, mCheckBoxOptions);
         }
         presetDBAdapter.close();
     }
 
     public void updateEditText(ArrayList players, String timeLimit) {
 
-        this.players = players;
+        this.mPlayerArray = players;
         this.timeLimit = timeLimit;
 
         displayRecyclerView(players);
@@ -986,27 +957,26 @@ public class NewGame extends AppCompatActivity
             }
         }
 
-        createScoreArray();
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         time = sdfDate.format(now);
         dbHelper.open();
-        dbHelper.updateGame(null, time,0, ScoreDBAdapter.KEY_TIME, gameID);
+        dbHelper.updateGame(time,0, ScoreDBAdapter.KEY_TIME, gameID);
 
         dbHelper.open();
-        dbHelper.updateGame(players, null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+        dbHelper.updatePlayers(players, gameID);
 
         dbHelper.open();
-        dbHelper.updateGame(null, timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
+        dbHelper.updateGame(timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
 
         for (EditTextOption e : mEditTextOptions){
             dbHelper.open();
-            dbHelper.updateGame(null, null,e.getmData(), e.getmDatabaseColumn(), gameID);
+            dbHelper.updateGame(null,e.getmData(), e.getmDatabaseColumn(), gameID);
         }
 
         for (CheckBoxOption c : mCheckBoxOptions){
             dbHelper.open();
-            dbHelper.updateGame(null, null,c.getmData(), c.getmDatabaseColumn(), gameID);
+            dbHelper.updateGame(null,c.getmData(), c.getmDatabaseColumn(), gameID);
         }
     }
 

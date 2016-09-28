@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,21 +37,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private Intent settingsIntent;
     private Intent aboutIntent;
     private Intent historyIntent;
-    private Button buttonMore, buttonLastGame;
     private ScoreDBAdapter dbHelper;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private TextView textViewNumGames;
     private RecyclerView recyclerView;
-    private MenuItem settingsMenuItem, historyMenuItem;
-    private Toolbar toolbar;
-    private HistoryAdapter historyAdapter;
-    private static ArrayList<GameModel> gameModel;
+    private MenuItem historyMenuItem;
     private SharedPreferences sharedPreferences;
     private int numGamesToShow;
     private RelativeLayout relativeLayoutRecent;
     private String TAG = "Home";
     private int lastPlayedGame;
-    private int accentColor;
     private boolean reviewLaterBool;
     private DataHelper dataHelper = new DataHelper();
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -65,7 +57,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
@@ -87,7 +79,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         }
 
         getSupportActionBar();
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
         dbHelper = new ScoreDBAdapter(this).open();
@@ -98,22 +90,21 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         settingsIntent = new Intent(this, Settings.class);
         historyIntent = new Intent(this, History.class);
         relativeLayoutRecent = (RelativeLayout)findViewById(R.id.layoutRecentGames);
-        buttonMore = (Button)findViewById(R.id.buttonMore);
+        Button buttonMore = (Button) findViewById(R.id.buttonMore);
         buttonMore.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 startActivity(historyIntent);
             }
         });
 
-        buttonLastGame = (Button)findViewById(R.id.buttonContinueLastGame);
+        Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
 
         recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
-        textViewNumGames = (TextView)findViewById(R.id.textViewNumGamesPlayed);
+        TextView textViewNumGames = (TextView) findViewById(R.id.textViewNumGamesPlayed);
         textViewNumGames.setText(String.valueOf(dbHelper.numRows()));
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +137,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         if (dbHelper.open().numRows() == 1 && reviewLaterBool){
             createReviewDialog();
         }
+
 
         displayRecyclerView();
 
@@ -265,15 +257,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                GameModel gModel = new GameModel();
-                gameModel = gModel.createGameModel(numGamesToShow, 1, this, dbHelper);
+                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
                 if (gameModel.isEmpty()){
                     relativeLayoutRecent.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                 }else{
                     relativeLayoutRecent.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    historyAdapter = new HistoryAdapter(gameModel, this, this, true);
+                    HistoryAdapter historyAdapter = new HistoryAdapter(gameModel, this, this, true);
                     recyclerView.setAdapter(historyAdapter);
                 }
 
@@ -292,7 +283,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        settingsMenuItem = menu.findItem(R.id.action_settings);
+        MenuItem settingsMenuItem = menu.findItem(R.id.action_settings);
         MenuItem aboutMenuItem = menu.findItem(R.id.action_about);
         settingsMenuItem.setVisible(true);
         aboutMenuItem.setVisible(true);

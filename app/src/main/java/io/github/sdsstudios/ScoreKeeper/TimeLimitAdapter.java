@@ -96,7 +96,7 @@ public class TimeLimitAdapter extends BaseAdapter{
                     timeLimit = timeLimitArrayNum.get(position).toString();
                     NewGame.spinnerTimeLimit.setSelection(position);
                     dbHelper.open();
-                    dbHelper.updateGame(null, timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
+                    dbHelper.updateGame(timeLimit,0, ScoreDBAdapter.KEY_TIMER, gameID);
                     dbHelper.close();
                 }else {
 
@@ -198,7 +198,7 @@ public class TimeLimitAdapter extends BaseAdapter{
                                                     dbHelper = new ScoreDBAdapter(context);
 
                                                     dbHelper.open();
-                                                    dbHelper.updateGame(null, timeLimitString,0, ScoreDBAdapter.KEY_TIMER, gameID);
+                                                    dbHelper.updateGame(timeLimitString,0, ScoreDBAdapter.KEY_TIMER, gameID);
                                                     dbHelper.close();
 
                                                     timeLimit = timeLimitString;

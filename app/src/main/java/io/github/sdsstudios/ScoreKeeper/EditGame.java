@@ -40,7 +40,7 @@ public class EditGame extends AppCompatActivity {
     int gameID;
     private String lengthStr =null;
     private EditText editTextLength, editTextDate;
-    private ArrayList<String> playerArray, scoreArray;
+    private List<Player> mPlayerArray;
     private RecyclerView recyclerView;
     private ScoreDBAdapter dbHelper;
     private DataHelper dataHelper;
@@ -123,8 +123,7 @@ public class EditGame extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 
-        playerArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-        scoreArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, gameID, dbHelper);
+        mPlayerArray = dataHelper.getPlayerArray(gameID, dbHelper);
 
         date = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper);
 
@@ -251,9 +250,9 @@ public class EditGame extends AppCompatActivity {
 
     public void completeGame(){
         if (completed) {
-            dbHelper.updateGame(null, "1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+            dbHelper.updateGame("1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
         }else{
-            dbHelper.updateGame(null, "0", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
+            dbHelper.updateGame( "0", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
         }
 
         dbHelper.close();
@@ -365,39 +364,38 @@ public class EditGame extends AppCompatActivity {
     public void displayRecyclerView(int editable) {
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        playerArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper);
-        playerListAdapter = new PlayerListAdapter(playerArray, scoreArray, dbHelper, gameID, 2, editable);
+        mPlayerArray = dataHelper.getPlayerArray( gameID, dbHelper);
+        playerListAdapter = new PlayerListAdapter(mPlayerArray, dbHelper, gameID, 2, editable);
         recyclerView.setAdapter(playerListAdapter);
     }
 
     public void onMenuDoneClick() {
-        playerListAdapter.deleteEmptyPlayers(playerArray);
-        playerArray = playerListAdapter.getPlayerArray();
-        scoreArray = playerListAdapter.getScoreArray();
+        playerListAdapter.deleteEmptyPlayers(mPlayerArray);
+        mPlayerArray = playerListAdapter.getPlayerArray();
 
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
 
         if (!checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
-            dbHelper.open().updateGame(null, null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.open().updateGame(null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
             dbHelper.close();
             bLength = true;
             invalidSnackbar(getString(R.string.invalid_time));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
             bLength = false;
-            dbHelper.open().updateGame(null, null, 0, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.open().updateGame(null, 0, ScoreDBAdapter.KEY_STOPWATCH, gameID);
             dbHelper.close();
 
         }else if(checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
             bLength = false;
-            dbHelper.open().updateGame(null, null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
+            dbHelper.open().updateGame(null, 1, ScoreDBAdapter.KEY_STOPWATCH, gameID);
             dbHelper.close();
         }
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = checkDuplicates(playerArray);
-        final boolean bNumPlayers = PlayerListAdapter.checkNumberPlayers(playerArray);
+        final boolean bCheckDuplicates = dataHelper.checkDuplicates(mPlayerArray);
+        final boolean bNumPlayers = checkNumberPlayers(mPlayerArray);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -408,9 +406,8 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                playerListAdapter.deleteEmptyPlayers(playerArray);
-                playerArray = playerListAdapter.getPlayerArray();
-                scoreArray = playerListAdapter.getScoreArray();
+                playerListAdapter.deleteEmptyPlayers(mPlayerArray);
+                mPlayerArray = playerListAdapter.getPlayerArray();
 
                 if (bCheckEmpty) {
 
@@ -429,26 +426,23 @@ public class EditGame extends AppCompatActivity {
 
                 }else if (!bCheckEmpty && bDateAndTime && !bLength && !bCheckDuplicates && !bNumPlayers){
                     dbHelper.open();
-                    dbHelper.updateGame(null, newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
+                    dbHelper.updateGame(newDate,0, ScoreDBAdapter.KEY_TIME, gameID);
 
                     dbHelper.open();
-                    dbHelper.updateGame(playerArray,null,0, ScoreDBAdapter.KEY_PLAYERS, gameID);
+                    dbHelper.updatePlayers(mPlayerArray,gameID);
 
                     dbHelper.open();
-                    dbHelper.updateGame(scoreArray, null,0, ScoreDBAdapter.KEY_SCORE, gameID);
-
-                    dbHelper.open();
-                    dbHelper.updateGame(null, newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    dbHelper.updateGame( newLength,0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
 
                     for (CheckBoxOption c : mCheckBoxOptions){
                         dbHelper.open();
-                        dbHelper.updateGame(null, null, c.getmData(), c.getmDatabaseColumn(), gameID);
+                        dbHelper.updateGame(null, c.getmData(), c.getmDatabaseColumn(), gameID);
 
                         c.getmCheckBox().setEnabled(false);
                     }
                     for (EditTextOption e : mEditTextOptions){
                         dbHelper.open();
-                        dbHelper.updateGame(null, null, e.getmData(), e.getmDatabaseColumn(), gameID);
+                        dbHelper.updateGame(null, e.getmData(), e.getmDatabaseColumn(), gameID);
 
                         e.getmEditText().setEnabled(false);
                     }
@@ -548,11 +542,20 @@ public class EditGame extends AppCompatActivity {
                 e.getmEditText().setText(String.valueOf(e.getmData()));
             }
         }
-        scoreArray = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE,gameID, dbHelper);
 
         displayRecyclerView(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+
+    public boolean checkNumberPlayers(List<Player> players){
+        if (players.size() < 2){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public void delete(){
         AlertDialog dialog;
@@ -579,23 +582,9 @@ public class EditGame extends AppCompatActivity {
         dialog.show();
     }
 
-    public boolean checkDuplicates(ArrayList arrayList){
-
-        boolean duplicate = false;
-
-        Set<Integer> set = new HashSet<Integer>(arrayList);
-
-        if(set.size() < arrayList.size()){
-            duplicate = true;
-        }
-
-        return duplicate;
-    }
-
     public interface PlayerListListener{
         void addPlayer();
-        ArrayList getPlayerArray();
-        ArrayList getScoreArray();
-        void deleteEmptyPlayers(ArrayList playerArray);
+        List<Player> getPlayerArray();
+        void deleteEmptyPlayers(List<Player> playerArray);
     }
 }

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,18 +23,18 @@ import java.util.Set;
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>
         implements EditGame.PlayerListListener{
     Snackbar snackbar = null;
-    private String backup, backupScore;
-    public ArrayList<String> playerArray, scoreArray;
+    private Player backup;
+    private List<Player> mPlayerArray;
     public ScoreDBAdapter mDbHelper;
     private int mGameID;
     private int activity;
     private int editable;
     private RelativeLayout relativeLayout;
+    private DataHelper dataHelper = new DataHelper();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PlayerListAdapter(ArrayList<String> player, ArrayList score, ScoreDBAdapter dbHelper, int gameID, int mactivity, int meditable) {
-        playerArray = player;
-        scoreArray = score;
+    public PlayerListAdapter(List<Player> player, ScoreDBAdapter dbHelper, int gameID, int mactivity, int meditable) {
+        mPlayerArray = player;
         mDbHelper = dbHelper;
         mGameID = gameID;
         activity = mactivity;
@@ -70,15 +71,15 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
 
 
-            holder.editTextPlayer.setText(playerArray.get(position));
+            holder.editTextPlayer.setText(mPlayerArray.get(position).getmName());
             holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (holder.editTextPlayer.isEnabled()){
-                        backup = "";
-                        backup = holder.editTextPlayer.getText().toString();
-                        playerArray.set(position, holder.editTextPlayer.getText().toString());
-                        if (checkDuplicates(playerArray)){
+                        backup = null;
+                        backup = new Player(holder.editTextPlayer.getText().toString(), 0, new ArrayList<Integer>());
+                        mPlayerArray.get(position).setmName(holder.editTextPlayer.getText().toString());
+                        if (dataHelper.checkDuplicates(mPlayerArray)){
                             View.OnClickListener onClickListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -86,8 +87,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                                 }
                             };
 
-                            playerArray.set(position, backup);
-
+                            mPlayerArray.set(position, backup);
 
                             if (relativeLayout != null) {
                                 snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
@@ -101,7 +101,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                         }else{
                             mDbHelper.open();
-                            mDbHelper.updateGame(playerArray, null,0, ScoreDBAdapter.KEY_PLAYERS, mGameID);
+                            mDbHelper.updatePlayers(mPlayerArray, mGameID);
                             mDbHelper.close();
                             holder.editTextPlayer.setEnabled(false);
                             holder.buttonEdit.setImageResource(R.mipmap.ic_create_black_24dp);
@@ -132,9 +132,10 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 holder.editTextPlayerExt.setEnabled(true);
                 holder.editTextScoreExt.setEnabled(true);
                 holder.buttonDelete.setVisibility(View.VISIBLE);
-                holder.editTextPlayerExt.setText(playerArray.get(position));
-                holder.editTextScoreExt.setText(scoreArray.get(position));
+                holder.editTextPlayerExt.setText(mPlayerArray.get(position).getmName());
+                holder.editTextScoreExt.setText(String.valueOf(mPlayerArray.get(position).getmScore()));
                 holder.editTextPlayerExt.addTextChangedListener(new TextWatcher() {
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -143,11 +144,10 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         try {
-                            playerArray.set(position, s.toString());
+                            mPlayerArray.get(position).setmName(s.toString());
                         }catch (Exception e){
                             e.printStackTrace();
                         }
-
                     }
 
                     @Override
@@ -165,7 +165,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         try {
-                            scoreArray.set(position, s.toString());
+                            mPlayerArray.get(position).setmScore(Integer.valueOf(s.toString()));
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -185,8 +185,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 });
 
             }else if(editable == 0){
-                holder.editTextPlayerExt.setHint(playerArray.get(position));
-                holder.editTextScoreExt.setHint(scoreArray.get(position));
+                holder.editTextPlayerExt.setHint(mPlayerArray.get(position).getmName());
+                holder.editTextScoreExt.setHint(String.valueOf(mPlayerArray.get(position).getmScore()));
                 holder.editTextPlayerExt.setEnabled(false);
                 holder.editTextScoreExt.setEnabled(false);
                 holder.buttonDelete.setVisibility(View.INVISIBLE);
@@ -195,33 +195,16 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
     }
 
-    public static boolean checkNumberPlayers(ArrayList players){
-        boolean b;
-        if (players.size() < 2){
-            b= true;
-        } else {
-            b = false;
-        }
-
-        return b;
-    }
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return playerArray.size();
+        return mPlayerArray.size();
     }
 
     public void removeAt(int position) {
-        backup = "";
-        backupScore = "";
-        backup = playerArray.get(position);
-        playerArray.remove(position);
-
-        if (activity == 2){
-            backupScore = scoreArray.get(position);
-            scoreArray.remove(position);
-        }
+        backup = null;
+        backup = mPlayerArray.get(position);
+        mPlayerArray.remove(position);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -231,7 +214,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         };
 
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, playerArray.size());
+        notifyItemRangeChanged(position, mPlayerArray.size());
 
         if (relativeLayout != null) {
             snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
@@ -243,8 +226,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void undoPlayerRemoval() {
 
-        playerArray.add(playerArray.size(), backup);
-        scoreArray.add(scoreArray.size(), backupScore);
+        mPlayerArray.add(mPlayerArray.size(), backup);
 
         if (relativeLayout != null) {
             snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
@@ -255,50 +237,31 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
         snackbar.show();
 
-        notifyItemInserted(playerArray.size());
-        notifyItemRangeChanged(playerArray.size(), playerArray.size());
+        notifyItemInserted(mPlayerArray.size());
+        notifyItemRangeChanged(mPlayerArray.size(), mPlayerArray.size());
 
-    }
-
-    public boolean checkDuplicates(ArrayList arrayList){
-        boolean duplicate = false;
-
-        Set<Integer> set = new HashSet<Integer>(arrayList);
-
-        if(set.size() < arrayList.size()){
-            duplicate = true;
-        }
-
-        return duplicate;
     }
 
     @Override
     public void addPlayer() {
-        playerArray.add(playerArray.size(), "");
-        scoreArray.add(scoreArray.size(), "0");
-        notifyItemInserted(playerArray.size());
+        mPlayerArray.add(mPlayerArray.size(), new Player("", 0, new ArrayList<Integer>()));
+        notifyItemInserted(mPlayerArray.size());
 
     }
 
     @Override
-    public ArrayList getPlayerArray() {
-        return playerArray;
+    public List<Player> getPlayerArray() {
+        return mPlayerArray;
     }
 
     @Override
-    public ArrayList getScoreArray() {
-        return scoreArray;
-    }
-
-    @Override
-    public void deleteEmptyPlayers(ArrayList playerArray) {
+    public void deleteEmptyPlayers(List<Player> playerArray) {
         for (int i = 0; i < playerArray.size(); i++){
-            if (playerArray.get(i).equals("")||playerArray.get(i) ==null||playerArray.get(i).equals(" ")){
+            if (playerArray.get(i).getmName().equals("")||playerArray.get(i).getmName() ==null||playerArray.get(i).getmName().equals(" ")){
                 playerArray.remove(i);
-                scoreArray.remove(i);
             }
         }
-        this.playerArray = playerArray;
+        this.mPlayerArray = playerArray;
     }
 
     // Provide a reference to the views for each data item

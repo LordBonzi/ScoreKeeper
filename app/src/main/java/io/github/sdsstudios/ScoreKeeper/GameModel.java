@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Seth Schroeder on 22/05/2016.
@@ -11,34 +12,29 @@ import java.util.ArrayList;
 
 public class GameModel{
     private String mPlayers;
-    private String mScore;
     private String mType;
     private String mDate;
     private String mProgress;
+    private String mScore;
     private int gameID;
 
-    public GameModel(){
-
-    }
 
     public GameModel(String players, String score, String date, String type, String progress, int gameIDm) {
         super();
         mPlayers = players;
-        mScore = score;
         mDate = date;
+        mScore = score;
         mType = type;
         mProgress = progress;
         gameID = gameIDm;
     }
 
-    public ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
+    public static ArrayList<GameModel> createGameModel(int numGames, int activity, Context context, ScoreDBAdapter dbHelper) {
         DataHelper dataHelper = new DataHelper();
         TimeHelper dateHelper = new TimeHelper();
-        String p, s ,d ,t, progress;
+        String p, s, d ,t, progress;
         int gameID;
 
-        ArrayList arrayListPlayer;
-        ArrayList arrayListScore;
         String date;
 
         ArrayList<GameModel> gameModelArrayList = new ArrayList<>();
@@ -52,71 +48,64 @@ public class GameModel{
         for (int i = 1; i <= dbHelper.open().numRows(); i++) {
             progress = "";
             p = "";
-            s = "";
             t = "";
+            s = "";
 
-            arrayListPlayer = dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, i, dbHelper);
-            arrayListScore = dataHelper.getArrayById(ScoreDBAdapter.KEY_SCORE, i, dbHelper);
+            List<Player> mPlayerArray = dataHelper.getPlayerArray(i, dbHelper);
             gameID = i;
 
             date = dataHelper.getStringById(i, ScoreDBAdapter.KEY_TIME, dbHelper);
             d = dateHelper.gameDate(date);
 
-            if (arrayListPlayer.size() == 2){
+            if (mPlayerArray.size() == 2){
                 try {
                     t = "2 Player Game";
-                    p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1);
-                    s = arrayListScore.get(0) + ":" + arrayListScore.get(1);
+                    p = mPlayerArray.get(0).getmName() + " vs " + mPlayerArray.get(1).getmName();
+                    s = mPlayerArray.get(0).getmScore() + " vs " + mPlayerArray.get(1).getmScore();
                 }catch (Exception e){
                     Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
 
-            }else if (arrayListPlayer.size() == 3){
+            }else if (mPlayerArray.size() == 3){
+
                 try {
                     t = "3 Player Game";
-                    p = arrayListPlayer.get(0) + " vs " + arrayListPlayer.get(1) + " vs " + arrayListPlayer.get(2);
-                    s = arrayListScore.get(0) + " : " + arrayListScore.get(1) + " : " + arrayListScore.get(2);
+                    p = mPlayerArray.get(0).getmName() + " vs " + mPlayerArray.get(1).getmName() + " vs " + mPlayerArray.get(2).getmName();
+                    s = mPlayerArray.get(0).getmScore() + " : " + mPlayerArray.get(1).getmScore() + " : " + mPlayerArray.get(2).getmScore();
                 }catch (Exception e){
                     Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
-            }else if (arrayListPlayer.size() > 3 && arrayListPlayer.size() < 10){
+
+            }else if (mPlayerArray.size() > 3){
                 try {
 
-                    t = "Group Game";
-                    for (int j = 0; j < arrayListPlayer.size(); j++){
-                        p += arrayListPlayer.get(j);
-                        if (j != arrayListPlayer.size()-1){
+                    if (mPlayerArray.size() > 10){
+                        t = "Huge Game";
+                    }else{
+                        t = "Group Game";
+
+                    }
+                    for (int j = 0; j < mPlayerArray.size(); j++){
+                        p += mPlayerArray.get(j).getmName();
+                        if (j != mPlayerArray.size()-1){
                             p += ", ";
                         }
-                        s += arrayListScore.get(j);
-                        if (j != arrayListPlayer.size()-1){
+                        s += mPlayerArray.get(j).getmScore();
+                        if (j != mPlayerArray.size()-1){
                             s += " : ";
+
                         }
                     }
                 }catch (Exception e){
                     Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
 
-            }else if (arrayListPlayer.size() > 10){
-                try {
-
-                    t = "Huge Game";
-                    for (int k = 0; k < arrayListPlayer.size(); k++){
-                        p += arrayListPlayer.get(k);
-                        if (k != arrayListPlayer.size()-1){
-                            p += ", ";
-                        }
-                    }
-                }catch (Exception e){
-                    Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
-                }
-
-            }else if (arrayListPlayer.size() == 1){
+            }else if (mPlayerArray.size() == 1){
                 try {
 
                     t = "Game is too small. How did you make it this small. it is a bug. you must report it.";
-                    p = String.valueOf(arrayListPlayer.get(0));
-                    s = String.valueOf(arrayListScore.get(0));
+                    p = String.valueOf(mPlayerArray.get(0).getmName());
+                    s = String.valueOf(mPlayerArray.get(0).getmScore());
                 }catch (Exception e){
                     Toast.makeText(context, "Error creating an item", Toast.LENGTH_SHORT).show();
                 }
@@ -156,7 +145,7 @@ public class GameModel{
                 }
                 t += " ·";
 
-                gameModelArrayList.add(new GameModel(p, s, d, t, progress, gameID));
+                gameModelArrayList.add(new GameModel(p,s, d, t, progress, gameID));
 
                 dbHelper.close();
 
@@ -172,12 +161,17 @@ public class GameModel{
         return mPlayers;
     }
 
-    public String getScore() {
-        return mScore;
-    }
 
     public String getDate() {
         return mDate;
+    }
+
+    public String getmScore() {
+        return mScore;
+    }
+
+    public void setmScore(String mScore) {
+        this.mScore = mScore;
     }
 
     public String getType() {

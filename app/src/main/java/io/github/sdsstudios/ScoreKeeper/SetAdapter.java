@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by seth on 08/05/16.
@@ -16,18 +17,17 @@ import java.util.ArrayList;
 
 public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
 
-    private ArrayList mSetArray;
+    private List<Player> mSetArray;
     private Context mContext;
     private DataHelper mDataHelper = new DataHelper();
     private int mNumPlayers, mNumSets;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SetAdapter(ArrayList setArray, Context context1, int numPlayers, int numSets) {
+    public SetAdapter(List<Player> setArray, Context context1, int numSets) {
         mContext = context1;
         this.mSetArray = setArray;
-        this.mNumPlayers = numPlayers;
+        this.mNumPlayers = setArray.size();
         this.mNumSets = numSets;
-
     }
 
     @Override

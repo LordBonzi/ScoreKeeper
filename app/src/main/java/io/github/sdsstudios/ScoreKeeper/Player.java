@@ -38,6 +38,19 @@ public class Player {
         return mSetScores;
     }
 
+    public void setScoreForSet(int index, int score){
+        mSetScores.set(index, score);
+    }
+
+    public void addSet(int score){
+        mSetScores.add(score);
+    }
+
+    public void deleteSet(int index){
+        mSetScores.remove(index);
+
+    }
+
     public void setmSetScores(ArrayList<Integer> mSetScores) {
         this.mSetScores = mSetScores;
     }

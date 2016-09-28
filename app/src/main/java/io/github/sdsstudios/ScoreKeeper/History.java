@@ -38,7 +38,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private DataHelper dataHelper;
     private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
     private HistoryAdapter historyAdapter;
-    private static ArrayList<GameModel> gameModel;
     private ActionMode actionMode = null;
     private int primaryDarkColor;
     private SharedPreferences sharedPreferences;
@@ -186,8 +185,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                GameModel gModel = new GameModel();
-                gameModel = gModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
+                ArrayList<GameModel> gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
                 historyAdapter = new HistoryAdapter(gameModel, this, this, false);
                 recyclerView.setAdapter(historyAdapter);
             } else {

@@ -77,6 +77,13 @@ public class ScoreDBAdapter {
         DATABASE = mDbHelper.getWritableDatabase();
         return this;
     }
+    public String convertToString(ArrayList array) {
+
+        String str = TextUtils.join(",", array);
+
+        return str;
+    }
+
 
     public void close() {
         if (mDbHelper != null) {
@@ -84,13 +91,18 @@ public class ScoreDBAdapter {
         }
     }
 
+    public String convertObjectListToString(List<Player> playerList){
+        Gson gson = new Gson();
+        return gson.toJson(playerList);
+    }
+
     public void updatePlayers(List<Player> playerList, int gameID){
         ContentValues initialValues = new ContentValues();
         String arrayList = null;
 
         try {
-            Gson gson = new Gson();
-            arrayList = gson.toJson(playerList);
+
+            arrayList = convertObjectListToString(playerList);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,14 +116,7 @@ public class ScoreDBAdapter {
         close();
     }
 
-    public String convertToString(ArrayList array) {
-
-        String str = TextUtils.join(",", array);
-
-        return str;
-    }
-
-    public void updateGame(ArrayList array, String time_or_completed_or_timeLimit, int maxscoreorstopwatch, String request, int id) {
+    public void updateGame(String time_or_completed_or_timeLimit, int maxscoreorstopwatch, String request, int id) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -129,8 +134,6 @@ public class ScoreDBAdapter {
                     || request.equals(KEY_STOPWATCH) || request.equals(KEY_DIFF_TO_WIN) || request.equals(KEY_NUM_SETS)){
             initialValues.put(request, maxscoreorstopwatch);
 
-        }else{
-            initialValues.put(request, convertToString(array));
         }
 
         open();
@@ -139,9 +142,7 @@ public class ScoreDBAdapter {
 
     }
 
-
-
-    public long createGame(ArrayList players, String time, ArrayList score, int completed, String timeLimit, List<EditTextOption> editTextOptions
+    public long createGame(List<Player> players, String time, int completed, String timeLimit, List<EditTextOption> editTextOptions
             , List<CheckBoxOption> checkBoxOptions) {
 
         ContentValues initialValues = new ContentValues();
@@ -152,8 +153,7 @@ public class ScoreDBAdapter {
             initialValues.put(KEY_ROWID, getNewestGame() + 1);
         }
 
-        initialValues.put(KEY_PLAYERS, convertToString(players));
-        initialValues.put(KEY_SCORE, convertToString(score));
+        initialValues.put(KEY_PLAYERS, convertObjectListToString(players));
         initialValues.put(KEY_TIME, time);
         initialValues.put(KEY_COMPLETED, completed);
         initialValues.put(KEY_TIMER, timeLimit);

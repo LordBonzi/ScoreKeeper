@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,25 +9,34 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by seth on 20/09/16.
  */
 
 public class SetGridViewAdapter extends BaseAdapter{
-    private ArrayList mSetArray;
-    private ArrayList mPlayerArray;
+    private List<Player> mPlayerArray;
+    private int mNumPlayers;
     private Context mCtx;
+    private Player mLastPlayer;
+    private int mLastRow;
 
-    public SetGridViewAdapter(ArrayList mSetArray, ArrayList mPlayerArray, Context ctx) {
-        this.mSetArray = mSetArray;
+    public SetGridViewAdapter(List<Player> mPlayerArray, Context ctx) {
         this.mPlayerArray = mPlayerArray;
         this.mCtx = ctx;
+
+        mNumPlayers = mPlayerArray.size();
     }
+
 
     @Override
     public int getCount() {
-        return mSetArray.size() + mPlayerArray.size();
+        int num = mPlayerArray.size();
+        for (Player p : mPlayerArray){
+            num += p.getmSetScores().size();
+        }
+        return num;
     }
 
     @Override
@@ -39,6 +49,10 @@ public class SetGridViewAdapter extends BaseAdapter{
         return 0;
     }
 
+    public int getNumRows(){
+        return (mPlayerArray.get(0).getmSetScores().size() * mNumPlayers) / mNumPlayers;
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
@@ -48,18 +62,54 @@ public class SetGridViewAdapter extends BaseAdapter{
 
         if (view == null) {
 
-
             if (position < mPlayerArray.size()){
                 itemView = inflater.inflate(R.layout.player_name_fragment, null);
                 TextView textView = (TextView) itemView.findViewById(R.id.textView);
-                textView.setText(String.valueOf(mPlayerArray.get(position)));
+                textView.setText(mPlayerArray.get(position).getmName());
 
             }else{
                 itemView = inflater.inflate(R.layout.set_fragment, null);
                 TextView textView = (TextView) itemView.findViewById(R.id.textView);
-                textView.setText(String.valueOf(mSetArray.get(position - mPlayerArray.size())));
-            }
 
+                Player player = null;
+                int currentRow = 0;
+
+                if (position == mNumPlayers){
+                    player = mPlayerArray.get(0);
+                    currentRow = 0;
+                }else{
+
+                    if (mPlayerArray.indexOf(mLastPlayer) + 1 < mNumPlayers){
+                        player = mPlayerArray.get(mPlayerArray.indexOf(mLastPlayer) + 1);
+                    }else{
+                        player = mPlayerArray.get(0);
+                    }
+
+                    if (position % mNumPlayers == 0) {
+                        currentRow = mLastRow + 1;
+                    }else{
+                        currentRow = mLastRow;
+                    }
+
+                }
+
+                mLastPlayer = player;
+                mLastRow = currentRow;
+
+
+
+                try{
+
+                    assert player != null;
+                    textView.setText(String.valueOf(player.getmSetScores().get(currentRow)));
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e("SetAdapter", e.toString());
+                    Log.e("SetAdapter", mLastPlayer.getmName());
+                }
+
+            }
 
         } else {
             itemView = view;

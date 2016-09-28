@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,26 +80,12 @@ public class PresetDBAdapter {
         return str;
     }
 
-    public void updatePreset(ArrayList players, String timelimitortitle, int maxscoreorstopwatch ,String request, int id) {
-
-        ContentValues initialValues = new ContentValues();
-
-        if (request.equals(KEY_PLAYERS)){
-            initialValues.put(request, convertToString(players));
-        }else if(request == KEY_TIME_LIMIT|| request == KEY_TITLE){
-            initialValues.put(request, timelimitortitle);
-
-        }else if(request.equals(KEY_MAX_SCORE) || request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_STOPWATCH)){
-            initialValues.put(request, maxscoreorstopwatch);
-        }
-
-        open();
-        mDb.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
-        close();
-
+    public String convertObjectListToString(List<Player> playerList){
+        Gson gson = new Gson();
+        return gson.toJson(playerList);
     }
 
-    public long createPreset(ArrayList players, String timelimit, String title, List<EditTextOption> editTextOptions
+    public long createPreset(List<Player> players, String timelimit, String title, List<EditTextOption> editTextOptions
             , List<CheckBoxOption> checkBoxOptions) {
 
         ContentValues initialValues = new ContentValues();
@@ -108,7 +96,7 @@ public class PresetDBAdapter {
             initialValues.put(KEY_ROWID, numRows() + 1);
         }
 
-        initialValues.put(KEY_PLAYERS, convertToString(players));
+        initialValues.put(KEY_PLAYERS, convertObjectListToString(players));
         initialValues.put(KEY_TIME_LIMIT, timelimit);
         initialValues.put(KEY_TITLE, title);
 

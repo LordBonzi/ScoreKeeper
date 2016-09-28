@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Path;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -37,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.common.api.Releasable;
+import com.google.android.gms.phenotype.Configuration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,10 +79,8 @@ public class NewGame extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private boolean classicTheme;
     static final String STATE_GAMEID = "gameID";
-    private RelativeLayout optionsHeader, timeLimitHeader;
+    private List<OptionCardView> mCardViewList = new ArrayList<>();
     private NestedScrollView scrollView;
-    private int optionsHeight, timeLimitHeight;
-    private RelativeLayout optionsContent, timeLimitContent;
 
     private List<EditTextOption> mEditTextOptions = new ArrayList<>();
     private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
@@ -155,37 +157,46 @@ public class NewGame extends AppCompatActivity
 
         scrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
-        optionsHeader = (RelativeLayout) findViewById(R.id.optionsHeader);
-        optionsHeader.setOnClickListener(this);
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
+                , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
 
-        timeLimitHeader = (RelativeLayout) findViewById(R.id.timeLimitHeader);
-        timeLimitHeader.setOnClickListener(this);
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPresets)
+                , (RelativeLayout) findViewById(R.id.presetHeader), 0));
 
-        optionsContent = (RelativeLayout)findViewById(R.id.relativeLayoutOptions);
-        timeLimitContent = (RelativeLayout)findViewById(R.id.relativeLayoutTimeLimit);
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
+                , (RelativeLayout) findViewById(R.id.playersHeader), 0));
 
-        optionsContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                optionsHeight = optionsContent.getMeasuredHeight();
-                toggleCardViewHeight(optionsHeight, optionsContent, 0);
-                // Do whatever you want with h
-                // Remove the listener so it is not called repeatedly
-                removeOnGlobalLayoutListener(optionsContent, this);
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTimeLimit)
+                , (RelativeLayout) findViewById(R.id.timeLimitHeader), 0));
+
+        for (final OptionCardView card: mCardViewList){
+            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+            }else{
+                card.getmHeader().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleCardViewHeight(card.getmHeight(), card, scrollView.getBottom());
+
+                    }
+                });
             }
-        });
 
-        timeLimitContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                timeLimitHeight = timeLimitContent.getMeasuredHeight();
-                toggleCardViewHeight(timeLimitHeight, timeLimitContent, 0);
-                // Do whatever you want with h
-                // Remove the listener so it is not called repeatedly
-                removeOnGlobalLayoutListener(timeLimitContent, this);
-            }
-        });
+            card.getmContent().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int height = card.getmContent().getMeasuredHeight();
 
+                    card.setmHeight(height);
+
+                    if (card.getmHeader().getId() != R.id.playersHeader) {
+                        toggleCardViewHeight(height, card, 0);
+                    }
+                    // Do whatever you want with h
+                    // Remove the listener so it is not called repeatedly
+                    removeOnGlobalLayoutListener(card.getmContent(), this);
+                }
+            });
+        }
 
         relativeLayout = (RelativeLayout)findViewById(R.id.newGameLayout);
         spinnerTimeLimit = (Spinner)findViewById(R.id.spinnerTimeLimit);
@@ -488,7 +499,7 @@ public class NewGame extends AppCompatActivity
         String playerName = editTextPlayer.getText().toString().trim();
         boolean duplicates;
         mPlayerArray.add(new Player(playerName, 0, new ArrayList<Integer>()));
-        duplicates = dataHelper.checkDuplicates(mPlayerArray);
+        duplicates = dataHelper.checkPlayerDuplicates(mPlayerArray);
 
         if (duplicates) {
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -694,42 +705,34 @@ public class NewGame extends AppCompatActivity
                 break;
             }
 
-            case R.id.optionsHeader:{
-                toggleCardViewHeight(optionsHeight, optionsContent, scrollView.getBottom());
-                break;
-            }
-            case R.id.timeLimitHeader:{
-                toggleCardViewHeight(timeLimitHeight, timeLimitContent, scrollView.getBottom());
-                break;
-            }
 
         }
     }
 
-    private void toggleCardViewHeight(int height, RelativeLayout layout, int scrollTo) {
+    private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
 
-        if (layout.getHeight() != height) {
+        if (cardView.getmContent().getHeight() != height) {
             // expand
 
-            expandView(height, layout, scrollTo); //'height' is the height of screen which we have measured already.
+            expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
 
         } else {
             // collapse
-            collapseView(layout);
+            collapseView(cardView);
 
         }
     }
 
-    public void collapseView(final RelativeLayout layout) {
+    public void collapseView(final OptionCardView cardView) {
 
-        ValueAnimator anim = ValueAnimator.ofInt(timeLimitHeight, 0);
+        ValueAnimator anim = ValueAnimator.ofInt(cardView.getmHeight(), 0);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = cardView.getmContent().getLayoutParams();
                 layoutParams.height = val;
-                layout.setLayoutParams(layoutParams);
+                cardView.getmContent().setLayoutParams(layoutParams);
 
             }
         });
@@ -821,7 +824,7 @@ public class NewGame extends AppCompatActivity
                 }
 
                 defaultTitle = editTextPresetTitle.getHint().toString();
-                 title[0] = editTextPresetTitle.getHint().toString();
+                title[0] = editTextPresetTitle.getHint().toString();
 
                 editTextPresetTitle.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -872,41 +875,41 @@ public class NewGame extends AppCompatActivity
 
     public void createNewGame(List<Player> players, boolean startGame) {
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            stop = false;
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    snackbar.dismiss();
-                }
-            };
+        stop = false;
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        };
 
-            //snackbar must have 2 or more players
+        //snackbar must have 2 or more players
 
-            if (players.size() < 2) {
+        if (players.size() < 2) {
 
-                snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+            snackbar = Snackbar.make(relativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            snackbar.show();
+        }else{
+            if (dataHelper.checkPlayerDuplicates(players)) {
+
+                snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
                 snackbar.show();
-            }else{
-                if (dataHelper.checkDuplicates(players)) {
 
-                    snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                            .setAction("Dismiss", onClickListener);
-                    snackbar.show();
+            }else {
 
-                }else {
+                if (startGame) {
 
-                    if (startGame) {
-
-                        mainActivityIntent.putExtra("gameID", gameID);
-                        startActivity(mainActivityIntent);
-                        finish();
-                    }else{
-                        createPresetDialog();
-                    }
+                    mainActivityIntent.putExtra("gameID", gameID);
+                    startActivity(mainActivityIntent);
+                    finish();
+                }else{
+                    createPresetDialog();
                 }
-
             }
+
+        }
 
     }
 

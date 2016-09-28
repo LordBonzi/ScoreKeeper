@@ -630,7 +630,7 @@ public class MainActivity extends AppCompatActivity
 
     private void addPlayer(AlertDialog alertDialog){
         mPlayersArray.add(newPlayer);
-        if (dataHelper.checkDuplicates(mPlayersArray)){
+        if (dataHelper.checkPlayerDuplicates(mPlayersArray)){
             mPlayersArray.remove(mPlayersArray.size()-1);
             dbHelper.open().updatePlayers(mPlayersArray, gameID);
             dbHelper.close();
@@ -1302,7 +1302,7 @@ public class MainActivity extends AppCompatActivity
                             newPlayer = oldPlayer;
                         }
                         mPlayersArray.set(position, newPlayer);
-                        if (dataHelper.checkDuplicates(mPlayersArray)) {
+                        if (dataHelper.checkPlayerDuplicates(mPlayersArray)) {
                             mPlayersArray.set(position, oldPlayer);
                             dbHelper.open().updatePlayers(mPlayersArray, gameID);
                             dbHelper.close();

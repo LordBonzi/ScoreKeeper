@@ -79,7 +79,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                         backup = null;
                         backup = new Player(holder.editTextPlayer.getText().toString(), 0, new ArrayList<Integer>());
                         mPlayerArray.get(position).setmName(holder.editTextPlayer.getText().toString());
-                        if (dataHelper.checkDuplicates(mPlayerArray)){
+                        if (dataHelper.checkPlayerDuplicates(mPlayerArray)){
                             View.OnClickListener onClickListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

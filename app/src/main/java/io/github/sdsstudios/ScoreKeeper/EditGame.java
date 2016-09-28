@@ -394,7 +394,7 @@ public class EditGame extends AppCompatActivity {
         }
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = dataHelper.checkDuplicates(mPlayerArray);
+        final boolean bCheckDuplicates = dataHelper.checkPlayerDuplicates(mPlayerArray);
         final boolean bNumPlayers = checkNumberPlayers(mPlayerArray);
 
         AlertDialog dialog;

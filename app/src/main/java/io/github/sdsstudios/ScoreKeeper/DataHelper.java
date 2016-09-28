@@ -113,7 +113,18 @@ public class DataHelper {
         editor.apply();
     }
 
-    public boolean checkDuplicates(List<Player> arrayList){
+    public boolean checkDuplicates(List arrayList){
+        boolean duplicate = false;
+
+        Set<Integer> set = new HashSet<Integer>(arrayList);
+        if(set.size() < arrayList.size()){
+            duplicate = true;
+        }
+
+        return duplicate;
+    }
+
+    public boolean checkPlayerDuplicates(List<Player> arrayList){
         boolean duplicate = false;
         Set<String> set = new HashSet<String>();
 

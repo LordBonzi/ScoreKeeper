@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity
     private TimeHelper timeHelper;
     private String timeLimitString = null;
     private boolean classicTheme = false;
-    private boolean fullScreen = false;
     private View dialogView;
     private LayoutInflater inflter = null;
     private AlertDialog alertDialog;
@@ -532,8 +531,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_fullscreen) {
-            fullScreen = !fullScreen;
-            fullScreen();
+            toggleFullScreen(true);
 
         }
 
@@ -755,19 +753,20 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public boolean isFullScreen(){
+        return !getSupportActionBar().isShowing();
+    }
+
     @Override
     public void onBackPressed() {
-        fullScreen = false;
-        fullScreen();
 
-        if (!finished) {
+        if (!finished && !isFullScreen()) {
             if (!isPaused) {
                 isPaused = true;
                 chronometerClick();
             }
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 
             builder.setTitle(R.string.quit_game);
 
@@ -811,18 +810,19 @@ public class MainActivity extends AppCompatActivity
 
             dialog.show();
 
-        }
-
-        if (isWon) {
+        }else if (isWon && !isFullScreen()) {
             winnerDialog(winner);
-        }
-
-        if (timeLimitReached(stopwatch)) {
+        }else if (timeLimitReached(stopwatch) && !isFullScreen()) {
             timeLimitDialog();
+        }else{
+            toggleFullScreen(false);
+
         }
     }
 
     public void winnerDialog(String winner) {
+
+        toggleFullScreen(false);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1118,9 +1118,9 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void fullScreen() {
+    public void toggleFullScreen(boolean fullscreen) {
 
-        if (fullScreen) {
+        if (fullscreen) {
             params = content.getLayoutParams();
             getSupportActionBar().hide();
 
@@ -1176,6 +1176,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+
+        Log.e(TAG, String.valueOf(getSupportActionBar().isShowing()));
     }
 
     @Override

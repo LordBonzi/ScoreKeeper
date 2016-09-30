@@ -539,7 +539,6 @@ public class NewGame extends AppCompatActivity
 
             // specify an adapter (see also next example)
             playerListAdapter.notifyItemInserted(mPlayerArray.size());
-            playerListAdapter.notifyDataSetChanged();
 
         }
 
@@ -710,16 +709,19 @@ public class NewGame extends AppCompatActivity
     }
 
     private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
+        if (cardView.getmHeader().getId() != R.id.playersHeader) {
 
-        if (cardView.getmContent().getHeight() != height) {
-            // expand
+            if (cardView.getmContent().getHeight() != height) {
+                // expand
 
-            expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
+                expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
 
-        } else {
-            // collapse
-            collapseView(cardView);
+            } else {
+                cardView.setmHeight(cardView.getmContent().getMeasuredHeight());
+                // collapse
+                collapseView(cardView);
 
+            }
         }
     }
 

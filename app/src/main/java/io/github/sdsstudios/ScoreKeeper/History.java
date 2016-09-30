@@ -175,6 +175,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 if (menuItemCompleted.isChecked()) {
                     type = 2;
                 }
+
                 if (menuItemUnfinished.isChecked()) {
                     type = 1;
                 }
@@ -341,6 +342,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                     gamesDeleted();
                     mode.finish();
+                    break;
 
                 case R.id.action_delete_all:
                     dbHelper.open();
@@ -350,12 +352,15 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                     startActivity(new Intent(getBaseContext(), Home.class));
 
                     mode.finish();
+                    break;
 
                 case R.id.action_select_all:
                     historyAdapter.clearSelection();
                     for (int i = 0; i < historyAdapter.getItemCount(); i++){
                         toggleSelection(i,historyAdapter.getItemID(i));
                     }
+
+                    break;
 
             }
 

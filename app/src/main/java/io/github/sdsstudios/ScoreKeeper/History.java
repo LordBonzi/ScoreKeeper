@@ -13,6 +13,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -192,7 +193,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 recyclerView.setVisibility(View.INVISIBLE);
             }
         }catch (Exception ignore){
-
+            ignore.printStackTrace();
+            Log.e("HistoryAdapter", ignore.toString());
+            Toast.makeText(this, "Error opening History", Toast.LENGTH_SHORT).show();
         }
         dbHelper.close();
     }

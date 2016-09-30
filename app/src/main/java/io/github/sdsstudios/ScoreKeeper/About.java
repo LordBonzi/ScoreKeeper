@@ -185,25 +185,13 @@ public class About extends PreferenceActivity {
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
                 dialogView = inflter.inflate(R.layout.developers_fragment, null);
                 ImageButton sethGoogle = (ImageButton)dialogView.findViewById(R.id.sethGoogleButton);
-                ImageButton alfieGoogle = (ImageButton)dialogView.findViewById(R.id.alfieGoogleButton);
                 Button sethGithub = (Button) dialogView.findViewById(R.id.sethGithubButton);
-                Button alfieGithub = (Button) dialogView.findViewById(R.id.alfieGithubButton);
                 Button sethEmail = (Button) dialogView.findViewById(R.id.sethEmailButton);
-                Button alfieEmail = (Button) dialogView.findViewById(R.id.alfieEmailButton);
-                Button alfieWebsite = (Button) dialogView.findViewById(R.id.alfieWebsiteButton);
 
                 sethGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/118423554132509773191"));
-                        startActivity(browserIntent);
-                    }
-                });
-
-                alfieGoogle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/109721482231084676815"));
                         startActivity(browserIntent);
                     }
                 });
@@ -216,42 +204,11 @@ public class About extends PreferenceActivity {
                     }
                 });
 
-                alfieGithub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alfster2012"));
-                        startActivity(browserIntent);
-                    }
-                });
-
-                alfieWebsite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://alfster2012.me/"));
-                        startActivity(browserIntent);
-                    }
-                });
-
                 sethEmail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent send = new Intent(Intent.ACTION_SENDTO);
                         String uriText = "mailto:" + Uri.encode("seth.d.schroeder@gmail.com") +
-                                "?subject=" + Uri.encode("Feedback for Score Keeper app") +
-                                "&body=" + Uri.encode("");
-                        Uri uri = Uri.parse(uriText);
-
-                        send.setData(uri);
-                        startActivity(Intent.createChooser(send, "Send mail..."));
-                        startActivity(send);
-                    }
-                });
-
-                alfieEmail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent send = new Intent(Intent.ACTION_SENDTO);
-                        String uriText = "mailto:" + Uri.encode("admin@alfster2012.me") +
                                 "?subject=" + Uri.encode("Feedback for Score Keeper app") +
                                 "&body=" + Uri.encode("");
                         Uri uri = Uri.parse(uriText);

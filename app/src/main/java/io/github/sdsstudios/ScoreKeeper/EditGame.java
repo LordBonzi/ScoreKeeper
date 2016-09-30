@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +19,12 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -58,6 +64,8 @@ public class EditGame extends AppCompatActivity {
     private ImageButton buttonHelpLength, buttonHelpDate;
     private boolean completed = false;
 
+    private NestedScrollView mScrollView;
+    private List<OptionCardView> mCardViewList = new ArrayList<>();
     private List<EditTextOption> mEditTextOptions = new ArrayList<>();
     private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
     private List<MenuItem> mMenuItemList = new ArrayList<>();
@@ -105,6 +113,7 @@ public class EditGame extends AppCompatActivity {
         editTextDate = (EditText) findViewById(R.id.editTextDate);
         editTextLength = (EditText) findViewById(R.id.editTextLength);
         editGameLayout = (RelativeLayout) findViewById(R.id.edit_game_content);
+        mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
         buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
         buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
@@ -173,6 +182,47 @@ public class EditGame extends AppCompatActivity {
 
         }
 
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
+                , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
+
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutDate)
+                , (RelativeLayout) findViewById(R.id.dateHeader), 0));
+
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
+                , (RelativeLayout) findViewById(R.id.playersHeader), 0));
+
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutLength)
+                , (RelativeLayout) findViewById(R.id.lengthHeader), 0));
+
+        for (final OptionCardView card: mCardViewList){
+            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+            }else{
+                card.getmHeader().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleCardViewHeight(card.getmHeight(), card, mScrollView.getBottom());
+
+                    }
+                });
+            }
+
+            card.getmContent().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int height = card.getmContent().getMeasuredHeight();
+
+                    card.setmHeight(height);
+
+                    if (card.getmHeader().getId() != R.id.playersHeader) {
+                        toggleCardViewHeight(height, card, mScrollView.getScrollY());
+                    }
+                    // Do whatever you want with h
+                    // Remove the listener so it is not called repeatedly
+                    removeOnGlobalLayoutListener(card.getmContent(), this);
+                }
+            });
+        }
+
         editTextLength.setHint(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper));
         editTextDate.setHint(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIME, dbHelper));
         editTextLength.setEnabled(false);
@@ -181,6 +231,84 @@ public class EditGame extends AppCompatActivity {
         displayRecyclerView(0);
 
 
+    }
+
+
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            removeLayoutListenerJB(v, victim);
+        } else removeLayoutListener(v, victim);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
+    }
+
+    private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
+        if (cardView.getmHeader().getId() != R.id.playersHeader) {
+
+            if (cardView.getmContent().getHeight() != height) {
+                // expand
+
+                expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
+
+            } else {
+                // collapse
+                collapseView(cardView);
+
+            }
+        }
+    }
+
+    public void collapseView(final OptionCardView cardView) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(cardView.getmHeight(), 0);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = cardView.getmContent().getLayoutParams();
+                layoutParams.height = val;
+                cardView.getmContent().setLayoutParams(layoutParams);
+
+            }
+        });
+        anim.start();
+    }
+
+    public void expandView(int height, final RelativeLayout layout, final int scrollTo) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(layout.getMeasuredHeightAndState(),
+                height);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
+                layoutParams.height = val;
+                layout.setLayoutParams(layoutParams);
+
+
+            }
+        });
+        anim.start();
+
+    }
+
+    private void updateCompleteMenuItem(){
+        if (dataHelper.getCompletedById(gameID, dbHelper.open()) == 0){
+            menuItemComplete.setTitle(R.string.complete);
+            completed = true;
+        }else{
+            menuItemComplete.setTitle(R.string.unfinish);
+            completed = false;
+        }
     }
 
     @Override
@@ -202,14 +330,7 @@ public class EditGame extends AppCompatActivity {
             menu.findItem(R.id.action_settings).setVisible(false);
             menuItemComplete.setVisible(true);
 
-            if (dataHelper.getCompletedById(gameID, dbHelper.open()) == 0){
-                menuItemComplete.setTitle(R.string.complete);
-                completed = true;
-            }else{
-                menuItemComplete.setTitle(R.string.unfinish);
-                completed = false;
-            }
-
+            updateCompleteMenuItem();
 
             createShareIntent();
             // Fetch and store ShareActionProvider
@@ -256,6 +377,14 @@ public class EditGame extends AppCompatActivity {
         }
 
         dbHelper.close();
+
+        if (dataHelper.getCompletedById(gameID, dbHelper.open()) == 0){
+            menuItemComplete.setTitle(R.string.complete);
+            completed = true;
+        }else{
+            menuItemComplete.setTitle(R.string.unfinish);
+            completed = false;
+        }
     }
 
     @Override

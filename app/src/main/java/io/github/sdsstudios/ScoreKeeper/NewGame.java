@@ -172,6 +172,7 @@ public class NewGame extends AppCompatActivity
         for (final OptionCardView card: mCardViewList){
             if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
             }else{
+
                 card.getmHeader().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -189,7 +190,7 @@ public class NewGame extends AppCompatActivity
                     card.setmHeight(height);
 
                     if (card.getmHeader().getId() != R.id.playersHeader) {
-                        toggleCardViewHeight(height, card, 0);
+                        toggleCardViewHeight(height, card, scrollView.getScrollY());
                     }
                     // Do whatever you want with h
                     // Remove the listener so it is not called repeatedly
@@ -751,9 +752,7 @@ public class NewGame extends AppCompatActivity
                 ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
                 layoutParams.height = val;
                 layout.setLayoutParams(layoutParams);
-                if (scrollTo != 0) {
-                    scrollView.scrollTo(0, scrollTo);
-                }
+
 
             }
         });

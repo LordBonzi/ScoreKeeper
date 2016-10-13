@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
 
@@ -138,7 +138,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             createReviewDialog();
         }
 
-
         displayRecyclerView();
 
         verifyStoragePermissions(this);
@@ -156,13 +155,21 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
     }
 
-    public boolean anyUnfinishedGames(){
+    public boolean anyUnfinishedGames() {
         boolean unfinishedGames = false;
 
-        for (int i = 1; i < dbHelper.open().numRows(); i++){
-            if (dataHelper.getIntByID(i, ScoreDBAdapter.KEY_COMPLETED, dbHelper.open()) == 0){
-                unfinishedGames = true;
+        try {
+
+            for (int i = 1; i < dbHelper.open().numRows(); i++) {
+                if (!dataHelper.getGame(i, dbHelper.open()).ismCompleted()) {
+                    unfinishedGames = true;
+                    continue;
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+            Toast.makeText(this, "Error opening anyUnfinishedGames()", Toast.LENGTH_SHORT).show();
         }
 
         dbHelper.close();
@@ -257,14 +264,14 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                ArrayList<GameModel> gameModel = GameModel.createGameModel(numGamesToShow, 1, this, dbHelper);
-                if (gameModel.isEmpty()){
+                List<HistoryModel> historyModels = HistoryModel.createHistoryModel(dbHelper, this);
+                if (historyModels.isEmpty()){
                     relativeLayoutRecent.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                 }else{
                     relativeLayoutRecent.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    HistoryAdapter historyAdapter = new HistoryAdapter(gameModel, this, this, true);
+                    HistoryAdapter historyAdapter = new HistoryAdapter(historyModels, this, this, true, HistoryAdapter.UNFINISHED);
                     recyclerView.setAdapter(historyAdapter);
                 }
 

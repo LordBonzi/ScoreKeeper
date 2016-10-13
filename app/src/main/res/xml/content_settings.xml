@@ -53,8 +53,19 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:title="Debugging. Only for developer">
+        <Preference
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:title="Create 10 Random Games"
+            android:key="prefCreateGames"
+            android:enabled="false"
+            />
 
-
+    </PreferenceCategory>
 
 </PreferenceScreen>
 

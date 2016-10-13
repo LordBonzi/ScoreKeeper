@@ -14,12 +14,11 @@ import java.util.TimeZone;
 
 public class TimeHelper {
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-    SimpleDateFormat weekFormat = new SimpleDateFormat("d MMM");
-    SimpleDateFormat yearFormat = new SimpleDateFormat("d MMM yyyy");
-    Calendar currentDate = Calendar.getInstance();
-    private String dateStr = null;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    private SimpleDateFormat weekFormat = new SimpleDateFormat("d MMM");
+    private SimpleDateFormat yearFormat = new SimpleDateFormat("d MMM yyyy");
+    private Calendar currentDate = Calendar.getInstance();
     private Date theDate;
 
     public String gameDate(String dateArray) {
@@ -39,6 +38,7 @@ public class TimeHelper {
 
         boolean year = currentDate.get(Calendar.YEAR) - myCal.get(Calendar.YEAR) != 0;
 
+        String dateStr = null;
         if (day){
             dateStr = timeFormat.format(myCal.getTime());
 

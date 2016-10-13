@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder> {
 
-    private ArrayList arrayList;
+    private List<String> arrayList;
     private Context context;
     private DataHelper dataHelper = new DataHelper();
     private ViewHolder.ClickListener listener;
@@ -27,7 +26,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewArrayAdapter(ArrayList titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
+    public RecyclerViewArrayAdapter(List<String> titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
         context = context1;
         this.arrayList = titleArray;
         this.listener = listener;

@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,25 +15,28 @@ import java.util.List;
  */
 public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHolder> {
     ScoreDBAdapter dbHelper;
-    int gameID;
-    private int maxScore, scoreInterval, diffToWin;
-    private List<Player> mPlayerArray;
-    private boolean enabled, reverseScrolling;
+    private Game mGame;
+    private boolean enabled;
     private GameListener gameListener;
+    private boolean reverseScoring;
+    private int scoreInterval;
+    private int maxScore;
+    private int diffToWin;
+
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(List<Player> mPlayerArray, ScoreDBAdapter dbAdapter,
-                          int id, boolean menabled, int maxScore, GameListener gameListener, boolean reverseScrolling, int scoreInterval, int diffToWin) {
+    public BigGameAdapter(Game mGame, ScoreDBAdapter dbAdapter, boolean menabled, GameListener gameListener) {
 
-        this.mPlayerArray = mPlayerArray;
         dbHelper = dbAdapter;
-        gameID = id;
         enabled = menabled;
-        this.maxScore = maxScore;
         this.gameListener = gameListener;
-        this.reverseScrolling = reverseScrolling;
-        this.scoreInterval = scoreInterval;
-        this.diffToWin = diffToWin;
+        this.mGame = mGame;
+
+        reverseScoring = mGame.isChecked(Option.REVERSE_SCORING);
+        scoreInterval = mGame.getData(Option.SCORE_INTERVAL);
+        maxScore = mGame.getData(Option.WINNING_SCORE);
+        diffToWin = mGame.getData(Option.SCORE_DIFF_TO_WIN);
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -55,29 +57,29 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final Player p = mPlayerArray.get(position);
+        final Player p = mGame.getPlayer(position);
 
         holder.textViewPlayer.setText(p.getmName());
-        holder.butonScore.setText(String.valueOf(p.getmScore()));
+        holder.buttonScore.setText(String.valueOf(p.getmScore()));
 
         if (enabled) {
-            holder.butonScore.setOnClickListener(new View.OnClickListener() {
+            holder.buttonScore.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     int score = 0;
                     int buttonScore = 0;
 
-                    buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    if (reverseScrolling) {
+
+                    buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
+                    if (reverseScoring) {
                         score = buttonScore -= scoreInterval;
                     } else {
                         score = buttonScore += scoreInterval;
                     }
 
-                    holder.butonScore.setText(String.valueOf(score));
+                    holder.buttonScore.setText(String.valueOf(score));
                     p.setmScore(score);
-                    dbHelper.open().updatePlayers(mPlayerArray, gameID);
 
                     if (maxScore != 0) {
                         if (maxScore < 0) {
@@ -92,20 +94,20 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
                         }
 
-
                     }
 
                 }
             });
 
-            holder.butonScore.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.buttonScore.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int score = 0;
                     int buttonScore = 0;
 
-                    buttonScore = Integer.valueOf(holder.butonScore.getText().toString());
-                    if (reverseScrolling) {
+                    buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
+
+                    if (reverseScoring) {
                         score = buttonScore += scoreInterval;
                     } else {
                         score = buttonScore -= scoreInterval;
@@ -113,9 +115,8 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     if (score == -1) {
 
                     } else {
-                        holder.butonScore.setText(String.valueOf(score));
+                        holder.buttonScore.setText(String.valueOf(score));
                         p.setmScore(score);
-                        dbHelper.open().updatePlayers(mPlayerArray, gameID);
                     }
 
                     return true;
@@ -136,15 +137,22 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }
             });
 
+            mGame.setPlayer(p, position);
+            dbHelper.updateGame(mGame);
+
         } else {
-            holder.butonScore.setEnabled(false);
+            holder.buttonScore.setEnabled(false);
         }
+
+
     }
 
     private boolean scoreDifference(int score) {
         boolean b = false;
-        for (int i = 0; i < mPlayerArray.size(); i++) {
-            if (Math.abs(score - Integer.valueOf(String.valueOf(mPlayerArray.get(i).getmScore()))) >= diffToWin) {
+        List<Player> playerArray = mGame.getmPlayerArray();
+
+        for (int i = 0; i < playerArray.size(); i++) {
+            if (Math.abs(score - Integer.valueOf(String.valueOf(playerArray.get(i).getmScore()))) >= diffToWin) {
                 b = true;
             }
         }
@@ -155,7 +163,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mPlayerArray.size();
+        return mGame.size();
     }
 
     // Provide a reference to the views for each data item
@@ -164,14 +172,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textViewPlayer;
-        public Button butonScore;
+        public Button buttonScore;
         public ImageButton imageButton, editButton;
 
 
         public ViewHolder(View v) {
             super(v);
             textViewPlayer = (TextView) v.findViewById(R.id.listTextViewPlayer);
-            butonScore = (Button) v.findViewById(R.id.listButtonScore);
+            buttonScore = (Button) v.findViewById(R.id.listButtonScore);
             imageButton = (ImageButton) v.findViewById(R.id.buttonDelete);
             editButton = (ImageButton) v.findViewById(R.id.buttonEdit);
 

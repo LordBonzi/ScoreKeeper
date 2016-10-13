@@ -34,7 +34,7 @@ public class Settings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private Preference deletePreference, timeLimitPreference, numGamesPreference
-            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference;
+            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference, mCreateGamesPreference;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -85,6 +85,7 @@ public class Settings extends PreferenceActivity{
         maxNumOnDicePreference = findPreference("prefDiceMaxNum");
         exportPreference = findPreference("prefExport");
         importPreference = findPreference("prefImport");
+        mCreateGamesPreference = findPreference("prefCreateGames");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

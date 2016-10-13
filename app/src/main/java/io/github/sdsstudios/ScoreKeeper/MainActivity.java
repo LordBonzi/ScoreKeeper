@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
 
     private boolean isWon = false;
     private String winner;
-    private int scoreInterval;
     public static int gameID;
     private Button buttonP1;
     private Button buttonP2;
@@ -69,15 +68,12 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView bigGameList;
     private boolean finished = false;
     private String TAG = "MainActivity.class";
-    private int gameSize;
-    private List<Player> mPlayersArray;
     public static DataHelper dataHelper;
     private Intent homeIntent;
     ScoreDBAdapter dbHelper;
     private RecyclerView.Adapter bigGameAdapter;
     private Stopwatch stopwatch;
     private TimeHelper timeHelper;
-    private String timeLimitString = null;
     private boolean classicTheme = false;
     private View dialogView;
     private LayoutInflater inflter = null;
@@ -86,24 +82,20 @@ public class MainActivity extends AppCompatActivity
     private boolean isPaused = false;
     private MenuItem menuItemDiceNum;
     private SharedPreferences sharedPreferences;
-    private int maxNumDice;
-    private int maxScore;
-    private boolean reverseScoring;
-    private int diffToWin;
     private RecyclerView.LayoutManager mLayoutManager;
     private RelativeLayout content, big, normal;
     private CoordinatorLayout coordinatorLayout;
-    private int contentTopMargin;
     private Player newPlayer = null;
-    private boolean stopwatchBoolean = false;
     private ViewGroup.LayoutParams params;
-    private AlertDialog.Builder builder;
-    private SetAdapter mSetAdapter;
-    private int mNumSets;
     private static final String STATE_GAMEID = "gameID";
     private TabLayout mTabLayout;
-
+    private Game mGame;
     private GridView mSetGridView;
+    private int maxNumDice;
+    private int mScoreInterval;
+    private int mScoreDiffToWin;
+    private boolean mReverseScoring;
+    private int mMaxScore;
 
     //tabsStuff
     private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
@@ -125,7 +117,8 @@ public class MainActivity extends AppCompatActivity
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         dataHelper = new DataHelper();
         dbHelper = new ScoreDBAdapter(this).open();
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && dataHelper.getArrayById(ScoreDBAdapter.KEY_PLAYERS, gameID, dbHelper).size() == 2;
+        mGame = dataHelper.getGame(gameID, dbHelper);
+        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && mGame.size() == 2;
         maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
 
@@ -157,7 +150,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         AdView mAdView;
-        if (gameSize > 2) {
+        if (mGame.size() > 2) {
             mAdView = (AdView) findViewById(R.id.adViewHome2);
         }else{
             mAdView = (AdView) findViewById(R.id.adViewHome);
@@ -172,24 +165,23 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         String time = sdfDate.format(now);
-        dbHelper.open();
-        dbHelper.updateGame(time,0, ScoreDBAdapter.KEY_TIME, gameID);
-        dbHelper.close();
+        mGame.setmTitle(time);
 
         if (savedInstanceState != null) {
             gameID = savedInstanceState.getInt(STATE_GAMEID);
         }
 
+        dbHelper.open().updateGame(mGame);
+
     }
 
     public void populateSetGridView(){
-        mSetGridView.setNumColumns(mPlayersArray.size());
-        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mPlayersArray, this);
+        mSetGridView.setNumColumns(mGame.size());
+        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this);
         mSetGridView.setAdapter(setGridViewAdapter);
     }
 
     public void loadObjects() {
-        builder = new AlertDialog.Builder(this);
 
         dataHelper = new DataHelper();
         timeHelper = new TimeHelper();
@@ -199,24 +191,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void loadGame() {
-        timeLimitString = dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_TIMER, dbHelper);
-        maxScore = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_MAX_SCORE, dbHelper);
-        scoreInterval = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_SCORE_INTERVAL, dbHelper);
-        diffToWin = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_DIFF_TO_WIN, dbHelper);
 
-        if (dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_STOPWATCH, dbHelper) ==1){
-            stopwatchBoolean = true;
-        }
-        if (scoreInterval == 0) {
-            scoreInterval = 1;
+        mScoreDiffToWin = mGame.getData(Option.SCORE_DIFF_TO_WIN);
+        mScoreInterval = mGame.getData(Option.SCORE_INTERVAL);
+        mReverseScoring = mGame.isChecked(Option.REVERSE_SCORING);
+        mMaxScore = mGame.getData(Option.WINNING_SCORE);
+
+        if (mScoreInterval == 0) {
+            mScoreInterval = 1;
         }
 
-        if (diffToWin == 0) {
-            diffToWin = 1;
+        if (mScoreDiffToWin == 0) {
+            mScoreDiffToWin = 1;
         }
-
-        int i = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_REVERSE_SCORING, dbHelper);
-        reverseScoring = i == 1;
 
         homeIntent = new Intent(this, Home.class);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
@@ -244,13 +231,6 @@ public class MainActivity extends AppCompatActivity
         textViewP2 = (TextView) findViewById(R.id.textViewP2);
 
         mSetGridView = (GridView)findViewById(R.id.setGridView);
-
-        mPlayersArray = new ArrayList();
-        mPlayersArray = dataHelper.getPlayerArray( gameID, dbHelper);
-
-        mNumSets = dataHelper.getIntByID(gameID, ScoreDBAdapter.KEY_NUM_SETS, dbHelper);
-
-        gameSize = mPlayersArray.size();
 
         if (!classicTheme) {
             bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
@@ -322,16 +302,16 @@ public class MainActivity extends AppCompatActivity
         editor.putInt("lastplayedgame", gameID);
         editor.apply();
 
-        for (Player p : mPlayersArray) {
-            if (maxScore < 0) {
-                if (p.getmScore() <= maxScore
+        for (Player p : mGame.getmPlayerArray()) {
+            if (mMaxScore < 0) {
+                if (p.getmScore() <= mMaxScore
                         && scoreDifference(p.getmScore())) {
 
                     gameWon(p.getmName());
                 }
 
-            } else if (maxScore >= 0) {
-                if (p.getmScore() >= maxScore
+            } else if (mMaxScore >= 0) {
+                if (p.getmScore() >= mMaxScore
                         && scoreDifference(p.getmScore())) {
                     gameWon(p.getmName());
                 }
@@ -340,23 +320,13 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-
-    }
-
-    private int numSetsPlayed(){
-        int num = 0;
-        for (Player p:mPlayersArray){
-            num += p.getmSetScores().size();
-        }
-
-        return num;
     }
 
     private boolean scoreDifference(int score) {
         boolean b = false;
-        for (Player p : mPlayersArray) {
-            if (maxScore != 0) {
-                if (Math.abs(score - p.getmScore()) >= diffToWin) {
+        for (Player p : mGame.getmPlayerArray()) {
+            if (mMaxScore != 0) {
+                if (Math.abs(score - p.getmScore()) >= mScoreDiffToWin) {
                     b = true;
                 }
             }
@@ -366,8 +336,8 @@ public class MainActivity extends AppCompatActivity
 
     private boolean timeLimitReached(Stopwatch chronometer) {
         boolean b = false;
-        if (timeLimitString != null) {
-            if (chronometer.getText().toString().equalsIgnoreCase(timeLimitString)) {
+        if (mGame.getmTimeLimit() != null) {
+            if (chronometer.getText().toString().equalsIgnoreCase(mGame.getmTimeLimit())) {
                 finished = true;
                 b = true;
                 timeLimitDialog();
@@ -381,19 +351,19 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         chronometerClick();
-        dbHelper.open();
 
-        if (stopwatchBoolean) {
-            dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        if (mGame.isChecked(Option.STOPWATCH)) {
+            mGame.setmLength(stopwatch.getText().toString());
         }
-        dbHelper.close();
+
+        dbHelper.open().updateGame(mGame);
     }
 
     public void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         bigGameList.setLayoutManager(mLayoutManager);
 
-        bigGameAdapter = new BigGameAdapter(mPlayersArray, dbHelper, gameID, enabled, maxScore, this, reverseScoring, scoreInterval, diffToWin);
+        bigGameAdapter = new BigGameAdapter(mGame, dbHelper, enabled, this);
         bigGameList.setAdapter(bigGameAdapter);
     }
 
@@ -490,16 +460,19 @@ public class MainActivity extends AppCompatActivity
 
             builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    List<Player> mPlayersArray = mGame.getmPlayerArray();
 
                     for (Player p : mPlayersArray) {
                         p.setmScore(0);
                     }
 
-                    if (stopwatchBoolean) {
-                        dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                    if (mGame.isChecked(Option.STOPWATCH)) {
+                        mGame.setmLength(stopwatch.getText().toString());
                     }
-                    dbHelper.close();
-                    if (gameSize > 2) {
+
+                    dbHelper.open().updateGame(mGame);
+
+                    if (mGame.size() > 2) {
                         displayRecyclerView(true);
                     } else {
                         P1Score = mPlayersArray.get(0).getmScore();
@@ -629,27 +602,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addPlayer(AlertDialog alertDialog){
-        mPlayersArray.add(newPlayer);
+        mGame.addPlayer(newPlayer);
+        List<Player> mPlayersArray = mGame.getmPlayerArray();
         if (dataHelper.checkPlayerDuplicates(mPlayersArray)){
             mPlayersArray.remove(mPlayersArray.size()-1);
-            dbHelper.open().updatePlayers(mPlayersArray, gameID);
-            dbHelper.close();
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
         }else {
 
             mPlayersArray.get(mPlayersArray.size() - 1).createNewSet(mPlayersArray.get(0).getmSetScores().size());
 
-            dbHelper.open().updatePlayers(mPlayersArray, gameID);
+            mGame.setmPlayerArray(mPlayersArray);
 
             alertDialog.dismiss();
 
-            if (stopwatchBoolean) {
-                dbHelper.open().updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+            if (mGame.isChecked(Option.STOPWATCH)) {
+                mGame.setmLength(stopwatch.getText().toString());
             }
 
-            dbHelper.close();
-            gameSize = mPlayersArray.size();
+            dbHelper.open().updateGame(mGame);
+
             selectLayout();
             isPaused = true;
             chronometerClick();
@@ -676,16 +648,16 @@ public class MainActivity extends AppCompatActivity
         super.onPause();
         isPaused = true;
         chronometerClick();
-        dbHelper.open();
 
-        if (stopwatchBoolean) {
-            dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+        if (mGame.isChecked(Option.STOPWATCH)) {
+            mGame.setmLength(stopwatch.getText().toString());
         }
-        dbHelper.close();
+
+        dbHelper.open().updateGame(mGame);
     }
 
     public void chronometerClick() {
-        if (stopwatchBoolean) {
+        if (mGame.isChecked(Option.STOPWATCH)) {
             if (!isPaused) {
                 stopwatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 stopwatch.start();
@@ -708,22 +680,23 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.buttonP1:
                 onScoreButtonClick(buttonP1);
-                dbHelper.open();
 
-                if (stopwatchBoolean) {
-                    dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                if (mGame.isChecked(Option.STOPWATCH)) {
+                    mGame.setmLength(stopwatch.getText().toString());
                 }
-                dbHelper.close();
+
+                dbHelper.open().updateGame(mGame);
                 break;
 
             case R.id.buttonP2:
                 onScoreButtonClick(buttonP2);
-                dbHelper.open();
 
-                if (stopwatchBoolean) {
-                    dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                if (mGame.isChecked(Option.STOPWATCH)) {
+                    mGame.setmLength(stopwatch.getText().toString());
                 }
-                dbHelper.close();
+
+                dbHelper.open().updateGame(mGame);
+
                 break;
 
             case R.id.fabChronometer:
@@ -776,12 +749,14 @@ public class MainActivity extends AppCompatActivity
 
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dbHelper.open();
-                    if (stopwatchBoolean) {
-                        dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+
+                    if (mGame.isChecked(Option.STOPWATCH)) {
+                        mGame.setmLength(stopwatch.getText().toString());
                     }
-                    dbHelper.updateGame("0", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                    dbHelper.close();
+
+                    mGame.setmCompleted(false);
+                    dbHelper.open().updateGame(mGame);
+
                     startActivity(homeIntent);
 
                 }
@@ -789,13 +764,15 @@ public class MainActivity extends AppCompatActivity
 
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dbHelper.open();
-                    if (stopwatchBoolean) {
-                        dbHelper.updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+
+                    if (mGame.isChecked(Option.STOPWATCH)) {
+                        mGame.setmLength(stopwatch.getText().toString());
                     }
 
-                    dbHelper.updateGame("1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                    dbHelper.close();
+                    mGame.setmCompleted(true);
+
+                    dbHelper.open().updateGame(mGame);
+
                     startActivity(homeIntent);
                 }
             });
@@ -835,12 +812,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (mNumSets > 1 && numSetsPlayed() / mPlayersArray.size() < mNumSets) {
-            for (int i = 0; i < mPlayersArray.size(); i++){
-                Player p = mPlayersArray.get(i);
-            }
-
-            dbHelper.open().updatePlayers(mPlayersArray, gameID);
+        if (mGame.numSets() > 1 && mGame.numSetsPlayed() / mGame.size() < mGame.numSets()) {
 
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -851,14 +823,14 @@ public class MainActivity extends AppCompatActivity
                     buttonP2.setEnabled(true);
                     isWon = false;
 
-                    for (Player p : mPlayersArray){
+                    for (Player p : mGame.getmPlayerArray()){
                         p.addSet(p.getmScore());
                         p.setmScore(0);
                     }
 
-                    dbHelper.open().updatePlayers(mPlayersArray, gameID);
+                    dbHelper.open().updateGame(mGame);
 
-                    if (mPlayersArray.size() == 2){
+                    if (mGame.size() == 2){
                         P1Score = 0;
                         P2Score = 0;
                         buttonP1.setText(String.valueOf(P1Score));
@@ -872,11 +844,12 @@ public class MainActivity extends AppCompatActivity
 
             builder.setNeutralButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    if (stopwatchBoolean) {
-                        dbHelper.open().updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+
+                    if (mGame.isChecked(Option.STOPWATCH)) {
+                        mGame.setmLength(stopwatch.getText().toString());
                     }
-                    dbHelper.open().updateGame("1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                    dbHelper.close();
+
+                    dbHelper.open().updateGame(mGame);
                     startActivity(homeIntent);
                 }
             });
@@ -885,12 +858,13 @@ public class MainActivity extends AppCompatActivity
 
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    dbHelper.open();
-                    if (stopwatchBoolean) {
-                        dbHelper.open().updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+
+                    if (mGame.isChecked(Option.STOPWATCH)) {
+                        mGame.setmLength(stopwatch.getText().toString());
                     }
-                    dbHelper.updateGame("1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                    dbHelper.close();
+
+                    dbHelper.open().updateGame(mGame);
+
                     startActivity(homeIntent);
                 }
             });
@@ -912,17 +886,17 @@ public class MainActivity extends AppCompatActivity
     public void onScoreButtonClick(Button button) {
 
         if (button == buttonP1) {
-            if (reverseScoring) {
-                P1Score -= scoreInterval;
+            if (mReverseScoring) {
+                P1Score -= mScoreInterval;
             } else {
-                P1Score += scoreInterval;
+                P1Score += mScoreInterval;
             }
             button.setText(String.valueOf(P1Score));
         } else {
-            if (reverseScoring) {
-                P2Score -= scoreInterval;
+            if (mReverseScoring) {
+                P2Score -= mScoreInterval;
             } else {
-                P2Score += scoreInterval;
+                P2Score += mScoreInterval;
             }
             button.setText(String.valueOf(P2Score));
         }
@@ -932,12 +906,12 @@ public class MainActivity extends AppCompatActivity
             ft2 = false;
         }
 
-        if (maxScore != 0 && Math.abs(P1Score - P2Score) >= diffToWin) {
-            if (P1Score >= maxScore || P2Score >= maxScore) {
-                if (P1Score == maxScore) {
-                    winner = mPlayersArray.get(0).getmName();
+        if (mMaxScore != 0 && Math.abs(P1Score - P2Score) >= mScoreDiffToWin) {
+            if (P1Score >= mMaxScore || P2Score >= mMaxScore) {
+                if (P1Score == mMaxScore) {
+                    winner = mGame.getPlayer(0).getmName();
                 } else {
-                    winner = mPlayersArray.get(1).getmName();
+                    winner = mGame.getPlayer(1).getmName();
 
                 }
                 isWon = true;
@@ -952,18 +926,18 @@ public class MainActivity extends AppCompatActivity
     public void onScoreButtonLongClick(Button button) {
 
         if (button == buttonP1 && !ft1 && P1Score != 0) {
-            if (reverseScoring) {
-                P1Score += scoreInterval;
+            if (mReverseScoring) {
+                P1Score += mScoreInterval;
             } else {
-                P1Score -= scoreInterval;
+                P1Score -= mScoreInterval;
             }
 
             button.setText(String.valueOf(P1Score));
         } else if (button == buttonP2 && !ft2 && P2Score != 0) {
-            if (reverseScoring) {
-                P2Score += scoreInterval;
+            if (mReverseScoring) {
+                P2Score += mScoreInterval;
             } else {
-                P2Score -= scoreInterval;
+                P2Score -= mScoreInterval;
             }
             button.setText(String.valueOf(P2Score));
         }
@@ -979,10 +953,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateScores() {
-        mPlayersArray.get(0).setmScore(P1Score);
-        mPlayersArray.get(1).setmScore(P2Score);
+        mGame.getPlayer(0).setmScore(P1Score);
+        mGame.getPlayer(1).setmScore(P2Score);
 
-        dbHelper.open().updatePlayers(mPlayersArray, gameID);
+        dbHelper.open().updateGame(mGame);
     }
 
     @Override
@@ -1025,7 +999,7 @@ public class MainActivity extends AppCompatActivity
                     String oldMinute = timeLimitSplit[1];
                     String oldSeconds = timeLimitSplit[2];
 
-                    timeLimitString = "";
+                    String timeLimitString = "";
 
                     if (TextUtils.isEmpty(hour)) {
                         editTextHour.setError("Can't be empty");
@@ -1082,9 +1056,7 @@ public class MainActivity extends AppCompatActivity
 
                                 if (!timeLimitString.equals("00:00:00:0")) {
 
-                                    dbHelper.open();
-                                    dbHelper.updateGame(timeLimitString, 0, ScoreDBAdapter.KEY_TIMER, gameID);
-                                    dbHelper.close();
+                                    mGame.setmTimeLimit(timeLimitString);
 
                                     timeLimitReached(stopwatch);
                                     buttonP1.setEnabled(true);
@@ -1108,14 +1080,13 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 } else {
-                    dbHelper.open();
-                    dbHelper.updateGame("1", 0, ScoreDBAdapter.KEY_COMPLETED, gameID);
-                    dbHelper.close();
+                    mGame.setmCompleted(true);
                     startActivity(homeIntent);
 
                 }
             }
         });
+        dbHelper.open().updateGame(mGame);
     }
 
     public void toggleFullScreen(boolean fullscreen) {
@@ -1203,20 +1174,19 @@ public class MainActivity extends AppCompatActivity
     public void deletePlayer(int position) {
         isPaused = true;
         chronometerClick();
-        if (mPlayersArray.size() > 2) {
-            mPlayersArray.remove(position);
+        if (mGame.size() > 2) {
+            mGame.removePlayer(position);
 
         } else {
             Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
         }
 
-        dbHelper.open().updatePlayers(mPlayersArray, gameID);
-
-        if (stopwatchBoolean) {
-            dbHelper.open().updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-            dbHelper.close();
+        if (mGame.isChecked(Option.STOPWATCH)) {
+            mGame.setmLength(stopwatch.getText().toString());
         }
-        gameSize = mPlayersArray.size();
+
+        dbHelper.open().updateGame(mGame);
+
         selectLayout();
         chronometerClick();
     }
@@ -1234,10 +1204,12 @@ public class MainActivity extends AppCompatActivity
         LayoutInflater inflter = LayoutInflater.from(this);
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogView = inflter.inflate(R.layout.edit_player_fragment, null);
+
         final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
         final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);
-        editTextPlayer.setHint(String.valueOf(mPlayersArray.get(position).getmName()));
-        editTextScore.setHint(String.valueOf(mPlayersArray.get(position).getmScore()));
+
+        editTextPlayer.setHint(String.valueOf(mGame.getPlayer(position).getmName()));
+        editTextScore.setHint(String.valueOf(mGame.getPlayer(position).getmScore()));
 
         dialogBuilder.setPositiveButton(R.string.done, null);
 
@@ -1296,29 +1268,31 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onClick(View view) {
-                        Player oldPlayer = mPlayersArray.get(position);
+
+                        Player oldPlayer = mGame.getPlayer(position);
 
                         if (newPlayer == null || newPlayer.equals("")) {
                             newPlayer = oldPlayer;
                         }
-                        mPlayersArray.set(position, newPlayer);
-                        if (dataHelper.checkPlayerDuplicates(mPlayersArray)) {
-                            mPlayersArray.set(position, oldPlayer);
-                            dbHelper.open().updatePlayers(mPlayersArray, gameID);
-                            dbHelper.close();
+                        mGame.setPlayer(newPlayer, position);
+
+                        if (dataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
+
+                            mGame.setPlayer(oldPlayer, position);
+
                             Toast.makeText(MainActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
                         } else {
 
-                            dbHelper.open().updatePlayers(mPlayersArray, gameID);
-                            dbHelper.close();
+                            dbHelper.open().updateGame(mGame);
+
                             alertDialog.dismiss();
 
-                            if (stopwatchBoolean) {
-                                dbHelper.open().updateGame(stopwatch.getText().toString(), 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
+                            if (mGame.isChecked(Option.STOPWATCH)) {
+                                mGame.setmLength(stopwatch.getText().toString());
                             }
 
-                            dbHelper.close();
-                            gameSize = mPlayersArray.size();
+                            dbHelper.open().updateGame(mGame);
+
                             selectLayout();
                             isPaused = true;
                             chronometerClick();
@@ -1333,7 +1307,7 @@ public class MainActivity extends AppCompatActivity
         alertDialog.show();
     }
     private void selectLayout(){
-        if (gameSize > 2) {
+        if (mGame.size() > 2) {
             big.setVisibility(View.VISIBLE);
             normal.setVisibility(View.INVISIBLE);
 
@@ -1355,31 +1329,30 @@ public class MainActivity extends AppCompatActivity
                 normal.setVisibility(View.VISIBLE);
                 big.setVisibility(View.INVISIBLE);
             }
-            P1Score = mPlayersArray.get(0).getmScore();
-            P2Score = mPlayersArray.get(1).getmScore();
+
+            P1Score = mGame.getPlayer(0).getmScore();
+            P2Score = mGame.getPlayer(1).getmScore();
             ft1 = true;
             ft2 = true;
 
             buttonP1.setText(String.valueOf(P1Score));
             buttonP2.setText(String.valueOf(P2Score));
-            textViewP1.setText(String.valueOf(mPlayersArray.get(0).getmName()));
-            textViewP2.setText(String.valueOf(mPlayersArray.get(1).getmName()));
+            textViewP1.setText(String.valueOf(mGame.getPlayer(0).getmName()));
+            textViewP2.setText(String.valueOf(mGame.getPlayer(1).getmName()));
             stopwatch = (Stopwatch) findViewById(R.id.chronometer);
             fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
             fabChronometer.setOnClickListener(this);
         }
 
-        if (stopwatchBoolean) {
+        if (mGame.isChecked(Option.STOPWATCH)) {
             try {
-                if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) == null
-                        || dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper).equals("") && stopwatchBoolean) {
-                    dbHelper.updateGame("00:00:00:0", 0, ScoreDBAdapter.KEY_CHRONOMETER, gameID);
-                    dbHelper.close();
+
+                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(Option.STOPWATCH)) {
+                    mGame.setmLength("00:00:00:0");
                 }
 
-                if (dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper) != null) {
-                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(dataHelper.getStringById(gameID, ScoreDBAdapter.KEY_CHRONOMETER, dbHelper)))
-                            + SystemClock.elapsedRealtime()));
+                if (mGame.getmLength() != null) {
+                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(mGame.getmLength()) + SystemClock.elapsedRealtime())));
                 }
 
                 timeLimitReached(stopwatch);
@@ -1393,6 +1366,8 @@ public class MainActivity extends AppCompatActivity
                     fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
                 }
 
+                dbHelper.open().updateGame(mGame);
+
             }catch(Exception e){
                 e.printStackTrace();
                 Snackbar snackbar;
@@ -1405,7 +1380,7 @@ public class MainActivity extends AppCompatActivity
 
 
         }else{
-            if (gameSize > 2) {
+            if (mGame.size() > 2) {
                 CardView cardView = (CardView)findViewById(R.id.buttonChronometerBig);
                 cardView.setVisibility(View.INVISIBLE);
                 bigGameList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));

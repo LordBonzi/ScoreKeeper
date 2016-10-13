@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -32,27 +33,48 @@ public class DataHelper {
         return arrayList;
     }
 
-    public List<Player> getPlayerArray(int id, ScoreDBAdapter dbHelper){
+    public Game getGame(int id, ScoreDBAdapter dbHelper){
 
         dbHelper.open();
         Cursor cursor = dbHelper.fetchGamesById(id);
 
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_PLAYERS);
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_GAME);
 
-        List<Player> playerList = new ArrayList<>();
+        Game gameList = null;
         try {
+            Gson gson = new GsonBuilder().serializeNulls().create();
 
-            Gson gson = new Gson();
-
-            Type type = new TypeToken<List<Player>>(){}.getType();
-            playerList = gson.fromJson(cursor.getString(index), type);
+            Type type = new TypeToken<Game>(){}.getType();
+            gameList = gson.fromJson(cursor.getString(index), type);
 
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataHelper.class", e.toString());
         }
 
-        return playerList ;
+        return gameList;
+    }
+
+    public Game getPreset(int id, PresetDBAdapter dbHelper){
+
+        dbHelper.open();
+        Cursor cursor = dbHelper.fetchPresetByID(id);
+
+        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_GAME);
+
+        Game gameList = null;
+        try {
+            Gson gson = new Gson();
+
+            Type type = new TypeToken<Game>(){}.getType();
+            gameList = gson.fromJson(cursor.getString(index), type);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("DataHelper.class", e.toString());
+        }
+
+        return gameList;
     }
 
     public String convertToString(List array) {
@@ -60,47 +82,6 @@ public class DataHelper {
         String str = TextUtils.join(",", array);
 
         return str;
-    }
-
-    public int getIntByID(int i, String request, ScoreDBAdapter dbHelper){
-
-        int maxscore = 0;
-        int index = 1;
-        dbHelper.open();
-        Cursor cursor = dbHelper.fetchGamesById(i);
-
-        index = cursor.getColumnIndex(request);
-
-        try {
-            maxscore = cursor.getInt(index);
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("DataHelper", e.toString());
-        }
-
-        dbHelper.close();
-        cursor.close();
-        return maxscore;
-    }
-
-    public ArrayList getArrayById(String request, int gameID, ScoreDBAdapter dbHelper){
-        ArrayList array = new ArrayList();
-        dbHelper.open();
-
-        Cursor cursor = dbHelper.fetchGamesById(gameID);
-        dbHelper.close();
-        int index = cursor.getColumnIndex(request);
-
-        String s = cursor.getString(index);
-        
-        if (s != null) {
-            String[] strValues = s.split(",");
-            array = new ArrayList<>(Arrays.asList(strValues));
-        }
-        
-        cursor.close();
-
-        return array;
     }
 
     public void saveSharedPrefs(List array, List arrayNum, Context context){
@@ -189,98 +170,6 @@ public class DataHelper {
 
     }
 
-    public String getStringById(int i, String request, ScoreDBAdapter dbHelper){
-
-        String s = "";
-
-        dbHelper.open();
-        Cursor cursor = dbHelper.fetchGamesById(i);
-        int index = cursor.getColumnIndex(request);
-        try {
-            s = cursor.getString(index);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        dbHelper.close();
-        cursor.close();
-        return s;
-    }
-
-    public int getCompletedById(int i, ScoreDBAdapter dbHelper){
-        int s;
-
-        dbHelper.open();
-        Cursor cursor = dbHelper.fetchGamesById(i);
-        dbHelper.close();
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_COMPLETED);
-        s = cursor.getInt(index);
-
-        cursor.close();
-
-        return s;
-    }
-
-    public String getPresetStringByID(int i, String request, PresetDBAdapter dbHelper){
-
-        String s = "";
-        int index = 1;
-        dbHelper.open();
-        Cursor cursor = dbHelper.fetchPresetById(i);
-
-        if (request == PresetDBAdapter.KEY_TIME_LIMIT) {
-            index = cursor.getColumnIndex(PresetDBAdapter.KEY_TIME_LIMIT);
-        }else if(request == PresetDBAdapter.KEY_TITLE){
-            index = cursor.getColumnIndex(PresetDBAdapter.KEY_TITLE);
-
-        }
-
-        try {
-            s = cursor.getString(index);
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("DataHelper", e.toString());
-        }
-
-        dbHelper.close();
-        cursor.close();
-        return s;
-    }
-
-    public int getPresetIntByID(int i, String request, PresetDBAdapter dbHelper){
-
-        int maxscore = 0;
-        int index = 1;
-        dbHelper.open();
-        Cursor cursor = dbHelper.fetchPresetById(i);
-
-        index = cursor.getColumnIndex(request);
-
-        try {
-            maxscore = cursor.getInt(index);
-        }catch (Exception e){
-            e.printStackTrace();
-            Log.e("DataHelper", e.toString());
-        }
-
-        dbHelper.close();
-        cursor.close();
-        return maxscore;
-    }
-
-    public ArrayList getPresetPlayerArrayByID(int gameID,  PresetDBAdapter dbHelper){
-        ArrayList array;
-        dbHelper.open();
-
-        Cursor cursor = dbHelper.fetchPresetById(gameID);
-        int index = cursor.getColumnIndex(PresetDBAdapter.KEY_PLAYERS);
-        String s = cursor.getString(index);
-        String[] strValues = s.split(",");
-        array = new ArrayList<>(Arrays.asList(strValues));
-        cursor.close();
-        dbHelper.close();
-
-        return array;
-    }
 
 
 }

@@ -1,6 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
 import android.widget.CheckBox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by seth on 18/09/16.
@@ -9,15 +13,36 @@ import android.widget.CheckBox;
 public class CheckBoxOption{
 
     private CheckBox mCheckBox;
-    private int mData;
-    private String mDatabaseColumn;
     private String mHint;
+    private int mID;
+    private Option mOption;
 
-    public CheckBoxOption(CheckBox mEditText, int mData, String mDatabaseColumn, String mHint) {
-        this.mDatabaseColumn = mDatabaseColumn;
-        this.mData = mData;
+    public CheckBoxOption(CheckBox mEditText, String mHint, Option o) {
         this.mCheckBox = mEditText;
         this.mHint = mHint;
+        this.mOption = o;
+    }
+
+    public static List<CheckBoxOption> loadCheckBoxOptions(Activity a){
+        //MUST BE IN ORDER OF THE LIST OF POINTERS ABOVE!!!
+
+        List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
+
+        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxStopwatch), a.getString(R.string.stopwatch)
+                , new Option(Option.STOPWATCH, 0)));
+
+        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxReverseScoring), a.getString(R.string.reverse_scoring)
+                , new Option(Option.REVERSE_SCORING, 0)));
+
+        return mCheckBoxOptions;
+    }
+
+    public int getmID() {
+        return mID;
+    }
+
+    public void setmID(int mID) {
+        this.mID = mID;
     }
 
     public String getmHint() {
@@ -28,14 +53,6 @@ public class CheckBoxOption{
         this.mHint = mHint;
     }
 
-    public String getmDatabaseColumn() {
-        return mDatabaseColumn;
-    }
-
-    public void setmDatabaseColumn(String mDatabaseColumn) {
-        this.mDatabaseColumn = mDatabaseColumn;
-    }
-
     public CheckBox getmCheckBox() {
         return mCheckBox;
     }
@@ -44,11 +61,27 @@ public class CheckBoxOption{
         this.mCheckBox = mEditText;
     }
 
-    public int getmData() {
-        return mData;
+    public boolean ismChecked() {
+        if (mOption.getmData() == 0){
+            return false;
+        }else{
+            return true;
+        }
     }
 
-    public void setmData(int mData) {
-        this.mData = mData;
+    public void setmChecked(boolean mChecked) {
+        if (!mChecked){
+            mOption.setmData(0);
+        }else{
+            mOption.setmData(1);
+        }
+    }
+
+    public Option getmOption() {
+        return mOption;
+    }
+
+    public void setmOption(Option mOption) {
+        this.mOption = mOption;
     }
 }

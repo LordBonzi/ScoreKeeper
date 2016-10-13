@@ -24,8 +24,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
-
 public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener{
 
     private Intent newGameIntent;
@@ -168,6 +166,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     public void displayRecyclerView(){
         dbHelper.open();
+
         try {
             if (dbHelper.numRows() != 0) {
                 int type = 3;
@@ -187,8 +186,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 recyclerView.setLayoutManager(mLayoutManager);
-                ArrayList<GameModel> gameModel = GameModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
-                historyAdapter = new HistoryAdapter(gameModel, this, this, false);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.createHistoryModel(dbHelper, this), this, this, false, type);
                 recyclerView.setAdapter(historyAdapter);
             } else {
                 recyclerView.setVisibility(View.INVISIBLE);
@@ -253,7 +251,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             toggleSelection(position, gameID);
         }else{
 
-            if (dataHelper.getCompletedById(gameID, dbHelper) == 0) {
+            if (!dataHelper.getGame(gameID, dbHelper).ismCompleted()) {
 
                 AlertDialog dialog;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -355,9 +353,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                     break;
 
                 case R.id.action_select_all:
-                    historyAdapter.clearSelection();
+
                     for (int i = 0; i < historyAdapter.getItemCount(); i++){
-                        toggleSelection(i,historyAdapter.getItemID(i));
+                        if (historyAdapter.isSelected(i)){
+                            historyAdapter.toggleSelection(i, i);
+                        }
                     }
 
                     break;

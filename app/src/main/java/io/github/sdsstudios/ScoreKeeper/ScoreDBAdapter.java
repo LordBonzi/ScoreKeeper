@@ -6,60 +6,25 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-/**
- * Created by Seth Schroeder on 27/11/2015.
- */
-
-public class ScoreDBAdapter {
+public class ScoreDBAdapter{
     public static final String KEY_ROWID = "_id";
-    public static final String KEY_SCORE = "_score";
-    public static final String KEY_PLAYERS = "_players";
-    public static final String KEY_TIME = "_time";
-    public static final String KEY_COMPLETED = "_completed";
-    public static final String KEY_TIMER = "_timer";
-    public static final String KEY_CHRONOMETER = "_chronometer";
-    public static final String KEY_MAX_SCORE = "_maxscore";
-    public static final String KEY_REVERSE_SCORING = "_reversescoring";
-    public static final String KEY_SCORE_INTERVAL = "_scoreinterval";
-    public static final String KEY_DIFF_TO_WIN = "_difftowin";
-    public static final String KEY_STOPWATCH = "_stopwatch";
-    public static final String KEY_SETS = "_sets";
-    public static final String KEY_NUM_SETS = "_numsets";
+    public static final String KEY_GAME = "_game";
     public static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
                     KEY_ROWID + " ," +
-                    KEY_PLAYERS + "," +
-                    KEY_SCORE + " , " +
-                    KEY_TIME + " , " +
-                    KEY_COMPLETED + " , " +
-                    KEY_CHRONOMETER + " , " +
-                    KEY_TIMER + " , " +
-                    KEY_MAX_SCORE + " , " +
-                    KEY_REVERSE_SCORING + " , " +
-                    KEY_SCORE_INTERVAL + " , " +
-                    KEY_DIFF_TO_WIN + " , " +
-                    KEY_STOPWATCH + " , " +
-                    KEY_SETS+ " , " +
-                    KEY_NUM_SETS +
+                    KEY_GAME +
                     " );";
 
-    public static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_PLAYERS
-            , KEY_SCORE, KEY_TIME, KEY_COMPLETED, KEY_CHRONOMETER, KEY_TIMER, KEY_MAX_SCORE
-            , KEY_REVERSE_SCORING, KEY_SCORE_INTERVAL,KEY_DIFF_TO_WIN, KEY_STOPWATCH
-            , KEY_SETS, KEY_NUM_SETS};
+    public static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_GAME};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
     public static SQLiteDatabase DATABASE;
@@ -77,13 +42,6 @@ public class ScoreDBAdapter {
         DATABASE = mDbHelper.getWritableDatabase();
         return this;
     }
-    public String convertToString(ArrayList array) {
-
-        String str = TextUtils.join(",", array);
-
-        return str;
-    }
-
 
     public void close() {
         if (mDbHelper != null) {
@@ -91,18 +49,19 @@ public class ScoreDBAdapter {
         }
     }
 
-    public String convertObjectListToString(List<Player> playerList){
-        Gson gson = new Gson();
-        return gson.toJson(playerList);
+
+    public String convertObjectToString(Game game){
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        return gson.toJson(game);
     }
 
-    public void updatePlayers(List<Player> playerList, int gameID){
+    public void updateGame(Game game){
         ContentValues initialValues = new ContentValues();
         String arrayList = null;
 
         try {
 
-            arrayList = convertObjectListToString(playerList);
+            arrayList = convertObjectToString(game);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,40 +69,13 @@ public class ScoreDBAdapter {
         }
 
 
-        initialValues.put(KEY_PLAYERS, arrayList);
+        initialValues.put(KEY_GAME, arrayList);
         open();
-        DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + gameID, null);
+        DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + game.getmID(), null);
         close();
     }
 
-    public void updateGame(String time_or_completed_or_timeLimit, int maxscoreorstopwatch, String request, int id) {
-
-        ContentValues initialValues = new ContentValues();
-
-        if (request.equals(KEY_TIME) || request.equals(KEY_CHRONOMETER)){
-            initialValues.put(request, time_or_completed_or_timeLimit);
-
-        }else if (request.equals(KEY_COMPLETED)){
-            int c = Integer.valueOf(time_or_completed_or_timeLimit);
-            initialValues.put(request, c);
-
-        }else if (request.equals(KEY_TIMER)){
-            initialValues.put(request, time_or_completed_or_timeLimit);
-
-        }else if(request.equals(KEY_REVERSE_SCORING) || request.equals(KEY_MAX_SCORE) || request.equals(KEY_SCORE_INTERVAL)
-                    || request.equals(KEY_STOPWATCH) || request.equals(KEY_DIFF_TO_WIN) || request.equals(KEY_NUM_SETS)){
-            initialValues.put(request, maxscoreorstopwatch);
-
-        }
-
-        open();
-        DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + id, null);
-        close();
-
-    }
-
-    public long createGame(List<Player> players, String time, int completed, String timeLimit, List<EditTextOption> editTextOptions
-            , List<CheckBoxOption> checkBoxOptions) {
+    public long createGame(Game game) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -153,17 +85,8 @@ public class ScoreDBAdapter {
             initialValues.put(KEY_ROWID, getNewestGame() + 1);
         }
 
-        initialValues.put(KEY_PLAYERS, convertObjectListToString(players));
-        initialValues.put(KEY_TIME, time);
-        initialValues.put(KEY_COMPLETED, completed);
-        initialValues.put(KEY_TIMER, timeLimit);
 
-        for (EditTextOption e : editTextOptions){
-            initialValues.put(e.getmDatabaseColumn(), e.getmData());
-        }
-        for (CheckBoxOption c : checkBoxOptions){
-            initialValues.put(c.getmDatabaseColumn(), c.getmData());
-        }
+        initialValues.put(KEY_GAME, convertObjectToString(game));
 
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }
@@ -239,6 +162,8 @@ public class ScoreDBAdapter {
     }
 
 
+
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context) {
@@ -253,15 +178,6 @@ public class ScoreDBAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-
-            if (newVersion > oldVersion) {
-                for (int i = 0; i < COLUMN_ARRAY.length; i++) {
-                    if (!columnExistsInTable(COLUMN_ARRAY[i], db)) {
-                        db.execSQL("ALTER TABLE " + SQLITE_TABLE + " ADD COLUMN " + COLUMN_ARRAY[i] + " TEXT");
-                    }
-                }
-            }
-
             onCreate(db);
 
         }

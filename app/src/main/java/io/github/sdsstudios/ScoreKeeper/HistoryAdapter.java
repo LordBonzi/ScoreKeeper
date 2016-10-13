@@ -23,22 +23,26 @@ import java.util.List;
  * Created by seth on 08/05/16.
  */
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
+    public static final int COMPLETED = 1;
+    public static final int UNFINISHED = 2;
+    public static final int BOTH = 3;
 
-    public static List<GameModel> mGameModel;
+    public static List<HistoryModel> mItemArray;
     private static Context context;
     private int numGames;
-    private GameModel gameModel;
     public static boolean actionModeDisabled = true;
     private ViewHolder.ClickListener clickListener;
     private boolean recentGames;
+    private int mGamesToShow;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<GameModel> gameModel, Context context1, ViewHolder.ClickListener clickListener, boolean recentGames) {
-        mGameModel = gameModel;
-        context = context1;
-        numGames =gameModel.size();
+    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, boolean recentGames, int mGamesToShow) {
+        this.mItemArray = mItemArray;
+        this.context = context;
+        numGames =mItemArray.size();
         this.clickListener = clickListener;
         this.recentGames = recentGames;
+        this.mGamesToShow = mGamesToShow;
     }
 
     public void removeItem(int position) {
@@ -92,7 +96,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     private void removeRange(int positionStart, int itemCount) {
         for (int i = 0; i < itemCount; ++i) {
-            mGameModel.remove(positionStart);
+            mItemArray.remove(positionStart);
         }
         notifyItemRangeRemoved(positionStart, itemCount);
     }
@@ -115,12 +119,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
         ViewHolder vh = new ViewHolder(view, clickListener);
 
-
         return vh;
-    }
-
-    public int getItemID(int position){
-        return mGameModel.get(mGameModel.size() - position - 1).getGameID();
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -130,17 +129,16 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        Collections.sort(mGameModel, new Comparator<GameModel>() {
+        Collections.sort(mItemArray, new Comparator<HistoryModel>() {
             @Override
-            public int compare(GameModel r1, GameModel r2) {
+            public int compare(HistoryModel model1, HistoryModel model2) {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date1 = null;
                 Date date2 = null;
-                DataHelper dataHelper = new DataHelper();
 
                 try {
-                    date1 = df.parse(dataHelper.getStringById(r1.getGameID(), ScoreDBAdapter.KEY_TIME, new ScoreDBAdapter(context)));
-                    date2 = df.parse(dataHelper.getStringById(r2.getGameID(), ScoreDBAdapter.KEY_TIME, new ScoreDBAdapter(context)));
+                    date1 = df.parse(model1.getmDate());
+                    date2 = df.parse(model2.getmDate());
                 } catch (ParseException e) {
                     e.printStackTrace();
                     Log.e("historyadapter", e.toString());
@@ -157,36 +155,36 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
             }
         });
 
-        if (mGameModel.size() == 0){
+        if (mItemArray.size() == 0){
             Toast.makeText(context, "How did you start History? There are no games!!!. Email developer in About", Toast.LENGTH_LONG).show();
 
-        }else if(mGameModel.size() > 0){
+        }else if(mItemArray.size() > 0){
 
             try {
 
-                gameModel = mGameModel.get(mGameModel.size() - position - 1);
+                HistoryModel item = mItemArray.get(mItemArray.size() - position - 1);
 
                 if (!recentGames){
 
                     TypedValue outValue = new TypedValue();
 
-                    holder.textViewHistoryType.setText(gameModel.getType());
-                    holder.textViewHistoryInProgress.setText(gameModel.getState());
+                    holder.textViewHistoryType.setText(item.getmPlayers());
+                    holder.textViewHistoryInProgress.setText(item.getmIsUnfinished());
 
                     holder.textViewHistoryInProgress.setAllCaps(true);
 
-                    if (isSelected(gameModel.getGameID()) ) {
+                    if (isSelected(item.getmID()) ) {
                         context.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
                         holder.relativeLayout.setBackgroundResource(outValue.resourceId);
-                    } else if (!isSelected(gameModel.getGameID()) || actionModeDisabled){
+                    } else if (!isSelected(item.getmID()) || actionModeDisabled){
                         context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
                         holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                     }
                 }
 
-                holder.textViewHistoryPlayers.setText(gameModel.getPlayers());
-                holder.textViewHistoryScore.setText(gameModel.getmScore());
-                holder.textViewHistoryDate.setText(String.valueOf(gameModel.getDate()));
+                holder.textViewHistoryPlayers.setText(item.getmPlayers());
+                holder.textViewHistoryScore.setText(item.getmScores());
+                holder.textViewHistoryDate.setText(String.valueOf(item.getmDate()));
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -245,9 +243,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         @Override
         public void onClick(View view) {
             if (listener != null) {
-                final GameModel gameModel;
-                gameModel = mGameModel.get(mGameModel.size()-getAdapterPosition()-1);
-                listener.onItemClicked(getAdapterPosition(), gameModel.getGameID());
+                final HistoryModel item;
+                item = mItemArray.get(mItemArray.size()-getAdapterPosition()-1);
+                listener.onItemClicked(getAdapterPosition(), item.getmID());
             }
 
         }
@@ -256,9 +254,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         public boolean onLongClick(View view) {
 
             if (listener != null) {
-                final GameModel gameModel;
-                gameModel = mGameModel.get(mGameModel.size()-getAdapterPosition()-1);
-                return listener.onItemLongClicked(getAdapterPosition(), gameModel.getGameID());
+                final HistoryModel item;
+                item = mItemArray.get(mItemArray.size()-getAdapterPosition()-1);
+                return listener.onItemLongClicked(getAdapterPosition(), item.getmID());
             }
 
             return true;

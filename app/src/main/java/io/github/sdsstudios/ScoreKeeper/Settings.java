@@ -34,7 +34,7 @@ public class Settings extends PreferenceActivity{
     private FirebaseAnalytics mFirebaseAnalytics;
     private AppCompatDelegate mDelegate;
     private Preference deletePreference, timeLimitPreference, numGamesPreference
-            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference, mCreateGamesPreference;
+            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference, mCreateGamesPreference, mDeleteAllPresets;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
     AlertDialog dialog;
     private DataHelper dataHelper;
@@ -86,6 +86,7 @@ public class Settings extends PreferenceActivity{
         exportPreference = findPreference("prefExport");
         importPreference = findPreference("prefImport");
         mCreateGamesPreference = findPreference("prefCreateGames");
+        mDeleteAllPresets = findPreference("prefDeleteAllPresets");
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -174,6 +175,40 @@ public class Settings extends PreferenceActivity{
                             dbHelper.deleteAllgames();
                             Toast.makeText(Settings.this, "Successfully deleted games", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
+                            Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+                return true;
+            }
+        });
+
+        mDeleteAllPresets.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                builder.setTitle(getResources().getString(R.string.delete_all_games) + "?");
+
+                builder.setMessage(R.string.delete_all_games_mes);
+
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            PresetDBAdapter presetDBAdapter = new PresetDBAdapter(Settings.this);
+                            presetDBAdapter.open().deleteAllPresets();
+                            presetDBAdapter.close();
+                            Toast.makeText(Settings.this, "Successfully deleted presets", Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Log.e("Settings", e.toString());
                             Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                     }

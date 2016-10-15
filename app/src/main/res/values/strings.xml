@@ -37,6 +37,7 @@
     </string>
     <string name="github">Our Github</string>
     <string name="delete_all_games">Delete All Games</string>
+    <string name="delete_all_presets">Delete All Presets</string>
     <string name="quit">Quit</string>
     <string name="reset">Reset</string>
     <string name="website" translatable="false">https://sds-studios.github.io/</string>

@@ -51,6 +51,13 @@
             android:key="prefDeleteAllGames"
             />
 
+        <Preference
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:title="@string/delete_all_presets"
+            android:key="prefDeleteAllPresets"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory

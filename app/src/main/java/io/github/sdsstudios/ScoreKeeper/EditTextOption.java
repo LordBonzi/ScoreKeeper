@@ -14,12 +14,12 @@ public class EditTextOption {
 
     private EditText mEditText;
     private String mHint;
-    private Option mOption;
+    private int mID;
 
-    public EditTextOption(EditText mEditText, String mHint, Option o) {
+    public EditTextOption(EditText mEditText, String mHint, int id) {
         this.mEditText = mEditText;
         this.mHint = mHint;
-        this.mOption = o;
+        this.mID = id;
     }
 
     public static List<EditTextOption> loadEditTextOptions(Activity a){
@@ -28,26 +28,26 @@ public class EditTextOption {
         List<EditTextOption> mEditTextOptions = new ArrayList<>();
 
         mEditTextOptions.add(new EditTextOption((EditText) a.findViewById(R.id.editTextMaxScore), a.getString(R.string.max_score)
-                , new Option(Option.WINNING_SCORE, 0)));
+                , Option.WINNING_SCORE));
 
         mEditTextOptions.add(new EditTextOption((EditText) a.findViewById(R.id.editTextScoreInterval), a.getString(R.string.score_interval)
-                , new Option(Option.SCORE_INTERVAL, 0)));
+                , Option.SCORE_INTERVAL));
 
         mEditTextOptions.add(new EditTextOption((EditText) a.findViewById(R.id.editTextDiffToWin), a.getString(R.string.diff_to_win)
-                , new Option(Option.SCORE_DIFF_TO_WIN, 0)));
+                , Option.SCORE_DIFF_TO_WIN));
 
-        mEditTextOptions.add(new EditTextOption((EditText) a.findViewById(R.id.editTextMaxScore), a.getString(R.string.num_sets)
-                , new Option(Option.NUMBER_SETS, 0)));
+        mEditTextOptions.add(new EditTextOption((EditText) a.findViewById(R.id.editTextNumSets), a.getString(R.string.num_sets)
+                , Option.NUMBER_SETS));
 
         return mEditTextOptions;
     }
 
     public int getmID() {
-        return mOption.getmID();
+        return mID;
     }
 
     public void setmID(int mID) {
-        mOption.setmID(mID);
+        this.mID = mID;
     }
 
     public String getmHint() {
@@ -66,19 +66,4 @@ public class EditTextOption {
         this.mEditText = mEditText;
     }
 
-    public int getmData() {
-        return mOption.getmData();
-    }
-
-    public void setmData(int mData) {
-        mOption.setmData(mData);
-    }
-
-    public Option getmOption() {
-        return mOption;
-    }
-
-    public void setmOption(Option mOption) {
-        this.mOption = mOption;
-    }
 }

@@ -18,7 +18,7 @@ public class Game {
     private List<Option> mOptions;
 
     public Game(List<Player> mPlayerArray, String mTimeLimit, String mTitle, String mLength, String mTime, boolean mCompleted, int mID
-                , List<Option> options) {
+            , List<Option> options) {
         this.mPlayerArray = mPlayerArray;
         this.mTimeLimit = mTimeLimit;
         this.mTitle = mTitle;
@@ -27,6 +27,19 @@ public class Game {
         this.mTime = mTime;
         this.mCompleted = mCompleted;
         this.mOptions = options;
+    }
+
+    public static List<Option> createOptionArray(){
+        List<Option> options = new ArrayList<>();
+        for (int i = 0; i < Option.EDIT_TEXT_IDS.length; i++){
+            options.add(new Option(Option.EDIT_TEXT_IDS[i], 0, Option.EDIT_TEXT));
+        }
+
+        for (int i = 0; i < Option.CHECK_BOX_IDS.length; i++){
+            options.add(new Option(Option.CHECK_BOX_IDS[i], 0, Option.CHECK_BOX));
+        }
+
+        return options;
     }
 
     public List<Option> getmOptions() {
@@ -133,11 +146,7 @@ public class Game {
 
     public boolean isChecked(int id){
         Option o = mOptions.get(id);
-        if (o.getmData() == 0){
-            return false;
-        }else {
-            return true;
-        }
+        return o.getmData() != 0;
     }
 
     public void setOptionData(int id, boolean data){
@@ -146,17 +155,6 @@ public class Game {
         }else{
             mOptions.get(id).setmData(1);
         }
-    }
-
-    public static List<Option> createOptionArray(List<EditTextOption> editTextOptions, List<CheckBoxOption> checkBoxOptions){
-        List<Option> options = new ArrayList<>();
-        for (EditTextOption e: editTextOptions){
-            options.add(e.getmOption());
-        }
-        for (CheckBoxOption c: checkBoxOptions){
-            options.add(c.getmOption());
-        }
-        return options;
     }
 
     public void setOptionData(int id, int data){
@@ -176,6 +174,8 @@ public class Game {
         return mPlayerArray.get(position);
     }
 
-
+    public void setOption(Option option){
+        mOptions.set(option.getmID(), option);
+    }
 
 }

@@ -26,6 +26,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener{
 
+    private String TAG = "History";
+
     private Intent newGameIntent;
     private Intent settingsIntent;
     private Intent aboutIntent;
@@ -67,7 +69,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        dbHelper = new ScoreDBAdapter(this).open();
+        dbHelper = new ScoreDBAdapter(this);
         dataHelper = new DataHelper();
         newGameIntent = new Intent(this, NewGame.class);
         aboutIntent = new Intent(this, About.class);
@@ -77,9 +79,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         recyclerView = (RecyclerView)findViewById(R.id.historyRecyclerView);
-
-
-        dbHelper.close();
 
     }
 
@@ -161,7 +160,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     public void displayRecyclerView(){
@@ -169,18 +167,18 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         try {
             if (dbHelper.numRows() != 0) {
-                int type = 3;
+                int type = HistoryAdapter.BOTH;
 
                 if (menuItemCompleted.isChecked()) {
-                    type = 2;
+                    type = HistoryAdapter.COMPLETED;
                 }
 
                 if (menuItemUnfinished.isChecked()) {
-                    type = 1;
+                    type = HistoryAdapter.UNFINISHED;
                 }
 
                 if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()) {
-                    type = 3;
+                    type = HistoryAdapter.BOTH;
                 }
 
                 RecyclerView.LayoutManager mLayoutManager;
@@ -191,11 +189,14 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             } else {
                 recyclerView.setVisibility(View.INVISIBLE);
             }
-        }catch (Exception ignore){
-            ignore.printStackTrace();
-            Log.e("HistoryAdapter", ignore.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
             Toast.makeText(this, "Error opening History", Toast.LENGTH_SHORT).show();
+
         }
+
         dbHelper.close();
     }
 

@@ -50,7 +50,7 @@ public class ScoreDBAdapter{
     }
 
 
-    public String convertObjectToString(Game game){
+    public String convertGameToString(Game game){
         Gson gson = new GsonBuilder().serializeNulls().create();
         return gson.toJson(game);
     }
@@ -61,7 +61,7 @@ public class ScoreDBAdapter{
 
         try {
 
-            arrayList = convertObjectToString(game);
+            arrayList = convertGameToString(game);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class ScoreDBAdapter{
         }
 
 
-        initialValues.put(KEY_GAME, convertObjectToString(game));
+        initialValues.put(KEY_GAME, convertGameToString(game));
 
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }

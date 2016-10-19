@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
     private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         String time = sdfDate.format(now);
-        mGame.setmTitle(time);
+        mGame.setmTime(time);
 
         if (savedInstanceState != null) {
             gameID = savedInstanceState.getInt(STATE_GAMEID);
@@ -196,6 +195,7 @@ public class MainActivity extends AppCompatActivity
         mScoreInterval = mGame.getData(Option.SCORE_INTERVAL);
         mReverseScoring = mGame.isChecked(Option.REVERSE_SCORING);
         mMaxScore = mGame.getData(Option.WINNING_SCORE);
+
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;

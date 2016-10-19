@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -128,38 +129,29 @@ public class EditGame extends AppCompatActivity {
         mEditTextOptions = EditTextOption.loadEditTextOptions(this);
         mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions(this);
 
-        for (EditTextOption e : mEditTextOptions){
+        for (Option o : mGame.getmOptions()){
 
-            if (e.getmData() != 0){
 
-                e.getmEditText().setText(String.valueOf(e.getmData()));
-            }
+            switch (o.getmViewType()){
 
-            e.getmEditText().setEnabled(false);
-        }
+                case Option.EDIT_TEXT:
 
-        for (final CheckBoxOption c : mCheckBoxOptions){
-
-            c.getmCheckBox().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (c.getmCheckBox().isChecked()){
-                        c.setmChecked(true);
-                    }else {
-                        c.setmChecked(false);
-
+                    if (o.getmData() != 0) {
+                        getEditText(o.getmID()).setText(String.valueOf(o.getmData()));
                     }
-                }
-            });
 
-            if (c.ismChecked()){
-                c.getmCheckBox().setChecked(true);
-            }else{
-                c.getmCheckBox().setChecked(false);
+                    break;
+
+                case Option.CHECK_BOX:
+
+                    if (o.isChecked()){
+                        getCheckBox(o.getmID()).setChecked(true);
+                    }else{
+                        getCheckBox(o.getmID()).setChecked(false);
+                    }
+
+                    break;
             }
-
-            c.getmCheckBox().setEnabled(false);
-
         }
 
         mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
@@ -211,6 +203,26 @@ public class EditGame extends AppCompatActivity {
         displayRecyclerView(false);
 
 
+    }
+
+    private CheckBox getCheckBox(int id){
+        return mCheckBoxOptions.get(id).getmCheckBox();
+    }
+
+    private Option getOption(int id){
+        return mGame.getmOptions().get(id);
+    }
+
+    private EditText getEditText(int id){
+        return mEditTextOptions.get(id).getmEditText();
+    }
+
+    private EditTextOption getEditTextOption(int id){
+        return mEditTextOptions.get(id);
+    }
+
+    private CheckBoxOption getCheckBoxOptions(int id){
+        return mCheckBoxOptions.get(id);
     }
 
 
@@ -424,8 +436,6 @@ public class EditGame extends AppCompatActivity {
         }
 
         for (final EditTextOption e: mEditTextOptions){
-            e.getmEditText().setEnabled(true);
-
             e.getmEditText().addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -436,14 +446,15 @@ public class EditGame extends AppCompatActivity {
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     try
                     {
-                        e.setmData(Integer.parseInt(charSequence.toString()));
+                        getOption(e.getmID()).setmData(Integer.parseInt(charSequence.toString()));
                     }
                     catch (NumberFormatException error)
                     {
                         error.printStackTrace();
-                        e.setmData(0);
+                        getOption(e.getmID()).setmData(0);
 
                     }
+
                 }
 
                 @Override
@@ -610,22 +621,27 @@ public class EditGame extends AppCompatActivity {
         editTextDate.setEnabled(false);
         editTextLength.setEnabled(false);
 
-        for (CheckBoxOption c : mCheckBoxOptions){
-            c.getmCheckBox().setEnabled(false);
+        for (Option o : mGame.getmOptions()){
 
-            if (c.ismChecked()){
-                c.getmCheckBox().setChecked(true);
-            }else{
-                c.getmCheckBox().setChecked(false);
-            }
-        }
+            switch (o.getmViewType()){
 
-        for (EditTextOption e :mEditTextOptions){
-            e.getmEditText().setEnabled(false);
+                case Option.EDIT_TEXT:
 
-            e.getmEditText().setText("");
-            if (e.getmData() != 0) {
-                e.getmEditText().setText(String.valueOf(e.getmData()));
+                    if (o.getmData() != 0) {
+                        getEditText(o.getmID()).setText(String.valueOf(o.getmData()));
+                    }
+
+                    break;
+
+                case Option.CHECK_BOX:
+
+                    if (o.isChecked()){
+                        getCheckBox(o.getmID()).setChecked(true);
+                    }else{
+                        getCheckBox(o.getmID()).setChecked(false);
+                    }
+
+                    break;
             }
         }
 

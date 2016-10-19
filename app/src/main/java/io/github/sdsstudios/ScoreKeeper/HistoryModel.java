@@ -79,7 +79,7 @@ public class HistoryModel {
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
-        for (int i = 1; i < dbAdapter.numRows(); i++){
+        for (int i = 0; i < dbAdapter.numRows(); i++){
             gameList.add(dataHelper.getGame(i, dbAdapter));
         }
 

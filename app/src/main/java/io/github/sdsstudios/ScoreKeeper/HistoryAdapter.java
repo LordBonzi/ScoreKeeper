@@ -23,6 +23,8 @@ import java.util.List;
  * Created by seth on 08/05/16.
  */
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
+    private String TAG = "HistoryAdapter";
+
     public static final int COMPLETED = 1;
     public static final int UNFINISHED = 2;
     public static final int BOTH = 3;
@@ -39,7 +41,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, boolean recentGames, int mGamesToShow) {
         this.mItemArray = mItemArray;
         this.context = context;
-        numGames =mItemArray.size();
+        numGames = mItemArray.size();
         this.clickListener = clickListener;
         this.recentGames = recentGames;
         this.mGamesToShow = mGamesToShow;
@@ -156,7 +158,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         });
 
         if (mItemArray.size() == 0){
-            Toast.makeText(context, "How did you start History? There are no games!!!. Email developer in About", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will reply", Toast.LENGTH_LONG).show();
 
         }else if(mItemArray.size() > 0){
 
@@ -188,7 +190,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
             }catch (Exception e){
                 e.printStackTrace();
-                Log.e("History Adapter", e.toString());
+                Log.e(TAG, e.toString());
 
             }
 

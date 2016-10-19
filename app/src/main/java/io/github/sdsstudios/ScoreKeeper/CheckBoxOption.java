@@ -15,12 +15,11 @@ public class CheckBoxOption{
     private CheckBox mCheckBox;
     private String mHint;
     private int mID;
-    private Option mOption;
 
-    public CheckBoxOption(CheckBox mEditText, String mHint, Option o) {
+    public CheckBoxOption(CheckBox mEditText, String mHint, int mID) {
         this.mCheckBox = mEditText;
         this.mHint = mHint;
-        this.mOption = o;
+        this.mID = mID;
     }
 
     public static List<CheckBoxOption> loadCheckBoxOptions(Activity a){
@@ -29,10 +28,10 @@ public class CheckBoxOption{
         List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
         mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxStopwatch), a.getString(R.string.stopwatch)
-                , new Option(Option.STOPWATCH, 0)));
+        , Option.STOPWATCH));
 
         mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxReverseScoring), a.getString(R.string.reverse_scoring)
-                , new Option(Option.REVERSE_SCORING, 0)));
+        , Option.REVERSE_SCORING));
 
         return mCheckBoxOptions;
     }
@@ -61,27 +60,8 @@ public class CheckBoxOption{
         this.mCheckBox = mEditText;
     }
 
-    public boolean ismChecked() {
-        if (mOption.getmData() == 0){
-            return false;
-        }else{
-            return true;
-        }
+    public void setChecked(boolean isChecked){
+        mCheckBox.setChecked(isChecked);
     }
 
-    public void setmChecked(boolean mChecked) {
-        if (!mChecked){
-            mOption.setmData(0);
-        }else{
-            mOption.setmData(1);
-        }
-    }
-
-    public Option getmOption() {
-        return mOption;
-    }
-
-    public void setmOption(Option mOption) {
-        this.mOption = mOption;
-    }
 }

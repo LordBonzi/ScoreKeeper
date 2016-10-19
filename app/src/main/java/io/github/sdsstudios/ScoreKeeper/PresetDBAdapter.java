@@ -37,7 +37,6 @@ public class PresetDBAdapter {
         this.mCtx = ctx;
     }
 
-
     public PresetDBAdapter open() throws SQLException {
         close();
         if (mDbHelper == null) {

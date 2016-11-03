@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,6 +64,8 @@ public class TimeHelper {
         if (!TimeZone.getTimeZone("GMT").inDaylightTime(d)){
             timeLong = timeLong - 3600000;
         }
+
+        Log.e("timehelper", "" + timeLong);
         return timeLong;
     }
 

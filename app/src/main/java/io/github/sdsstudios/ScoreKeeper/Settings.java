@@ -172,7 +172,7 @@ public class Settings extends PreferenceActivity{
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            dbHelper.deleteAllgames();
+                            dbHelper.open().deleteAllgames();
                             Toast.makeText(Settings.this, "Successfully deleted games", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -235,8 +235,6 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-
-
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
@@ -248,7 +246,6 @@ public class Settings extends PreferenceActivity{
         });
 
         dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
 
         homeIntent = new Intent(this, Home.class);
 

@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,10 +14,12 @@ public class Game {
     private String mTime;
     private boolean mCompleted;
     private int mID;
-    private List<Option> mOptions;
+
+    private List<EditTextOption> mEditTextOptions;
+    private List<CheckBoxOption> mCheckBoxOptions;
 
     public Game(List<Player> mPlayerArray, String mTimeLimit, String mTitle, String mLength, String mTime, boolean mCompleted, int mID
-            , List<Option> options) {
+            , List<EditTextOption> editTextOptions, List<CheckBoxOption> checkBoxOptions) {
         this.mPlayerArray = mPlayerArray;
         this.mTimeLimit = mTimeLimit;
         this.mTitle = mTitle;
@@ -26,30 +27,9 @@ public class Game {
         this.mLength = mLength;
         this.mTime = mTime;
         this.mCompleted = mCompleted;
-        this.mOptions = options;
+        this.mEditTextOptions = editTextOptions;
+        this.mCheckBoxOptions = checkBoxOptions;
     }
-
-    public static List<Option> createOptionArray(){
-        List<Option> options = new ArrayList<>();
-        for (int i = 0; i < Option.EDIT_TEXT_IDS.length; i++){
-            options.add(new Option(Option.EDIT_TEXT_IDS[i], 0, Option.EDIT_TEXT));
-        }
-
-        for (int i = 0; i < Option.CHECK_BOX_IDS.length; i++){
-            options.add(new Option(Option.CHECK_BOX_IDS[i], 0, Option.CHECK_BOX));
-        }
-
-        return options;
-    }
-
-    public List<Option> getmOptions() {
-        return mOptions;
-    }
-
-    public void setmOptions(List<Option> mOptions) {
-        this.mOptions = mOptions;
-    }
-
 
     public boolean ismCompleted() {
         return mCompleted;
@@ -130,7 +110,8 @@ public class Game {
 
     public int getData(int id){
         int data = 1;
-        for (Option e: mOptions){
+
+        for (EditTextOption e: mEditTextOptions){
             if (e.getmID() == id){
                 data = e.getmData();
                 break;
@@ -140,25 +121,41 @@ public class Game {
         return data;
     }
 
+    public List<EditTextOption> getmEditTextOptions() {
+        return mEditTextOptions;
+    }
+
+    public void setmEditTextOptions(List<EditTextOption> mEditTextOptions) {
+        this.mEditTextOptions = mEditTextOptions;
+    }
+
+    public List<CheckBoxOption> getmCheckBoxOptions() {
+        return mCheckBoxOptions;
+    }
+
+    public void setmCheckBoxOptions(List<CheckBoxOption> mCheckBoxOptions) {
+        this.mCheckBoxOptions = mCheckBoxOptions;
+    }
+
     public int numSets(){
-        return mOptions.get(Option.NUMBER_SETS).getmData();
+        return mEditTextOptions.get(EditTextOption.NUMBER_SETS).getmData();
     }
 
     public boolean isChecked(int id){
-        Option o = mOptions.get(id);
-        return o.getmData() != 0;
+        return mCheckBoxOptions.get(id).getmData() != 0;
     }
 
-    public void setOptionData(int id, boolean data){
+    public void setChecked(int id, boolean data){
+
         if (!data){
-            mOptions.get(id).setmData(0);
+            mCheckBoxOptions.get(id).setmData(0);
         }else{
-            mOptions.get(id).setmData(1);
+            mCheckBoxOptions.get(id).setmData(1);
         }
     }
 
-    public void setOptionData(int id, int data){
-        mOptions.get(id).setmData(data);
+    public void setData(int id, int data){
+        mEditTextOptions.get(id).setmData(data);
     }
 
     public void addPlayer(Player player){
@@ -174,8 +171,13 @@ public class Game {
         return mPlayerArray.get(position);
     }
 
-    public void setOption(Option option){
-        mOptions.set(option.getmID(), option);
+    public void setmEditTextOption(EditTextOption option){
+        mEditTextOptions.set(option.getmID(), option);
+    }
+
+    public void setmCheckBoxOption(CheckBoxOption checkBoxOption){
+        mCheckBoxOptions.set(checkBoxOption.getmID(), checkBoxOption);
     }
 
 }
+

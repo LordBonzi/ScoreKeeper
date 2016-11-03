@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity
 
         Bundle extras = getIntent().getExtras();
         gameID = extras.getInt("gameID");
+
+        Log.e(TAG, "" + gameID);
+
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 // Restore value of members from saved state
         sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
@@ -148,12 +151,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        AdView mAdView;
-        if (mGame.size() > 2) {
-            mAdView = (AdView) findViewById(R.id.adViewHome2);
-        }else{
-            mAdView = (AdView) findViewById(R.id.adViewHome);
-        }
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
 
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
@@ -191,10 +189,10 @@ public class MainActivity extends AppCompatActivity
 
     public void loadGame() {
 
-        mScoreDiffToWin = mGame.getData(Option.SCORE_DIFF_TO_WIN);
-        mScoreInterval = mGame.getData(Option.SCORE_INTERVAL);
-        mReverseScoring = mGame.isChecked(Option.REVERSE_SCORING);
-        mMaxScore = mGame.getData(Option.WINNING_SCORE);
+        mScoreDiffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
+        mScoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
+        mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
+        mMaxScore = mGame.getData(EditTextOption.WINNING_SCORE);
 
 
         if (mScoreInterval == 0) {
@@ -352,7 +350,7 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         chronometerClick();
 
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
             mGame.setmLength(stopwatch.getText().toString());
         }
 
@@ -466,7 +464,7 @@ public class MainActivity extends AppCompatActivity
                         p.setmScore(0);
                     }
 
-                    if (mGame.isChecked(Option.STOPWATCH)) {
+                    if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                         mGame.setmLength(stopwatch.getText().toString());
                     }
 
@@ -616,7 +614,7 @@ public class MainActivity extends AppCompatActivity
 
             alertDialog.dismiss();
 
-            if (mGame.isChecked(Option.STOPWATCH)) {
+            if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                 mGame.setmLength(stopwatch.getText().toString());
             }
 
@@ -649,7 +647,7 @@ public class MainActivity extends AppCompatActivity
         isPaused = true;
         chronometerClick();
 
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
             mGame.setmLength(stopwatch.getText().toString());
         }
 
@@ -657,7 +655,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void chronometerClick() {
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
             if (!isPaused) {
                 stopwatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                 stopwatch.start();
@@ -681,7 +679,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.buttonP1:
                 onScoreButtonClick(buttonP1);
 
-                if (mGame.isChecked(Option.STOPWATCH)) {
+                if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                     mGame.setmLength(stopwatch.getText().toString());
                 }
 
@@ -691,7 +689,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.buttonP2:
                 onScoreButtonClick(buttonP2);
 
-                if (mGame.isChecked(Option.STOPWATCH)) {
+                if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                     mGame.setmLength(stopwatch.getText().toString());
                 }
 
@@ -750,7 +748,7 @@ public class MainActivity extends AppCompatActivity
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(Option.STOPWATCH)) {
+                    if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                         mGame.setmLength(stopwatch.getText().toString());
                     }
 
@@ -765,7 +763,7 @@ public class MainActivity extends AppCompatActivity
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(Option.STOPWATCH)) {
+                    if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                         mGame.setmLength(stopwatch.getText().toString());
                     }
 
@@ -845,7 +843,7 @@ public class MainActivity extends AppCompatActivity
             builder.setNeutralButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(Option.STOPWATCH)) {
+                    if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                         mGame.setmLength(stopwatch.getText().toString());
                     }
 
@@ -859,7 +857,7 @@ public class MainActivity extends AppCompatActivity
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(Option.STOPWATCH)) {
+                    if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                         mGame.setmLength(stopwatch.getText().toString());
                     }
 
@@ -1181,7 +1179,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
         }
 
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
             mGame.setmLength(stopwatch.getText().toString());
         }
 
@@ -1287,7 +1285,7 @@ public class MainActivity extends AppCompatActivity
 
                             alertDialog.dismiss();
 
-                            if (mGame.isChecked(Option.STOPWATCH)) {
+                            if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                                 mGame.setmLength(stopwatch.getText().toString());
                             }
 
@@ -1344,22 +1342,18 @@ public class MainActivity extends AppCompatActivity
             fabChronometer.setOnClickListener(this);
         }
 
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
+
             try {
-
-                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(Option.STOPWATCH)) {
+                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                     mGame.setmLength("00:00:00:0");
-                }
-
-                if (mGame.getmLength() != null) {
-                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(mGame.getmLength()) + SystemClock.elapsedRealtime())));
+                }else{
+                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
                 timeLimitReached(stopwatch);
 
-                if (finished) {
-
-                } else {
+                if (!finished){
                     stopwatch.start();
                     fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
                     stopwatch.setTextColor(getResources().getColor(R.color.start));

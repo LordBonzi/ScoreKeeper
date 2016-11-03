@@ -94,7 +94,7 @@ public class TimeLimitAdapter extends BaseAdapter{
 
                 if (position < timeLimitArray.size() -1){
                     timeLimit = timeLimitArrayNum.get(position).toString();
-                    NewGame.spinnerTimeLimit.setSelection(position);
+                    NewGame.SPINNER_TIME_LIMIT.setSelection(position);
 
                     Game g = dataHelper.getGame(gameID, dbHelper);
                     g.setmTimeLimit(timeLimit);
@@ -209,14 +209,14 @@ public class TimeLimitAdapter extends BaseAdapter{
                                                     if (dataHelper.checkDuplicates(timeLimitArray)) {
                                                         timeLimitArray.remove(timeLimitArray.size() - 2);
                                                         timeLimitArrayNum.remove(timeLimitArrayNum.size() - 2);
-                                                        Snackbar snackbar = Snackbar.make(NewGame.relativeLayout, "Already exists", Snackbar.LENGTH_SHORT);
+                                                        Snackbar snackbar = Snackbar.make(NewGame.RELATIVE_LAYOUT, "Already exists", Snackbar.LENGTH_SHORT);
                                                         snackbar.show();
 
                                                     }
 
                                                     notifyDataSetChanged();
                                                     alertDialog.dismiss();
-                                                    NewGame.spinnerTimeLimit.setSelection(timeLimitArray.size() - 2);
+                                                    NewGame.SPINNER_TIME_LIMIT.setSelection(timeLimitArray.size() - 2);
                                                     saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
 
                                                 } else {

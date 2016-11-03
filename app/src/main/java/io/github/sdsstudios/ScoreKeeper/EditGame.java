@@ -54,6 +54,7 @@ public class EditGame extends AppCompatActivity {
     private Intent mShareIntent;
 
     private NestedScrollView mScrollView;
+
     private List<OptionCardView> mCardViewList = new ArrayList<>();
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
@@ -126,33 +127,10 @@ public class EditGame extends AppCompatActivity {
 
         mGame = dataHelper.getGame(gameID, dbHelper);
 
-        mEditTextOptions = EditTextOption.loadEditTextOptions(this);
-        mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions(this);
+        mEditTextOptions = mGame.getmEditTextOptions();
+        mCheckBoxOptions = mGame.getmCheckBoxOptions();
 
-        for (Option o : mGame.getmOptions()){
-
-
-            switch (o.getmViewType()){
-
-                case Option.EDIT_TEXT:
-
-                    if (o.getmData() != 0) {
-                        getEditText(o.getmID()).setText(String.valueOf(o.getmData()));
-                    }
-
-                    break;
-
-                case Option.CHECK_BOX:
-
-                    if (o.isChecked()){
-                        getCheckBox(o.getmID()).setChecked(true);
-                    }else{
-                        getCheckBox(o.getmID()).setChecked(false);
-                    }
-
-                    break;
-            }
-        }
+        loadOptions();
 
         mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
                 , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
@@ -206,25 +184,12 @@ public class EditGame extends AppCompatActivity {
     }
 
     private CheckBox getCheckBox(int id){
-        return mCheckBoxOptions.get(id).getmCheckBox();
-    }
-
-    private Option getOption(int id){
-        return mGame.getmOptions().get(id);
+        return ((CheckBox) findViewById(id));
     }
 
     private EditText getEditText(int id){
-        return mEditTextOptions.get(id).getmEditText();
+        return ((EditText) findViewById(id));
     }
-
-    private EditTextOption getEditTextOption(int id){
-        return mEditTextOptions.get(id);
-    }
-
-    private CheckBoxOption getCheckBoxOptions(int id){
-        return mCheckBoxOptions.get(id);
-    }
-
 
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -432,11 +397,11 @@ public class EditGame extends AppCompatActivity {
         menuItemComplete.setVisible(false);
 
         for (CheckBoxOption c: mCheckBoxOptions){
-            c.getmCheckBox().setEnabled(true);
+            getCheckBox(c.getmID()).setEnabled(true);
         }
 
         for (final EditTextOption e: mEditTextOptions){
-            e.getmEditText().addTextChangedListener(new TextWatcher() {
+            getEditText(e.getmID()).addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -446,12 +411,12 @@ public class EditGame extends AppCompatActivity {
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     try
                     {
-                        getOption(e.getmID()).setmData(Integer.parseInt(charSequence.toString()));
+                        e.setmData(Integer.parseInt(charSequence.toString()));
                     }
                     catch (NumberFormatException error)
                     {
                         error.printStackTrace();
-                        getOption(e.getmID()).setmData(0);
+                        e.setmData(0);
 
                     }
 
@@ -481,23 +446,26 @@ public class EditGame extends AppCompatActivity {
 
     public void onMenuDoneClick() {
         playerListAdapter.deleteEmptyPlayers(mGame);
+
+        //TODO fix this mess with pulling Game from playerlistadapter
+
         mGame = playerListAdapter.getGame();
 
         final String newDate = editTextDate.getText().toString();
         final String newLength = editTextLength.getText().toString();
 
         if (!checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
-            mGame.setOptionData(Option.STOPWATCH, true);
+            mGame.setChecked(CheckBoxOption.STOPWATCH, true);
             bLength = true;
             invalidSnackbar(getString(R.string.invalid_time));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
             bLength = false;
-            mGame.setOptionData(Option.STOPWATCH, false);
+            mGame.setChecked(CheckBoxOption.STOPWATCH, false);
 
         }else if(checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
             bLength = false;
-            mGame.setOptionData(Option.STOPWATCH, true);
+            mGame.setChecked(CheckBoxOption.STOPWATCH, true);
         }
 
         final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
@@ -539,10 +507,10 @@ public class EditGame extends AppCompatActivity {
                     dbHelper.updateGame(mGame);
 
                     for (CheckBoxOption c : mCheckBoxOptions){
-                        c.getmCheckBox().setEnabled(false);
+                        getCheckBox(c.getmCheckBoxID()).setEnabled(false);
                     }
                     for (EditTextOption e : mEditTextOptions){
-                        e.getmEditText().setEnabled(false);
+                        getEditText(e.getmEditTextID()).setEnabled(false);
                     }
 
                     editTextLength.setText(mGame.getmLength());
@@ -621,36 +589,31 @@ public class EditGame extends AppCompatActivity {
         editTextDate.setEnabled(false);
         editTextLength.setEnabled(false);
 
-        for (Option o : mGame.getmOptions()){
-
-            switch (o.getmViewType()){
-
-                case Option.EDIT_TEXT:
-
-                    if (o.getmData() != 0) {
-                        getEditText(o.getmID()).setText(String.valueOf(o.getmData()));
-                    }
-
-                    break;
-
-                case Option.CHECK_BOX:
-
-                    if (o.isChecked()){
-                        getCheckBox(o.getmID()).setChecked(true);
-                    }else{
-                        getCheckBox(o.getmID()).setChecked(false);
-                    }
-
-                    break;
-            }
-        }
+        loadOptions();
 
         displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void loadOptions(){
+        for (EditTextOption e : mEditTextOptions){
 
-    public boolean moreThanTwoPlayers(){
+            if (e.getmData() != 0) {
+                getEditText(e.getmID()).setText(String.valueOf(e.getmData()));
+            }
+
+        }
+
+        for(CheckBoxOption c : mCheckBoxOptions){
+            if (c.isChecked()){
+                getCheckBox(c.getmCheckBoxID()).setChecked(true);
+            }else{
+                getCheckBox(c.getmCheckBoxID()).setChecked(false);
+            }
+        }
+    }
+
+    private boolean moreThanTwoPlayers(){
         return mGame.size() >= 2;
     }
 

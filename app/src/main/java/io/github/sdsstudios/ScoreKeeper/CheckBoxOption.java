@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
-import android.widget.CheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +9,22 @@ import java.util.List;
  * Created by seth on 18/09/16.
  */
 
-public class CheckBoxOption{
+public class CheckBoxOption extends Option{
 
-    private CheckBox mCheckBox;
+    //DO NOT CHANGE VALUES. WILL CRASH THE APP IF CHANGED
+
+    //Checkbox IDs only
+    public static final int STOPWATCH = 0;
+    public static final int REVERSE_SCORING = 1;
+    //ADD NEW POINTERS HERE
+
+    private int mCheckBoxID;
     private String mHint;
-    private int mID;
 
-    public CheckBoxOption(CheckBox mEditText, String mHint, int mID) {
-        this.mCheckBox = mEditText;
+    public CheckBoxOption(int mCheckBoxID, String mHint, int id, int data) {
+        super(id, data);
+        this.mCheckBoxID = mCheckBoxID;
         this.mHint = mHint;
-        this.mID = mID;
     }
 
     public static List<CheckBoxOption> loadCheckBoxOptions(Activity a){
@@ -27,21 +32,13 @@ public class CheckBoxOption{
 
         List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
-        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxStopwatch), a.getString(R.string.stopwatch)
-        , Option.STOPWATCH));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch, a.getString(R.string.stopwatch)
+        , CheckBoxOption.STOPWATCH, 0));
 
-        mCheckBoxOptions.add(new CheckBoxOption((CheckBox) a.findViewById(R.id.checkBoxReverseScoring), a.getString(R.string.reverse_scoring)
-        , Option.REVERSE_SCORING));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring, a.getString(R.string.reverse_scoring)
+        , CheckBoxOption.REVERSE_SCORING, 0));
 
         return mCheckBoxOptions;
-    }
-
-    public int getmID() {
-        return mID;
-    }
-
-    public void setmID(int mID) {
-        this.mID = mID;
     }
 
     public String getmHint() {
@@ -52,16 +49,11 @@ public class CheckBoxOption{
         this.mHint = mHint;
     }
 
-    public CheckBox getmCheckBox() {
-        return mCheckBox;
+    public int getmCheckBoxID() {
+        return mCheckBoxID;
     }
 
-    public void setmCheckBox(CheckBox mEditText) {
-        this.mCheckBox = mEditText;
+    public void setmCheckBoxID(int mCheckBoxID) {
+        this.mCheckBoxID = mCheckBoxID;
     }
-
-    public void setChecked(boolean isChecked){
-        mCheckBox.setChecked(isChecked);
-    }
-
 }

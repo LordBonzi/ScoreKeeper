@@ -42,7 +42,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         activity = mActivity;
         editable = mEditable;
         if(activity == NEW_GAME){
-            relativeLayout = NewGame.relativeLayout;
+            relativeLayout = NewGame.RELATIVE_LAYOUT;
         } else if (activity == EDIT_GAME) {
             relativeLayout = EditGame.editGameLayout;
         }

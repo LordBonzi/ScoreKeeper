@@ -110,7 +110,6 @@ public class ScoreDBAdapter{
 
         }catch (Exception e){
             value = 1;
-
         }
         cursor.close();
 

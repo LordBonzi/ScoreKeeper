@@ -32,10 +32,10 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         this.gameListener = gameListener;
         this.mGame = mGame;
 
-        reverseScoring = mGame.isChecked(Option.REVERSE_SCORING);
-        scoreInterval = mGame.getData(Option.SCORE_INTERVAL);
-        maxScore = mGame.getData(Option.WINNING_SCORE);
-        diffToWin = mGame.getData(Option.SCORE_DIFF_TO_WIN);
+        reverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
+        scoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
+        maxScore = mGame.getData(EditTextOption.WINNING_SCORE);
+        diffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
 
     }
 

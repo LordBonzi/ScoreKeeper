@@ -10,7 +10,7 @@
     android:id="@+id/scrollView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.github.sdsstudios.ScoreKeeper.NewGame">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
 
     <RelativeLayout
         android:id="@+id/newGameLayout"

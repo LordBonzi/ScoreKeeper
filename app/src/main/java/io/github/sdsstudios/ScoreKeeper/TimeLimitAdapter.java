@@ -25,26 +25,23 @@ import java.util.List;
  */
 public class TimeLimitAdapter extends BaseAdapter{
 
-    public static String timeLimit;
-
-    private DataHelper dataHelper;
-    private int gameID;
+    private String mTimeLimit;
+    private DataHelper mDataHelper;
+    private int mGameID;
     private List timeLimitArray;
     private List timeLimitArrayNum;
-    LayoutInflater inflter;
-    private NewGame newGame;
-    private TextView timeLimitTextView;
-    private Context context;
-    private ScoreDBAdapter dbHelper;
-    public static AlertDialog alertDialog = null;
+    private LayoutInflater mInflater;
+    private Context mCtx;
+    private ScoreDBAdapter mDbHelper;
+    private AlertDialog mAlertDialog = null;
 
 
     public TimeLimitAdapter(Context ctx,List objects, List objectsNum, ScoreDBAdapter db, int id) {
-        context = ctx;
+        mCtx = ctx;
         timeLimitArray = objects;
-        inflter = (LayoutInflater.from(ctx));
-        dbHelper = db;
-        gameID = id;
+        mInflater = (LayoutInflater.from(ctx));
+        mDbHelper = db;
+        mGameID = id;
         timeLimitArrayNum = objectsNum;
     }
 
@@ -65,12 +62,11 @@ public class TimeLimitAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-        newGame = new NewGame();
-        dataHelper = new DataHelper();
+        mDataHelper = new DataHelper();
 
-        view = inflter.inflate(R.layout.time_limit_spinner_adapter, null);
+        view = mInflater.inflate(R.layout.time_limit_spinner_adapter, null);
 
-        timeLimitTextView = (TextView) view.findViewById(R.id.textView);
+        TextView timeLimitTextView = (TextView) view.findViewById(R.id.textView);
         timeLimitTextView.setText(timeLimitArray.get(position).toString());
 
         timeLimitTextView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -93,18 +89,18 @@ public class TimeLimitAdapter extends BaseAdapter{
             public void onClick(View view) {
 
                 if (position < timeLimitArray.size() -1){
-                    timeLimit = timeLimitArrayNum.get(position).toString();
+                    mTimeLimit = timeLimitArrayNum.get(position).toString();
                     NewGame.SPINNER_TIME_LIMIT.setSelection(position);
 
-                    Game g = dataHelper.getGame(gameID, dbHelper);
-                    g.setmTimeLimit(timeLimit);
-                    dbHelper.open().updateGame(g);
+                    Game g = mDataHelper.getGame(mGameID, mDbHelper);
+                    g.setmTimeLimit(mTimeLimit);
+                    mDbHelper.open().updateGame(g);
                 }else {
 
                     final View dialogView;
 
-                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-                    dialogView = inflter.inflate(R.layout.create_time_limit, null);
+                    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mCtx);
+                    dialogView = mInflater.inflate(R.layout.create_time_limit, null);
                     EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
                     EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
                     EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
@@ -127,13 +123,13 @@ public class TimeLimitAdapter extends BaseAdapter{
 
                     dialogBuilder.setView(dialogView);
 
-                    alertDialog = dialogBuilder.create();
+                    mAlertDialog = dialogBuilder.create();
 
-                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                         @Override
                         public void onShow(DialogInterface dialogInterface) {
 
-                            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                             b.setOnClickListener(new View.OnClickListener() {
 
                                 @Override
@@ -196,17 +192,17 @@ public class TimeLimitAdapter extends BaseAdapter{
                                                 timeLimitString += "0";
 
                                                 if (!timeLimitString.equals("00:00:00:0")) {
-                                                    dbHelper = new ScoreDBAdapter(context);
+                                                    mDbHelper = new ScoreDBAdapter(mCtx);
 
-                                                    Game g = dataHelper.getGame(gameID, dbHelper);
-                                                    g.setmTimeLimit(timeLimit);
-                                                    dbHelper.open().updateGame(g);
+                                                    Game g = mDataHelper.getGame(mGameID, mDbHelper);
+                                                    g.setmTimeLimit(mTimeLimit);
+                                                    mDbHelper.open().updateGame(g);
 
-                                                    timeLimit = timeLimitString;
-                                                    timeLimitArray.add(timeLimitArray.size() - 1, dataHelper.createTimeLimitCondensed(timeLimitString));
+                                                    mTimeLimit = timeLimitString;
+                                                    timeLimitArray.add(timeLimitArray.size() - 1, mDataHelper.createTimeLimitCondensed(timeLimitString));
                                                     timeLimitArrayNum.add(timeLimitArrayNum.size() - 1, timeLimitString);
 
-                                                    if (dataHelper.checkDuplicates(timeLimitArray)) {
+                                                    if (mDataHelper.checkDuplicates(timeLimitArray)) {
                                                         timeLimitArray.remove(timeLimitArray.size() - 2);
                                                         timeLimitArrayNum.remove(timeLimitArrayNum.size() - 2);
                                                         Snackbar snackbar = Snackbar.make(NewGame.RELATIVE_LAYOUT, "Already exists", Snackbar.LENGTH_SHORT);
@@ -215,18 +211,18 @@ public class TimeLimitAdapter extends BaseAdapter{
                                                     }
 
                                                     notifyDataSetChanged();
-                                                    alertDialog.dismiss();
+                                                    mAlertDialog.dismiss();
                                                     NewGame.SPINNER_TIME_LIMIT.setSelection(timeLimitArray.size() - 2);
                                                     saveSharedPrefs(timeLimitArray, timeLimitArrayNum);
 
                                                 } else {
-                                                    alertDialog.dismiss();
+                                                    mAlertDialog.dismiss();
                                                 }
 
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                                 Log.e("tmelimitadapter", e.toString());
-                                                Toast toast = Toast.makeText(context, R.string.invalid_time, Toast.LENGTH_SHORT);
+                                                Toast toast = Toast.makeText(mCtx, R.string.invalid_time, Toast.LENGTH_SHORT);
                                                 toast.show();
                                             }
                                         }
@@ -235,7 +231,7 @@ public class TimeLimitAdapter extends BaseAdapter{
                             });
                         }
                         });
-                    alertDialog.show();
+                    mAlertDialog.show();
 
                     }
 
@@ -246,7 +242,7 @@ public class TimeLimitAdapter extends BaseAdapter{
 
     public void saveSharedPrefs(List array, List arrayNum){
         DataHelper dataHelper =new DataHelper();
-        SharedPreferences sharedPref = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = mCtx.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putString("timelimitarray", dataHelper.convertToString(array));

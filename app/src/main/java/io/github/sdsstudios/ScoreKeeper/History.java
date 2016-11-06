@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -18,42 +18,46 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
-public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener{
+public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
     private String TAG = "History";
 
-    private Intent newGameIntent;
-    private Intent settingsIntent;
-    private Intent aboutIntent;
-    private RecyclerView.Adapter adapter;
-    private ScoreDBAdapter dbHelper;
-    private RelativeLayout relativeLayout;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private RecyclerView recyclerView;
-    private DataHelper dataHelper;
-    private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
-    private HistoryAdapter historyAdapter;
-    private ActionMode actionMode = null;
-    private int primaryDarkColor;
-    private SharedPreferences sharedPreferences;
+    private Intent mSettingsIntent;
+    private Intent mAboutIntent;
+    private ScoreDBAdapter mDbHelper;
+    private RecyclerView mRecyclerView;
+    private DataHelper mDataHelper;
+    private MenuItem menuItemCompleted;
+    private MenuItem menuItemUnfinished;
+    private HistoryAdapter mHistoryAdapter;
+    private ActionMode mHistoryActionMode = null;
+    private int mPrimaryDarkColor;
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient mGoogleAPIClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        if (colorNavBar){
+        if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
+                getWindow().setNavigationBarColor(mPrimaryDarkColor);
             }
         }
         setTheme(accentColor);
@@ -62,24 +66,23 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
+            getWindow().setStatusBarColor(mPrimaryDarkColor);
         }
         getSupportActionBar();
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        dbHelper = new ScoreDBAdapter(this);
-        dataHelper = new DataHelper();
-        newGameIntent = new Intent(this, NewGame.class);
-        aboutIntent = new Intent(this, About.class);
-        settingsIntent = new Intent(this, Settings.class);
-        relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
+        mDbHelper = new ScoreDBAdapter(this);
+        mDataHelper = new DataHelper();
+        mAboutIntent = new Intent(this, About.class);
+        mSettingsIntent = new Intent(this, Settings.class);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
 
-        recyclerView = (RecyclerView)findViewById(R.id.historyRecyclerView);
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mGoogleAPIClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -98,7 +101,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         menuItemCompleted.setChecked(true);
 
 
-        settingsMenuItem = menu.findItem(R.id.action_settings);
+        MenuItem settingsMenuItem = menu.findItem(R.id.action_settings);
         settingsMenuItem.setVisible(false);
 
         displayRecyclerView();
@@ -110,14 +113,14 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onResume() {
         super.onResume();
-        dbHelper.open();
+        mDbHelper.open();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     @Override
@@ -129,24 +132,27 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(settingsIntent);
+            startActivity(mSettingsIntent);
             return true;
-        }if (id == R.id.action_about) {
-            startActivity(aboutIntent);
+        }
+        if (id == R.id.action_about) {
+            startActivity(mAboutIntent);
             return true;
-        }if (id == R.id.action_unfinished){
-            if (!menuItemCompleted.isChecked()){
+        }
+        if (id == R.id.action_unfinished) {
+            if (!menuItemCompleted.isChecked()) {
                 Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 menuItemUnfinished.setChecked(!menuItemUnfinished.isChecked());
                 displayRecyclerView();
             }
 
-        }if (id == R.id.action_completed){
+        }
+        if (id == R.id.action_completed) {
 
-            if (!menuItemUnfinished.isChecked()){
+            if (!menuItemUnfinished.isChecked()) {
                 Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 menuItemCompleted.setChecked(!menuItemCompleted.isChecked());
 
                 displayRecyclerView();
@@ -162,11 +168,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         super.onBackPressed();
     }
 
-    public void displayRecyclerView(){
-        dbHelper.open();
+    public void displayRecyclerView() {
+        mDbHelper.open();
 
         try {
-            if (dbHelper.numRows() != 0) {
+            if (mDbHelper.numRows() != 0) {
                 int type = HistoryAdapter.BOTH;
 
                 if (menuItemCompleted.isChecked()) {
@@ -183,21 +189,21 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
-                recyclerView.setLayoutManager(mLayoutManager);
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.createHistoryModel(dbHelper, this), this, this, false, type);
-                recyclerView.setAdapter(historyAdapter);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.createHistoryModel(mDbHelper, this), this, this, Pointers.HISTORY, type);
+                mRecyclerView.setAdapter(historyAdapter);
             } else {
-                recyclerView.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.toString());
             Toast.makeText(this, "Error opening History", Toast.LENGTH_SHORT).show();
 
         }
 
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     @Override
@@ -215,17 +221,17 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     }
 
     private void toggleSelection(int position, int gameID) {
-        historyAdapter.toggleSelection(position, gameID);
-        int count = historyAdapter.getSelectedItemCount();
+        mHistoryAdapter.toggleSelection(position, gameID);
+        int count = mHistoryAdapter.getSelectedItemCount();
 
         if (count == 0) {
-            actionMode.finish();
+            mHistoryActionMode.finish();
         } else {
 
             try {
-                actionMode.invalidate();
-                actionMode.setTitle(count + " items selected");
-            }catch (Exception e){
+                mHistoryActionMode.invalidate();
+                mHistoryActionMode.setTitle(count + " items selected");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -234,12 +240,12 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void multiSelectDisabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
+            getWindow().setStatusBarColor(mPrimaryDarkColor);
         }
 
         displayRecyclerView();
-        if (dbHelper.open().numRows() == 0){
-            dbHelper.close();
+        if (mDbHelper.open().numRows() == 0) {
+            mDbHelper.close();
             Intent home = new Intent(this, Home.class);
             startActivity(home);
         }
@@ -248,11 +254,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void onItemClicked(int position, final int gameID) {
 
-        if (actionMode != null) {
+        if (mHistoryActionMode != null) {
             toggleSelection(position, gameID);
-        }else{
+        } else {
 
-            if (!dataHelper.getGame(gameID, dbHelper).ismCompleted()) {
+            if (!mDataHelper.getGame(gameID, mDbHelper).ismCompleted()) {
 
                 AlertDialog dialog;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -264,7 +270,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(History.this, EditGame.class);
-                        intent.putExtra("gameID", gameID);
+                        intent.putExtra("GAME_ID", gameID);
                         startActivity(intent);
                     }
                 });
@@ -273,7 +279,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                     public void onClick(DialogInterface dialog, int id) {
 
                         Intent intent = new Intent(History.this, MainActivity.class);
-                        intent.putExtra("gameID", gameID);
+                        intent.putExtra("GAME_ID", gameID);
                         startActivity(intent);
                     }
 
@@ -288,9 +294,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 dialog = builder.create();
                 dialog.show();
-            }else{
+            } else {
                 Intent intent = new Intent(this, EditGame.class);
-                intent.putExtra("gameID", gameID);
+                intent.putExtra("GAME_ID", gameID);
                 startActivity(intent);
             }
 
@@ -299,12 +305,12 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
-        if (actionMode == null) {
-            actionMode = startSupportActionMode(new History.ActionBarCallback());
+        if (mHistoryActionMode == null) {
+            mHistoryActionMode = startSupportActionMode(new ActionBarCallback());
         }
 
-        if (actionMode != null) {
-            actionMode.setTitle(1 + " items selected");
+        if (mHistoryActionMode != null) {
+            mHistoryActionMode.setTitle(1 + " items selected");
         }
 
         multiSelectEnabled();
@@ -314,9 +320,40 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     }
 
     /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("History Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mGoogleAPIClient.connect();
+        AppIndex.AppIndexApi.start(mGoogleAPIClient, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(mGoogleAPIClient, getIndexApiAction());
+        mGoogleAPIClient.disconnect();
+    }
 
     public class ActionBarCallback implements ActionMode.Callback {
         @Override
@@ -335,18 +372,18 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    dbHelper.open();
-                    historyAdapter.deleteSelectedGames(dbHelper);
-                    dbHelper.close();
+                    mDbHelper.open();
+                    mHistoryAdapter.deleteSelectedGames(mDbHelper);
+                    mDbHelper.close();
 
                     gamesDeleted();
                     mode.finish();
                     break;
 
                 case R.id.action_delete_all:
-                    dbHelper.open();
-                    dbHelper.deleteAllgames();
-                    dbHelper.close();
+                    mDbHelper.open();
+                    mDbHelper.deleteAllgames();
+                    mDbHelper.close();
 
                     startActivity(new Intent(getBaseContext(), Home.class));
 
@@ -355,9 +392,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 case R.id.action_select_all:
 
-                    for (int i = 0; i < historyAdapter.getItemCount(); i++){
-                        if (historyAdapter.isSelected(i)){
-                            historyAdapter.toggleSelection(i, i);
+                    for (int i = 0; i < mHistoryAdapter.getItemCount(); i++) {
+                        if (mHistoryAdapter.isSelected(i)) {
+                            mHistoryAdapter.toggleSelection(i, i);
                         }
                     }
 
@@ -370,13 +407,13 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            historyAdapter.clearSelection();
+            mHistoryAdapter.clearSelection();
             multiSelectDisabled();
-            HistoryAdapter.actionModeDisabled = true;
-            historyAdapter.notifyDataSetChanged();
+            HistoryAdapter.ACTION_MODE_DISABLED = true;
+            mHistoryAdapter.notifyDataSetChanged();
             gamesDeleted();
 
-            actionMode = null;
+            mHistoryActionMode = null;
         }
     }
 

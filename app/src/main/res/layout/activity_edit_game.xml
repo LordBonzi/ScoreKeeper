@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    tools:context="io.github.sdsstudios.ScoreKeeper.EditGame">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.EditGame">
 
     <include
         layout="@layout/content_edit_game"

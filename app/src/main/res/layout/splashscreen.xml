@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/splashscreen"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.github.sdsstudios.ScoreKeeper.SplashActivity">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.SplashActivity">
 
     <TextView
         android:layout_width="wrap_content"

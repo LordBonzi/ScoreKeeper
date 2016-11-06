@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     @SuppressWarnings("unused")
-    private static final String TAG = DatabaseSelectableAdapter.class.getSimpleName();
+    private static final String TAG = "DatabaseSelectableAdapter";
 
     private SparseIntArray selectedItems;
 

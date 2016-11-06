@@ -17,10 +17,10 @@ import java.net.URLConnection;
 
 class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
-    String filename;
+    private String mFileName;
 
-    public DownloadFileFromURL(String filename){
-        this.filename = filename;
+    public DownloadFileFromURL(String mFileName){
+        this.mFileName = mFileName;
     }
 
     /**
@@ -52,7 +52,7 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
             // Output stream to write file
-            OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + filename);
+            OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + mFileName);
 
             byte data[] = new byte[1024];
 
@@ -101,7 +101,7 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         // Displaying downloaded image into image view
         // Reading image path from sdcard
-        String changelogPath = Environment.getExternalStorageDirectory().toString() + filename;
+        String changelogPath = Environment.getExternalStorageDirectory().toString() + mFileName;
         // setting downloaded into image view
     }
 

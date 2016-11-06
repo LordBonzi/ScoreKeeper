@@ -55,39 +55,33 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
         , BigGameAdapter.GameListener {
 
-    private boolean isWon = false;
-    private String winner;
-    public static int gameID;
-    private Button buttonP1;
-    private Button buttonP2;
-    private TextView textViewP1, textViewP2;
-    private ImageButton buttonEditP1, buttonEditP2;
-    private boolean ft1, ft2;
-    private int P1Score, P2Score;
-    private FloatingActionButton fabChronometer;
-    private RecyclerView bigGameList;
-    private boolean finished = false;
+    private boolean mWon = false;
+    private String mWinnerString;
+    public static int GAME_ID;
+    private Button mButtonP1, mButtonP2;
+    private TextView mTextViewP1, mTextViewP2;
+    private int mP1Score, mP2Score;
+    private FloatingActionButton mFabChronometer;
+    private RecyclerView mPlayerList;
+    private boolean mFinished = false;
     private String TAG = "MainActivity.class";
-    public static DataHelper dataHelper;
-    private Intent homeIntent;
-    ScoreDBAdapter dbHelper;
-    private RecyclerView.Adapter bigGameAdapter;
-    private Stopwatch stopwatch;
-    private TimeHelper timeHelper;
-    private boolean classicTheme = false;
-    private View dialogView;
-    private LayoutInflater inflter = null;
-    private AlertDialog alertDialog;
-    private long timeWhenStopped = 0;
-    private boolean isPaused = false;
-    private MenuItem menuItemDiceNum;
-    private SharedPreferences sharedPreferences;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RelativeLayout content, big, normal;
-    private CoordinatorLayout coordinatorLayout;
-    private Player newPlayer = null;
-    private ViewGroup.LayoutParams params;
-    private static final String STATE_GAMEID = "gameID";
+    private DataHelper mDataHelper;
+    private Intent mHomeIntent;
+    private ScoreDBAdapter mDbHelper;
+    private Stopwatch mStopwatch;
+    private TimeHelper mTimeHelper;
+    private boolean mClassicTheme = false;
+    private View mDialogView;
+    private AlertDialog mAlertDialog;
+    private long mTimeWhenStopped = 0L;
+    private boolean mPaused = false;
+    private MenuItem mMenuItemDiceNum;
+    private SharedPreferences mSharedPreferences;
+    private RelativeLayout mBaseLayout, mBigLayout, mNormalLayout;
+    private CoordinatorLayout mCoordinatorLayout;
+    private Player mNewPlayer = null;
+    private ViewGroup.LayoutParams mParams;
+    private static final String STATE_GAMEID = "GAME_ID";
     private TabLayout mTabLayout;
     private Game mGame;
     private GridView mSetGridView;
@@ -97,35 +91,30 @@ public class MainActivity extends AppCompatActivity
     private boolean mReverseScoring;
     private int mMaxScore;
 
-    //tabsStuff
-    private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Toolbar toolbar;
 
         Bundle extras = getIntent().getExtras();
-        gameID = extras.getInt("gameID");
+        GAME_ID = extras.getInt("GAME_ID");
 
-        Log.e(TAG, "" + gameID);
-
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
 // Restore value of members from saved state
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        dataHelper = new DataHelper();
-        dbHelper = new ScoreDBAdapter(this).open();
-        mGame = dataHelper.getGame(gameID, dbHelper);
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false) && mGame.size() == 2;
-        maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        mDataHelper = new DataHelper();
+        mDbHelper = new ScoreDBAdapter(this).open();
+        mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
+        mClassicTheme = mSharedPreferences.getBoolean("prefClassicTheme", false) && mGame.size() == 2;
+        maxNumDice = mSharedPreferences.getInt("maxNumDice", 6);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
 
         setTheme(accentColor);
-        if (classicTheme) {
+
+        if (mClassicTheme) {
             setContentView(R.layout.activity_main_classic);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -144,7 +133,7 @@ public class MainActivity extends AppCompatActivity
                 getWindow().setStatusBarColor(primaryDarkColor);
             }
 
-            if (colorNavBar && !classicTheme) {
+            if (colorNavBar && !mClassicTheme) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getWindow().setNavigationBarColor(primaryDarkColor);
                 }
@@ -165,10 +154,10 @@ public class MainActivity extends AppCompatActivity
         mGame.setmTime(time);
 
         if (savedInstanceState != null) {
-            gameID = savedInstanceState.getInt(STATE_GAMEID);
+            GAME_ID = savedInstanceState.getInt(STATE_GAMEID);
         }
 
-        dbHelper.open().updateGame(mGame);
+        mDbHelper.open().updateGame(mGame);
 
     }
 
@@ -180,11 +169,11 @@ public class MainActivity extends AppCompatActivity
 
     public void loadObjects() {
 
-        dataHelper = new DataHelper();
-        timeHelper = new TimeHelper();
+        mDataHelper = new DataHelper();
+        mTimeHelper = new TimeHelper();
 
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
+        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper.open();
     }
 
     public void loadGame() {
@@ -203,43 +192,43 @@ public class MainActivity extends AppCompatActivity
             mScoreDiffToWin = 1;
         }
 
-        homeIntent = new Intent(this, Home.class);
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        content = (RelativeLayout) findViewById(R.id.content);
+        mHomeIntent = new Intent(this, Home.class);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mBaseLayout = (RelativeLayout) findViewById(R.id.content);
 
-        buttonP1 = (Button) findViewById(R.id.buttonP1);
-        buttonP1.setOnClickListener(this);
-        buttonP1.setOnLongClickListener(this);
+        mButtonP1 = (Button) findViewById(R.id.buttonP1);
+        mButtonP1.setOnClickListener(this);
+        mButtonP1.setOnLongClickListener(this);
 
-        buttonP2 = (Button) findViewById(R.id.buttonP2);
-        buttonP2.setOnClickListener(this);
-        buttonP2.setOnLongClickListener(this);
+        mButtonP2 = (Button) findViewById(R.id.buttonP2);
+        mButtonP2.setOnClickListener(this);
+        mButtonP2.setOnLongClickListener(this);
 
-        if (!classicTheme) {
-            buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
+        if (!mClassicTheme) {
+            ImageButton buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
             buttonEditP1.setOnClickListener(this);
 
-            buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
+            ImageButton buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
             buttonEditP2.setOnClickListener(this);
         }
 
-        stopwatch = new Stopwatch(this);
+        mStopwatch = new Stopwatch(this);
 
-        textViewP1 = (TextView) findViewById(R.id.textViewP1);
-        textViewP2 = (TextView) findViewById(R.id.textViewP2);
+        mTextViewP1 = (TextView) findViewById(R.id.textViewP1);
+        mTextViewP2 = (TextView) findViewById(R.id.textViewP2);
 
         mSetGridView = (GridView)findViewById(R.id.setGridView);
 
-        if (!classicTheme) {
-            bigGameList = (RecyclerView) findViewById(R.id.bigGameList);
+        if (!mClassicTheme) {
+            mPlayerList = (RecyclerView) findViewById(R.id.bigGameList);
 
-            normal = (RelativeLayout) findViewById(R.id.layoutNormal);
-            big = (RelativeLayout) findViewById(R.id.layoutBig);
+            mNormalLayout = (RelativeLayout) findViewById(R.id.layoutNormal);
+            mBigLayout = (RelativeLayout) findViewById(R.id.layoutBig);
 
-            mSectionsPagerAdapter = new MainActivity.SectionsPagerAdapter(getSupportFragmentManager());
+            SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
             // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPager) findViewById(R.id.container);
+            ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
             mViewPager.setAdapter(mSectionsPagerAdapter);
 
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -285,19 +274,19 @@ public class MainActivity extends AppCompatActivity
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
 
             // Applying font
-            textViewP1.setTypeface(tf);
-            textViewP2.setTypeface(tf);
-            stopwatch.setTypeface(tf);
-            buttonP1.setTypeface(tf);
-            buttonP2.setTypeface(tf);
+            mTextViewP1.setTypeface(tf);
+            mTextViewP2.setTypeface(tf);
+            mStopwatch.setTypeface(tf);
+            mButtonP1.setTypeface(tf);
+            mButtonP2.setTypeface(tf);
         }
 
         selectLayout();
 
-        stopwatch.setOnChronometerTickListener(this);
+        mStopwatch.setOnChronometerTickListener(this);
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("lastplayedgame", gameID);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("lastplayedgame", GAME_ID);
         editor.apply();
 
         for (Player p : mGame.getmPlayerArray()) {
@@ -336,7 +325,7 @@ public class MainActivity extends AppCompatActivity
         boolean b = false;
         if (mGame.getmTimeLimit() != null) {
             if (chronometer.getText().toString().equalsIgnoreCase(mGame.getmTimeLimit())) {
-                finished = true;
+                mFinished = true;
                 b = true;
                 timeLimitDialog();
             }
@@ -351,18 +340,18 @@ public class MainActivity extends AppCompatActivity
         chronometerClick();
 
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-            mGame.setmLength(stopwatch.getText().toString());
+            mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        dbHelper.open().updateGame(mGame);
+        mDbHelper.open().updateGame(mGame);
     }
 
     public void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        bigGameList.setLayoutManager(mLayoutManager);
+        mPlayerList.setLayoutManager(mLayoutManager);
 
-        bigGameAdapter = new BigGameAdapter(mGame, dbHelper, enabled, this);
-        bigGameList.setAdapter(bigGameAdapter);
+        RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, mDbHelper, enabled, this);
+        mPlayerList.setAdapter(bigGameAdapter);
     }
 
     @Override
@@ -374,31 +363,31 @@ public class MainActivity extends AppCompatActivity
         menu.findItem(R.id.action_fullscreen).setVisible(true);
         menu.findItem(R.id.action_dice).setVisible(true);
         menu.findItem(R.id.action_add).setVisible(true);
-        menuItemDiceNum = menu.findItem(R.id.action_dice_num);
+        mMenuItemDiceNum = menu.findItem(R.id.action_dice_num);
         return true;
     }
 
     public void timeLimitDialog() {
 
-        buttonP1.setEnabled(false);
-        buttonP2.setEnabled(false);
+        mButtonP1.setEnabled(false);
+        mButtonP2.setEnabled(false);
         displayRecyclerView(false);
 
-        if (!isPaused) {
-            isPaused = true;
+        if (!mPaused) {
+            mPaused = true;
             chronometerClick();
         }
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.create_time_limit, null);
+        mDialogView = inflater.inflate(R.layout.create_time_limit, null);
 
-        final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-        final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-        final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
-        final CheckBox checkBoxExtend = (CheckBox) dialogView.findViewById(R.id.checkBoxExtend);
+        final EditText editTextHour = (EditText) mDialogView.findViewById(R.id.editTextHour);
+        final EditText editTextMinute = (EditText) mDialogView.findViewById(R.id.editTextMinute);
+        final EditText editTextSecond = (EditText) mDialogView.findViewById(R.id.editTextSeconds);
+        final CheckBox checkBoxExtend = (CheckBox) mDialogView.findViewById(R.id.checkBoxExtend);
         checkBoxExtend.setVisibility(View.VISIBLE);
-        final RelativeLayout relativeLayout = (RelativeLayout) dialogView.findViewById(R.id.relativeLayout2);
+        final RelativeLayout relativeLayout = (RelativeLayout) mDialogView.findViewById(R.id.relativeLayout2);
         editTextHour.setText("0");
         editTextMinute.setText("0");
         editTextSecond.setText("0");
@@ -425,11 +414,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        dialogBuilder.setView(dialogView);
-        alertDialog = dialogBuilder.create();
-        alertDialog.setOnShowListener(this);
+        dialogBuilder.setView(mDialogView);
+        mAlertDialog = dialogBuilder.create();
+        mAlertDialog.setOnShowListener(this);
 
-        alertDialog.show();
+        mAlertDialog.show();
     }
 
     @Override
@@ -446,7 +435,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_reset) {
-            isPaused = true;
+            mPaused = true;
             chronometerClick();
 
             AlertDialog dialog;
@@ -465,26 +454,23 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                        mGame.setmLength(stopwatch.getText().toString());
+                        mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    dbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
                     if (mGame.size() > 2) {
                         displayRecyclerView(true);
                     } else {
-                        P1Score = mPlayersArray.get(0).getmScore();
-                        P2Score = mPlayersArray.get(0).getmScore();
-                        ft1 = true;
-                        ft2 = true;
+                        mP1Score = mPlayersArray.get(0).getmScore();
+                        mP2Score = mPlayersArray.get(0).getmScore();
 
-                        buttonP1.setText(String.valueOf(P1Score));
-                        buttonP2.setText(String.valueOf(P2Score));
+                        mButtonP1.setText(String.valueOf(mP1Score));
+                        mButtonP2.setText(String.valueOf(mP2Score));
                     }
 
-                    stopwatch.setBase(SystemClock.elapsedRealtime());
-                    timeWhenStopped = 0;
-
+                    mStopwatch.setBase(SystemClock.elapsedRealtime());
+                    mTimeWhenStopped = 0L;
 
                 }
             });
@@ -507,15 +493,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_dice) {
-            if (!menuItemDiceNum.isVisible()) {
-                menuItemDiceNum.setVisible(true);
+            if (!mMenuItemDiceNum.isVisible()) {
+                mMenuItemDiceNum.setVisible(true);
                 Random rand = new Random();
                 int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
-                menuItemDiceNum.setTitle(String.valueOf(randomNum));
+                mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
             Random rand = new Random();
             int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
-            menuItemDiceNum.setTitle(String.valueOf(randomNum));
+            mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
         }
 
         if (id == R.id.action_add) {
@@ -529,7 +515,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public void addPlayerDialog() {
-        isPaused = true;
+        mPaused = true;
         chronometerClick();
         final View dialogView;
 
@@ -541,7 +527,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                addPlayer(alertDialog);
+                addPlayer(mAlertDialog);
 
                 return false;
             }
@@ -560,9 +546,9 @@ public class MainActivity extends AppCompatActivity
 
         dialogBuilder.setView(dialogView);
 
-        alertDialog = dialogBuilder.create();
+        mAlertDialog = dialogBuilder.create();
 
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 editTextPresetTitle.addTextChangedListener(new TextWatcher() {
@@ -574,7 +560,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        newPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
+                        mNewPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
 
                     }
 
@@ -583,26 +569,26 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 b.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
-                        addPlayer(alertDialog);
+                        addPlayer(mAlertDialog);
 
                     }
                 });
             }
 
         });
-        alertDialog.show();
+        mAlertDialog.show();
 
     }
 
     private void addPlayer(AlertDialog alertDialog){
-        mGame.addPlayer(newPlayer);
+        mGame.addPlayer(mNewPlayer);
         List<Player> mPlayersArray = mGame.getmPlayerArray();
-        if (dataHelper.checkPlayerDuplicates(mPlayersArray)){
+        if (mDataHelper.checkPlayerDuplicates(mPlayersArray)){
             mPlayersArray.remove(mPlayersArray.size()-1);
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
@@ -615,13 +601,13 @@ public class MainActivity extends AppCompatActivity
             alertDialog.dismiss();
 
             if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                mGame.setmLength(stopwatch.getText().toString());
+                mGame.setmLength(mStopwatch.getText().toString());
             }
 
-            dbHelper.open().updateGame(mGame);
+            mDbHelper.open().updateGame(mGame);
 
             selectLayout();
-            isPaused = true;
+            mPaused = true;
             chronometerClick();
         }
     }
@@ -629,84 +615,79 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
-        savedInstanceState.putInt(STATE_GAMEID, gameID);
+        savedInstanceState.putInt(STATE_GAMEID, GAME_ID);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        isPaused = true;
+
+        mPaused = true;
         chronometerClick();
 
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-            mGame.setmLength(stopwatch.getText().toString());
+            mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        dbHelper.open().updateGame(mGame);
+        mDbHelper.open().updateGame(mGame);
     }
 
     public void chronometerClick() {
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-            if (!isPaused) {
-                stopwatch.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-                stopwatch.start();
-                fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
-                stopwatch.setTextColor(getResources().getColor(R.color.start));
-                fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+            if (!mPaused) {
+
+                mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
+                mStopwatch.start();
+                mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                mStopwatch.setTextColor(getResources().getColor(R.color.start));
+                mFabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
             } else {
-                timeWhenStopped = stopwatch.getBase() - SystemClock.elapsedRealtime();
-                stopwatch.stop();
-                fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-                stopwatch.setTextColor(getResources().getColor(R.color.stop));
-                fabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
+                mTimeWhenStopped = mStopwatch.getBase() - SystemClock.elapsedRealtime();
+                mStopwatch.stop();
+                mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
+                mStopwatch.setTextColor(getResources().getColor(R.color.stop));
+                mFabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
             }
         }
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonP1:
-                onScoreButtonClick(buttonP1);
+                onScoreButtonClick(mButtonP1);
 
                 if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                    mGame.setmLength(stopwatch.getText().toString());
+                    mGame.setmLength(mStopwatch.getText().toString());
                 }
 
-                dbHelper.open().updateGame(mGame);
+                mDbHelper.open().updateGame(mGame);
                 break;
 
             case R.id.buttonP2:
-                onScoreButtonClick(buttonP2);
+                onScoreButtonClick(mButtonP2);
 
                 if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                    mGame.setmLength(stopwatch.getText().toString());
+                    mGame.setmLength(mStopwatch.getText().toString());
                 }
 
-                dbHelper.open().updateGame(mGame);
+                mDbHelper.open().updateGame(mGame);
 
                 break;
 
             case R.id.fabChronometer:
-                if (!finished) {
-                    isPaused = !isPaused;
+                if (!mFinished) {
+                    mPaused = !mPaused;
                     chronometerClick();
                 }
                 break;
 
             case R.id.fabChronometerBig:
-                if (!finished) {
-                    isPaused = !isPaused;
+                if (!mFinished) {
+                    mPaused = !mPaused;
                     chronometerClick();
                 }
                 break;
@@ -731,9 +712,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        if (!finished && !isFullScreen()) {
-            if (!isPaused) {
-                isPaused = true;
+        if (!mFinished && !isFullScreen()) {
+            if (!mPaused) {
+                mPaused = true;
                 chronometerClick();
             }
             AlertDialog dialog;
@@ -749,13 +730,13 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                        mGame.setmLength(stopwatch.getText().toString());
+                        mGame.setmLength(mStopwatch.getText().toString());
                     }
 
                     mGame.setmCompleted(false);
-                    dbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
-                    startActivity(homeIntent);
+                    startActivity(mHomeIntent);
 
                 }
             });
@@ -764,14 +745,14 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                        mGame.setmLength(stopwatch.getText().toString());
+                        mGame.setmLength(mStopwatch.getText().toString());
                     }
 
                     mGame.setmCompleted(true);
 
-                    dbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
-                    startActivity(homeIntent);
+                    startActivity(mHomeIntent);
                 }
             });
 
@@ -785,9 +766,9 @@ public class MainActivity extends AppCompatActivity
 
             dialog.show();
 
-        }else if (isWon && !isFullScreen()) {
-            winnerDialog(winner);
-        }else if (timeLimitReached(stopwatch) && !isFullScreen()) {
+        }else if (mWon && !isFullScreen()) {
+            winnerDialog(mWinnerString);
+        }else if (timeLimitReached(mStopwatch) && !isFullScreen()) {
             timeLimitDialog();
         }else{
             toggleFullScreen(false);
@@ -812,27 +793,32 @@ public class MainActivity extends AppCompatActivity
 
         if (mGame.numSets() > 1 && mGame.numSetsPlayed() / mGame.size() < mGame.numSets()) {
 
+            mButtonP1.setEnabled(false);
+            mButtonP2.setEnabled(false);
+
+            for (Player p : mGame.getmPlayerArray()){
+                p.addSet(p.getmScore());
+                p.setmScore(0);
+            }
+
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    finished = false;
-                    isPaused = false;
+                    mFinished = false;
+                    mPaused = false;
+
                     chronometerClick();
-                    buttonP1.setEnabled(true);
-                    buttonP2.setEnabled(true);
-                    isWon = false;
 
-                    for (Player p : mGame.getmPlayerArray()){
-                        p.addSet(p.getmScore());
-                        p.setmScore(0);
-                    }
+                    mButtonP1.setEnabled(true);
+                    mButtonP2.setEnabled(true);
+                    mWon = false;
 
-                    dbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
                     if (mGame.size() == 2){
-                        P1Score = 0;
-                        P2Score = 0;
-                        buttonP1.setText(String.valueOf(P1Score));
-                        buttonP2.setText(String.valueOf(P2Score));
+                        mP1Score = 0;
+                        mP2Score = 0;
+                        mButtonP1.setText(String.valueOf(mP1Score));
+                        mButtonP2.setText(String.valueOf(mP2Score));
                     }else{
                         displayRecyclerView(true);
                     }
@@ -844,11 +830,11 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                        mGame.setmLength(stopwatch.getText().toString());
+                        mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    dbHelper.open().updateGame(mGame);
-                    startActivity(homeIntent);
+                    mDbHelper.open().updateGame(mGame);
+                    startActivity(mHomeIntent);
                 }
             });
 
@@ -858,12 +844,12 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                        mGame.setmLength(stopwatch.getText().toString());
+                        mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    dbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
-                    startActivity(homeIntent);
+                    startActivity(mHomeIntent);
                 }
             });
         }
@@ -872,78 +858,93 @@ public class MainActivity extends AppCompatActivity
 
         dialog.show();
 
-        finished = true;
-        isPaused = true;
+        mFinished = true;
+        mPaused = true;
         chronometerClick();
-        buttonP1.setEnabled(false);
-        buttonP2.setEnabled(false);
-        isWon = true;
+
+        mWon = true;
 
     }
 
     public void onScoreButtonClick(Button button) {
 
-        if (button == buttonP1) {
+        if (button == mButtonP1) {
             if (mReverseScoring) {
-                P1Score -= mScoreInterval;
+                mP1Score -= mScoreInterval;
             } else {
-                P1Score += mScoreInterval;
+                mP1Score += mScoreInterval;
             }
-            button.setText(String.valueOf(P1Score));
+            button.setText(String.valueOf(mP1Score));
+
         } else {
+
             if (mReverseScoring) {
-                P2Score -= mScoreInterval;
+                mP2Score -= mScoreInterval;
             } else {
-                P2Score += mScoreInterval;
+                mP2Score += mScoreInterval;
             }
-            button.setText(String.valueOf(P2Score));
-        }
-        if (button == buttonP1) {
-            ft1 = false;
-        } else {
-            ft2 = false;
+
+            button.setText(String.valueOf(mP2Score));
         }
 
-        if (mMaxScore != 0 && Math.abs(P1Score - P2Score) >= mScoreDiffToWin) {
-            if (P1Score >= mMaxScore || P2Score >= mMaxScore) {
-                if (P1Score == mMaxScore) {
-                    winner = mGame.getPlayer(0).getmName();
-                } else {
-                    winner = mGame.getPlayer(1).getmName();
+        if (mMaxScore != 0 && (Math.abs(mP1Score - mP2Score) >= mScoreDiffToWin)) {
 
+            if (mReverseScoring){
+
+                if (mP1Score <= mMaxScore || mP2Score <= mMaxScore) {
+                    scoreEqualsMaxScore();
                 }
-                isWon = true;
-                updateScores();
-                winnerDialog(winner);
+
+            }else{
+
+                if (mP1Score >= mMaxScore || mP2Score >= mMaxScore) {
+                    scoreEqualsMaxScore();
+                }
+
             }
+
+
         }
 
         updateScores();
+
+    }
+
+    public void scoreEqualsMaxScore(){
+        if (mP1Score == mMaxScore) {
+
+            mWinnerString = mGame.getPlayer(0).getmName();
+
+        } else {
+
+            mWinnerString = mGame.getPlayer(1).getmName();
+
+        }
+
+        mWon = true;
+        updateScores();
+        winnerDialog(mWinnerString);
     }
 
     public void onScoreButtonLongClick(Button button) {
 
-        if (button == buttonP1 && !ft1 && P1Score != 0) {
+        if (button == mButtonP1 && mP1Score != 0) {
             if (mReverseScoring) {
-                P1Score += mScoreInterval;
+                mP1Score += mScoreInterval;
             } else {
-                P1Score -= mScoreInterval;
+                mP1Score -= mScoreInterval;
             }
 
-            button.setText(String.valueOf(P1Score));
-        } else if (button == buttonP2 && !ft2 && P2Score != 0) {
-            if (mReverseScoring) {
-                P2Score += mScoreInterval;
-            } else {
-                P2Score -= mScoreInterval;
-            }
-            button.setText(String.valueOf(P2Score));
-        }
+            button.setText(String.valueOf(mP1Score));
 
-        if (button == buttonP1) {
-            ft1 = false;
-        } else {
-            ft2 = false;
+        } else if (button == mButtonP2 && mP2Score != 0) {
+            if (mReverseScoring) {
+                mP2Score += mScoreInterval;
+            } else {
+                mP2Score -= mScoreInterval;
+            }
+
+            button.setText(String.valueOf(mP2Score));
 
         }
 
@@ -951,10 +952,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateScores() {
-        mGame.getPlayer(0).setmScore(P1Score);
-        mGame.getPlayer(1).setmScore(P2Score);
+        mGame.getPlayer(0).setmScore(mP1Score);
+        mGame.getPlayer(1).setmScore(mP2Score);
 
-        dbHelper.open().updateGame(mGame);
+        mDbHelper.open().updateGame(mGame);
     }
 
     @Override
@@ -962,11 +963,11 @@ public class MainActivity extends AppCompatActivity
 
         switch (v.getId()) {
             case R.id.buttonP1:
-                onScoreButtonLongClick(buttonP1);
+                onScoreButtonLongClick(mButtonP1);
                 break;
 
             case R.id.buttonP2:
-                onScoreButtonLongClick(buttonP2);
+                onScoreButtonLongClick(mButtonP2);
                 break;
         }
 
@@ -975,22 +976,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onShow(final DialogInterface dialogInterface) {
-        Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         b.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                final CheckBox checkBoxExtend = (CheckBox) dialogView.findViewById(R.id.checkBoxExtend);
+                final CheckBox checkBoxExtend = (CheckBox) mDialogView.findViewById(R.id.checkBoxExtend);
 
                 if (checkBoxExtend.isChecked()) {
-                    final EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
-                    final EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
-                    final EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+                    final EditText editTextHour = (EditText) mDialogView.findViewById(R.id.editTextHour);
+                    final EditText editTextMinute = (EditText) mDialogView.findViewById(R.id.editTextMinute);
+                    final EditText editTextSecond = (EditText) mDialogView.findViewById(R.id.editTextSeconds);
                     String hour = editTextHour.getText().toString().trim();
                     String minute = editTextMinute.getText().toString().trim();
                     String seconds = editTextSecond.getText().toString().trim();
 
-                    String oldTimeLimit = stopwatch.getText().toString();
+                    String oldTimeLimit = mStopwatch.getText().toString();
                     String[] timeLimitSplit = oldTimeLimit.split(":");
 
                     String oldHour = timeLimitSplit[0];
@@ -1001,17 +1002,18 @@ public class MainActivity extends AppCompatActivity
 
                     if (TextUtils.isEmpty(hour)) {
                         editTextHour.setError("Can't be empty");
-                        return;
+
                     } else if (TextUtils.isEmpty(minute)) {
                         editTextMinute.setError("Can't be empty");
-                        return;
+
                     } else if (TextUtils.isEmpty(seconds)) {
                         editTextSecond.setError("Can't be empty");
-                        return;
+
                     } else {
 
                         if (Integer.valueOf(hour) + Integer.valueOf(oldHour) >= 24) {
                             editTextHour.setError("Hour must be less than " + String.valueOf(24 - Integer.valueOf(oldHour)));
+
                         } else if (Integer.valueOf(minute) + Integer.valueOf(oldMinute) >= 60) {
                             editTextMinute.setError("Minute must be less than " + String.valueOf(60 - Integer.valueOf(oldMinute)));
 
@@ -1031,6 +1033,7 @@ public class MainActivity extends AppCompatActivity
                                 if (minute.length() == 1 && !minute.equals("0")) {
                                     minute = ("0" + minute);
                                 }
+
                                 if (seconds.length() == 1 && !seconds.equals("0")) {
                                     seconds = ("0" + seconds);
                                 }
@@ -1056,17 +1059,17 @@ public class MainActivity extends AppCompatActivity
 
                                     mGame.setmTimeLimit(timeLimitString);
 
-                                    timeLimitReached(stopwatch);
-                                    buttonP1.setEnabled(true);
-                                    buttonP2.setEnabled(true);
+                                    timeLimitReached(mStopwatch);
+                                    mButtonP1.setEnabled(true);
+                                    mButtonP2.setEnabled(true);
                                     displayRecyclerView(true);
-                                    alertDialog.dismiss();
-                                    fabChronometer.setEnabled(true);
-                                    finished = false;
+                                    mAlertDialog.dismiss();
+                                    mFabChronometer.setEnabled(true);
+                                    mFinished = false;
 
                                 } else {
-                                    finished = true;
-                                    alertDialog.dismiss();
+                                    mFinished = true;
+                                    mAlertDialog.dismiss();
                                 }
 
                             } catch (Exception e) {
@@ -1079,18 +1082,19 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
                     mGame.setmCompleted(true);
-                    startActivity(homeIntent);
+                    startActivity(mHomeIntent);
 
                 }
             }
         });
-        dbHelper.open().updateGame(mGame);
+
+        mDbHelper.open().updateGame(mGame);
     }
 
     public void toggleFullScreen(boolean fullscreen) {
 
         if (fullscreen) {
-            params = content.getLayoutParams();
+            mParams = mBaseLayout.getLayoutParams();
             getSupportActionBar().hide();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -1103,7 +1107,7 @@ public class MainActivity extends AppCompatActivity
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-                coordinatorLayout.setFitsSystemWindows(false);
+                mCoordinatorLayout.setFitsSystemWindows(false);
 
             }
 
@@ -1113,16 +1117,16 @@ public class MainActivity extends AppCompatActivity
             );
 
             params.setMargins(0, mTabLayout.getHeight(), 0, 0);
-            content.setLayoutParams(params);
+            mBaseLayout.setLayoutParams(params);
 
         } else {
-            if (!classicTheme) {
+            if (!mClassicTheme) {
                 getSupportActionBar().show();
 
-                boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-                int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+                boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+                int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
 
-                if (colorNavBar && !classicTheme) {
+                if (colorNavBar && !mClassicTheme) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setNavigationBarColor(primaryDarkColor);
                     }
@@ -1134,11 +1138,11 @@ public class MainActivity extends AppCompatActivity
                                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-                    coordinatorLayout.setFitsSystemWindows(true);
+                    mCoordinatorLayout.setFitsSystemWindows(true);
                 }
 
-                if (params != null) {
-                    content.setLayoutParams(params);
+                if (mParams != null) {
+                    mBaseLayout.setLayoutParams(mParams);
                 }
 
                 mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -1146,21 +1150,20 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        Log.e(TAG, String.valueOf(getSupportActionBar().isShowing()));
     }
 
     @Override
     public void onChronometerTick(Stopwatch chronometer) {
-        timeLimitReached(stopwatch);
+        timeLimitReached(mStopwatch);
     }
 
     @Override
     public void gameWon(String winner) {
-        this.winner = winner;
-        finished = true;
-        isPaused = true;
+        this.mWinnerString = winner;
+        mFinished = true;
+        mPaused = true;
         chronometerClick();
-        isWon = true;
+        mWon = true;
         winnerDialog(winner);
         displayRecyclerView(false);
 
@@ -1170,7 +1173,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void deletePlayer(int position) {
-        isPaused = true;
+        mPaused = true;
         chronometerClick();
         if (mGame.size() > 2) {
             mGame.removePlayer(position);
@@ -1180,10 +1183,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-            mGame.setmLength(stopwatch.getText().toString());
+            mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        dbHelper.open().updateGame(mGame);
+        mDbHelper.open().updateGame(mGame);
 
         selectLayout();
         chronometerClick();
@@ -1195,7 +1198,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void editPlayerDialog(final int position){
-        isPaused = true;
+        mPaused = true;
         chronometerClick();
         final View dialogView;
 
@@ -1223,9 +1226,9 @@ public class MainActivity extends AppCompatActivity
 
         dialogBuilder.setView(dialogView);
 
-        alertDialog = dialogBuilder.create();
+        mAlertDialog = dialogBuilder.create();
 
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 editTextPlayer.addTextChangedListener(new TextWatcher() {
@@ -1236,7 +1239,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        newPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
+                        mNewPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
 
                     }
 
@@ -1253,7 +1256,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        newPlayer.setmScore(Integer.valueOf(charSequence.toString()));
+                        mNewPlayer.setmScore(Integer.valueOf(charSequence.toString()));
                     }
 
                     @Override
@@ -1261,7 +1264,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 b.setOnClickListener(new View.OnClickListener() {
 
                     @Override
@@ -1269,30 +1272,30 @@ public class MainActivity extends AppCompatActivity
 
                         Player oldPlayer = mGame.getPlayer(position);
 
-                        if (newPlayer == null || newPlayer.equals("")) {
-                            newPlayer = oldPlayer;
+                        if (mNewPlayer == null || mNewPlayer.equals("")) {
+                            mNewPlayer = oldPlayer;
                         }
-                        mGame.setPlayer(newPlayer, position);
+                        mGame.setPlayer(mNewPlayer, position);
 
-                        if (dataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
+                        if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
 
                             mGame.setPlayer(oldPlayer, position);
 
                             Toast.makeText(MainActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
                         } else {
 
-                            dbHelper.open().updateGame(mGame);
+                            mDbHelper.open().updateGame(mGame);
 
-                            alertDialog.dismiss();
+                            mAlertDialog.dismiss();
 
                             if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
-                                mGame.setmLength(stopwatch.getText().toString());
+                                mGame.setmLength(mStopwatch.getText().toString());
                             }
 
-                            dbHelper.open().updateGame(mGame);
+                            mDbHelper.open().updateGame(mGame);
 
                             selectLayout();
-                            isPaused = true;
+                            mPaused = true;
                             chronometerClick();
                         }
 
@@ -1302,16 +1305,16 @@ public class MainActivity extends AppCompatActivity
             }
 
         });
-        alertDialog.show();
+        mAlertDialog.show();
     }
     private void selectLayout(){
         if (mGame.size() > 2) {
-            big.setVisibility(View.VISIBLE);
-            normal.setVisibility(View.INVISIBLE);
+            mBigLayout.setVisibility(View.VISIBLE);
+            mNormalLayout.setVisibility(View.INVISIBLE);
 
-            stopwatch = (Stopwatch) findViewById(R.id.chronometerBig);
-            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
-            fabChronometer.setOnClickListener(this);
+            mStopwatch = (Stopwatch) findViewById(R.id.chronometerBig);
+            mFabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
+            mFabChronometer.setOnClickListener(this);
 
             try {
                 displayRecyclerView(true);
@@ -1323,23 +1326,21 @@ public class MainActivity extends AppCompatActivity
 
         } else {
 
-            if (!classicTheme) {
-                normal.setVisibility(View.VISIBLE);
-                big.setVisibility(View.INVISIBLE);
+            if (!mClassicTheme) {
+                mNormalLayout.setVisibility(View.VISIBLE);
+                mBigLayout.setVisibility(View.INVISIBLE);
             }
 
-            P1Score = mGame.getPlayer(0).getmScore();
-            P2Score = mGame.getPlayer(1).getmScore();
-            ft1 = true;
-            ft2 = true;
+            mP1Score = mGame.getPlayer(0).getmScore();
+            mP2Score = mGame.getPlayer(1).getmScore();
 
-            buttonP1.setText(String.valueOf(P1Score));
-            buttonP2.setText(String.valueOf(P2Score));
-            textViewP1.setText(String.valueOf(mGame.getPlayer(0).getmName()));
-            textViewP2.setText(String.valueOf(mGame.getPlayer(1).getmName()));
-            stopwatch = (Stopwatch) findViewById(R.id.chronometer);
-            fabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
-            fabChronometer.setOnClickListener(this);
+            mButtonP1.setText(String.valueOf(mP1Score));
+            mButtonP2.setText(String.valueOf(mP2Score));
+            mTextViewP1.setText(String.valueOf(mGame.getPlayer(0).getmName()));
+            mTextViewP2.setText(String.valueOf(mGame.getPlayer(1).getmName()));
+            mStopwatch = (Stopwatch) findViewById(R.id.chronometer);
+            mFabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
+            mFabChronometer.setOnClickListener(this);
         }
 
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
@@ -1347,28 +1348,33 @@ public class MainActivity extends AppCompatActivity
             try {
                 if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                     mGame.setmLength("00:00:00:0");
+
+                }else if (mTimeWhenStopped != 0L){
+                    //when coming back from the app running in the background treat it as unpausing the mStopwatch
+                    mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
+
                 }else{
-                    stopwatch.setBase((-(3600000 + timeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
+                    mStopwatch.setBase((-(3600000 + mTimeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
-                timeLimitReached(stopwatch);
+                timeLimitReached(mStopwatch);
 
-                if (!finished){
-                    stopwatch.start();
-                    fabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
-                    stopwatch.setTextColor(getResources().getColor(R.color.start));
-                    fabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
+                if (!mFinished){
+                    mStopwatch.start();
+                    mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                    mStopwatch.setTextColor(getResources().getColor(R.color.start));
+                    mFabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
                 }
 
-                dbHelper.open().updateGame(mGame);
+                mDbHelper.open().updateGame(mGame);
 
             }catch(Exception e){
                 e.printStackTrace();
                 Snackbar snackbar;
-                snackbar = Snackbar.make(normal, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
-                fabChronometer.setEnabled(false);
-                buttonP1.setEnabled(false);
-                buttonP2.setEnabled(false);
+                snackbar = Snackbar.make(mNormalLayout, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
+                mFabChronometer.setEnabled(false);
+                mButtonP1.setEnabled(false);
+                mButtonP2.setEnabled(false);
                 snackbar.show();
             }
 
@@ -1377,14 +1383,14 @@ public class MainActivity extends AppCompatActivity
             if (mGame.size() > 2) {
                 CardView cardView = (CardView)findViewById(R.id.buttonChronometerBig);
                 cardView.setVisibility(View.INVISIBLE);
-                bigGameList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+                mPlayerList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
             }else{
                 CardView cardView = (CardView)findViewById(R.id.buttonChronometer);
                 cardView.setVisibility(View.INVISIBLE);
             }
-            stopwatch.setVisibility(View.INVISIBLE);
-            fabChronometer.setVisibility(View.INVISIBLE);
+            mStopwatch.setVisibility(View.INVISIBLE);
+            mFabChronometer.setVisibility(View.INVISIBLE);
         }
     }
 

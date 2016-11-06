@@ -35,21 +35,15 @@ import java.io.IOException;
 public class About extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
-    private SharedPreferences settings;
-    private Intent homeIntent;
-    private Preference changeLogPreference, developersPreference, translatorsPreference, communityPreference, ratePreference, githubPreference, licensePreference;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private boolean darkTheme, classicTheme, colorNavBar;
-    private int accentColor;
+    private Intent mHomeIntent;
+    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
-        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-        colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
 
@@ -75,15 +69,15 @@ public class About extends PreferenceActivity {
             }
         }
         addPreferencesFromResource(R.xml.about_settings);
-        changeLogPreference = findPreference("prefChangelog");
-        developersPreference = findPreference("prefDevelopers");
-        translatorsPreference = findPreference("prefTranslators");
-        communityPreference = findPreference("prefCommunity");
-        ratePreference = findPreference("prefRate");
-        githubPreference = findPreference("prefGithub");
-        licensePreference = findPreference("prefLicense");
+        Preference changeLogPreference = findPreference("prefChangelog");
+        Preference developersPreference = findPreference("prefDevelopers");
+        Preference translatorsPreference = findPreference("prefTranslators");
+        Preference communityPreference = findPreference("prefCommunity");
+        Preference ratePreference = findPreference("prefRate");
+        Preference githubPreference = findPreference("prefGithub");
+        Preference licensePreference = findPreference("prefLicense");
 
-        homeIntent = new Intent(this, Home.class);
+        mHomeIntent = new Intent(this, Home.class);
 
         translatorsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -314,7 +308,7 @@ public class About extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
     @Override
@@ -328,14 +322,14 @@ public class About extends PreferenceActivity {
         super.onStop();
         getDelegate().onStop();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
 
     }
 
@@ -344,7 +338,7 @@ public class About extends PreferenceActivity {
         super.onDestroy();
         getDelegate().onDestroy();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
 
@@ -363,7 +357,7 @@ public class About extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(homeIntent);
+        startActivity(mHomeIntent);
     }
 
 }

@@ -25,25 +25,25 @@ import java.util.List;
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
     private String TAG = "HistoryAdapter";
 
-    public static final int COMPLETED = 1;
-    public static final int UNFINISHED = 2;
-    public static final int BOTH = 3;
+    static final int COMPLETED = 1;
+    static final int UNFINISHED = 2;
+    static final int BOTH = 3;
 
-    public static List<HistoryModel> mItemArray;
-    private static Context context;
-    private int numGames;
-    public static boolean actionModeDisabled = true;
-    private ViewHolder.ClickListener clickListener;
-    private boolean recentGames;
+    private static List<HistoryModel> mItemArray;
+    private Context mCtx;
+    private int mNumGames;
+    static boolean ACTION_MODE_DISABLED = true;
+    private ViewHolder.ClickListener mViewClickListener;
+    private int mActivity;
     private int mGamesToShow;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, boolean recentGames, int mGamesToShow) {
+    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, int activity, int mGamesToShow) {
         this.mItemArray = mItemArray;
-        this.context = context;
-        numGames = mItemArray.size();
-        this.clickListener = clickListener;
-        this.recentGames = recentGames;
+        this.mCtx = context;
+        mNumGames = mItemArray.size();
+        this.mViewClickListener = clickListener;
+        this.mActivity = activity;
         this.mGamesToShow = mGamesToShow;
     }
 
@@ -109,7 +109,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         // create a new view
 
         View view;
-        if (recentGames){
+        if (mActivity == Pointers.HOME){
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recent_history_adapter, parent, false);
         }else{
@@ -119,7 +119,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(view, clickListener);
+        ViewHolder vh = new ViewHolder(view, mViewClickListener);
 
         return vh;
     }
@@ -158,15 +158,15 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         });
 
         if (mItemArray.size() == 0){
-            Toast.makeText(context, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will reply", Toast.LENGTH_LONG).show();
+            Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will reply", Toast.LENGTH_LONG).show();
 
-        }else if(mItemArray.size() > 0){
+        }else {
 
             try {
 
                 HistoryModel item = mItemArray.get(mItemArray.size() - position - 1);
 
-                if (!recentGames){
+                if (mActivity == Pointers.HISTORY){
 
                     TypedValue outValue = new TypedValue();
 
@@ -176,10 +176,10 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
                     holder.textViewHistoryInProgress.setAllCaps(true);
 
                     if (isSelected(item.getmID()) ) {
-                        context.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
+                        mCtx.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
                         holder.relativeLayout.setBackgroundResource(outValue.resourceId);
-                    } else if (!isSelected(item.getmID()) || actionModeDisabled){
-                        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                    } else if (!isSelected(item.getmID()) || ACTION_MODE_DISABLED){
+                        mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
                         holder.relativeLayout.setBackgroundResource(outValue.resourceId);
                     }
                 }
@@ -201,7 +201,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return numGames;
+        return mNumGames;
     }
 
     // Provide a reference to the views for each data item

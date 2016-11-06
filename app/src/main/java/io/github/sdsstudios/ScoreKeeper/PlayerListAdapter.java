@@ -21,30 +21,25 @@ import java.util.List;
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>
         implements EditGame.PlayerListListener{
 
-    public static int NEW_GAME = 1;
-    public static int EDIT_GAME = 2;
-
-    Snackbar snackbar = null;
-    private Player backup;
+    private Snackbar mSnackBar = null;
+    private Player mBackupPlayer;
     private Game mGame;
     public ScoreDBAdapter mDbHelper;
-    private int mGameID;
-    private int activity;
-    private boolean editable;
-    private RelativeLayout relativeLayout;
-    private DataHelper dataHelper = new DataHelper();
+    private int mActivity;
+    private boolean mEditable;
+    private RelativeLayout mRelativeLayout;
+    private DataHelper mDataHelper = new DataHelper();
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public PlayerListAdapter(Game game, ScoreDBAdapter dbHelper, int mActivity, boolean mEditable) {
         mGame = game;
         mDbHelper = dbHelper;
-        mGameID = game.getmID();
-        activity = mActivity;
-        editable = mEditable;
-        if(activity == NEW_GAME){
-            relativeLayout = NewGame.RELATIVE_LAYOUT;
-        } else if (activity == EDIT_GAME) {
-            relativeLayout = EditGame.editGameLayout;
+        this.mActivity = mActivity;
+        this.mEditable = mEditable;
+        if(this.mActivity == Pointers.NEW_GAME){
+            mRelativeLayout = NewGame.RELATIVE_LAYOUT;
+        } else if (this.mActivity == Pointers.EDIT_GAME) {
+            mRelativeLayout = EditGame.EDIT_GAME_LAYOUT;
         }
     }
 
@@ -68,7 +63,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        if (activity == 1) {
+        if (mActivity == 1) {
             holder.layout.setVisibility(View.VISIBLE);
 
             holder.editTextPlayer.setText(mGame.getPlayer(position).getmName());
@@ -76,27 +71,27 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (holder.editTextPlayer.isEnabled()){
-                        backup = null;
-                        backup = new Player(holder.editTextPlayer.getText().toString(), 0, new ArrayList<Integer>());
+                        mBackupPlayer = null;
+                        mBackupPlayer = new Player(holder.editTextPlayer.getText().toString(), 0, new ArrayList<Integer>());
                         mGame.setPlayerName(holder.editTextPlayer.getText().toString(), position);
-                        if (dataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())){
+                        if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())){
                             View.OnClickListener onClickListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    snackbar.dismiss();
+                                    mSnackBar.dismiss();
                                 }
                             };
 
-                            mGame.setPlayer(backup, position);
+                            mGame.setPlayer(mBackupPlayer, position);
 
-                            if (relativeLayout != null) {
-                                snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                            if (mRelativeLayout != null) {
+                                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                                         .setAction("Dismiss", onClickListener);
-                                snackbar.show();
+                                mSnackBar.show();
                             }else{
-                                snackbar = Snackbar.make(relativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                                         .setAction("Dismiss", onClickListener);
-                                snackbar.show();
+                                mSnackBar.show();
                             }
 
                         }else{
@@ -124,11 +119,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 }
             });
 
-        } else if (activity == 2) {
+        } else if (mActivity == 2) {
             holder.layoutExt.setVisibility(View.VISIBLE);
             holder.buttonDelete.setVisibility(View.INVISIBLE);
 
-            if (editable){
+            if (mEditable){
                 holder.editTextPlayerExt.setEnabled(true);
                 holder.editTextScoreExt.setEnabled(true);
                 holder.buttonDelete.setVisibility(View.VISIBLE);
@@ -184,7 +179,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     }
                 });
 
-            }else if(!editable){
+            }else if(!mEditable){
                 holder.editTextPlayerExt.setHint(mGame.getPlayer(position).getmName());
                 holder.editTextScoreExt.setHint(String.valueOf(mGame.getPlayer(position).getmScore()));
                 holder.editTextPlayerExt.setEnabled(false);
@@ -202,8 +197,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void removeAt(int position) {
-        backup = null;
-        backup = mGame.getPlayer(position);
+        mBackupPlayer = null;
+        mBackupPlayer = mGame.getPlayer(position);
         mGame.removePlayer(position);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -216,10 +211,10 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mGame.size());
 
-        if (relativeLayout != null) {
-            snackbar = Snackbar.make(relativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
+        if (mRelativeLayout != null) {
+            mSnackBar = Snackbar.make(mRelativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
                     .setAction("Undo", onClickListener);
-            snackbar.show();
+            mSnackBar.show();
         }
 
     }
@@ -227,16 +222,16 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public void undoPlayerRemoval() {
         int playerArraySize = mGame.size();
 
-        mGame.setPlayer( backup, playerArraySize);
+        mGame.setPlayer(mBackupPlayer, playerArraySize);
 
-        if (relativeLayout != null) {
-            snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-            snackbar.show();
+        if (mRelativeLayout != null) {
+            mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+            mSnackBar.show();
         }else{
-            snackbar = Snackbar.make(relativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-            snackbar.show();
+            mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
+            mSnackBar.show();
         }
-        snackbar.show();
+        mSnackBar.show();
 
         notifyItemInserted(playerArraySize);
         notifyItemRangeChanged(playerArraySize, playerArraySize);

@@ -16,39 +16,39 @@ import java.util.TimeZone;
 
 public class TimeHelper {
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-    private SimpleDateFormat weekFormat = new SimpleDateFormat("d MMM");
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("d MMM yyyy");
-    private Calendar currentDate = Calendar.getInstance();
-    private Date theDate;
+    private SimpleDateFormat mGameDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat mTimeFormat = new SimpleDateFormat("HH:mm");
+    private SimpleDateFormat mWeekFormat = new SimpleDateFormat("d MMM");
+    private SimpleDateFormat mYearFormat = new SimpleDateFormat("d MMM yyyy");
+    private Calendar mCurrentDate = Calendar.getInstance();
+    private Date mDate;
 
     public String gameDate(String dateArray) {
 
         try {
-            theDate = simpleDateFormat.parse(dateArray);
+            mDate = mGameDateFormat.parse(dateArray);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         Calendar myCal = new GregorianCalendar();
-        myCal.setTime(theDate);
+        myCal.setTime(mDate);
 
-        boolean day = currentDate.get(Calendar.DAY_OF_MONTH) - myCal.get(Calendar.DAY_OF_MONTH) == 0
-                && currentDate.get(Calendar.MONTH) == myCal.get(Calendar.MONTH)
-                && currentDate.get(Calendar.YEAR) == myCal.get(Calendar.YEAR);
+        boolean day = mCurrentDate.get(Calendar.DAY_OF_MONTH) - myCal.get(Calendar.DAY_OF_MONTH) == 0
+                && mCurrentDate.get(Calendar.MONTH) == myCal.get(Calendar.MONTH)
+                && mCurrentDate.get(Calendar.YEAR) == myCal.get(Calendar.YEAR);
 
-        boolean year = currentDate.get(Calendar.YEAR) - myCal.get(Calendar.YEAR) != 0;
+        boolean year = mCurrentDate.get(Calendar.YEAR) - myCal.get(Calendar.YEAR) != 0;
 
         String dateStr = null;
         if (day){
-            dateStr = timeFormat.format(myCal.getTime());
+            dateStr = mTimeFormat.format(myCal.getTime());
 
         }else if(year){
-            dateStr = yearFormat.format(myCal.getTime());
+            dateStr = mYearFormat.format(myCal.getTime());
 
         }else{
-            dateStr = weekFormat.format(myCal.getTime());
+            dateStr = mWeekFormat.format(myCal.getTime());
         }
         return dateStr;
     }

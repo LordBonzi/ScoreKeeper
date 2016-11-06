@@ -22,34 +22,31 @@ import android.widget.GridView;
 import com.google.android.gms.ads.AdView;
 
 public class ThemeSettings extends PreferenceActivity{
-    private Intent settingsIntent;
+    private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
-    private SharedPreferences sharedPreferences;
-    private Preference  darkThemePreference, accentPreference, primaryPreference, classicPreference, defaultThemePreference, colorNavBarPreference;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private boolean darkTheme, classicTheme, colorNavBar;
-    private int accentColor, primaryColor, primaryDarkColor;
-    private int[] colors = {};
-    private int[] primaryColors = {};
-    private int[] primaryDarkColors = {};
-    private int index;
-    private int oldColorIndex;
+    private SharedPreferences mSharedPreferences;
+    SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+    private boolean mDarkTheme, mClassicTheme, mColorNavBar;
+    private int mAccentColor, mPrimaryColor, mPrimaryDarkColor;
+    private int[] mColors = {};
+    private int mColorIndex;
+    private int mOldColorIndex;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
-        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-        colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        mClassicTheme = mSharedPreferences.getBoolean("prefClassicTheme", false);
+        mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", false);
+        mColorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         colorIndex();
-        accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
+        mAccentColor = mSharedPreferences.getInt("prefAccent", mColors[1]);
         colorIndex();
-        oldColorIndex = index;
-        primaryColor = sharedPreferences.getInt("prefPrimaryColor", getPrimaryColors()[0]);
-        primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[0]);
+        mOldColorIndex = mColorIndex;
+        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", getPrimaryColors()[0]);
+        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[0]);
 
-        setTheme(accentColor);
+        setTheme(mAccentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -58,27 +55,27 @@ public class ThemeSettings extends PreferenceActivity{
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
+        toolbar.setBackgroundColor(mPrimaryColor);
         setSupportActionBar(toolbar);
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
+            getWindow().setStatusBarColor(mPrimaryDarkColor);
         }
-        if (colorNavBar){
+        if (mColorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
+                getWindow().setNavigationBarColor(mPrimaryDarkColor);
             }
         }
         addPreferencesFromResource(R.xml.theme_settings);
 
-        darkThemePreference = findPreference("prefDarkTheme");
-        accentPreference = findPreference("prefAccentColor");
-        primaryPreference = findPreference("prefPrimaryColor");
-        classicPreference = findPreference("prefClassicScoreboard");
-        defaultThemePreference = findPreference("prefDefaultTheme");
-        colorNavBarPreference = findPreference("prefColorNavBar");
+        Preference darkThemePreference = findPreference("prefDarkTheme");
+        Preference accentPreference = findPreference("prefAccentColor");
+        Preference primaryPreference = findPreference("prefPrimaryColor");
+        Preference classicPreference = findPreference("prefClassicScoreboard");
+        Preference defaultThemePreference = findPreference("prefDefaultTheme");
+        Preference colorNavBarPreference = findPreference("prefColorNavBar");
 
-        settingsIntent = new Intent(this, Settings.class);
+        mSettingsIntent = new Intent(this, Settings.class);
 
         final int[] rawColors = new int[] {
                 getResources().getColor(R.color.accentGrey),
@@ -91,15 +88,15 @@ public class ThemeSettings extends PreferenceActivity{
                 getResources().getColor(R.color.accentBlue)
 
         };
-        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-        accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
+        mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", false);
+        mAccentColor = mSharedPreferences.getInt("prefAccent", mColors[1]);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             colorNavBarPreference.setEnabled(true);
             colorNavBarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    colorNavBar = !colorNavBar;
+                    mColorNavBar = !mColorNavBar;
                     saveInfo();
                     Intent intent = getIntent();
                     finish();
@@ -114,9 +111,9 @@ public class ThemeSettings extends PreferenceActivity{
         defaultThemePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                accentColor = colors[1];
-                primaryColor = getPrimaryColors()[0];
-                primaryDarkColor = getPrimaryDarkColors()[0];
+                mAccentColor = mColors[1];
+                mPrimaryColor = getPrimaryColors()[0];
+                mPrimaryDarkColor = getPrimaryDarkColors()[0];
                 saveInfo();
                 Intent intent = getIntent();
                 finish();
@@ -128,10 +125,10 @@ public class ThemeSettings extends PreferenceActivity{
         darkThemePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                darkTheme = !darkTheme;
+                mDarkTheme = !mDarkTheme;
                 saveInfo();
                 colorIndex();
-                accentColor = colors[oldColorIndex-1];
+                mAccentColor = mColors[mOldColorIndex -1];
                 saveInfo();
                 Intent intent = getIntent();
                 finish();
@@ -144,7 +141,7 @@ public class ThemeSettings extends PreferenceActivity{
         classicPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                classicTheme = !classicTheme;
+                mClassicTheme = !mClassicTheme;
                 saveInfo();
                 return true;
             }
@@ -153,7 +150,7 @@ public class ThemeSettings extends PreferenceActivity{
         accentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                accentColor = sharedPreferences.getInt("prefAccent", colors[1]);
+                mAccentColor = mSharedPreferences.getInt("prefAccent", mColors[1]);
 
 
                 final View dialogView;
@@ -166,14 +163,14 @@ public class ThemeSettings extends PreferenceActivity{
                 colorIndex();
 
                 final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
-                final GridViewAdapter gridViewAdapter = new GridViewAdapter(ThemeSettings.this, index, colors, rawColors, true);
+                final GridViewAdapter gridViewAdapter = new GridViewAdapter(ThemeSettings.this, mColorIndex, mColors, rawColors, true);
 
                 gridView.setAdapter(gridViewAdapter);
 
                 dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        accentColor = colors[1];
+                        mAccentColor = mColors[1];
                         saveInfo();
 
                         colorIndex();
@@ -209,8 +206,8 @@ public class ThemeSettings extends PreferenceActivity{
         primaryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                primaryColor = sharedPreferences.getInt("prefPrimaryColor", getPrimaryColors()[1]);
-                primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[1]);
+                mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", getPrimaryColors()[1]);
+                mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getPrimaryDarkColors()[1]);
 
                 final View dialogView;
 
@@ -219,22 +216,22 @@ public class ThemeSettings extends PreferenceActivity{
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ThemeSettings.this);
                 dialogView = inflter.inflate(R.layout.accent_color_fragment, null);
 
-                index = 1;
+                mColorIndex = 1;
                 for (int i = 0; i < getPrimaryColors().length; i++){
-                    if (primaryColor == getPrimaryColors()[i]){
-                        index = i+1;
+                    if (mPrimaryColor == getPrimaryColors()[i]){
+                        mColorIndex = i+1;
                     }
                 }
                 final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
-                final GridViewAdapter gridViewAdapter = new GridViewAdapter(ThemeSettings.this, index, getPrimaryColors(), getPrimaryDarkColors(),false);
+                final GridViewAdapter gridViewAdapter = new GridViewAdapter(ThemeSettings.this, mColorIndex, getPrimaryColors(), getPrimaryDarkColors(),false);
 
                 gridView.setAdapter(gridViewAdapter);
 
                 dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        primaryColor = getPrimaryColors()[0];
-                        primaryDarkColor = getPrimaryDarkColors()[0];
+                        mPrimaryColor = getPrimaryColors()[0];
+                        mPrimaryDarkColor = getPrimaryDarkColors()[0];
                         saveInfo();
                         Intent intent = getIntent();
                         finish();
@@ -267,7 +264,7 @@ public class ThemeSettings extends PreferenceActivity{
     }
 
     public int[] getPrimaryColors(){
-        primaryColors = new int[]{
+        int[] primaryColors = new int[]{
                 getResources().getColor(R.color.primaryIndigo),
                 getResources().getColor(R.color.primaryRed),
                 getResources().getColor(R.color.primaryPurple),
@@ -282,7 +279,7 @@ public class ThemeSettings extends PreferenceActivity{
     }
 
     public int[] getPrimaryDarkColors(){
-        primaryDarkColors = new int[]{
+        int[] primaryDarkColors = new int[]{
                 getResources().getColor(R.color.primaryIndigoDark),
                 getResources().getColor(R.color.primaryRedDark),
                 getResources().getColor(R.color.primaryPurpleDark),
@@ -305,8 +302,8 @@ public class ThemeSettings extends PreferenceActivity{
     }
 
     public void colorIndex(){
-        if (darkTheme) {
-            colors = new int[]{
+        if (mDarkTheme) {
+            mColors = new int[]{
                     R.style.DarkTheme_Grey,
                     R.style.DarkTheme_Pink,
                     R.style.DarkTheme_Yellow,
@@ -318,7 +315,7 @@ public class ThemeSettings extends PreferenceActivity{
 
             };
         }else{
-            colors = new int[]{
+            mColors = new int[]{
                     R.style.AppTheme_Grey,
                     R.style.AppTheme_Pink,
                     R.style.AppTheme_Yellow,
@@ -330,10 +327,10 @@ public class ThemeSettings extends PreferenceActivity{
 
             };
         }
-        index = 1;
-        for (int i = 0; i < colors.length; i++){
-            if (accentColor == colors[i]){
-                index = i+1;
+        mColorIndex = 1;
+        for (int i = 0; i < mColors.length; i++){
+            if (mAccentColor == mColors[i]){
+                mColorIndex = i+1;
             }
         }
 
@@ -361,13 +358,13 @@ public class ThemeSettings extends PreferenceActivity{
     }
 
     private void saveInfo(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("prefDarkTheme", darkTheme);
-        editor.putInt("prefAccent", accentColor);
-        editor.putInt("prefPrimaryColor", primaryColor);
-        editor.putInt("prefPrimaryDarkColor", primaryDarkColor);
-        editor.putBoolean("prefClassicTheme", classicTheme);
-        editor.putBoolean("prefColorNavBar", colorNavBar);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean("prefDarkTheme", mDarkTheme);
+        editor.putInt("prefAccent", mAccentColor);
+        editor.putInt("prefPrimaryColor", mPrimaryColor);
+        editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
+        editor.putBoolean("prefClassicTheme", mClassicTheme);
+        editor.putBoolean("prefColorNavBar", mColorNavBar);
 
         editor.apply();
 
@@ -376,7 +373,7 @@ public class ThemeSettings extends PreferenceActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
@@ -390,14 +387,14 @@ public class ThemeSettings extends PreferenceActivity{
         super.onStop();
         getDelegate().onStop();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
     }
 
@@ -406,7 +403,7 @@ public class ThemeSettings extends PreferenceActivity{
         super.onDestroy();
         getDelegate().onDestroy();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
 
@@ -425,7 +422,7 @@ public class ThemeSettings extends PreferenceActivity{
 
     @Override
     public void onBackPressed() {
-        startActivity(settingsIntent);
+        startActivity(mSettingsIntent);
     }
 
 }

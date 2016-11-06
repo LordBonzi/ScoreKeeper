@@ -13,16 +13,16 @@ import android.widget.ImageView;
  */
 
 public class GridViewAdapter extends BaseAdapter {
-    private Context context;
-    private int selected;
-    private final int[] colors, rawColors;
+    private Context mCtx;
+    private int mSelected;
+    private final int[] mColors, mRawColors;
     private boolean accent;
 
-    public GridViewAdapter(Context context, int selected, int[] colors, int[] rawColors, boolean accents){
-        this.context = context;
-        this.selected = selected;
-        this.colors = colors;
-        this.rawColors = rawColors;
+    public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, boolean accents){
+        this.mCtx = mCtx;
+        this.mSelected = mSelected;
+        this.mColors = colors;
+        this.mRawColors = rawColors;
         accent=accents;
     }
 
@@ -43,15 +43,15 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) context
+        LayoutInflater inflater = (LayoutInflater) mCtx
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View gridView = inflater.inflate(R.layout.accent_color_item, null);
         ImageView itemView = (ImageView) gridView.findViewById(R.id.accentColorView);
 
         itemView.setScaleType(ImageView.ScaleType.CENTER);
 
-        gridView.setBackgroundColor(rawColors[position]);
-        if (selected == position +1) {
+        gridView.setBackgroundColor(mRawColors[position]);
+        if (mSelected == position +1) {
             itemView.setImageResource(R.mipmap.ic_check_white_24dp);
 
         }else{
@@ -61,15 +61,15 @@ public class GridViewAdapter extends BaseAdapter {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selected = position+1;
-                SharedPreferences sharedPreferences = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+                mSelected = position+1;
+                SharedPreferences sharedPreferences = mCtx.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 if (accent) {
-                    editor.putInt("prefAccent", colors[selected - 1]);
+                    editor.putInt("prefAccent", mColors[mSelected - 1]);
                 }else{
-                    editor.putInt("prefPrimaryColor", colors[selected - 1]);
-                    editor.putInt("prefPrimaryDarkColor", rawColors[selected - 1]);
+                    editor.putInt("prefPrimaryColor", mColors[mSelected - 1]);
+                    editor.putInt("prefPrimaryDarkColor", mRawColors[mSelected - 1]);
                 }
 
                 editor.apply();

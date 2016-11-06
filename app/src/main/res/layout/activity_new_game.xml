@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="io.github.sdsstudios.ScoreKeeper.NewGame">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
 
     <include
         layout="@layout/content_new_game"

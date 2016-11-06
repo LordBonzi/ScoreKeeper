@@ -18,19 +18,18 @@ import java.util.List;
  */
 public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder> {
 
-    private List<String> arrayList;
-    private Context context;
-    private DataHelper dataHelper = new DataHelper();
-    private ViewHolder.ClickListener listener;
-    private int activity;
+    private List<String> mArrayList;
+    private Context mCtx;
+    private ViewHolder.ClickListener mClickListener;
+    private int mActivity;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecyclerViewArrayAdapter(List<String> titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
-        context = context1;
-        this.arrayList = titleArray;
-        this.listener = listener;
-        this.activity = activity;
+        mCtx = context1;
+        this.mArrayList = titleArray;
+        this.mClickListener = listener;
+        this.mActivity = activity;
 
     }
 
@@ -75,13 +74,11 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     }
 
     public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter, int gameID) {
-        if (activity == 1) {
+        if (mActivity == Pointers.NEW_GAME) {
             for (int i = 0; i < getSelectedItems().size(); i++) {
                 int position = getSelectedItems().get(getSelectedItems().size() - i - 1);
                 presetDBAdapter.deletePreset(position);
             }
-
-        } else if (activity == 2) {
 
         }
         notifyDataSetChanged();
@@ -90,7 +87,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
     private void removeRange(int positionStart, int itemCount) {
         for (int i = 0; i < itemCount; ++i) {
-            arrayList.remove(positionStart);
+            mArrayList.remove(positionStart);
         }
         notifyItemRangeRemoved(positionStart, itemCount);
     }
@@ -109,7 +106,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
         // set the view's size, margins, paddings and layout parameters
 
-        ViewHolder vh = new ViewHolder(view, listener);
+        ViewHolder vh = new ViewHolder(view, mClickListener);
 
         return vh;
     }
@@ -120,13 +117,13 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(arrayList.get(position).toString());
+        holder.textView.setText(mArrayList.get(position).toString());
 
         TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
         if (isSelected(position + 1)) {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.stop));
+            holder.cardView.setCardBackgroundColor(mCtx.getResources().getColor(R.color.stop));
 
         } else if (!isSelected(position + 1)) {
 
@@ -139,7 +136,7 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return mArrayList.size();
     }
 
     // Provide a reference to the views for each data item

@@ -189,7 +189,7 @@ public class NewGame extends AppCompatActivity
                         toggleCardViewHeight(height, card, mScrollView.getScrollY());
                     }
                     // Do whatever you want with h
-                    // Remove the listener so it is not called repeatedly
+                    // Remove the onSharedPreferenceChangeListener so it is not called repeatedly
                     removeOnGlobalLayoutListener(card.getmContent(), this);
                 }
             });
@@ -492,7 +492,7 @@ public class NewGame extends AppCompatActivity
         mPlayerList.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         mPlayerList.setLayoutManager(mLayoutManager);
-        PLAYER_LIST_ADAPTER = new PlayerListAdapter(mCurrentGame, mDBHelper, PlayerListAdapter.NEW_GAME, false);
+        PLAYER_LIST_ADAPTER = new PlayerListAdapter(mCurrentGame, mDBHelper, Pointers.NEW_GAME, false);
         mPlayerList.setAdapter(PLAYER_LIST_ADAPTER);
 
     }
@@ -600,7 +600,7 @@ public class NewGame extends AppCompatActivity
             titleArrayList.add(presetGame.getmTitle());
         }
 
-        mRecyclerViewAdapter = new RecyclerViewArrayAdapter((ArrayList) titleArrayList, this, this, 1);
+        mRecyclerViewAdapter = new RecyclerViewArrayAdapter((ArrayList) titleArrayList, this, this, Pointers.NEW_GAME);
         LayoutInflater inflter = LayoutInflater.from(this);
         final AlertDialog alertDialog;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -734,6 +734,7 @@ public class NewGame extends AppCompatActivity
         });
         anim.start();
     }
+
     public void expandView(int height, final RelativeLayout layout, final int scrollTo) {
 
         ValueAnimator anim = ValueAnimator.ofInt(layout.getMeasuredHeightAndState(),
@@ -896,7 +897,7 @@ public class NewGame extends AppCompatActivity
 
                 if (startGame) {
 
-                    mainActivityIntent.putExtra("gameID", mGameID);
+                    mainActivityIntent.putExtra("GAME_ID", mGameID);
                     startActivity(mainActivityIntent);
                     finish();
                 }else{

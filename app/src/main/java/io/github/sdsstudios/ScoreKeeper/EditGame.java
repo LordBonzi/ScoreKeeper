@@ -39,18 +39,19 @@ import java.util.Date;
 import java.util.List;
 
 public class EditGame extends AppCompatActivity {
-    int gameID;
-    private EditText editTextLength, editTextDate;
-    private RecyclerView recyclerView;
-    private ScoreDBAdapter dbHelper;
-    private DataHelper dataHelper;
-    private PlayerListAdapter playerListAdapter;
-    public static RelativeLayout editGameLayout;
-    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat hourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
-    boolean bLength = false;
-    private MenuItem menuItemDelete, menuItemEdit, menuItemDone, menuItemCancel, menuItemAdd
-            , menuItemShare, menuItemComplete;
+
+    private int mGameID;
+    private EditText mEditTextLength, mEditTextDate;
+    private RecyclerView mRecyclerView;
+    private ScoreDBAdapter mDbHelper;
+    private DataHelper mDataHelper;
+    private PlayerListAdapter mPlayerListAdapter;
+    public static RelativeLayout EDIT_GAME_LAYOUT;
+    private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
+    boolean mBooleanLength = false;
+    private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
+            , mMenuItemShare, mMenuItemComplete;
     private Intent mShareIntent;
 
     private NestedScrollView mScrollView;
@@ -96,16 +97,16 @@ public class EditGame extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle extras = getIntent().getExtras();
-        gameID = extras.getInt("gameID");
+        mGameID = extras.getInt("GAME_ID");
 
-        dbHelper = new ScoreDBAdapter(this);
-        dbHelper.open();
+        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper.open();
 
-        dataHelper = new DataHelper();
+        mDataHelper = new DataHelper();
 
-        editTextDate = (EditText) findViewById(R.id.editTextDate);
-        editTextLength = (EditText) findViewById(R.id.editTextLength);
-        editGameLayout = (RelativeLayout) findViewById(R.id.edit_game_content);
+        mEditTextDate = (EditText) findViewById(R.id.editTextDate);
+        mEditTextLength = (EditText) findViewById(R.id.editTextLength);
+        EDIT_GAME_LAYOUT = (RelativeLayout) findViewById(R.id.edit_game_content);
         mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
         ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
@@ -123,9 +124,9 @@ public class EditGame extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
 
-        mGame = dataHelper.getGame(gameID, dbHelper);
+        mGame = mDataHelper.getGame(mGameID, mDbHelper);
 
         mEditTextOptions = mGame.getmEditTextOptions();
         mCheckBoxOptions = mGame.getmCheckBoxOptions();
@@ -167,16 +168,16 @@ public class EditGame extends AppCompatActivity {
                         toggleCardViewHeight(height, card, mScrollView.getScrollY());
                     }
                     // Do whatever you want with h
-                    // Remove the listener so it is not called repeatedly
+                    // Remove the onSharedPreferenceChangeListener so it is not called repeatedly
                     removeOnGlobalLayoutListener(card.getmContent(), this);
                 }
             });
         }
 
-        editTextLength.setHint(mGame.getmLength());
-        editTextDate.setHint(mGame.getmTime());
-        editTextLength.setEnabled(false);
-        editTextDate.setEnabled(false);
+        mEditTextLength.setHint(mGame.getmLength());
+        mEditTextDate.setHint(mGame.getmTime());
+        mEditTextLength.setEnabled(false);
+        mEditTextDate.setEnabled(false);
 
         displayRecyclerView(false);
 
@@ -260,10 +261,10 @@ public class EditGame extends AppCompatActivity {
 
     private void updateCompleteMenuItem(){
         if (mGame.ismCompleted()){
-            menuItemComplete.setTitle(R.string.complete);
+            mMenuItemComplete.setTitle(R.string.complete);
             mGame.setmCompleted(true);
         }else{
-            menuItemComplete.setTitle(R.string.unfinish);
+            mMenuItemComplete.setTitle(R.string.unfinish);
             mGame.setmCompleted(false);
         }
     }
@@ -274,24 +275,24 @@ public class EditGame extends AppCompatActivity {
 
         try {
             getMenuInflater().inflate(R.menu.main, menu);
-            mMenuItemList.add(menuItemDelete = menu.findItem(R.id.action_delete));
-            mMenuItemList.add(menuItemDone = menu.findItem(R.id.action_done));
-            mMenuItemList.add(menuItemEdit = menu.findItem(R.id.action_edit));
-            mMenuItemList.add(menuItemCancel = menu.findItem(R.id.action_cancel));
-            mMenuItemList.add(menuItemAdd = menu.findItem(R.id.action_add));
-            mMenuItemList.add(menuItemComplete = menu.findItem(R.id.complete_game));
-            mMenuItemList.add(menuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true));
+            mMenuItemList.add(mMenuItemDelete = menu.findItem(R.id.action_delete));
+            mMenuItemList.add(mMenuItemDone = menu.findItem(R.id.action_done));
+            mMenuItemList.add(mMenuItemEdit = menu.findItem(R.id.action_edit));
+            mMenuItemList.add(mMenuItemCancel = menu.findItem(R.id.action_cancel));
+            mMenuItemList.add(mMenuItemAdd = menu.findItem(R.id.action_add));
+            mMenuItemList.add(mMenuItemComplete = menu.findItem(R.id.complete_game));
+            mMenuItemList.add(mMenuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true));
 
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_settings).setVisible(false);
-            menuItemComplete.setVisible(true);
+            mMenuItemComplete.setVisible(true);
 
             updateCompleteMenuItem();
 
             createShareIntent();
             // Fetch and store ShareActionProvider
-            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
+            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
             mShareActionProvider.setShareIntent(mShareIntent);
         }catch (Exception e){
             e.printStackTrace();
@@ -311,27 +312,27 @@ public class EditGame extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        dbHelper.open();
+        mDbHelper.open();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     public void completeGame(){
 
         if (mGame.ismCompleted()){
-            menuItemComplete.setTitle(R.string.complete);
+            mMenuItemComplete.setTitle(R.string.complete);
         }else{
-            menuItemComplete.setTitle(R.string.unfinish);
+            mMenuItemComplete.setTitle(R.string.unfinish);
         }
     }
 
@@ -356,7 +357,7 @@ public class EditGame extends AppCompatActivity {
             onMenuCancelClick();
 
         } else if (id == R.id.action_add){
-            playerListAdapter.addPlayer();
+            mPlayerListAdapter.addPlayer();
 
         }else if (id == R.id.complete_game){
             completeGame();
@@ -385,16 +386,16 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuEditClick() {
-        editTextLength.setEnabled(true);
-        editTextDate.setEnabled(true);
+        mEditTextLength.setEnabled(true);
+        mEditTextDate.setEnabled(true);
 
-        menuItemAdd.setVisible(true);
-        menuItemDelete.setVisible(false);
-        menuItemEdit.setVisible(false);
-        menuItemDone.setVisible(true);
-        menuItemCancel.setVisible(true);
-        menuItemShare.setVisible(false);
-        menuItemComplete.setVisible(false);
+        mMenuItemAdd.setVisible(true);
+        mMenuItemDelete.setVisible(false);
+        mMenuItemEdit.setVisible(false);
+        mMenuItemDone.setVisible(true);
+        mMenuItemCancel.setVisible(true);
+        mMenuItemShare.setVisible(false);
+        mMenuItemComplete.setVisible(false);
 
         for (CheckBoxOption c: mCheckBoxOptions){
             getCheckBox(c.getmID()).setEnabled(true);
@@ -431,46 +432,46 @@ public class EditGame extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        editTextLength.setText(mGame.getmLength());
-        editTextDate.setText(mGame.getmTime());
+        mEditTextLength.setText(mGame.getmLength());
+        mEditTextDate.setText(mGame.getmTime());
         displayRecyclerView(true);
 
     }
 
     public void displayRecyclerView(boolean editable) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
-        playerListAdapter = new PlayerListAdapter(mGame, dbHelper, PlayerListAdapter.EDIT_GAME, editable);
-        recyclerView.setAdapter(playerListAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mPlayerListAdapter = new PlayerListAdapter(mGame, mDbHelper, Pointers.EDIT_GAME, editable);
+        mRecyclerView.setAdapter(mPlayerListAdapter);
     }
 
     public void onMenuDoneClick() {
-        playerListAdapter.deleteEmptyPlayers(mGame);
+        mPlayerListAdapter.deleteEmptyPlayers(mGame);
 
         //TODO fix this mess with pulling Game from playerlistadapter
 
-        mGame = playerListAdapter.getGame();
+        mGame = mPlayerListAdapter.getGame();
 
-        final String newDate = editTextDate.getText().toString();
-        final String newLength = editTextLength.getText().toString();
+        final String newDate = mEditTextDate.getText().toString();
+        final String newLength = mEditTextLength.getText().toString();
 
-        if (!checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
+        if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
             mGame.setChecked(CheckBoxOption.STOPWATCH, true);
-            bLength = true;
+            mBooleanLength = true;
             invalidSnackbar(getString(R.string.invalid_time));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
-            bLength = false;
+            mBooleanLength = false;
             mGame.setChecked(CheckBoxOption.STOPWATCH, false);
 
-        }else if(checkValidity(newLength, hourlengthFormat, 10) && newLength.length() != 0){
-            bLength = false;
+        }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
+            mBooleanLength = false;
             mGame.setChecked(CheckBoxOption.STOPWATCH, true);
         }
 
-        final boolean bDateAndTime = checkValidity(editTextDate.getText().toString(), dateTimeFormat, 19);
+        final boolean bDateAndTime = checkValidity(mEditTextDate.getText().toString(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = dataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
+        final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
         final boolean bNumPlayers = moreThanTwoPlayers();
 
         AlertDialog dialog;
@@ -482,8 +483,8 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                playerListAdapter.deleteEmptyPlayers(mGame);
-                mGame = playerListAdapter.getGame();
+                mPlayerListAdapter.deleteEmptyPlayers(mGame);
+                mGame = mPlayerListAdapter.getGame();
 
                 if (bCheckEmpty) {
 
@@ -500,11 +501,11 @@ public class EditGame extends AppCompatActivity {
 
                     invalidSnackbar("Must have 2 or more players");
 
-                }else if (!bCheckEmpty && bDateAndTime && !bLength && !bCheckDuplicates && !bNumPlayers){
+                }else if (!bCheckEmpty && bDateAndTime && !mBooleanLength && !bCheckDuplicates && !bNumPlayers){
                     mGame.setmTime(newDate);
                     mGame.setmLength(newLength);
 
-                    dbHelper.updateGame(mGame);
+                    mDbHelper.updateGame(mGame);
 
                     for (CheckBoxOption c : mCheckBoxOptions){
                         getCheckBox(c.getmCheckBoxID()).setEnabled(false);
@@ -513,25 +514,25 @@ public class EditGame extends AppCompatActivity {
                         getEditText(e.getmEditTextID()).setEnabled(false);
                     }
 
-                    editTextLength.setText(mGame.getmLength());
-                    editTextDate.setText(mGame.getmTime());
+                    mEditTextLength.setText(mGame.getmLength());
+                    mEditTextDate.setText(mGame.getmTime());
 
                     displayRecyclerView(false);
 
-                    editTextLength.setEnabled(false);
-                    editTextDate.setEnabled(false);
-                    menuItemAdd.setVisible(false);
-                    menuItemDelete.setVisible(true);
-                    menuItemDone.setVisible(false);
-                    menuItemEdit.setVisible(true);
-                    menuItemCancel.setVisible(false);
-                    menuItemShare.setVisible(true);
-                    menuItemComplete.setVisible(true);
-                    editTextDate.setEnabled(false);
-                    editTextLength.setEnabled(false);
+                    mEditTextLength.setEnabled(false);
+                    mEditTextDate.setEnabled(false);
+                    mMenuItemAdd.setVisible(false);
+                    mMenuItemDelete.setVisible(true);
+                    mMenuItemDone.setVisible(false);
+                    mMenuItemEdit.setVisible(true);
+                    mMenuItemCancel.setVisible(false);
+                    mMenuItemShare.setVisible(true);
+                    mMenuItemComplete.setVisible(true);
+                    mEditTextDate.setEnabled(false);
+                    mEditTextLength.setEnabled(false);
 
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    dbHelper.close();
+                    mDbHelper.close();
                 }
 
             }
@@ -569,47 +570,53 @@ public class EditGame extends AppCompatActivity {
     public void invalidSnackbar(String message) {
         Snackbar snackbar;
 
-        snackbar = Snackbar.make(editGameLayout, message, Snackbar.LENGTH_SHORT);
+        snackbar = Snackbar.make(EDIT_GAME_LAYOUT, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
     public void onMenuCancelClick(){
-        editTextLength.setText(mGame.getmLength());
-        editTextDate.setText(mGame.getmTime());
+        mEditTextLength.setText(mGame.getmLength());
+        mEditTextDate.setText(mGame.getmTime());
 
-        editTextLength.setEnabled(false);
-        editTextDate.setEnabled(false);
-        menuItemDelete.setVisible(true);
-        menuItemDone.setVisible(false);
-        menuItemEdit.setVisible(true);
-        menuItemAdd.setVisible(false);
-        menuItemCancel.setVisible(false);
-        menuItemShare.setVisible(true);
-        menuItemComplete.setVisible(true);
-        editTextDate.setEnabled(false);
-        editTextLength.setEnabled(false);
+        mEditTextLength.setEnabled(false);
+        mEditTextDate.setEnabled(false);
+        mMenuItemDelete.setVisible(true);
+        mMenuItemDone.setVisible(false);
+        mMenuItemEdit.setVisible(true);
+        mMenuItemAdd.setVisible(false);
+        mMenuItemCancel.setVisible(false);
+        mMenuItemShare.setVisible(true);
+        mMenuItemComplete.setVisible(true);
+        mEditTextDate.setEnabled(false);
+        mEditTextLength.setEnabled(false);
 
         loadOptions();
 
         displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     private void loadOptions(){
         for (EditTextOption e : mEditTextOptions){
 
             if (e.getmData() != 0) {
-                getEditText(e.getmID()).setText(String.valueOf(e.getmData()));
+                EditText editText = getEditText(e.getmEditTextID());
+                editText.setText(String.valueOf(e.getmData()));
+                editText.setEnabled(false);
             }
 
         }
 
         for(CheckBoxOption c : mCheckBoxOptions){
+            CheckBox checkBox = getCheckBox(c.getmCheckBoxID());
             if (c.isChecked()){
-                getCheckBox(c.getmCheckBoxID()).setChecked(true);
+                checkBox.setChecked(true);
             }else{
-                getCheckBox(c.getmCheckBoxID()).setChecked(false);
+                checkBox.setChecked(false);
             }
+
+            checkBox.setEnabled(false);
         }
     }
 
@@ -627,7 +634,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                dbHelper.deleteGame(gameID);
+                mDbHelper.deleteGame(mGameID);
                 startActivity(new Intent(EditGame.this, History.class));
             }
         });

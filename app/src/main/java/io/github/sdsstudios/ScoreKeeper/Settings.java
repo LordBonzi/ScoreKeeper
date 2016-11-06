@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,29 +28,24 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 public class Settings extends PreferenceActivity{
-    private ScoreDBAdapter dbHelper;
-    private Intent homeIntent;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private ScoreDBAdapter mDbHelper;
+    private Intent mHomeIntent;
     private AppCompatDelegate mDelegate;
-    private Preference deletePreference, timeLimitPreference, numGamesPreference
-            , themesPreference, maxNumOnDicePreference, exportPreference, importPreference, mCreateGamesPreference, mDeleteAllPresets;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
-    AlertDialog dialog;
-    private DataHelper dataHelper;
-    private boolean colorise;
-    private String numGamesToShow;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+    private AlertDialog mDialog;
+    private int mNumGamesToShow;
+    private SharedPreferences mSharedPreferences;
     private int maxNumDice;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        maxNumDice = sharedPreferences.getInt("maxNumDice", 6);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        maxNumDice = mSharedPreferences.getInt("maxNumDice", 6);
+        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
 
         if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -76,19 +70,14 @@ public class Settings extends PreferenceActivity{
             getWindow().setStatusBarColor(primaryDarkColor);
         }
 
-        dataHelper = new DataHelper();
+        Preference deletePreference = findPreference("prefDeleteAllGames");
+        Preference numGamesPreference = findPreference("prefNumGames");
+        Preference themesPreference = findPreference("prefThemes");
+        Preference maxNumOnDicePreference = findPreference("prefDiceMaxNum");
+        Preference exportPreference = findPreference("prefExport");
+        Preference importPreference = findPreference("prefImport");
+        Preference mDeleteAllPresets = findPreference("prefDeleteAllPresets");
 
-        deletePreference = findPreference("prefDeleteAllGames");
-        timeLimitPreference = findPreference("prefDeleteTimeLimit");
-        numGamesPreference = findPreference("prefNumGames");
-        themesPreference = findPreference("prefThemes");
-        maxNumOnDicePreference = findPreference("prefDiceMaxNum");
-        exportPreference = findPreference("prefExport");
-        importPreference = findPreference("prefImport");
-        mCreateGamesPreference = findPreference("prefCreateGames");
-        mDeleteAllPresets = findPreference("prefDeleteAllPresets");
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -116,8 +105,8 @@ public class Settings extends PreferenceActivity{
                     }
                 });
 
-                dialog = builder.create();
-                dialog.show();                return true;
+                mDialog = builder.create();
+                mDialog.show();                return true;
             }
 
         });
@@ -146,8 +135,8 @@ public class Settings extends PreferenceActivity{
                     }
                 });
 
-                dialog = builder.create();
-                dialog.show();
+                mDialog = builder.create();
+                mDialog.show();
                 return true;
             }
 
@@ -172,7 +161,7 @@ public class Settings extends PreferenceActivity{
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            dbHelper.open().deleteAllgames();
+                            mDbHelper.open().deleteAllgames();
                             Toast.makeText(Settings.this, "Successfully deleted games", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -186,8 +175,8 @@ public class Settings extends PreferenceActivity{
                     }
                 });
 
-                dialog = builder.create();
-                dialog.show();
+                mDialog = builder.create();
+                mDialog.show();
                 return true;
             }
         });
@@ -220,8 +209,8 @@ public class Settings extends PreferenceActivity{
                     }
                 });
 
-                dialog = builder.create();
-                dialog.show();
+                mDialog = builder.create();
+                mDialog.show();
                 return true;
             }
         });
@@ -238,20 +227,20 @@ public class Settings extends PreferenceActivity{
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                numGamesToShow = (String) o;
+                mNumGamesToShow = (int) o;
                 saveInfo();
                 return true;
             }
 
         });
 
-        dbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new ScoreDBAdapter(this);
 
-        homeIntent = new Intent(this, Home.class);
+        mHomeIntent = new Intent(this, Home.class);
 
         //Shared prefs stuff
 
-        numGamesToShow = sharedPreferences.getString("numgamestoshow", "3");
+        mNumGamesToShow = mSharedPreferences.getInt("numgamestoshow", 3);
 
     }
 
@@ -339,8 +328,8 @@ public class Settings extends PreferenceActivity{
     }
 
     private void saveInfo(){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("numgamestoshow", numGamesToShow);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("numgamestoshow", mNumGamesToShow);
         editor.putInt("maxNumDice", maxNumDice);
         editor.apply();
     }
@@ -348,7 +337,7 @@ public class Settings extends PreferenceActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
@@ -362,14 +351,14 @@ public class Settings extends PreferenceActivity{
         super.onStop();
         getDelegate().onStop();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
     }
 
@@ -378,7 +367,7 @@ public class Settings extends PreferenceActivity{
         super.onDestroy();
         getDelegate().onDestroy();
         getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
     private AppCompatDelegate getDelegate() {
@@ -396,7 +385,7 @@ public class Settings extends PreferenceActivity{
 
     @Override
     public void onBackPressed() {
-        startActivity(homeIntent);
+        startActivity(mHomeIntent);
     }
 
 }

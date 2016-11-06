@@ -33,20 +33,18 @@ import java.util.List;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
 
-    private Intent newGameIntent;
-    private Intent settingsIntent;
-    private Intent aboutIntent;
-    private Intent historyIntent;
-    private ScoreDBAdapter dbHelper;
-    private RecyclerView recyclerView;
-    private MenuItem historyMenuItem;
-    private SharedPreferences sharedPreferences;
-    private int numGamesToShow;
-    private RelativeLayout relativeLayoutRecent;
+    private Intent mNewGameIntent;
+    private Intent mSettingsIntent;
+    private Intent mAboutIntent;
+    private Intent mHistoryIntent;
+    private ScoreDBAdapter mDbHelper;
+    private RecyclerView mRecyclerView;
+    private SharedPreferences mSharedPreferences;
+    private RelativeLayout mRelativeLayoutRecents;
     private String TAG = "Home";
-    private int lastPlayedGame;
-    private boolean reviewLaterBool;
-    private DataHelper dataHelper = new DataHelper();
+    private int mLastPlayedGame;
+    private boolean mReviewLaterBool;
+    private DataHelper mDataHelper = new DataHelper();
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -56,12 +54,12 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        reviewLaterBool = sharedPreferences.getBoolean("reviewlater", true);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+        mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
 
         if (colorNavBar){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -82,36 +80,35 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
-        dbHelper = new ScoreDBAdapter(this).open();
-        numGamesToShow = Integer.valueOf(sharedPreferences.getString("numgamestoshow", "3"));
-        lastPlayedGame = sharedPreferences.getInt("lastplayedgame", dbHelper.getNewestGame());
-        newGameIntent = new Intent(this, NewGame.class);
-        aboutIntent = new Intent(this, About.class);
-        settingsIntent = new Intent(this, Settings.class);
-        historyIntent = new Intent(this, History.class);
-        relativeLayoutRecent = (RelativeLayout)findViewById(R.id.layoutRecentGames);
+        mDbHelper = new ScoreDBAdapter(this).open();
+        mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.getNewestGame());
+        mNewGameIntent = new Intent(this, NewGame.class);
+        mAboutIntent = new Intent(this, About.class);
+        mSettingsIntent = new Intent(this, Settings.class);
+        mHistoryIntent = new Intent(this, History.class);
+        mRelativeLayoutRecents = (RelativeLayout)findViewById(R.id.layoutRecentGames);
         Button buttonMore = (Button) findViewById(R.id.buttonMore);
         buttonMore.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                startActivity(historyIntent);
+                startActivity(mHistoryIntent);
             }
         });
 
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
 
-        recyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
+        mRecyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
         TextView textViewNumGames = (TextView) findViewById(R.id.textViewNumGamesPlayed);
-        textViewNumGames.setText(String.valueOf(dbHelper.numRows()));
+        textViewNumGames.setText(String.valueOf(mDbHelper.numRows()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(newGameIntent);
+                startActivity(mNewGameIntent);
             }
         });
 
@@ -119,22 +116,22 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this, MainActivity.class);
-                intent.putExtra("gameID", lastPlayedGame);
+                intent.putExtra("GAME_ID", mLastPlayedGame);
                 startActivity(intent);
             }
         });
 
-        if (dbHelper.numRows() == 0){
-            relativeLayoutRecent.setVisibility(View.INVISIBLE);
+        if (mDbHelper.numRows() == 0){
+            mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonMore.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
         if (!anyUnfinishedGames()){
-            relativeLayoutRecent.setVisibility(View.INVISIBLE);
+            mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
         }
 
-        if (dbHelper.open().numRows() == 1 && reviewLaterBool){
+        if (mDbHelper.open().numRows() == 1 && mReviewLaterBool){
             createReviewDialog();
         }
 
@@ -160,8 +157,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         try {
 
-            for (int i = 1; i < dbHelper.open().numRows(); i++) {
-                if (!dataHelper.getGame(i, dbHelper.open()).ismCompleted()) {
+            for (int i = 1; i < mDbHelper.open().numRows(); i++) {
+                if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
                     unfinishedGames = true;
                     continue;
                 }
@@ -169,10 +166,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         }catch (Exception e){
             e.printStackTrace();
             Log.e(TAG, e.toString());
-            Toast.makeText(this, "Error opening anyUnfinishedGames()", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error running anyUnfinishedGames() method", Toast.LENGTH_SHORT).show();
         }
 
-        dbHelper.close();
+        mDbHelper.close();
         return unfinishedGames;
     }
 
@@ -221,9 +218,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             public void onClick(DialogInterface dialog, int id) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
                 startActivity(browserIntent);
-                reviewLaterBool = false;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("reviewlater", reviewLaterBool);
+                mReviewLaterBool = false;
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
             }
         });
@@ -231,9 +228,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         builder.setNeutralButton(R.string.remind_me_later, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                reviewLaterBool = true;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("reviewlater", reviewLaterBool);
+                mReviewLaterBool = true;
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
                 dialogInterface.dismiss();
             }
@@ -242,9 +239,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
-                reviewLaterBool = false;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("reviewlater", reviewLaterBool);
+                mReviewLaterBool = false;
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
                 dialog.dismiss();
             }
@@ -256,29 +253,29 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     public void displayRecyclerView(){
-        dbHelper.open();
+        mDbHelper.open();
 
         try {
-            if (dbHelper.numRows() != 0) {
+            if (mDbHelper.numRows() != 0) {
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
-                recyclerView.setLayoutManager(mLayoutManager);
-                List<HistoryModel> historyModels = HistoryModel.createHistoryModel(dbHelper, this);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                List<HistoryModel> historyModels = HistoryModel.createHistoryModel(mDbHelper, this);
                 if (historyModels.isEmpty()){
-                    relativeLayoutRecent.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.INVISIBLE);
+                    mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
+                    mRecyclerView.setVisibility(View.INVISIBLE);
                 }else{
-                    relativeLayoutRecent.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    HistoryAdapter historyAdapter = new HistoryAdapter(historyModels, this, this, true, HistoryAdapter.UNFINISHED);
-                    recyclerView.setAdapter(historyAdapter);
+                    mRelativeLayoutRecents.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    HistoryAdapter historyAdapter = new HistoryAdapter(historyModels, this, this, Pointers.HOME, HistoryAdapter.UNFINISHED);
+                    mRecyclerView.setAdapter(historyAdapter);
                 }
 
             } else {
-                recyclerView.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
             }
-            dbHelper.close();
+            mDbHelper.close();
         }catch (Exception e){
             e.printStackTrace();
             Log.e(TAG, e.toString());
@@ -301,12 +298,12 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     @Override
     protected void onResume() {
         super.onResume();
-        dbHelper.open();
+        mDbHelper.open();
     }
     @Override
     protected void onPause() {
         super.onPause();
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     @Override
@@ -318,10 +315,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(settingsIntent);
+            startActivity(mSettingsIntent);
             return true;
         }if (id == R.id.action_about) {
-            startActivity(aboutIntent);
+            startActivity(mAboutIntent);
             return true;
         }
 
@@ -338,7 +335,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     public void onItemClicked(int position, final int gameID) {
         try {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("gameID", gameID);
+            intent.putExtra("GAME_ID", gameID);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

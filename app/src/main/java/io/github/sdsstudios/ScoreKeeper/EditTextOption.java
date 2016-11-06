@@ -47,6 +47,7 @@ public class EditTextOption extends Option{
         mEditTextOptions.add(new EditTextOption(R.id.editTextNumSets, a.getString(R.string.num_sets)
                 , EditTextOption.NUMBER_SETS, 1));
 
+
         return mEditTextOptions;
     }
 

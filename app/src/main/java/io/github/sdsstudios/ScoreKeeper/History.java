@@ -325,7 +325,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
      */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
-                .setName("History Page") // TODO: Define a title for the content shown.
+                .setName("Score Keeper History")
                 // TODO: Make sure this auto-generated URL is correct.
                 .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                 .build();

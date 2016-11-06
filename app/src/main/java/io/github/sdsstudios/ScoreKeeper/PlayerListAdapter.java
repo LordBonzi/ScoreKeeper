@@ -63,7 +63,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        if (mActivity == 1) {
+        if (mActivity == Pointers.NEW_GAME) {
             holder.layout.setVisibility(View.VISIBLE);
 
             holder.editTextPlayer.setText(mGame.getPlayer(position).getmName());
@@ -119,7 +119,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 }
             });
 
-        } else if (mActivity == 2) {
+        } else if (mActivity == Pointers.EDIT_GAME) {
             holder.layoutExt.setVisibility(View.VISIBLE);
             holder.buttonDelete.setVisibility(View.INVISIBLE);
 

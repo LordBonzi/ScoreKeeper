@@ -74,17 +74,17 @@ public class HistoryModel {
         this.mPresetGame = mPresetGame;
     }
 
-    public static List<HistoryModel> createHistoryModel(ScoreDBAdapter dbAdapter, Context context){
+    synchronized static List<HistoryModel> createHistoryModel(ScoreDBAdapter dbAdapter, Context context){
         List<HistoryModel> modelList = new ArrayList<>();
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
-        for (int i = 0; i < dbAdapter.numRows(); i++){
+        for (int i = 0; i <= dbAdapter.numRows(); i++){
             gameList.add(dataHelper.getGame(i, dbAdapter));
         }
 
         for (Game game: gameList){
-            modelList.add(new HistoryModel(game.size() + "players",
+            modelList.add(new HistoryModel(game.getmTitle(),
                     scoreString(), dateString(), titleString(), isUnfinishedString(game, context), game.getmID()));
         }
 

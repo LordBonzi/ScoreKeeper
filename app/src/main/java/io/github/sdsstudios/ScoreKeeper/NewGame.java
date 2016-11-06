@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +52,7 @@ public class NewGame extends AppCompatActivity
     private DataHelper mDataHelper;
     private String mTime = null;
     private String TAG = "NewGame";
-    private EditText mEditTextPlayer;
+    private EditText mEditTextPlayer, mEditTextGameTitle;
     private Button mButtonNewGame, mButtonAddPlayer, mButtonQuit, mButtonCreatePreset;
     private CheckBox mCheckBoxNoTimeLimit;
     private RecyclerView mPlayerList;
@@ -212,6 +211,27 @@ public class NewGame extends AppCompatActivity
         mHomeIntent = new Intent(this, Home.class);
         mPlayerList = (RecyclerView)findViewById(R.id.playerList);
 
+        mEditTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
+
+        mEditTextGameTitle = (EditText) findViewById(R.id.editTextGameTitle);
+        mEditTextGameTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mCurrentGame.setmTitle(s.toString().trim());
+                mDBHelper.open().updateGame(mCurrentGame);
+            }
+        });
+
         mEditTextOptions = EditTextOption.loadEditTextOptions(this);
         mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions(this);
 
@@ -236,13 +256,11 @@ public class NewGame extends AppCompatActivity
 
         }else{
 
-            mCurrentGame = new Game(new ArrayList<Player>(), null, "The Game with no name", null , mTime, false, 0
+            mCurrentGame = new Game(new ArrayList<Player>(), null, mEditTextGameTitle.getText().toString().trim() , null , mTime, false, 0
                     , EditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this));
 
             mDBHelper.open().createGame(mCurrentGame);
             mGameID = mDBHelper.getNewestGame();
-
-            Log.e(TAG, "" + mGameID);
 
             mCurrentGame.setmID(mGameID);
             mDBHelper.close();
@@ -261,7 +279,6 @@ public class NewGame extends AppCompatActivity
         mButtonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
         mButtonAddPlayer.setOnClickListener(this);
 
-        mEditTextPlayer = (EditText) findViewById(R.id.editTextPlayer);
 
         for (final CheckBoxOption c : mCheckBoxOptions){
             getCheckBox(c.getmCheckBoxID()).setOnClickListener(new View.OnClickListener() {

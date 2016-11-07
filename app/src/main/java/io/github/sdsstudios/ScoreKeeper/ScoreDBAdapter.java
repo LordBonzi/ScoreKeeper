@@ -12,9 +12,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class ScoreDBAdapter{
+
     public static final String KEY_ROWID = "_id";
     public static final String KEY_GAME = "_game";
-    public static final String SQLITE_TABLE = "score";
+    private static final String SQLITE_TABLE = "score";
     private static final String TAG = "ScoreDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
     private static final int DATABASE_VERSION = 5;
@@ -24,10 +25,10 @@ public class ScoreDBAdapter{
                     KEY_GAME +
                     " );";
 
-    public static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_GAME};
+    private static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_GAME};
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
-    public static SQLiteDatabase DATABASE;
+    private static SQLiteDatabase DATABASE;
 
     public ScoreDBAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -43,19 +44,19 @@ public class ScoreDBAdapter{
         return this;
     }
 
-    public void close() {
+    void close() {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
     }
 
 
-    public String convertGameToString(Game game){
+    private String convertGameToString(Game game){
         Gson gson = new GsonBuilder().serializeNulls().create();
         return gson.toJson(game);
     }
 
-    public void updateGame(Game game){
+    void updateGame(Game game){
         ContentValues initialValues = new ContentValues();
         String arrayList = null;
 
@@ -75,7 +76,7 @@ public class ScoreDBAdapter{
         close();
     }
 
-    public long createGame(Game game) {
+    long createGame(Game game) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -91,13 +92,13 @@ public class ScoreDBAdapter{
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }
 
-    public int numRows(){
+    int numRows(){
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
         return  cursor.getCount();
     }
 
-    public int getNewestGame(){
+    int getNewestGame(){
 
         int value = 1;
         Cursor cursor = null;
@@ -105,18 +106,23 @@ public class ScoreDBAdapter{
         cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
         cursor.moveToLast();
         int index = cursor.getColumnIndex(KEY_ROWID);
+
         try{
+
             value = cursor.getInt(index) ;
 
         }catch (Exception e){
+
             value = 1;
+
         }
+
         cursor.close();
 
         return value;
     }
 
-    public boolean deleteGame(int id){
+    boolean deleteGame(int id){
 
         open();
         DATABASE.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
@@ -136,14 +142,14 @@ public class ScoreDBAdapter{
         return true;
     }
 
-    public boolean deleteAllgames() {
+    boolean deleteAllGames() {
 
         int doneDelete = 0;
         doneDelete = DATABASE.delete(SQLITE_TABLE, null , null);
         return doneDelete > 0;
     }
 
-    public Cursor fetchGamesById(int id) throws SQLException {
+    Cursor fetchGamesById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
             mCursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY,
@@ -159,9 +165,6 @@ public class ScoreDBAdapter{
         }
         return mCursor;
     }
-
-
-
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 

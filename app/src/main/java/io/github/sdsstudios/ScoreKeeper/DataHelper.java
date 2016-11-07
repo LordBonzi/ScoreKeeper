@@ -33,7 +33,9 @@ public class DataHelper {
         return arrayList;
     }
 
-    public Game getGame(int id, ScoreDBAdapter dbHelper){
+
+
+    Game getGame(int id, ScoreDBAdapter dbHelper){
 
         dbHelper.open();
         Cursor cursor = dbHelper.fetchGamesById(id);

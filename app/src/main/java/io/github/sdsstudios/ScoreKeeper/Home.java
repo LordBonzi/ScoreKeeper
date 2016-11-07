@@ -33,6 +33,8 @@ import java.util.List;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
 
+    private List<HistoryModel> mHistoryModelList = null;
+
     private Intent mNewGameIntent;
     private Intent mSettingsIntent;
     private Intent mAboutIntent;
@@ -252,23 +254,31 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         dialog.show();
     }
 
-    public void displayRecyclerView(){
+    public synchronized void displayRecyclerView(){
         mDbHelper.open();
 
         try {
+
             if (mDbHelper.numRows() != 0) {
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
-                List<HistoryModel> historyModels = HistoryModel.createHistoryModel(mDbHelper, this);
-                if (historyModels.isEmpty()){
+
+                if (mDbHelper.numRows() == 0){
                     mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
                     mRecyclerView.setVisibility(View.INVISIBLE);
+
                 }else{
+
                     mRelativeLayoutRecents.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.VISIBLE);
-                    HistoryAdapter historyAdapter = new HistoryAdapter(historyModels, this, this, Pointers.HOME, HistoryAdapter.UNFINISHED);
+
+                    mHistoryModelList = HistoryModel.getHistoryModelList(mDbHelper, mSharedPreferences, this);
+
+                    HistoryAdapter historyAdapter = new HistoryAdapter(mHistoryModelList
+                            , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
+
                     mRecyclerView.setAdapter(historyAdapter);
                 }
 

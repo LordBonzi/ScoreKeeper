@@ -40,26 +40,29 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private HistoryAdapter mHistoryAdapter;
     private ActionMode mHistoryActionMode = null;
     private int mPrimaryDarkColor;
+    private SharedPreferences mSharedPreferences;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+
     private GoogleApiClient mGoogleAPIClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(mPrimaryDarkColor);
             }
         }
+
         setTheme(accentColor);
         setContentView(R.layout.activity_history);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
@@ -168,7 +171,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         super.onBackPressed();
     }
 
-    public void displayRecyclerView() {
+    public synchronized void displayRecyclerView() {
         mDbHelper.open();
 
         try {
@@ -190,7 +193,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.createHistoryModel(mDbHelper, this), this, this, Pointers.HISTORY, type);
+
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, mSharedPreferences, this)
+                        , this, this, Pointers.HISTORY, type);
                 mRecyclerView.setAdapter(historyAdapter);
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);
@@ -205,6 +210,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         mDbHelper.close();
     }
+
 
     @Override
     public void gamesDeleted() {
@@ -382,7 +388,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 case R.id.action_delete_all:
                     mDbHelper.open();
-                    mDbHelper.deleteAllgames();
+                    mDbHelper.deleteAllGames();
                     mDbHelper.close();
 
                     startActivity(new Intent(getBaseContext(), Home.class));

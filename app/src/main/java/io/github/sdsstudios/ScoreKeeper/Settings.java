@@ -161,7 +161,7 @@ public class Settings extends PreferenceActivity{
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            mDbHelper.open().deleteAllgames();
+                            mDbHelper.open().deleteAllGames();
                             Toast.makeText(Settings.this, "Successfully deleted games", Toast.LENGTH_SHORT).show();
                         }catch (Exception e){
                             Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();

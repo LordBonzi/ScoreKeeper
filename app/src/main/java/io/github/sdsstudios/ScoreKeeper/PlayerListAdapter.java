@@ -222,7 +222,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public void undoPlayerRemoval() {
         int playerArraySize = mGame.size();
 
-        mGame.setPlayer(mBackupPlayer, playerArraySize);
+        mGame.addPlayer(mBackupPlayer);
 
         if (mRelativeLayout != null) {
             mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);

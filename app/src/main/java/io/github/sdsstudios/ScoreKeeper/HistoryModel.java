@@ -18,17 +18,17 @@ import java.util.List;
 
 public class HistoryModel {
     private String mPlayers;
-    private String mScores;
+    private String mInfo;
     private String mDate;
     private String mTitle;
     private int mID;
     private String mIsUnfinished;
 
-    public HistoryModel(String mPlayers, String mScores, String mDate, String mPresetGame, String isUnfinished, int mID) {
+    public HistoryModel(String mPlayers, String mInfo, String mDate, String mTitle, String isUnfinished, int mID) {
         this.mPlayers = mPlayers;
-        this.mScores = mScores;
+        this.mInfo = mInfo;
         this.mDate = mDate;
-        this.mTitle = mPresetGame;
+        this.mTitle = mTitle;
         this.mID = mID;
         this.mIsUnfinished = isUnfinished;
     }
@@ -57,12 +57,12 @@ public class HistoryModel {
         this.mPlayers = mPlayers;
     }
 
-    public String getmScores() {
-        return mScores;
+    public String getmInfo() {
+        return mInfo;
     }
 
-    public void setmScores(String mScores) {
-        this.mScores = mScores;
+    public void setmInfo(String mInfo) {
+        this.mInfo = mInfo;
     }
 
     public String getmDate() {
@@ -85,6 +85,7 @@ public class HistoryModel {
         List<HistoryModel> list = null;
 
         try {
+
             Type type = new TypeToken<List<HistoryModel>>(){}.getType();
 
             Gson gson = new GsonBuilder().serializeNulls().create();
@@ -92,8 +93,10 @@ public class HistoryModel {
                     saveHistoryModelListToGSON(newHistoryModelList(mDbHelper, ctx))), type);
 
         } catch (Exception e) {
+
             e.printStackTrace();
             Log.e("DataHelper.class", e.toString());
+
         }
 
         return list;
@@ -131,15 +134,33 @@ public class HistoryModel {
         }
 
         for (Game game: gameList){
-            modelList.add(new HistoryModel(game.getmTitle(),
-                    scoreString(), dateString(), titleString(), isUnfinishedString(game, context), game.getmID()));
+            modelList.add(new HistoryModel(playerString(game),
+                    infoString(game), dateString(game), game.getmTitle(), isUnfinishedString(game, context), game.getmID()));
         }
 
         return modelList;
     }
 
-    private static String scoreString(){
-        return "";
+    private static String playerString(Game game){
+        String string = "";
+        int size = game.getmPlayerArray().size();
+
+        for (int i = 0; i < size; i++){
+
+            Player p = game.getmPlayerArray().get(i);
+            string += p.getmName();
+
+            if (i != size - 1){
+                string += ", ";
+            }
+
+        }
+
+        return string;
+    }
+
+    private static String infoString(Game game){
+        return game.size() + " Players, " + game.numSets() + " Sets";
     }
 
     private static String isUnfinishedString(Game game, Context ctx){
@@ -150,11 +171,8 @@ public class HistoryModel {
         }
     }
 
-    private static String dateString(){
-        return "";
+    private static String dateString(Game game){
+        return TimeHelper.gameDate(game.getmTime());
     }
 
-    private static String titleString(){
-        return "";
-    }
 }

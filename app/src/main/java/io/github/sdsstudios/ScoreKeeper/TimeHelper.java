@@ -16,14 +16,14 @@ import java.util.TimeZone;
 
 public class TimeHelper {
 
-    private SimpleDateFormat mGameDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private SimpleDateFormat mTimeFormat = new SimpleDateFormat("HH:mm");
-    private SimpleDateFormat mWeekFormat = new SimpleDateFormat("d MMM");
-    private SimpleDateFormat mYearFormat = new SimpleDateFormat("d MMM yyyy");
-    private Calendar mCurrentDate = Calendar.getInstance();
-    private Date mDate;
+    private static SimpleDateFormat mGameDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat mTimeFormat = new SimpleDateFormat("HH:mm");
+    private static SimpleDateFormat mWeekFormat = new SimpleDateFormat("d MMM");
+    private static SimpleDateFormat mYearFormat = new SimpleDateFormat("d MMM yyyy");
+    private static Calendar mCurrentDate = Calendar.getInstance();
+    private static Date mDate;
 
-    public String gameDate(String dateArray) {
+    public static String gameDate(String dateArray) {
 
         try {
             mDate = mGameDateFormat.parse(dateArray);

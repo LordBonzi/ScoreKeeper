@@ -170,9 +170,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                     TypedValue outValue = new TypedValue();
 
-                    holder.textViewHistoryType.setText(item.getmPlayers());
-                    holder.textViewHistoryInProgress.setText(item.getmIsUnfinished());
+                    holder.textViewHistoryInfo.setText(item.getmInfo());
 
+                    holder.textViewHistoryInProgress.setText(item.getmIsUnfinished());
                     holder.textViewHistoryInProgress.setAllCaps(true);
 
                     if (isSelected(item.getmID()) ) {
@@ -184,9 +184,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
                     }
                 }
 
+                holder.textViewHistoryTitle.setText(item.getmTitle());
                 holder.textViewHistoryPlayers.setText(item.getmPlayers());
-                holder.textViewHistoryScore.setText(item.getmScores());
-                holder.textViewHistoryDate.setText(String.valueOf(item.getmDate()));
+                holder.textViewHistoryDate.setText(item.getmDate());
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -211,10 +211,10 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         @SuppressWarnings("unused")
 
         // each data item is just a string in this case
+        public TextView textViewHistoryTitle;
         public TextView textViewHistoryPlayers;
-        public TextView textViewHistoryScore;
         public TextView textViewHistoryDate;
-        public TextView textViewHistoryType;
+        public TextView textViewHistoryInfo;
         public TextView textViewHistoryInProgress;
         public RelativeLayout relativeLayout;
         public int color;
@@ -226,10 +226,10 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         public ViewHolder(View v, ClickListener listener) {
             super(v);
 
-            textViewHistoryPlayers = (TextView)v.findViewById(R.id.textViewHistoryPlayers);
+            textViewHistoryTitle = (TextView)v.findViewById(R.id.textViewHistoryPlayers);
             textViewHistoryDate = (TextView)v.findViewById(R.id.textViewHistoryDate);
-            textViewHistoryScore = (TextView)v.findViewById(R.id.textViewHistoryScore);
-            textViewHistoryType = (TextView)v.findViewById(R.id.textViewHistoryType);
+            textViewHistoryPlayers = (TextView)v.findViewById(R.id.textViewHistoryScore);
+            textViewHistoryInfo = (TextView)v.findViewById(R.id.textViewHistoryType);
             textViewHistoryInProgress = (TextView)v.findViewById(R.id.textViewHistoryInProgress);
             relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayoutHistoryAdapter);
             color = v.getResources().getColor(R.color.colorAccent);

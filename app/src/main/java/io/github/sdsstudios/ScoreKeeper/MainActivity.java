@@ -1167,8 +1167,6 @@ public class MainActivity extends AppCompatActivity
         winnerDialog(winner);
         displayRecyclerView(false);
 
-        Log.e(TAG, "GameWon()");
-
     }
 
     @Override

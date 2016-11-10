@@ -193,7 +193,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(new LoadHistory().doInBackground(this)
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY)
                         , this, this, Pointers.HISTORY, type);
 
                 mRecyclerView.setAdapter(historyAdapter);

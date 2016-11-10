@@ -31,7 +31,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     private static List<HistoryModel> mItemArray;
     private Context mCtx;
-    private int mNumGames;
     static boolean ACTION_MODE_DISABLED = true;
     private ViewHolder.ClickListener mViewClickListener;
     private int mActivity;
@@ -41,10 +40,11 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, int activity, int mGamesToShow) {
         this.mItemArray = mItemArray;
         this.mCtx = context;
-        mNumGames = mItemArray.size();
         this.mViewClickListener = clickListener;
         this.mActivity = activity;
         this.mGamesToShow = mGamesToShow;
+
+
     }
 
     public void removeItem(int position) {
@@ -158,7 +158,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         });
 
         if (mItemArray.size() == 0){
-            Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will reply", Toast.LENGTH_LONG).show();
+            Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will respond", Toast.LENGTH_LONG).show();
 
         }else {
 
@@ -201,7 +201,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mNumGames;
+        return mItemArray.size();
     }
 
     // Provide a reference to the views for each data item

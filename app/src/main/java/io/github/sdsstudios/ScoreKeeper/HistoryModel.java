@@ -74,18 +74,27 @@ public class HistoryModel {
         this.mTitle = mTitle;
     }
 
-    synchronized static List<HistoryModel> getHistoryModelList(ScoreDBAdapter mDbHelper, Context ctx){
-        return newHistoryModelList(mDbHelper, ctx);
-
-    }
-
-    synchronized static List<HistoryModel> newHistoryModelList(ScoreDBAdapter dbAdapter, Context context){
+    synchronized static List<HistoryModel> getHistoryModelList(ScoreDBAdapter dbAdapter, Context context, int activity){
         List<HistoryModel> modelList = new ArrayList<>();
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
-        for (int i = 1; i <= dbAdapter.numRows(); i++){
-            gameList.add(dataHelper.getGame(i, dbAdapter));
+        int dbNumRows = dbAdapter.numRows();
+        int numGames = dbNumRows;
+
+        if (activity == Pointers.HOME){
+            numGames = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE).getInt("numgamestoshow", 3);
+        }
+
+        for (int i = 0; i <= dbNumRows; i++){
+            if (gameList.size() != numGames) {
+                Game game = dataHelper.getGame(dbNumRows - i, dbAdapter);
+                if (!game.ismCompleted() && activity == Pointers.HOME) {
+                    gameList.add(game);
+                }else if (activity == Pointers.HISTORY){
+                    gameList.add(game);
+                }
+            }
         }
 
         for (Game game: gameList){

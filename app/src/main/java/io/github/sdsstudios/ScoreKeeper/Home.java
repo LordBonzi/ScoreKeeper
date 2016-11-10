@@ -271,7 +271,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                     mRelativeLayoutRecents.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.VISIBLE);
 
-                    HistoryAdapter historyAdapter = new HistoryAdapter(new LoadHistory().doInBackground(this)
+                    HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME)
                             , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
 
                     mRecyclerView.setAdapter(historyAdapter);

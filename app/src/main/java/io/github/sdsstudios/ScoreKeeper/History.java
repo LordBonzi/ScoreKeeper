@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,9 +20,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
@@ -79,12 +75,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         mDataHelper = new DataHelper();
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mGoogleAPIClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -325,40 +317,16 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         return true;
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Score Keeper History")
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mGoogleAPIClient.connect();
-        AppIndex.AppIndexApi.start(mGoogleAPIClient, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(mGoogleAPIClient, getIndexApiAction());
-        mGoogleAPIClient.disconnect();
     }
 
     public class ActionBarCallback implements ActionMode.Callback {

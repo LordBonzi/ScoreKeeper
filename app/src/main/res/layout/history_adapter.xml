@@ -76,8 +76,6 @@
             android:layout_toEndOf="@+id/textViewHistoryType"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-
-
     </RelativeLayout>
 
     <View

@@ -227,7 +227,7 @@ public class Settings extends PreferenceActivity{
         numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                mNumGamesToShow = (int) o;
+                mNumGamesToShow = Integer.valueOf(String.valueOf(o));
                 saveInfo();
                 return true;
             }

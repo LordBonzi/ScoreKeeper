@@ -29,11 +29,8 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
-import java.util.List;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
-
-    private List<HistoryModel> mHistoryModelList = null;
 
     private Intent mNewGameIntent;
     private Intent mSettingsIntent;
@@ -274,9 +271,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                     mRelativeLayoutRecents.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.VISIBLE);
 
-                    mHistoryModelList = HistoryModel.getHistoryModelList(mDbHelper, mSharedPreferences, this);
-
-                    HistoryAdapter historyAdapter = new HistoryAdapter(mHistoryModelList
+                    HistoryAdapter historyAdapter = new HistoryAdapter(new LoadHistory().doInBackground(this)
                             , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
 
                     mRecyclerView.setAdapter(historyAdapter);
@@ -356,6 +351,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     public boolean onItemLongClicked(int position, int gameID) {
         return false;
     }
+
+
+
 }
 
 

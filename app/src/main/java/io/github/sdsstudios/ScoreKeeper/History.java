@@ -40,7 +40,6 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private HistoryAdapter mHistoryAdapter;
     private ActionMode mHistoryActionMode = null;
     private int mPrimaryDarkColor;
-    private SharedPreferences mSharedPreferences;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -52,7 +51,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
@@ -194,8 +193,9 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, mSharedPreferences, this)
+                HistoryAdapter historyAdapter = new HistoryAdapter(new LoadHistory().doInBackground(this)
                         , this, this, Pointers.HISTORY, type);
+
                 mRecyclerView.setAdapter(historyAdapter);
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);

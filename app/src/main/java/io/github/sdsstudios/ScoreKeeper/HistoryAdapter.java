@@ -186,7 +186,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                 holder.textViewHistoryTitle.setText(item.getmTitle());
                 holder.textViewHistoryPlayers.setText(item.getmPlayers());
-                holder.textViewHistoryDate.setText(item.getmDate());
+                holder.textViewHistoryDate.setText(TimeHelper.gameDate(item.getmDate()));
 
             }catch (Exception e){
                 e.printStackTrace();

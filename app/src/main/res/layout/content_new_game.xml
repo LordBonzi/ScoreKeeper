@@ -96,6 +96,7 @@
                         android:paddingStart="16dp"
                         android:text="@string/players"
                         android:textStyle="bold" />
+
                 </RelativeLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>

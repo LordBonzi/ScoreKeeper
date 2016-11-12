@@ -276,7 +276,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        Intent intent = new Intent(History.this, MainActivity.class);
+                        Intent intent = new Intent(History.this, GameActivity.class);
                         intent.putExtra("GAME_ID", gameID);
                         startActivity(intent);
                     }

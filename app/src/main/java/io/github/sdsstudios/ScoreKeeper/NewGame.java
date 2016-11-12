@@ -887,7 +887,7 @@ public class NewGame extends AppCompatActivity
     }
 
     public void createNewGame(boolean startGame) {
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        Intent mainActivityIntent = new Intent(this, GameActivity.class);
         mStop = false;
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

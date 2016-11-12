@@ -51,7 +51,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity
+public class GameActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
         , BigGameAdapter.GameListener {
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton mFabChronometer;
     private RecyclerView mPlayerList;
     private boolean mFinished = false;
-    private String TAG = "MainActivity.class";
+    private String TAG = "GameActivity.class";
     private DataHelper mDataHelper;
     private Intent mHomeIntent;
     private ScoreDBAdapter mDbHelper;
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity
                             break;
 
                         case 2:
-                            Toast.makeText(MainActivity.this, "Coming Soon ;)", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GameActivity.this, "Coming Soon ;)", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -1279,7 +1279,7 @@ public class MainActivity extends AppCompatActivity
 
                             mGame.setPlayer(oldPlayer, position);
 
-                            Toast.makeText(MainActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GameActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
                         } else {
 
                             mDbHelper.open().updateGame(mGame);
@@ -1407,8 +1407,8 @@ public class MainActivity extends AppCompatActivity
          * number.
          */
 
-        public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
+        public static GameActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            GameActivity.PlaceholderFragment fragment = new GameActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -1441,7 +1441,7 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return MainActivity.PlaceholderFragment.newInstance(position + 1);
+            return GameActivity.PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override

@@ -114,7 +114,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         buttonLastGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Home.this, MainActivity.class);
+                Intent intent = new Intent(Home.this, GameActivity.class);
                 intent.putExtra("GAME_ID", mLastPlayedGame);
                 startActivity(intent);
             }
@@ -191,7 +191,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
+
         }else{
+
             File sdcard = Environment.getExternalStorageDirectory();
             File file = new File(sdcard, "/ScoreKeeper");
             file.mkdirs();
@@ -339,7 +341,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     @Override
     public void onItemClicked(int position, final int gameID) {
         try {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("GAME_ID", gameID);
             startActivity(intent);
         } catch (Exception e) {

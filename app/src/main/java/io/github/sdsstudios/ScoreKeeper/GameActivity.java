@@ -100,17 +100,16 @@ public class GameActivity extends AppCompatActivity
         GAME_ID = extras.getInt("GAME_ID");
 
         mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-// Restore value of members from saved state
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
         int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        mDataHelper = new DataHelper();
-        mDbHelper = new ScoreDBAdapter(this).open();
-        mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         mClassicTheme = mSharedPreferences.getBoolean("prefClassicTheme", false) && mGame.size() == 2;
         maxNumDice = mSharedPreferences.getInt("maxNumDice", 6);
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+
+        loadObjects();
+
+        mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
 
         setTheme(accentColor);
 
@@ -126,6 +125,7 @@ public class GameActivity extends AppCompatActivity
             setContentView(R.layout.activity_main);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(primaryColor);
+            toolbar.setTitle(mGame.getmTitle());
             setSupportActionBar(toolbar);
             getSupportActionBar();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -145,7 +145,6 @@ public class GameActivity extends AppCompatActivity
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        loadObjects();
         loadGame();
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
@@ -173,7 +172,6 @@ public class GameActivity extends AppCompatActivity
         mTimeHelper = new TimeHelper();
 
         mDbHelper = new ScoreDBAdapter(this);
-        mDbHelper.open();
     }
 
     public void loadGame() {
@@ -182,7 +180,6 @@ public class GameActivity extends AppCompatActivity
         mScoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
         mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
         mMaxScore = mGame.getData(EditTextOption.WINNING_SCORE);
-
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -193,6 +190,7 @@ public class GameActivity extends AppCompatActivity
         }
 
         mHomeIntent = new Intent(this, Home.class);
+
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mBaseLayout = (RelativeLayout) findViewById(R.id.content);
 
@@ -289,24 +287,30 @@ public class GameActivity extends AppCompatActivity
         editor.putInt("lastplayedgame", GAME_ID);
         editor.apply();
 
+        isGameWon();
+
+    }
+
+    private void isGameWon(){
         for (Player p : mGame.getmPlayerArray()) {
-            if (mMaxScore < 0) {
-                if (p.getmScore() <= mMaxScore
-                        && scoreDifference(p.getmScore())) {
 
-                    gameWon(p.getmName());
-                }
+            if (mGame.numSetsPlayed() == mGame.numSets()) {
+                if (mMaxScore < 0) {
+                    if (p.getmScore() <= mMaxScore && scoreDifference(p.getmScore())) {
 
-            } else if (mMaxScore >= 0) {
-                if (p.getmScore() >= mMaxScore
-                        && scoreDifference(p.getmScore())) {
-                    gameWon(p.getmName());
+                        gameWon(p.getmName());
+                    }
+
+                } else if (mMaxScore >= 0) {
+                    if (p.getmScore() >= mMaxScore
+                            && scoreDifference(p.getmScore())) {
+                        gameWon(p.getmName());
+                    }
+
                 }
 
             }
-
         }
-
     }
 
     private boolean scoreDifference(int score) {
@@ -791,7 +795,7 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
-        if (mGame.numSets() > 1 && mGame.numSetsPlayed() / mGame.size() < mGame.numSets()) {
+        if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
 
             mButtonP1.setEnabled(false);
             mButtonP2.setEnabled(false);
@@ -910,6 +914,7 @@ public class GameActivity extends AppCompatActivity
 
     }
 
+    //finds the winner in two player games
     public void scoreEqualsMaxScore(){
         if (mP1Score == mMaxScore) {
 

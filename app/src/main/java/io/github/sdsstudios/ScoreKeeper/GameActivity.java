@@ -1084,7 +1084,7 @@ public class GameActivity extends AppCompatActivity
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_time, Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_length, Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                         }

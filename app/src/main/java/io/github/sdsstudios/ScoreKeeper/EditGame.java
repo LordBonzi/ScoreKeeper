@@ -40,6 +40,8 @@ import java.util.List;
 
 public class EditGame extends AppCompatActivity {
 
+    private String TAG = "EditGame";
+
     private int mGameID;
     private EditText mEditTextLength, mEditTextDate;
     private RecyclerView mRecyclerView;
@@ -49,7 +51,6 @@ public class EditGame extends AppCompatActivity {
     public static RelativeLayout EDIT_GAME_LAYOUT;
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
-    boolean mBooleanLength = false;
     private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
             , mMenuItemShare, mMenuItemComplete;
     private Intent mShareIntent;
@@ -398,11 +399,15 @@ public class EditGame extends AppCompatActivity {
         mMenuItemComplete.setVisible(false);
 
         for (CheckBoxOption c: mCheckBoxOptions){
-            getCheckBox(c.getmID()).setEnabled(true);
+            getCheckBox(c.getmCheckBoxID()).setEnabled(true);
         }
 
         for (final EditTextOption e: mEditTextOptions){
-            getEditText(e.getmID()).addTextChangedListener(new TextWatcher() {
+            EditText editText = getEditText(e.getmEditTextID());
+
+            editText.setEnabled(true);
+
+            editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -454,25 +459,28 @@ public class EditGame extends AppCompatActivity {
 
         final String newDate = mEditTextDate.getText().toString();
         final String newLength = mEditTextLength.getText().toString();
+        final boolean booleanLength;
 
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
             mGame.setChecked(CheckBoxOption.STOPWATCH, true);
-            mBooleanLength = true;
-            invalidSnackbar(getString(R.string.invalid_time));
+            booleanLength = true;
+            invalidSnackbar(getString(R.string.invalid_length));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
-            mBooleanLength = false;
+            booleanLength = false;
             mGame.setChecked(CheckBoxOption.STOPWATCH, false);
 
         }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
-            mBooleanLength = false;
+            booleanLength = false;
             mGame.setChecked(CheckBoxOption.STOPWATCH, true);
+        }else{
+            booleanLength = false;
         }
 
         final boolean bDateAndTime = checkValidity(mEditTextDate.getText().toString(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
-        final boolean bNumPlayers = moreThanTwoPlayers();
+        final boolean bNumPlayers = mGame.size() >= 2;
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -493,15 +501,18 @@ public class EditGame extends AppCompatActivity {
                 }else if (!bDateAndTime) {
                     invalidSnackbar(getString(R.string.invalid_date_and_time));
 
+                }else if (booleanLength) {
+                    invalidSnackbar(getString(R.string.invalid_length));
+
                 } else if (bCheckDuplicates) {
 
                     invalidSnackbar("You can't have duplicate players!");
 
-                } else if (bNumPlayers) {
+                } else if (!bNumPlayers) {
 
                     invalidSnackbar("Must have 2 or more players");
 
-                }else if (!bCheckEmpty && bDateAndTime && !mBooleanLength && !bCheckDuplicates && !bNumPlayers){
+                }else{
                     mGame.setmTime(newDate);
                     mGame.setmLength(newLength);
 
@@ -618,10 +629,6 @@ public class EditGame extends AppCompatActivity {
 
             checkBox.setEnabled(false);
         }
-    }
-
-    private boolean moreThanTwoPlayers(){
-        return mGame.size() >= 2;
     }
 
     public void delete(){

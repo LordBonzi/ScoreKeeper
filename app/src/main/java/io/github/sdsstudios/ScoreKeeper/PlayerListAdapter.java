@@ -159,10 +159,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        try {
+                        if (!s.toString().equals("")){
                             mGame.getPlayer(position).setmScore(Integer.valueOf(s.toString()));
-                        }catch (Exception e){
-                            e.printStackTrace();
                         }
                     }
 

@@ -296,19 +296,19 @@ public class GameActivity extends AppCompatActivity
 
             if (mGame.numSetsPlayed() == mGame.numSets()) {
                 if (mMaxScore < 0) {
+
                     if (p.getmScore() <= mMaxScore && scoreDifference(p.getmScore())) {
 
                         gameWon(p.getmName());
                     }
 
                 } else if (mMaxScore >= 0) {
-                    if (p.getmScore() >= mMaxScore
-                            && scoreDifference(p.getmScore())) {
+                    if (p.getmScore() >= mMaxScore && scoreDifference(p.getmScore())) {
+
                         gameWon(p.getmName());
                     }
 
                 }
-
             }
         }
     }
@@ -516,8 +516,6 @@ public class GameActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public void addPlayerDialog() {
         mPaused = true;
         chronometerClick();
@@ -593,7 +591,7 @@ public class GameActivity extends AppCompatActivity
         mGame.addPlayer(mNewPlayer);
         List<Player> mPlayersArray = mGame.getmPlayerArray();
         if (mDataHelper.checkPlayerDuplicates(mPlayersArray)){
-            mPlayersArray.remove(mPlayersArray.size()-1);
+            mPlayersArray.remove(mPlayersArray.size() - 1);
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
         }else {
@@ -642,7 +640,6 @@ public class GameActivity extends AppCompatActivity
     public void chronometerClick() {
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
             if (!mPaused) {
-
                 mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
                 mStopwatch.start();
                 mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
@@ -771,10 +768,15 @@ public class GameActivity extends AppCompatActivity
             dialog.show();
 
         }else if (mWon && !isFullScreen()) {
+
             winnerDialog(mWinnerString);
+
         }else if (timeLimitReached(mStopwatch) && !isFullScreen()) {
+
             timeLimitDialog();
+
         }else{
+
             toggleFullScreen(false);
 
         }
@@ -795,15 +797,15 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
-        if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
+        for (Player p : mGame.getmPlayerArray()){
+            p.addSet(p.getmScore());
+            p.setmScore(0);
+        }
+
+        if (mGame.numSets() > 1 && mGame.numSetsPlayed() + 1 < mGame.numSets()) {
 
             mButtonP1.setEnabled(false);
             mButtonP2.setEnabled(false);
-
-            for (Player p : mGame.getmPlayerArray()){
-                p.addSet(p.getmScore());
-                p.setmScore(0);
-            }
 
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -851,6 +853,8 @@ public class GameActivity extends AppCompatActivity
                         mGame.setmLength(mStopwatch.getText().toString());
                     }
 
+                    mGame.setmCompleted(true);
+
                     mDbHelper.open().updateGame(mGame);
 
                     startActivity(mHomeIntent);
@@ -896,17 +900,16 @@ public class GameActivity extends AppCompatActivity
             if (mReverseScoring){
 
                 if (mP1Score <= mMaxScore || mP2Score <= mMaxScore) {
-                    scoreEqualsMaxScore();
+                    setWinnerString();
                 }
 
             }else{
 
                 if (mP1Score >= mMaxScore || mP2Score >= mMaxScore) {
-                    scoreEqualsMaxScore();
+                    setWinnerString();
                 }
 
             }
-
 
         }
 
@@ -915,7 +918,8 @@ public class GameActivity extends AppCompatActivity
     }
 
     //finds the winner in two player games
-    public void scoreEqualsMaxScore(){
+    public void setWinnerString(){
+
         if (mP1Score == mMaxScore) {
 
             mWinnerString = mGame.getPlayer(0).getmName();
@@ -929,6 +933,7 @@ public class GameActivity extends AppCompatActivity
         mWon = true;
         updateScores();
         winnerDialog(mWinnerString);
+
     }
 
     public void onScoreButtonLongClick(Button button) {

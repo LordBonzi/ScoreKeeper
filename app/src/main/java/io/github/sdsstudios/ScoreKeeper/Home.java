@@ -159,7 +159,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             for (int i = 1; i < mDbHelper.open().numRows(); i++) {
                 if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
                     unfinishedGames = true;
-                    continue;
                 }
             }
         }catch (Exception e){

@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class Game {
+
     private List<Player> mPlayerArray;
     private String mTimeLimit;
     private String mLength;
@@ -105,7 +106,7 @@ public class Game {
             num += p.getmSetScores().size();
         }
 
-        return num;
+        return num  / size();
     }
 
     public int getData(int id){

@@ -165,7 +165,8 @@ public class NewGame extends AppCompatActivity
                 , (RelativeLayout) findViewById(R.id.timeLimitHeader), 0));
 
         for (final OptionCardView card: mCardViewList){
-            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation
+                    == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
             }else{
 
                 card.getmHeader().setOnClickListener(new View.OnClickListener() {
@@ -256,7 +257,7 @@ public class NewGame extends AppCompatActivity
 
         }else{
 
-            mCurrentGame = new Game(new ArrayList<Player>(), null, mEditTextGameTitle.getText().toString().trim() , null , mTime, false, 0
+            mCurrentGame = new Game(new ArrayList<Player>(), null, mEditTextGameTitle.getText().toString().trim() , "00:00:00:0" , mTime, false, 0
                     , EditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this));
 
             mDBHelper.open().createGame(mCurrentGame);

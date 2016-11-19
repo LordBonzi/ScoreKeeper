@@ -12,10 +12,12 @@ public class Player {
     private ArrayList<Integer> mSetScores;
     //TODO add image for player
 
-    public Player(String mName, int mScore, ArrayList<Integer> mSetScores) {
+    public Player(String mName, int mScore) {
         this.mName = mName;
         this.mScore = mScore;
-        this.mSetScores = mSetScores;
+        this.mSetScores = new ArrayList<Integer>();
+        //create a blank set.
+        mSetScores.add(0,0);
     }
 
     public String getmName() {
@@ -32,6 +34,8 @@ public class Player {
 
     public void setmScore(int mScore) {
         this.mScore = mScore;
+        mSetScores.set(mSetScores.size() - 1, mScore);
+
     }
 
     public ArrayList<Integer> getmSetScores() {
@@ -39,7 +43,7 @@ public class Player {
     }
 
     public void setScoreForSet(int index, int score){
-        mSetScores.set(index, score);
+
     }
 
     public void createNewSet(int numSets){

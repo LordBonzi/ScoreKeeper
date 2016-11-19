@@ -180,5 +180,12 @@ public class Game {
         mCheckBoxOptions.set(checkBoxOption.getmID(), checkBoxOption);
     }
 
+    public String getWinner(){
+        String winner = "";
+
+        return winner;
+
+    }
+
 }
 

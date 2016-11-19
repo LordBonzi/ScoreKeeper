@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,7 +71,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 public void onClick(View v) {
                     if (holder.editTextPlayer.isEnabled()){
                         mBackupPlayer = null;
-                        mBackupPlayer = new Player(holder.editTextPlayer.getText().toString(), 0, new ArrayList<Integer>());
+                        mBackupPlayer = new Player(holder.editTextPlayer.getText().toString(), 0);
                         mGame.setPlayerName(holder.editTextPlayer.getText().toString(), position);
                         if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())){
                             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -238,7 +237,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     @Override
     public void addPlayer() {
-        mGame.addPlayer(new Player("", 0, new ArrayList<Integer>()));
+        mGame.addPlayer(new Player("", 0));
         notifyItemInserted(mGame.size());
 
     }

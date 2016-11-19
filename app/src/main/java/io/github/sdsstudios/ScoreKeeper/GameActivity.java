@@ -46,7 +46,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -486,13 +485,14 @@ public class GameActivity extends AppCompatActivity
             });
 
             dialog = builder.create();
-
             dialog.show();
+
             return true;
         }
 
         if (id == R.id.action_fullscreen) {
-            toggleFullScreen(true);
+
+            setFullScreen(true);
 
         }
 
@@ -562,7 +562,7 @@ public class GameActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
+                        mNewPlayer = new Player(charSequence.toString(), 0);
 
                     }
 
@@ -777,14 +777,14 @@ public class GameActivity extends AppCompatActivity
 
         }else{
 
-            toggleFullScreen(false);
+            setFullScreen(false);
 
         }
     }
 
     public void winnerDialog(String winner) {
 
-        toggleFullScreen(false);
+        setFullScreen(false);
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -797,15 +797,12 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
-        for (Player p : mGame.getmPlayerArray()){
-            p.addSet(p.getmScore());
-            p.setmScore(0);
-        }
+        if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
 
-        if (mGame.numSets() > 1 && mGame.numSetsPlayed() + 1 < mGame.numSets()) {
-
-            mButtonP1.setEnabled(false);
-            mButtonP2.setEnabled(false);
+            for (Player p : mGame.getmPlayerArray()){
+                p.addSet(0);
+                p.setmScore(0);
+            }
 
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -861,6 +858,9 @@ public class GameActivity extends AppCompatActivity
                 }
             });
         }
+
+        mButtonP1.setEnabled(false);
+        mButtonP2.setEnabled(false);
 
         dialog = builder.create();
 
@@ -1101,7 +1101,7 @@ public class GameActivity extends AppCompatActivity
         mDbHelper.open().updateGame(mGame);
     }
 
-    public void toggleFullScreen(boolean fullscreen) {
+    public void setFullScreen(boolean fullscreen) {
 
         if (fullscreen) {
             mParams = mBaseLayout.getLayoutParams();
@@ -1247,7 +1247,7 @@ public class GameActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer = new Player(charSequence.toString(), 0, new ArrayList<Integer>());
+                        mNewPlayer = new Player(charSequence.toString(), 0);
 
                     }
 

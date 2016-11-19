@@ -23,7 +23,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     private int mMaxScore;
     private int mDiffToWin;
 
-
     // Provide a suitable constructor (depends on the kind of dataset)
     public BigGameAdapter(Game mGame, ScoreDBAdapter dbAdapter, boolean menabled, GameListener mGameListener) {
 
@@ -53,6 +52,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
@@ -69,7 +69,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 public void onClick(View v) {
                     int score = 0;
                     int buttonScore = 0;
-
 
                     buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
                     if (mReverseScoring) {

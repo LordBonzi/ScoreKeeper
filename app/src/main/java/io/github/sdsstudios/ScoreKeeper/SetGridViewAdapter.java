@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class SetGridViewAdapter extends BaseAdapter{
         for (Player p : mPlayerArray){
             num += p.getmSetScores().size();
         }
-        return num;
+        return num + mNumPlayers;
     }
 
     @Override
@@ -58,36 +57,44 @@ public class SetGridViewAdapter extends BaseAdapter{
 
         LayoutInflater inflater = (LayoutInflater) mCtx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View itemView;
+        View itemView = null;
 
         if (view == null) {
 
             if (position < mPlayerArray.size()){
                 itemView = inflater.inflate(R.layout.player_name_fragment, null);
                 TextView textView = (TextView) itemView.findViewById(R.id.textView);
+                textView.setTextSize(12);
                 textView.setText(mPlayerArray.get(position).getmName());
 
             }else{
-                itemView = inflater.inflate(R.layout.set_fragment, null);
-                TextView textView = (TextView) itemView.findViewById(R.id.textView);
 
                 Player player = null;
                 int currentRow = 0;
 
                 if (position == mNumPlayers){
+
                     player = mPlayerArray.get(0);
                     currentRow = 0;
+
                 }else{
 
-                    if (mPlayerArray.indexOf(mLastPlayer) + 1 < mNumPlayers){
-                        player = mPlayerArray.get(mPlayerArray.indexOf(mLastPlayer) + 1);
+                    if (mNumPlayers - mPlayerArray.indexOf(mLastPlayer) < mNumPlayers){
+
+                        player = mPlayerArray.get(mPlayerArray.indexOf(mLastPlayer) - 1);
+
                     }else{
-                        player = mPlayerArray.get(0);
+
+                        player = mPlayerArray.get(mNumPlayers - 1);
+
                     }
 
                     if (position % mNumPlayers == 0) {
+
                         currentRow = mLastRow + 1;
+
                     }else{
+
                         currentRow = mLastRow;
                     }
 
@@ -96,17 +103,27 @@ public class SetGridViewAdapter extends BaseAdapter{
                 mLastPlayer = player;
                 mLastRow = currentRow;
 
+                try {
 
+                    if (currentRow == 0){
+                        itemView = inflater.inflate(R.layout.player_name_fragment, null);
 
-                try{
+                    }else{
+                        itemView = inflater.inflate(R.layout.set_fragment, null);
+
+                    }
+
+                    TextView textView = (TextView) itemView.findViewById(R.id.textView);
 
                     assert player != null;
                     textView.setText(String.valueOf(player.getmSetScores().get(currentRow)));
 
-                }catch (Exception e){
+                } catch (Exception e) {
+
                     e.printStackTrace();
                     Log.e("SetAdapter", e.toString());
                     Log.e("SetAdapter", mLastPlayer.getmName());
+
                 }
 
             }

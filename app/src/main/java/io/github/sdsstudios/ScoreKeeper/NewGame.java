@@ -270,7 +270,6 @@ public class NewGame extends AppCompatActivity
 
         }
 
-
         mButtonNewGame = (Button)findViewById(R.id.buttonNewGame);
         mButtonNewGame.setOnClickListener(this);
 
@@ -279,7 +278,6 @@ public class NewGame extends AppCompatActivity
 
         mButtonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
         mButtonAddPlayer.setOnClickListener(this);
-
 
         for (final CheckBoxOption c : mCheckBoxOptions){
             getCheckBox(c.getmCheckBoxID()).setOnClickListener(new View.OnClickListener() {
@@ -310,8 +308,15 @@ public class NewGame extends AppCompatActivity
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     try
                     {
-
-                        e.setmData(Integer.parseInt(charSequence.toString()));
+                        if (charSequence.toString().equals("")){
+                            if (e.getmID() == EditTextOption.SCORE_INTERVAL) {
+                                e.setmData(1);
+                            }else{
+                                e.setmData(0);
+                            }
+                        }else {
+                            e.setmData(Integer.parseInt(charSequence.toString()));
+                        }
                     }
                     catch (NumberFormatException error)
                     {
@@ -517,11 +522,13 @@ public class NewGame extends AppCompatActivity
 
     public void addPlayers() {
         String playerName = mEditTextPlayer.getText().toString().trim();
-        boolean duplicates;
-        mCurrentGame.addPlayer(new Player(playerName, 0, new ArrayList<Integer>()));
-        duplicates = mDataHelper.checkPlayerDuplicates(mCurrentGame.getmPlayerArray());
 
-        if (duplicates) {
+        boolean areDuplicatePlayers;
+
+        mCurrentGame.addPlayer(new Player(playerName, 0));
+        areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mCurrentGame.getmPlayerArray());
+
+        if (areDuplicatePlayers) {
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -549,7 +556,7 @@ public class NewGame extends AppCompatActivity
             mSnackbar = Snackbar.make(RELATIVE_LAYOUT, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             mSnackbar.show();
-        } else if (!duplicates && !playerName.equals("") && !playerName.equals(" ")) {
+        } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
 
             mEditTextPlayer.setText("");
 

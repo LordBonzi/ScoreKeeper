@@ -71,7 +71,9 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     int buttonScore = 0;
 
                     buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
+
                     if (mReverseScoring) {
+
                         score = buttonScore -= mScoreInterval;
                     } else {
                         score = buttonScore += mScoreInterval;

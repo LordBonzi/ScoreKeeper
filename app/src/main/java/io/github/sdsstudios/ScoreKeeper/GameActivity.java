@@ -792,6 +792,7 @@ public class GameActivity extends AppCompatActivity
         builder.setTitle(winner + " " + getString(R.string.has_won));
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
@@ -799,13 +800,15 @@ public class GameActivity extends AppCompatActivity
 
         if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
 
-            for (Player p : mGame.getmPlayerArray()){
-                p.addSet(0);
-                p.setmScore(0);
-            }
-
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
+
                 public void onClick(DialogInterface dialog, int id) {
+
+                    for (Player p : mGame.getmPlayerArray()){
+                        p.addSet(0);
+                        p.setmScore(0);
+                    }
+
                     mFinished = false;
                     mPaused = false;
 

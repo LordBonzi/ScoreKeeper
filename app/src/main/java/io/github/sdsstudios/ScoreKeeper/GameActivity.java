@@ -293,21 +293,20 @@ public class GameActivity extends AppCompatActivity
     private void isGameWon(){
         for (Player p : mGame.getmPlayerArray()) {
 
-            if (mGame.numSetsPlayed() == mGame.numSets()) {
-                if (mMaxScore < 0) {
+            if (mMaxScore < 0) {
 
-                    if (p.getmScore() <= mMaxScore && scoreDifference(p.getmScore())) {
+                if (p.getmScore() <= mMaxScore && scoreDifference(p.getmScore())) {
 
-                        gameWon(p.getmName());
-                    }
-
-                } else if (mMaxScore >= 0) {
-                    if (p.getmScore() >= mMaxScore && scoreDifference(p.getmScore())) {
-
-                        gameWon(p.getmName());
-                    }
-
+                    gameWon(p.getmName());
                 }
+
+            } else if (mMaxScore >= 0) {
+                if (p.getmScore() >= mMaxScore && scoreDifference(p.getmScore())) {
+
+                    gameWon(p.getmName());
+                }
+
+
             }
         }
     }
@@ -517,7 +516,6 @@ public class GameActivity extends AppCompatActivity
             }
         }
 
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -599,11 +597,9 @@ public class GameActivity extends AppCompatActivity
             mPlayersArray.remove(mPlayersArray.size() - 1);
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
-        }else {
+        }else{
 
             mPlayersArray.get(mPlayersArray.size() - 1).createNewSet(mPlayersArray.get(0).getmSetScores().size());
-
-            mGame.setmPlayerArray(mPlayersArray);
 
             alertDialog.dismiss();
 
@@ -840,7 +836,7 @@ public class GameActivity extends AppCompatActivity
                 }
             });
 
-            builder.setNeutralButton(R.string.complete_game, new DialogInterface.OnClickListener() {
+            builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
                     if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {

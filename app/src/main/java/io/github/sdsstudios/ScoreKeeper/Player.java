@@ -47,10 +47,9 @@ public class Player {
     }
 
     public void createNewSet(int numSets){
-        for (int i = 0; i < numSets; i++){
+        for (int i = 0; i < numSets - 1; i++) {
             addSet(0);
         }
-
     }
 
     public void addSet(int score){

@@ -15,6 +15,8 @@ import java.util.List;
  */
 
 public class SetGridViewAdapter extends BaseAdapter{
+    private String TAG = "SetViewAdapter";
+
     private List<Player> mPlayerArray;
     private int mNumPlayers;
     private Context mCtx;
@@ -81,11 +83,15 @@ public class SetGridViewAdapter extends BaseAdapter{
 
                     if (mNumPlayers - mPlayerArray.indexOf(mLastPlayer) < mNumPlayers){
 
-                        player = mPlayerArray.get(mPlayerArray.indexOf(mLastPlayer) - 1);
+                        if (mPlayerArray.indexOf(mLastPlayer) + 1 == mNumPlayers){
+                            player = mPlayerArray.get(0);
+                        }else{
+                            player = mPlayerArray.get(mPlayerArray.indexOf(mLastPlayer) + 1);
+                        }
 
                     }else{
 
-                        player = mPlayerArray.get(mNumPlayers - 1);
+                        player = mPlayerArray.get(1);
 
                     }
 
@@ -106,9 +112,11 @@ public class SetGridViewAdapter extends BaseAdapter{
                 try {
 
                     if (currentRow == 0){
+
                         itemView = inflater.inflate(R.layout.player_name_fragment, null);
 
                     }else{
+
                         itemView = inflater.inflate(R.layout.set_fragment, null);
 
                     }

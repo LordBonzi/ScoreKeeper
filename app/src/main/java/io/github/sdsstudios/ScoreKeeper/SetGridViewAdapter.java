@@ -35,7 +35,7 @@ public class SetGridViewAdapter extends BaseAdapter{
         for (Player p : mPlayerArray){
             num += p.getmSetScores().size();
         }
-        return num + mNumPlayers;
+        return num;
     }
 
     @Override
@@ -116,7 +116,8 @@ public class SetGridViewAdapter extends BaseAdapter{
                     TextView textView = (TextView) itemView.findViewById(R.id.textView);
 
                     assert player != null;
-                    textView.setText(String.valueOf(player.getmSetScores().get(currentRow)));
+                    List<Integer> setList = player.getmSetScores();
+                    textView.setText(String.valueOf(setList.get(setList.size() - currentRow - 1)));
 
                 } catch (Exception e) {
 

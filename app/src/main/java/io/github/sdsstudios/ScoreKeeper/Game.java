@@ -8,6 +8,10 @@ import java.util.List;
 
 public class Game {
 
+    private String TAG = "Game";
+
+    private GameListener mGameListener;
+
     private List<Player> mPlayerArray;
     private String mTimeLimit;
     private String mLength;
@@ -20,7 +24,7 @@ public class Game {
     private List<CheckBoxOption> mCheckBoxOptions;
 
     public Game(List<Player> mPlayerArray, String mTimeLimit, String mTitle, String mLength, String mTime, boolean mCompleted, int mID
-            , List<EditTextOption> editTextOptions, List<CheckBoxOption> checkBoxOptions) {
+            , List<EditTextOption> editTextOptions, List<CheckBoxOption> checkBoxOptions, GameListener mGameListener) {
         this.mPlayerArray = mPlayerArray;
         this.mTimeLimit = mTimeLimit;
         this.mTitle = mTitle;
@@ -30,6 +34,7 @@ public class Game {
         this.mCompleted = mCompleted;
         this.mEditTextOptions = editTextOptions;
         this.mCheckBoxOptions = checkBoxOptions;
+        this.mGameListener = mGameListener;
     }
 
     public boolean ismCompleted() {
@@ -180,12 +185,81 @@ public class Game {
         mCheckBoxOptions.set(checkBoxOption.getmID(), checkBoxOption);
     }
 
-    public String getWinner(){
-        String winner = "";
+    public String getWinnerString(){
+        Player winningPlayer = mPlayerArray.get(0);
 
-        return winner;
+        for (Player p : mPlayerArray) {
+            if (numSetsPlayed() == numSets()) {
+                if (p.overallScore() > winningPlayer.overallScore()) {
+                    winningPlayer = p;
+                }
+            }else{
+                if (p.getmScore() > winningPlayer.getmScore()) {
+                    winningPlayer = p;
+                }
+            }
+        }
+
+        return winningPlayer.getmName();
+    }
+
+    public boolean isGameWon(){
+        int maxScore = getData(EditTextOption.WINNING_SCORE);
+        boolean isWon = false;
+
+        for (Player p : mPlayerArray) {
+
+            if (maxScore != 0) {
+                if (maxScore < 0) {
+                    if (p.getmScore() <= maxScore && scoreDifference(maxScore)) {
+                        mGameListener.gameWon(getWinnerString());
+                        isWon = true;
+                    }
+
+                } else if (maxScore >= 0) {
+                    if (p.getmScore() >= maxScore && scoreDifference(maxScore)) {
+                        mGameListener.gameWon(getWinnerString());
+                        isWon = true;
+                    }
+
+                }
+
+            }
+
+        }
+
+        return isWon;
 
     }
 
+    private boolean scoreDifference(int score) {
+        boolean b = false;
+        for (Player p : mPlayerArray) {
+            if (getData(EditTextOption.WINNING_SCORE) != 0) {
+                if (Math.abs(score - p.getmScore()) >= getData(EditTextOption.SCORE_DIFF_TO_WIN)) {
+                    b = true;
+                }
+            }
+        }
+        return b;
+    }
+
+    void setGameListener(GameListener listener){
+        mGameListener = listener;
+    }
+
+    GameListener getmGameListener(){
+        return mGameListener;
+    }
+
+    interface GameListener {
+        void gameWon(String winner);
+
+        void deletePlayer(int position);
+
+        void editPlayer(int position);
+    }
+
 }
+
 

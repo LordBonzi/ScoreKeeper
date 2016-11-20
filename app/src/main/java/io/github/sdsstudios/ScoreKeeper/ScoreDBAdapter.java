@@ -57,6 +57,8 @@ public class ScoreDBAdapter{
     }
 
     void updateGame(Game game){
+        game.setGameListener(null);
+
         ContentValues initialValues = new ContentValues();
         String arrayList = null;
 
@@ -77,6 +79,7 @@ public class ScoreDBAdapter{
     }
 
     long createGame(Game game) {
+        game.setGameListener(null);
 
         ContentValues initialValues = new ContentValues();
 

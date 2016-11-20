@@ -42,10 +42,6 @@ public class Player {
         return mSetScores;
     }
 
-    public void setScoreForSet(int index, int score){
-
-    }
-
     public void createNewSet(int numSets){
         for (int i = 0; i < numSets - 1; i++) {
             addSet(0);
@@ -59,6 +55,16 @@ public class Player {
     public void deleteSet(int index){
         mSetScores.remove(index);
 
+    }
+
+    public int overallScore(){
+        int overallScore = 0;
+
+        for (int score : mSetScores){
+            overallScore += score;
+        }
+
+        return overallScore;
     }
 
     public void setmSetScores(ArrayList<Integer> mSetScores) {

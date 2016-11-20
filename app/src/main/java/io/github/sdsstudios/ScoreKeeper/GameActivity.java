@@ -52,7 +52,7 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
-        , BigGameAdapter.GameListener {
+        , Game.GameListener {
 
     private boolean mWon = false;
     private String mWinnerString;
@@ -109,6 +109,7 @@ public class GameActivity extends AppCompatActivity
         loadObjects();
 
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
+        mGame.setGameListener(this);
 
         setTheme(accentColor);
 
@@ -122,9 +123,11 @@ public class GameActivity extends AppCompatActivity
         } else {
 
             setContentView(R.layout.activity_main);
+
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(primaryColor);
             toolbar.setTitle(mGame.getmTitle());
+
             setSupportActionBar(toolbar);
             getSupportActionBar();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -286,41 +289,9 @@ public class GameActivity extends AppCompatActivity
         editor.putInt("lastplayedgame", GAME_ID);
         editor.apply();
 
-        isGameWon();
-
-    }
-
-    private void isGameWon(){
-        for (Player p : mGame.getmPlayerArray()) {
-
-            if (mMaxScore < 0) {
-
-                if (p.getmScore() <= mMaxScore && scoreDifference(p.getmScore())) {
-
-                    gameWon(p.getmName());
-                }
-
-            } else if (mMaxScore >= 0) {
-                if (p.getmScore() >= mMaxScore && scoreDifference(p.getmScore())) {
-
-                    gameWon(p.getmName());
-                }
+        mGame.isGameWon();
 
 
-            }
-        }
-    }
-
-    private boolean scoreDifference(int score) {
-        boolean b = false;
-        for (Player p : mGame.getmPlayerArray()) {
-            if (mMaxScore != 0) {
-                if (Math.abs(score - p.getmScore()) >= mScoreDiffToWin) {
-                    b = true;
-                }
-            }
-        }
-        return b;
     }
 
     private boolean timeLimitReached(Stopwatch chronometer) {
@@ -793,7 +764,14 @@ public class GameActivity extends AppCompatActivity
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle(winner + " " + getString(R.string.has_won));
+        if (mGame.numSetsPlayed() == mGame.numSets()){
+
+            builder.setTitle(winner + " " + getString(R.string.has_won) + " overall");
+        }else{
+
+            builder.setTitle(winner + " " + getString(R.string.has_won));
+
+        }
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
@@ -889,6 +867,7 @@ public class GameActivity extends AppCompatActivity
             } else {
                 mP1Score += mScoreInterval;
             }
+
             button.setText(String.valueOf(mP1Score));
 
         } else {
@@ -902,44 +881,9 @@ public class GameActivity extends AppCompatActivity
             button.setText(String.valueOf(mP2Score));
         }
 
-        if (mMaxScore != 0 && (Math.abs(mP1Score - mP2Score) >= mScoreDiffToWin)) {
-
-            if (mReverseScoring){
-
-                if (mP1Score <= mMaxScore || mP2Score <= mMaxScore) {
-                    setWinnerString();
-                }
-
-            }else{
-
-                if (mP1Score >= mMaxScore || mP2Score >= mMaxScore) {
-                    setWinnerString();
-                }
-
-            }
-
-        }
-
         updateScores();
-
-    }
-
-    //finds the winner in two player games
-    public void setWinnerString(){
-
-        if (mP1Score == mMaxScore) {
-
-            mWinnerString = mGame.getPlayer(0).getmName();
-
-        } else {
-
-            mWinnerString = mGame.getPlayer(1).getmName();
-
-        }
-
-        mWon = true;
-        updateScores();
-        winnerDialog(mWinnerString);
+        mGame.setGameListener(this);
+        mGame.isGameWon();
 
     }
 
@@ -1177,6 +1121,11 @@ public class GameActivity extends AppCompatActivity
     @Override
     public void gameWon(String winner) {
         this.mWinnerString = winner;
+
+        if (mGame.size() == 2) {
+            updateScores();
+        }
+
         mFinished = true;
         mPaused = true;
         chronometerClick();

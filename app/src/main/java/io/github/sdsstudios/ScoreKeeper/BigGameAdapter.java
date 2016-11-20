@@ -8,8 +8,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.List;
-
 /**
  * Created by seth on 08/05/16.
  */
@@ -17,24 +15,20 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     private ScoreDBAdapter mDbHelper;
     private Game mGame;
     private boolean mEnabled;
-    private GameListener mGameListener;
     private boolean mReverseScoring;
     private int mScoreInterval;
-    private int mMaxScore;
-    private int mDiffToWin;
+    private Game.GameListener mGameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(Game mGame, ScoreDBAdapter dbAdapter, boolean menabled, GameListener mGameListener) {
+    public BigGameAdapter(Game mGame, ScoreDBAdapter dbAdapter, boolean menabled, Game.GameListener mGameListener) {
 
         mDbHelper = dbAdapter;
         mEnabled = menabled;
-        this.mGameListener = mGameListener;
         this.mGame = mGame;
+        this.mGameListener = mGameListener;
 
         mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
         mScoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
-        mMaxScore = mGame.getData(EditTextOption.WINNING_SCORE);
-        mDiffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
 
     }
 
@@ -73,7 +67,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
 
                     if (mReverseScoring) {
-
                         score = buttonScore -= mScoreInterval;
                     } else {
                         score = buttonScore += mScoreInterval;
@@ -82,20 +75,8 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     holder.buttonScore.setText(String.valueOf(score));
                     p.setmScore(score);
 
-                    if (mMaxScore != 0) {
-                        if (mMaxScore < 0) {
-                            if (p.getmScore() <= mMaxScore && scoreDifference(score)) {
-                                mGameListener.gameWon(p.getmName());
-                            }
-
-                        } else if (mMaxScore >= 0) {
-                            if (p.getmScore() >= mMaxScore && scoreDifference(score)) {
-                                mGameListener.gameWon(p.getmName());
-                            }
-
-                        }
-
-                    }
+                    mGame.setGameListener(mGameListener);
+                    mGame.isGameWon();
 
                 }
             });
@@ -127,14 +108,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGameListener.deletePlayer(position);
+                    mGame.getmGameListener().deletePlayer(position);
                 }
             });
 
             holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGameListener.editPlayer(position);
+                    mGame.getmGameListener().editPlayer(position);
                 }
             });
 
@@ -147,19 +128,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
 
     }
-
-    private boolean scoreDifference(int score) {
-        boolean b = false;
-        List<Player> playerArray = mGame.getmPlayerArray();
-
-        for (int i = 0; i < playerArray.size(); i++) {
-            if (Math.abs(score - Integer.valueOf(String.valueOf(playerArray.get(i).getmScore()))) >= mDiffToWin) {
-                b = true;
-            }
-        }
-        return b;
-    }
-
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
@@ -185,13 +153,5 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             editButton = (ImageButton) v.findViewById(R.id.buttonEdit);
 
         }
-    }
-
-    public interface GameListener {
-        void gameWon(String winner);
-
-        void deletePlayer(int position);
-
-        void editPlayer(int position);
     }
 }

@@ -258,7 +258,7 @@ public class NewGame extends AppCompatActivity
         }else{
 
             mCurrentGame = new Game(new ArrayList<Player>(), null, mEditTextGameTitle.getText().toString().trim() , "00:00:00:0" , mTime, false, 0
-                    , EditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this));
+                    , EditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this), null);
 
             mDBHelper.open().createGame(mCurrentGame);
             mGameID = mDBHelper.getNewestGame();

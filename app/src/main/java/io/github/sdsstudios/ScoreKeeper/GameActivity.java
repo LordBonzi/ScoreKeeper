@@ -509,7 +509,12 @@ public class GameActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_add) {
-            addPlayerDialog();
+            if (!mFinished) {
+                addPlayerDialog();
+            }else{
+                Toast.makeText(this, "Game has finished, you can't add more players", Toast.LENGTH_SHORT).show();
+
+            }
         }
 
 
@@ -611,6 +616,9 @@ public class GameActivity extends AppCompatActivity
             selectLayout();
             mPaused = true;
             chronometerClick();
+
+            populateSetGridView();
+
         }
     }
 

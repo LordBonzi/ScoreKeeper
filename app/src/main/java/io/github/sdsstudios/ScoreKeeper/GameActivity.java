@@ -244,6 +244,7 @@ public class GameActivity extends AppCompatActivity
                 public void onPageSelected(int position) {
 
                     switch (position){
+
                         case 0:
                             findViewById(R.id.gameRelativeLayout).setVisibility(View.VISIBLE);
                             mSetGridView.setVisibility(View.INVISIBLE);
@@ -252,10 +253,7 @@ public class GameActivity extends AppCompatActivity
                         case 1:
                             findViewById(R.id.gameRelativeLayout).setVisibility(View.INVISIBLE);
                             mSetGridView.setVisibility(View.VISIBLE);
-
                             populateSetGridView();
-
-
                             break;
 
                         case 2:
@@ -271,6 +269,7 @@ public class GameActivity extends AppCompatActivity
 
 
         }else{
+
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
 
             // Applying font
@@ -289,6 +288,7 @@ public class GameActivity extends AppCompatActivity
         editor.putInt("lastplayedgame", GAME_ID);
         editor.apply();
 
+        mGame.setGameListener(this);
         mGame.isGameWon();
 
 

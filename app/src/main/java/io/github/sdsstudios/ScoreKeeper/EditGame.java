@@ -261,7 +261,7 @@ public class EditGame extends AppCompatActivity {
     }
 
     private void updateCompleteMenuItem(){
-        if (mGame.ismCompleted()){
+        if (!mGame.ismCompleted()){
             mMenuItemComplete.setTitle(R.string.complete);
             mGame.setmCompleted(true);
         }else{
@@ -302,7 +302,6 @@ public class EditGame extends AppCompatActivity {
         return true;
     }
 
-
     public void createShareIntent(){
         mShareIntent = new Intent();
         mShareIntent.setAction(Intent.ACTION_SEND);
@@ -331,10 +330,14 @@ public class EditGame extends AppCompatActivity {
     public void completeGame(){
 
         if (mGame.ismCompleted()){
-            mMenuItemComplete.setTitle(R.string.complete);
-        }else{
             mMenuItemComplete.setTitle(R.string.unfinish);
+        }else{
+            mMenuItemComplete.setTitle(R.string.complete);
         }
+
+        mGame.setmCompleted(!mGame.ismCompleted());
+
+        mDbHelper.updateGame(mGame);
     }
 
     @Override
@@ -344,24 +347,31 @@ public class EditGame extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_delete) {
-            delete();
+        switch (id){
+            case R.id.action_delete:
+                delete();
+                break;
 
-        } else if (id == R.id.action_edit) {
-            onMenuEditClick();
+            case R.id.action_edit:
+                onMenuEditClick();
+                break;
 
-        } else if (id == R.id.action_done) {
-            onMenuDoneClick();
+            case R.id.action_done:
+                onMenuDoneClick();
+                break;
 
-        } else if (id == R.id.action_cancel) {
-            onMenuCancelClick();
+            case R.id.action_cancel:
+                onMenuCancelClick();
+                break;
 
-        } else if (id == R.id.action_add){
-            mPlayerListAdapter.addPlayer();
+            case R.id.action_add:
+                mPlayerListAdapter.addPlayer();
+                break;
 
-        }else if (id == R.id.complete_game){
-            completeGame();
+            case R.id.complete_game:
+                completeGame();
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -370,7 +380,6 @@ public class EditGame extends AppCompatActivity {
     public void helpDialog(String title, String message){
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 
         builder.setTitle(title);
 

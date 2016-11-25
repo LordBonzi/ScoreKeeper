@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -91,7 +92,8 @@ public class HistoryModel {
         int numGames = dbAdapter.numRows();
 
         if (activity == Pointers.HOME){
-            numGames = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE).getInt("numgamestoshow", 3);
+            numGames = Integer.valueOf(PreferenceManager
+                    .getDefaultSharedPreferences(context).getString("prefNumGames", "3"));
         }
 
         for (int i = 1; i <= dbAdapter.numRows(); i++){

@@ -176,7 +176,7 @@
     <string name="events">Events</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="time_line">Timeline</string>
-
+    <string name="receive_notifications">Receive Notifications</string>
 
 </resources>
 

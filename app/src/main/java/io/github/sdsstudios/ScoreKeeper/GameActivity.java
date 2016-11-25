@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -98,18 +98,20 @@ public class GameActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         GAME_ID = extras.getInt("GAME_ID");
 
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
+
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
-        mClassicTheme = mSharedPreferences.getBoolean("prefClassicTheme", false) && mGame.size() == 2;
-        maxNumDice = mSharedPreferences.getInt("maxNumDice", 6);
+        maxNumDice = Integer.valueOf(mSharedPreferences.getString("prefDiceMaxNum", "6"));
 
         loadObjects();
 
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
         mGame.setGameListener(this);
+
+        mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
 
         setTheme(accentColor);
 
@@ -681,8 +683,8 @@ public class GameActivity extends AppCompatActivity
 
     }
 
-    public boolean isFullScreen(){
-        return !getSupportActionBar().isShowing();
+    public boolean isFullScreen() {
+        return !mClassicTheme && !getSupportActionBar().isShowing();
     }
 
     @Override

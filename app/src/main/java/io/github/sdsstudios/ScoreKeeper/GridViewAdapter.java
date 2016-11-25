@@ -2,6 +2,7 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,14 @@ public class GridViewAdapter extends BaseAdapter {
     private Context mCtx;
     private int mSelected;
     private final int[] mColors, mRawColors;
-    private boolean accent;
+    private boolean mAccent;
 
     public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, boolean accents){
         this.mCtx = mCtx;
         this.mSelected = mSelected;
         this.mColors = colors;
         this.mRawColors = rawColors;
-        accent=accents;
+        mAccent =accents;
     }
 
     @Override
@@ -62,11 +63,11 @@ public class GridViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 mSelected = position+1;
-                SharedPreferences sharedPreferences = mCtx.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mCtx);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                if (accent) {
-                    editor.putInt("prefAccent", mColors[mSelected - 1]);
+                if (mAccent) {
+                    editor.putInt("prefAccentColor", mColors[mSelected - 1]);
                 }else{
                     editor.putInt("prefPrimaryColor", mColors[mSelected - 1]);
                     editor.putInt("prefPrimaryDarkColor", mRawColors[mSelected - 1]);

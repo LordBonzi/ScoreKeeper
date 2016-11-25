@@ -2,12 +2,12 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -104,8 +104,10 @@ public class NewGame extends AppCompatActivity
     }
 
     public void loadActivity(Bundle savedInstanceState){
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
+
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);

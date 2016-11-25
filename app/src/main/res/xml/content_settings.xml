@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     >
 
-    <ListPreference android:title="Number of games on Homepage"
+    <ListPreference
+        android:title="Number of games on Homepage"
         android:summary="The number of recent games to show on the homepage"
         android:key="prefNumGames"
         android:entries="@array/numGames"
@@ -18,6 +19,7 @@
         android:title="@string/themes"
         android:key="prefThemes"
         />
+
     <EditTextPreference
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -28,18 +30,31 @@
         android:key="prefDiceMaxNum"
         />
 
-    <Preference
+    <SwitchPreference
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="@string/export"
-        android:key="prefExport"
+        android:title="@string/receive_notifications"
+        android:key="prefReceiveNotifications"
+        android:defaultValue="true"
         />
-    <Preference
+
+    <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="@string/_import"
-        android:key="prefImport"
-        />
+        android:title="Backup and Restore">
+        <Preference
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:title="@string/export"
+            android:key="prefExport"
+            />
+        <Preference
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:title="@string/_import"
+            android:key="prefImport"
+            />
+        </PreferenceCategory>
     <PreferenceCategory
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

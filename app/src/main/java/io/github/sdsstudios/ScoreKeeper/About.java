@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -41,9 +41,11 @@ public class About extends PreferenceActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int accentColor = sharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
+
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
 
@@ -241,7 +243,6 @@ public class About extends PreferenceActivity {
         });
 
     }
-
 
     public void displayOutput(TextView textView, int type)
     {

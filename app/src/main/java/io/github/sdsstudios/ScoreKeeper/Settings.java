@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -33,16 +33,15 @@ public class Settings extends PreferenceActivity{
     private AppCompatDelegate mDelegate;
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
     private AlertDialog mDialog;
-    private int mNumGamesToShow;
     private SharedPreferences mSharedPreferences;
-    private int maxNumDice;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        maxNumDice = mSharedPreferences.getInt("maxNumDice", 6);
-        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
@@ -52,32 +51,34 @@ public class Settings extends PreferenceActivity{
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
         }
+
         setTheme(accentColor);
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
+
         addPreferencesFromResource(R.xml.content_settings);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
 
         Preference deletePreference = findPreference("prefDeleteAllGames");
-        Preference numGamesPreference = findPreference("prefNumGames");
         Preference themesPreference = findPreference("prefThemes");
-        Preference maxNumOnDicePreference = findPreference("prefDiceMaxNum");
         Preference exportPreference = findPreference("prefExport");
         Preference importPreference = findPreference("prefImport");
-        Preference mDeleteAllPresets = findPreference("prefDeleteAllPresets");
-
+        Preference deleteAllPresets = findPreference("prefDeleteAllPresets");
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -124,7 +125,7 @@ public class Settings extends PreferenceActivity{
                             importDatabase();
                             Toast.makeText(Settings.this, "Successfully imported games", Toast.LENGTH_SHORT).show();
                         }catch (IOException e){
-                            Toast.makeText(Settings.this, "Is the database in /ScoreKeeper folder?", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Settings.this, "Error. Is the database in /ScoreKeeper folder?", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -140,15 +141,6 @@ public class Settings extends PreferenceActivity{
                 return true;
             }
 
-        });
-
-        maxNumOnDicePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                maxNumDice = Integer.valueOf(String.valueOf(o));
-                saveInfo();
-                return true;
-            }
         });
 
         deletePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -181,7 +173,8 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        mDeleteAllPresets.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+        deleteAllPresets.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 builder.setTitle(getResources().getString(R.string.delete_all_games) + "?");
@@ -224,24 +217,9 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        numGamesPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                mNumGamesToShow = Integer.valueOf(String.valueOf(o));
-                saveInfo();
-                return true;
-            }
-
-        });
-
         mDbHelper = new ScoreDBAdapter(this);
 
         mHomeIntent = new Intent(this, Home.class);
-
-        //Shared prefs stuff
-
-        mNumGamesToShow = mSharedPreferences.getInt("numgamestoshow", 3);
-
     }
 
     private void exportDatabase(){
@@ -325,13 +303,6 @@ public class Settings extends PreferenceActivity{
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void saveInfo(){
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt("numgamestoshow", mNumGamesToShow);
-        editor.putInt("maxNumDice", maxNumDice);
-        editor.apply();
     }
 
     @Override

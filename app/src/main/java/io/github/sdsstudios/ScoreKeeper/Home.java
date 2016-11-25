@@ -1,7 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -56,8 +56,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = mSharedPreferences.getInt("prefAccent", R.style.AppTheme);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
         int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
@@ -83,7 +84,11 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        if (mSharedPreferences.getBoolean("prefReceiveNotifications", true)){
+            FirebaseMessaging.getInstance().subscribeToTopic("news");
+        }else{
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
+        }
 
         mDbHelper = new ScoreDBAdapter(this);
         mNumRows = mDbHelper.open().numRows();

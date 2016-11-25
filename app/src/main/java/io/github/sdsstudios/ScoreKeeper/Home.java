@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 
@@ -81,6 +82,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
 
         mDbHelper = new ScoreDBAdapter(this);
         mNumRows = mDbHelper.open().numRows();

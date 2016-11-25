@@ -177,6 +177,7 @@
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="time_line">Timeline</string>
     <string name="receive_notifications">Receive Notifications</string>
+    <string name="receive_notifications_summary">Receive Notifications from the developer about news and updates. They will not spam your notification drawer and will not be very often. It is just a way for the developer to communicate with their users occasionally.</string>
 
 </resources>
 

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,8 +80,21 @@ public class Settings extends PreferenceActivity{
         Preference exportPreference = findPreference("prefExport");
         Preference importPreference = findPreference("prefImport");
         Preference deleteAllPresets = findPreference("prefDeleteAllPresets");
+        Preference notificationsPreference = findPreference("prefReceiveNotifications");
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        notificationsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (mSharedPreferences.getBoolean("prefReceiveNotifications", true)){
+                    FirebaseMessaging.getInstance().subscribeToTopic("news");
+                }else{
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
+                }
+                return false;
+            }
+        });
 
         exportPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:title="@string/receive_notifications"
+        android:summary="@string/receive_notifications_summary"
         android:key="prefReceiveNotifications"
         android:defaultValue="true"
         />

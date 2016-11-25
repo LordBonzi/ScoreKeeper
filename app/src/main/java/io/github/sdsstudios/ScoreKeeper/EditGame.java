@@ -612,12 +612,12 @@ public class EditGame extends AppCompatActivity {
     }
 
     private void loadOptions(){
+
         for (EditTextOption e : mEditTextOptions){
-                if (e.getmData() != 0) {
-                    EditText editText = getEditText(e.getmEditTextID());
-                    editText.setText(String.valueOf(e.getmData()));
-                    editText.setEnabled(false);
-                }
+                EditText editText = getEditText(e.getmEditTextID());
+                editText.setText(String.valueOf(e.getmData()));
+                editText.setEnabled(false);
+
         }
 
         for(CheckBoxOption c : mCheckBoxOptions){

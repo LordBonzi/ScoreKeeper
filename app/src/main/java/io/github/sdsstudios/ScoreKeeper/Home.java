@@ -50,6 +50,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private int mNumRows = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +81,18 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
-        mDbHelper = new ScoreDBAdapter(this).open();
-        mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.getNewestGame());
+
+        mDbHelper = new ScoreDBAdapter(this);
+        mNumRows = mDbHelper.open().numRows();
+        mDbHelper.close();
+
+        mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
         mNewGameIntent = new Intent(this, NewGame.class);
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);
         mHistoryIntent = new Intent(this, History.class);
         mRelativeLayoutRecents = (RelativeLayout)findViewById(R.id.layoutRecentGames);
+
         Button buttonMore = (Button) findViewById(R.id.buttonMore);
         buttonMore.setOnClickListener(new View.OnClickListener() {
 
@@ -120,21 +127,24 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             }
         });
 
-        if (mDbHelper.numRows() == 0){
+        if (mNumRows == 0){
             mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonMore.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
-        }
-        if (!anyUnfinishedGames()){
+
+        }else if (!anyUnfinishedGames()){
             mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
+
+        }else{
+
+            displayRecyclerView();
+
         }
 
-        if (mDbHelper.open().numRows() == 1 && mReviewLaterBool){
+        if (mNumRows == 1 && mReviewLaterBool){
             createReviewDialog();
         }
-
-        displayRecyclerView();
 
         verifyStoragePermissions(this);
 
@@ -152,15 +162,17 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     public boolean anyUnfinishedGames() {
+
         boolean unfinishedGames = false;
 
         try {
 
-            for (int i = 1; i < mDbHelper.open().numRows(); i++) {
+            for (int i = 1; i <= mNumRows; i++) {
                 if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
                     unfinishedGames = true;
                 }
             }
+
         }catch (Exception e){
             e.printStackTrace();
             Log.e(TAG, e.toString());
@@ -253,30 +265,21 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     public synchronized void displayRecyclerView(){
+
         mDbHelper.open();
 
         try {
 
-            if (mDbHelper.numRows() != 0) {
+            if (mNumRows != 0) {
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                if (mDbHelper.numRows() == 0){
-                    mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
-                    mRecyclerView.setVisibility(View.INVISIBLE);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME)
+                        , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
 
-                }else{
-
-                    mRelativeLayoutRecents.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
-
-                    HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME)
-                            , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
-
-                    mRecyclerView.setAdapter(historyAdapter);
-                }
+                mRecyclerView.setAdapter(historyAdapter);
 
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);

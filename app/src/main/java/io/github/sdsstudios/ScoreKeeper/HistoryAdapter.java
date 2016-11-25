@@ -11,12 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -131,31 +127,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        Collections.sort(mItemArray, new Comparator<HistoryModel>() {
-            @Override
-            public int compare(HistoryModel model1, HistoryModel model2) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date date1 = null;
-                Date date2 = null;
 
-                try {
-                    date1 = df.parse(model1.getmDate());
-                    date2 = df.parse(model2.getmDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Log.e("historyadapter", e.toString());
-                }
-
-                int i= 0;
-
-                if (date1 != null) {
-                    i = date1.compareTo(date2);
-                }
-
-                return i;
-
-            }
-        });
 
         if (mItemArray.size() == 0){
             Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will respond", Toast.LENGTH_LONG).show();

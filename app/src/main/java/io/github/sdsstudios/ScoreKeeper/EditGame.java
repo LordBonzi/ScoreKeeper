@@ -263,10 +263,8 @@ public class EditGame extends AppCompatActivity {
     private void updateCompleteMenuItem(){
         if (!mGame.ismCompleted()){
             mMenuItemComplete.setTitle(R.string.complete);
-            mGame.setmCompleted(true);
         }else{
             mMenuItemComplete.setTitle(R.string.unfinish);
-            mGame.setmCompleted(false);
         }
     }
 
@@ -329,13 +327,9 @@ public class EditGame extends AppCompatActivity {
 
     public void completeGame(){
 
-        if (mGame.ismCompleted()){
-            mMenuItemComplete.setTitle(R.string.unfinish);
-        }else{
-            mMenuItemComplete.setTitle(R.string.complete);
-        }
-
         mGame.setmCompleted(!mGame.ismCompleted());
+
+        updateCompleteMenuItem();
 
         mDbHelper.updateGame(mGame);
     }
@@ -619,13 +613,11 @@ public class EditGame extends AppCompatActivity {
 
     private void loadOptions(){
         for (EditTextOption e : mEditTextOptions){
-
-            if (e.getmData() != 0) {
-                EditText editText = getEditText(e.getmEditTextID());
-                editText.setText(String.valueOf(e.getmData()));
-                editText.setEnabled(false);
-            }
-
+                if (e.getmData() != 0) {
+                    EditText editText = getEditText(e.getmEditTextID());
+                    editText.setText(String.valueOf(e.getmData()));
+                    editText.setEnabled(false);
+                }
         }
 
         for(CheckBoxOption c : mCheckBoxOptions){

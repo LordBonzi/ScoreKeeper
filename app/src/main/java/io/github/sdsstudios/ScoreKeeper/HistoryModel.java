@@ -1,8 +1,15 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,6 +17,8 @@ import java.util.List;
  */
 
 public class HistoryModel {
+    private static String TAG = "HistoryModel";
+
     private String mPlayers;
     private String mInfo;
     private String mDate;
@@ -79,16 +88,17 @@ public class HistoryModel {
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
-        int dbNumRows = dbAdapter.numRows();
-        int numGames = dbNumRows;
+        int numGames = dbAdapter.numRows();
 
         if (activity == Pointers.HOME){
             numGames = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE).getInt("numgamestoshow", 3);
         }
 
-        for (int i = 0; i <= dbNumRows; i++){
+        for (int i = 1; i <= dbAdapter.numRows(); i++){
             if (gameList.size() != numGames) {
-                Game game = dataHelper.getGame(dbNumRows - i, dbAdapter);
+
+                Game game = dataHelper.getGame(i, dbAdapter);
+
                 if (!game.ismCompleted() && activity == Pointers.HOME) {
                     gameList.add(game);
                 }else if (activity == Pointers.HISTORY){
@@ -101,6 +111,32 @@ public class HistoryModel {
             modelList.add(new HistoryModel(playerString(game),
                     infoString(game), game.getmTime(), game.getmTitle(), isUnfinishedString(game, context), game.getmID()));
         }
+
+        Collections.sort(modelList, new Comparator<HistoryModel>() {
+            @Override
+            public int compare(HistoryModel model1, HistoryModel model2) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date1 = null;
+                Date date2 = null;
+
+                try {
+                    date1 = df.parse(model1.getmDate());
+                    date2 = df.parse(model2.getmDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                }
+
+                int i= 0;
+
+                if (date1 != null) {
+                    i = date1.compareTo(date2);
+                }
+
+                return i;
+
+            }
+        });
 
         return modelList;
     }

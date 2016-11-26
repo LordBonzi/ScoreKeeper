@@ -7,39 +7,58 @@ package io.github.sdsstudios.ScoreKeeper;
 public class Option {
 
     private int mID;
-    private int mData;
+    private int mIntData;
+    private String mStringData;
+    private boolean mBoolData;
 
     public Option(int id, int data) {
         this.mID = id;
-        this.mData = data;
+        this.mIntData = data;
     }
+
+    public Option(int id, String data) {
+            this.mID = id;
+            this.mStringData = data;
+        }
+
+    public Option(int id, boolean data) {
+            this.mID = id;
+            this.mBoolData = data;
+        }
 
     public int getmID() {
         return mID;
     }
 
     public void setmID(int mID) {
-
         this.mID = mID;
     }
 
-    public int getmData() {
-        return mData;
+    public void setString(String data){
+        mStringData = data;
     }
 
-    public void setmData(int mData) {
-        this.mData = mData;
+    public void setInt(int data){
+        mIntData = data;
+    }
+
+    public boolean getBoolean(){
+        return mBoolData;
+    }
+
+    public int getInt(){
+        return mIntData;
+    }
+
+    public String getString(){
+        return (String) mStringData;
     }
 
     public boolean isChecked(){
-        return mData != 0;
+        return mBoolData;
     }
 
     public void setChecked(boolean checked){
-        if (checked){
-            mData = 1;
-        }else{
-            mData = 0;
-        }
+        mBoolData = checked;
     }
 }

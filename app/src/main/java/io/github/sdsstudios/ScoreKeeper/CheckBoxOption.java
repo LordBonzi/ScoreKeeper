@@ -21,7 +21,7 @@ public class CheckBoxOption extends Option{
     private int mCheckBoxID;
     private String mHint;
 
-    public CheckBoxOption(int mCheckBoxID, String mHint, int id, int data) {
+    public CheckBoxOption(int mCheckBoxID, String mHint, int id, boolean data) {
         super(id, data);
         this.mCheckBoxID = mCheckBoxID;
         this.mHint = mHint;
@@ -33,10 +33,10 @@ public class CheckBoxOption extends Option{
         List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
         mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch, a.getString(R.string.stopwatch)
-        , CheckBoxOption.STOPWATCH, 0));
+        , CheckBoxOption.STOPWATCH, false));
 
         mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring, a.getString(R.string.reverse_scoring)
-        , CheckBoxOption.REVERSE_SCORING, 0));
+        , CheckBoxOption.REVERSE_SCORING, false));
 
         return mCheckBoxOptions;
     }

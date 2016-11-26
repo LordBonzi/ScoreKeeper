@@ -180,11 +180,11 @@ public class GameActivity extends AppCompatActivity
 
     public void loadGame() {
 
-        int mScoreDiffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
-        mScoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
-        mStartingScore = mGame.getData(EditTextOption.STARTING_SCORE);
+        int mScoreDiffToWin = mGame.getInt(IntEditTextOption.SCORE_DIFF_TO_WIN);
+        mScoreInterval = mGame.getInt(IntEditTextOption.SCORE_INTERVAL);
+        mStartingScore = mGame.getInt(IntEditTextOption.STARTING_SCORE);
         mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
-        mMaxScore = mGame.getData(EditTextOption.WINNING_SCORE);
+        mMaxScore = mGame.getInt(IntEditTextOption.WINNING_SCORE);
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -294,6 +294,7 @@ public class GameActivity extends AppCompatActivity
         mGame.setGameListener(this);
         mGame.isGameWon();
 
+        Log.e(TAG, mGame.getmTimeLimit());
 
     }
 
@@ -539,7 +540,7 @@ public class GameActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer = new Player(charSequence.toString(), 0);
+                        mNewPlayer = new Player(charSequence.toString(), mStartingScore);
 
                     }
 
@@ -565,9 +566,13 @@ public class GameActivity extends AppCompatActivity
     }
 
     private void addPlayer(AlertDialog alertDialog){
+
         mGame.addPlayer(mNewPlayer);
+
         List<Player> mPlayersArray = mGame.getmPlayerArray();
+
         if (mDataHelper.checkPlayerDuplicates(mPlayersArray)){
+
             mPlayersArray.remove(mPlayersArray.size() - 1);
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
@@ -703,8 +708,6 @@ public class GameActivity extends AppCompatActivity
 
             builder.setMessage(R.string.quit_game_message);
 
-
-
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
@@ -790,8 +793,8 @@ public class GameActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int id) {
 
                     for (Player p : mGame.getmPlayerArray()){
-                        p.addSet(0);
-                        p.setmScore(0);
+                        p.addSet(mStartingScore);
+                        p.setmScore(mStartingScore);
                     }
 
                     mFinished = false;

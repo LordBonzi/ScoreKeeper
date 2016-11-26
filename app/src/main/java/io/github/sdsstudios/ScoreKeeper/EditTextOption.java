@@ -1,10 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by seth on 18/09/16.
  */
@@ -13,47 +8,32 @@ public class EditTextOption extends Option{
 
     //DO NOT CHANGE VALUES. WILL CRASH THE APP IN FUTURE UPDATES IF CHANGED
 
+    public static final int NUM_INT_OPTIONS = 5;
+
     //EditText IDs only
     public static final int WINNING_SCORE = 0;
     public static final int SCORE_INTERVAL = 1;
     public static final int SCORE_DIFF_TO_WIN = 2;
     public static final int NUMBER_SETS = 3;
     public static final int STARTING_SCORE = 4;
+    public static final int LENGTH = 5;
+    public static final int DATE = 6;
+    public static final int TITLE = 7;
     //ADD NEW POINTERS HERE
 
-    private String mHint;
     private int mEditTextID;
 
-    public EditTextOption(int editTextID, String mHint, int id, int data) {
+    public EditTextOption(int editTextID, int id, int data) {
         super(id, data);
 
-        this.mHint = mHint;
         this.mEditTextID = editTextID;
     }
 
-    public static List<EditTextOption> loadEditTextOptions(Activity a){
-        //MUST BE IN ORDER OF THE LIST OF POINTERS ABOVE!!!
+    public EditTextOption(int editTextID, int id, String data) {
+        super(id, data);
 
-        List<EditTextOption> mEditTextOptions = new ArrayList<>();
-
-        mEditTextOptions.add(new EditTextOption(R.id.editTextMaxScore, a.getString(R.string.max_score)
-                , EditTextOption.WINNING_SCORE, 0));
-
-        mEditTextOptions.add(new EditTextOption(R.id.editTextScoreInterval, a.getString(R.string.score_interval)
-                , EditTextOption.SCORE_INTERVAL, 1));
-
-        mEditTextOptions.add(new EditTextOption(R.id.editTextDiffToWin, a.getString(R.string.diff_to_win)
-                , EditTextOption.SCORE_DIFF_TO_WIN, 0));
-
-        mEditTextOptions.add(new EditTextOption(R.id.editTextNumSets, a.getString(R.string.num_sets)
-                , EditTextOption.NUMBER_SETS, 1));
-
-        mEditTextOptions.add(new EditTextOption(R.id.editTextStartingScore, a.getString(R.string.starting_score)
-                , EditTextOption.STARTING_SCORE, 0));
-
-        return mEditTextOptions;
+        this.mEditTextID = editTextID;
     }
-
 
     public int getmEditTextID() {
         return mEditTextID;
@@ -62,14 +42,5 @@ public class EditTextOption extends Option{
     public void setmEditTextID(int mEditTextID) {
         this.mEditTextID = mEditTextID;
     }
-
-    public String getmHint() {
-        return mHint;
-    }
-
-    public void setmHint(String mHint) {
-        this.mHint = mHint;
-    }
-
 
 }

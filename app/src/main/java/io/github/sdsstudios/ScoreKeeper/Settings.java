@@ -99,11 +99,19 @@ public class Settings extends PreferenceActivity{
                 boolean lastBool = false;
 
                 for (int i = 1; i <= 10; i++){
-                    Game game = new Game(new ArrayList<Player>(), null, "Debugging Game " + i , "00:00:00:0" , mTime, !lastBool, 0
-                            , EditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions(Settings.this), null);
+
+                    Game game = new Game(new ArrayList<Player>(), null, false, 0
+                            , IntEditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions(Settings.this)
+                            , StringEditTextOption.loadEditTextOptions(), null);
 
                     dbAdapter.open().createGame(game);
+
+                    game.setmLength("00:00:00:0");
+                    game.setmTime(mTime);
+                    game.setmTitle("Debugging Game " + i);
+
                     game.setmID(dbAdapter.getNewestGame());
+
                     dbAdapter.updateGame(game);
                     dbAdapter.close();
 

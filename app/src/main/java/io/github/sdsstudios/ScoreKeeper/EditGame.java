@@ -43,7 +43,6 @@ public class EditGame extends AppCompatActivity {
     private String TAG = "EditGame";
 
     private int mGameID;
-    private EditText mEditTextLength, mEditTextDate;
     private RecyclerView mRecyclerView;
     private ScoreDBAdapter mDbHelper;
     private DataHelper mDataHelper;
@@ -60,8 +59,9 @@ public class EditGame extends AppCompatActivity {
     private List<OptionCardView> mCardViewList = new ArrayList<>();
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
-    private List<EditTextOption> mEditTextOptions = new ArrayList<>();
+    private List<IntEditTextOption> mIntEditTextOptions = new ArrayList<>();
     private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
+    private List<StringEditTextOption> mStringEditTextOptions = new ArrayList<>();
 
     private Game mGame;
 
@@ -106,8 +106,6 @@ public class EditGame extends AppCompatActivity {
 
         mDataHelper = new DataHelper();
 
-        mEditTextDate = (EditText) findViewById(R.id.editTextDate);
-        mEditTextLength = (EditText) findViewById(R.id.editTextLength);
         EDIT_GAME_LAYOUT = (RelativeLayout) findViewById(R.id.edit_game_content);
         mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
@@ -119,6 +117,7 @@ public class EditGame extends AppCompatActivity {
                 helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
             }
         });
+
         buttonHelpLength.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,8 +129,9 @@ public class EditGame extends AppCompatActivity {
 
         mGame = mDataHelper.getGame(mGameID, mDbHelper);
 
-        mEditTextOptions = mGame.getmEditTextOptions();
+        mIntEditTextOptions = mGame.getmIntEditTextOptions();
         mCheckBoxOptions = mGame.getmCheckBoxOptions();
+        mStringEditTextOptions = mGame.getmStringEditTextOptions();
 
         loadOptions();
 
@@ -146,6 +146,9 @@ public class EditGame extends AppCompatActivity {
 
         mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutLength)
                 , (RelativeLayout) findViewById(R.id.lengthHeader), 0));
+
+        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTitle)
+                , (RelativeLayout) findViewById(R.id.titleHeader), 0));
 
         for (final OptionCardView card: mCardViewList){
             if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
@@ -176,22 +179,84 @@ public class EditGame extends AppCompatActivity {
             });
         }
 
-        mEditTextLength.setHint(mGame.getmLength());
-        mEditTextDate.setHint(mGame.getmTime());
-        mEditTextLength.setEnabled(false);
-        mEditTextDate.setEnabled(false);
+
 
         displayRecyclerView(false);
 
 
     }
 
-    private CheckBox getCheckBox(int id){
-        return ((CheckBox) findViewById(id));
+    private CheckBox getCheckBox(CheckBoxOption checkBoxOption){
+        try{
+
+            return ((CheckBox) findViewById(checkBoxOption.getmCheckBoxID()));
+
+        }catch (ClassCastException e){
+
+            switch (checkBoxOption.getmID()){
+                case CheckBoxOption.REVERSE_SCORING:
+                    checkBoxOption.setmCheckBoxID(R.id.checkBoxReverseScoring);
+                    return ((CheckBox) findViewById(R.id.checkBoxReverseScoring));
+
+                case CheckBoxOption.STOPWATCH:
+                    checkBoxOption.setmCheckBoxID(R.id.checkBoxStopwatch);
+                    return ((CheckBox) findViewById(R.id.checkBoxStopwatch));
+
+                default:
+                    return null;
+
+            }
+
+        }
     }
 
-    private EditText getEditText(int id){
-        return ((EditText) findViewById(id));
+    private EditText getEditText(EditTextOption editTextOption){
+        try{
+
+            return ((EditText) findViewById(editTextOption.getmEditTextID()));
+
+        }catch (ClassCastException e){
+
+            switch (editTextOption.getmID()){
+                case IntEditTextOption.NUMBER_SETS:
+                    editTextOption.setmEditTextID(R.id.editTextNumSets);
+                    return ((EditText) findViewById(R.id.editTextNumSets));
+
+                case EditTextOption.SCORE_DIFF_TO_WIN:
+                    editTextOption.setmEditTextID(R.id.editTextDiffToWin);
+                    return ((EditText) findViewById(R.id.editTextDiffToWin));
+
+                case EditTextOption.WINNING_SCORE:
+                    editTextOption.setmEditTextID(R.id.editTextMaxScore);
+                    return ((EditText) findViewById(R.id.editTextMaxScore));
+
+                case EditTextOption.STARTING_SCORE:
+                    editTextOption.setmEditTextID(R.id.editTextStartingScore);
+                    return ((EditText) findViewById(R.id.editTextStartingScore));
+
+                case EditTextOption.SCORE_INTERVAL:
+                    editTextOption.setmEditTextID(R.id.editTextScoreInterval);
+                    return ((EditText) findViewById(R.id.editTextScoreInterval));
+
+                case EditTextOption.LENGTH:
+                    editTextOption.setmEditTextID(R.id.editTextLength);
+                    return ((EditText) findViewById(R.id.editTextLength));
+
+                case EditTextOption.TITLE:
+                    editTextOption.setmEditTextID(R.id.editTextTitle);
+                    return ((EditText) findViewById(R.id.editTextTitle));
+
+                case EditTextOption.DATE:
+                    editTextOption.setmEditTextID(R.id.editTextDate);
+                    return ((EditText) findViewById(R.id.editTextDate));
+
+                default:
+                    return null;
+
+            }
+
+        }
+
     }
 
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
@@ -391,23 +456,44 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuEditClick() {
-        mEditTextLength.setEnabled(true);
-        mEditTextDate.setEnabled(true);
 
-        mMenuItemAdd.setVisible(true);
-        mMenuItemDelete.setVisible(false);
-        mMenuItemEdit.setVisible(false);
-        mMenuItemDone.setVisible(true);
-        mMenuItemCancel.setVisible(true);
-        mMenuItemShare.setVisible(false);
-        mMenuItemComplete.setVisible(false);
+        for (final StringEditTextOption e: mStringEditTextOptions){
+            EditText editText = getEditText(e);
+            editText.setEnabled(true);
+            editText.setText(e.getString());
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        for (CheckBoxOption c: mCheckBoxOptions){
-            getCheckBox(c.getmCheckBoxID()).setEnabled(true);
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    e.setString(charSequence.toString());
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
         }
 
-        for (final EditTextOption e: mEditTextOptions){
-            EditText editText = getEditText(e.getmEditTextID());
+        for (final CheckBoxOption c: mCheckBoxOptions){
+            final CheckBox checkBox = getCheckBox(c);
+            checkBox.setEnabled(true);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    c.setChecked(checkBox.isChecked());
+                }
+            });
+        }
+
+        for (final IntEditTextOption e: mIntEditTextOptions){
+            EditText editText = getEditText(e);
 
             editText.setEnabled(true);
 
@@ -421,12 +507,12 @@ public class EditGame extends AppCompatActivity {
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     try
                     {
-                        e.setmData(Integer.parseInt(charSequence.toString()));
+                        e.setInt(Integer.valueOf(charSequence.toString()));
                     }
                     catch (NumberFormatException error)
                     {
                         error.printStackTrace();
-                        e.setmData(0);
+                        e.setInt(0);
 
                     }
 
@@ -441,8 +527,14 @@ public class EditGame extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        mEditTextLength.setText(mGame.getmLength());
-        mEditTextDate.setText(mGame.getmTime());
+        mMenuItemAdd.setVisible(true);
+        mMenuItemDelete.setVisible(false);
+        mMenuItemEdit.setVisible(false);
+        mMenuItemDone.setVisible(true);
+        mMenuItemCancel.setVisible(true);
+        mMenuItemShare.setVisible(false);
+        mMenuItemComplete.setVisible(false);
+
         displayRecyclerView(true);
 
     }
@@ -455,14 +547,21 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuDoneClick() {
+        final Game oldGame = mGame;
+
         mPlayerListAdapter.deleteEmptyPlayers(mGame);
 
-        //TODO fix this mess with pulling Game from playerlistadapter
-
         mGame = mPlayerListAdapter.getGame();
+        mGame.setmStringEditTextOptions(mStringEditTextOptions);
+        mGame.setmCheckBoxOptions(mCheckBoxOptions);
+        mGame.setmIntEditTextOption(mIntEditTextOptions);
 
-        final String newDate = mEditTextDate.getText().toString();
-        final String newLength = mEditTextLength.getText().toString();
+
+        /** TODO fix this mess with pulling Game from playerlistadapter
+         * Just pull player array and not whole game **/
+
+        final String newLength = mGame.getmLength();
+
         final boolean booleanLength;
 
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
@@ -481,7 +580,7 @@ public class EditGame extends AppCompatActivity {
             booleanLength = false;
         }
 
-        final boolean bDateAndTime = checkValidity(mEditTextDate.getText().toString(), mDateTimeFormat, 19);
+        final boolean bDateAndTime = checkValidity(mGame.getmTime(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
         final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
         final boolean bNumPlayers = mGame.size() >= 2;
@@ -494,48 +593,57 @@ public class EditGame extends AppCompatActivity {
         builder.setMessage(R.string.are_you_sure_edit_game);
 
         builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialog, int id) {
+
                 mPlayerListAdapter.deleteEmptyPlayers(mGame);
+                mPlayerListAdapter.notifyDataSetChanged();
+
                 mGame = mPlayerListAdapter.getGame();
 
                 if (bCheckEmpty) {
 
+                    mGame = oldGame;
                     invalidSnackbar("You can't have empty names!");
 
                 }else if (!bDateAndTime) {
+
+                    mGame = oldGame;
                     invalidSnackbar(getString(R.string.invalid_date_and_time));
 
                 }else if (booleanLength) {
+                    mGame = oldGame;
                     invalidSnackbar(getString(R.string.invalid_length));
 
                 } else if (bCheckDuplicates) {
 
+                    mGame = oldGame;
                     invalidSnackbar("You can't have duplicate players!");
 
                 } else if (!bNumPlayers) {
 
+                    mGame = oldGame;
                     invalidSnackbar("Must have 2 or more players");
 
                 }else{
-                    mGame.setmTime(newDate);
-                    mGame.setmLength(newLength);
 
                     mDbHelper.updateGame(mGame);
 
                     for (CheckBoxOption c : mCheckBoxOptions){
-                        getCheckBox(c.getmCheckBoxID()).setEnabled(false);
-                    }
-                    for (EditTextOption e : mEditTextOptions){
-                        getEditText(e.getmEditTextID()).setEnabled(false);
+                        getCheckBox(c).setEnabled(false);
                     }
 
-                    mEditTextLength.setText(mGame.getmLength());
-                    mEditTextDate.setText(mGame.getmTime());
+                    for (IntEditTextOption e : mIntEditTextOptions){
+                        getEditText(e).setEnabled(false);
+                    }
+
+                    for (StringEditTextOption e: mStringEditTextOptions){
+                        getEditText(e).setText(e.getString());
+                        getEditText(e).setEnabled(false);
+                    }
 
                     displayRecyclerView(false);
 
-                    mEditTextLength.setEnabled(false);
-                    mEditTextDate.setEnabled(false);
                     mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);
                     mMenuItemDone.setVisible(false);
@@ -543,8 +651,6 @@ public class EditGame extends AppCompatActivity {
                     mMenuItemCancel.setVisible(false);
                     mMenuItemShare.setVisible(true);
                     mMenuItemComplete.setVisible(true);
-                    mEditTextDate.setEnabled(false);
-                    mEditTextLength.setEnabled(false);
 
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDbHelper.close();
@@ -555,6 +661,7 @@ public class EditGame extends AppCompatActivity {
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                mGame = oldGame;
                 dialog.dismiss();
             }
         });
@@ -590,11 +697,12 @@ public class EditGame extends AppCompatActivity {
     }
 
     public void onMenuCancelClick(){
-        mEditTextLength.setText(mGame.getmLength());
-        mEditTextDate.setText(mGame.getmTime());
 
-        mEditTextLength.setEnabled(false);
-        mEditTextDate.setEnabled(false);
+        for (StringEditTextOption e: mStringEditTextOptions){
+            getEditText(e).setText(e.getString());
+            getEditText(e).setEnabled(false);
+        }
+
         mMenuItemDelete.setVisible(true);
         mMenuItemDone.setVisible(false);
         mMenuItemEdit.setVisible(true);
@@ -602,8 +710,6 @@ public class EditGame extends AppCompatActivity {
         mMenuItemCancel.setVisible(false);
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
-        mEditTextDate.setEnabled(false);
-        mEditTextLength.setEnabled(false);
 
         loadOptions();
 
@@ -614,15 +720,15 @@ public class EditGame extends AppCompatActivity {
 
     private void loadOptions(){
 
-        for (EditTextOption e : mEditTextOptions){
-                EditText editText = getEditText(e.getmEditTextID());
-                editText.setText(String.valueOf(e.getmData()));
+        for (IntEditTextOption e : mIntEditTextOptions){
+                EditText editText = getEditText(e);
+                editText.setText(String.valueOf(e.getInt()));
                 editText.setEnabled(false);
 
         }
 
         for(CheckBoxOption c : mCheckBoxOptions){
-            CheckBox checkBox = getCheckBox(c.getmCheckBoxID());
+            CheckBox checkBox = getCheckBox(c);
             if (c.isChecked()){
                 checkBox.setChecked(true);
             }else{
@@ -630,6 +736,11 @@ public class EditGame extends AppCompatActivity {
             }
 
             checkBox.setEnabled(false);
+        }
+
+        for (EditTextOption e: mStringEditTextOptions){
+            getEditText(e).setHint(e.getString());
+            getEditText(e).setEnabled(false);
         }
     }
 

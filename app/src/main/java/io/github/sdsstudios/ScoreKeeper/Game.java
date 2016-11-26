@@ -14,26 +14,24 @@ public class Game {
 
     private List<Player> mPlayerArray;
     private String mTimeLimit;
-    private String mLength;
-    private String mTitle;
-    private String mTime;
     private boolean mCompleted;
     private int mID;
 
-    private List<EditTextOption> mEditTextOptions;
+    private List<IntEditTextOption> mIntEditTextOptions;
+    private List<StringEditTextOption> mStringEditTextOptions;
     private List<CheckBoxOption> mCheckBoxOptions;
 
-    public Game(List<Player> mPlayerArray, String mTimeLimit, String mTitle, String mLength, String mTime, boolean mCompleted, int mID
-            , List<EditTextOption> editTextOptions, List<CheckBoxOption> checkBoxOptions, GameListener mGameListener) {
+    public Game(List<Player> mPlayerArray, String mTimeLimit, boolean mCompleted, int mID
+        , List<IntEditTextOption> intEditTextOptions, List<CheckBoxOption> checkBoxOptions, List<StringEditTextOption> stringEditTextOptions,
+                GameListener mGameListener) {
+
         this.mPlayerArray = mPlayerArray;
         this.mTimeLimit = mTimeLimit;
-        this.mTitle = mTitle;
         this.mID = mID;
-        this.mLength = mLength;
-        this.mTime = mTime;
         this.mCompleted = mCompleted;
-        this.mEditTextOptions = editTextOptions;
         this.mCheckBoxOptions = checkBoxOptions;
+        this.mIntEditTextOptions = intEditTextOptions;
+        this.mStringEditTextOptions = stringEditTextOptions;
         this.mGameListener = mGameListener;
     }
 
@@ -46,19 +44,19 @@ public class Game {
     }
 
     public String getmTime() {
-        return mTime;
+        return getString(EditTextOption.DATE);
     }
 
     public void setmTime(String mTime) {
-        this.mTime = mTime;
+        setString(EditTextOption.DATE, mTime);
     }
 
     public String getmLength() {
-        return mLength;
+        return getString(EditTextOption.LENGTH);
     }
 
     public void setmLength(String mLength) {
-        this.mLength = mLength;
+        setString(EditTextOption.LENGTH, mLength);
     }
 
     public int getmID() {
@@ -86,11 +84,11 @@ public class Game {
     }
 
     public String getmTitle() {
-        return mTitle;
+        return getString(EditTextOption.TITLE);
     }
 
     public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+        setString(EditTextOption.TITLE, mTitle);
     }
 
     public void setPlayer(Player player, int index){
@@ -114,25 +112,32 @@ public class Game {
         return num  / size();
     }
 
-    public int getData(int id){
+    public int getInt(int id){
         int data = 1;
 
-        for (EditTextOption e: mEditTextOptions){
+        for (IntEditTextOption e: mIntEditTextOptions){
+
             if (e.getmID() == id){
-                data = e.getmData();
+                data = Integer.valueOf(String.valueOf(e.getInt()));
                 break;
             }
+
         }
 
         return data;
     }
 
-    public List<EditTextOption> getmEditTextOptions() {
-        return mEditTextOptions;
-    }
+    public String getString(int id){
+        String data = "";
 
-    public void setmEditTextOptions(List<EditTextOption> mEditTextOptions) {
-        this.mEditTextOptions = mEditTextOptions;
+        for (StringEditTextOption e: mStringEditTextOptions){
+            if (e.getmID() == id ){
+                data = e.getString();
+                break;
+            }
+        }
+
+        return data;
     }
 
     public List<CheckBoxOption> getmCheckBoxOptions() {
@@ -144,24 +149,39 @@ public class Game {
     }
 
     public int numSets(){
-        return mEditTextOptions.get(EditTextOption.NUMBER_SETS).getmData();
+        return mIntEditTextOptions.get(IntEditTextOption.NUMBER_SETS).getInt();
     }
 
     public boolean isChecked(int id){
-        return mCheckBoxOptions.get(id).getmData() != 0;
+        return mCheckBoxOptions.get(id).getBoolean();
     }
 
     public void setChecked(int id, boolean data){
-
-        if (!data){
-            mCheckBoxOptions.get(id).setmData(0);
-        }else{
-            mCheckBoxOptions.get(id).setmData(1);
-        }
+        mCheckBoxOptions.get(id).setChecked(data);
     }
 
-    public void setData(int id, int data){
-        mEditTextOptions.get(id).setmData(data);
+    public List<IntEditTextOption> getmIntEditTextOptions() {
+        return mIntEditTextOptions;
+    }
+
+    public void setmIntEditTextOption(List<IntEditTextOption> mIntEditTextOptions) {
+        this.mIntEditTextOptions = mIntEditTextOptions;
+    }
+
+    public List<StringEditTextOption> getmStringEditTextOptions() {
+        return mStringEditTextOptions;
+    }
+
+    public void setmStringEditTextOptions(List<StringEditTextOption> mStringEditTextOptions) {
+        this.mStringEditTextOptions = mStringEditTextOptions;
+    }
+
+    public void setString(int id, String data){
+        mStringEditTextOptions.get(id - EditTextOption.NUM_INT_OPTIONS).setString(data);
+    }
+
+    public void setInt(int id, int data){
+        mIntEditTextOptions.get(id).setInt(data);
     }
 
     public void addPlayer(Player player){
@@ -172,13 +192,12 @@ public class Game {
         mPlayerArray.remove(position);
     }
 
-
     public Player getPlayer(int position){
         return mPlayerArray.get(position);
     }
 
-    public void setmEditTextOption(EditTextOption option){
-        mEditTextOptions.set(option.getmID(), option);
+    public void setmIntEditTextOption(IntEditTextOption option){
+        mIntEditTextOptions.set(option.getmID(), option);
     }
 
     public void setmCheckBoxOption(CheckBoxOption checkBoxOption){
@@ -204,7 +223,8 @@ public class Game {
     }
 
     public boolean isGameWon(){
-        int maxScore = getData(EditTextOption.WINNING_SCORE);
+
+        int maxScore = getInt(IntEditTextOption.WINNING_SCORE);
         boolean isWon = false;
 
         for (Player p : mPlayerArray) {
@@ -235,8 +255,8 @@ public class Game {
     private boolean scoreDifference(int score) {
         boolean b = false;
         for (Player p : mPlayerArray) {
-            if (getData(EditTextOption.WINNING_SCORE) != 0) {
-                if (Math.abs(score - p.getmScore()) >= getData(EditTextOption.SCORE_DIFF_TO_WIN)) {
+            if (getInt(IntEditTextOption.WINNING_SCORE) != 0) {
+                if (Math.abs(score - p.getmScore()) >= getInt(IntEditTextOption.SCORE_DIFF_TO_WIN)) {
                     b = true;
                 }
             }

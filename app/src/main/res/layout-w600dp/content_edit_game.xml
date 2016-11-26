@@ -19,20 +19,84 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
-            android:id="@+id/cardViewDate"
-            android:layout_toLeftOf="@+id/cardViewAd"
-            android:layout_toStartOf="@+id/cardViewAd"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
+            android:id="@+id/cardViewTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/cardViewLength"
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            card_view:cardCornerRadius="4dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/titleHeader">
+
+                    <EditText
+                        android:id="@+id/editTextTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="24dp"
+                        android:layout_marginEnd="13dp"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginRight="13dp"
+                        android:layout_marginStart="13dp"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/titleHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:text="@string/title"
+                        android:textStyle="bold" />
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="4dp"
+            android:id="@+id/cardViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewAd"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            >
+            android:layout_alignLeft="@+id/cardViewLength">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -64,11 +128,11 @@
                     android:id="@+id/dateHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:background="?attr/selectableItemBackground"
-                    android:clickable="true">
+                    android:clickable="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                     <TextView
                         android:id="@+id/textView15"
@@ -103,19 +167,18 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
-
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             card_view:cardCornerRadius="4dp"
             android:id="@+id/cardViewLength"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            >
+            android:layout_marginLeft="4dp"
+            android:layout_alignRight="@+id/cardViewAd2"
+            android:layout_alignEnd="@+id/cardViewAd2">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -144,7 +207,7 @@
 
                 <RelativeLayout
                     android:id="@+id/lengthHeader"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
@@ -188,13 +251,13 @@
             android:id="@+id/cardViewOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cardViewAd"
-            android:layout_marginRight="4dp"
+            android:layout_below="@+id/cardViewPlayerList"
+            android:layout_alignRight="@+id/cardViewTitle"
+            android:layout_alignEnd="@+id/cardViewTitle"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_toEndOf="@+id/cardViewDate"
-            android:layout_toRightOf="@+id/cardViewDate">
+            android:layout_marginBottom="4dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -391,12 +454,13 @@
             android:id="@+id/cardViewPlayerList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/cardViewLength"
+            android:layout_below="@+id/cardViewTitle"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_alignRight="@+id/cardViewDate"
-            android:layout_alignEnd="@+id/cardViewDate">
+            android:layout_alignRight="@+id/cardViewTitle"
+            android:layout_alignEnd="@+id/cardViewTitle">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -445,34 +509,6 @@
 
         <android.support.v7.widget.CardView
             ads:cardCornerRadius="4dp"
-            android:id="@+id/cardViewAd"
-            android:layout_width="wrap_content"
-            android:layout_marginRight="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cardViewLength"
-            android:layout_alignRight="@+id/cardViewLength"
-            android:layout_alignEnd="@+id/cardViewLength"
-            android:layout_alignLeft="@+id/cardViewLength"
-            android:layout_alignStart="@+id/cardViewLength">
-
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adViewHome"
-                android:layout_width="320dp"
-                android:layout_height="50dp"
-                ads:adSize="BANNER"
-                android:layout_gravity="center"
-                ads:adUnitId="@string/banner_ad_unit_id"
-                android:layout_below="@+id/cardViewLength"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            ads:cardCornerRadius="4dp"
             android:id="@+id/cardViewAd2"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
@@ -492,6 +528,32 @@
                 android:layout_gravity="center"
                 ads:adUnitId="@string/banner_ad_unit_id"
                 android:layout_below="@+id/cardViewOptions"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            ads:cardCornerRadius="4dp"
+            android:id="@+id/cardViewAd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewLength"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_alignLeft="@+id/cardViewLength"
+            android:layout_alignStart="@+id/cardViewLength"
+            android:layout_alignRight="@+id/cardViewDate"
+            android:layout_alignEnd="@+id/cardViewDate">
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adViewHome"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                ads:adSize="BANNER"
+                android:layout_gravity="center"
+                ads:adUnitId="@string/banner_ad_unit_id"
+                android:layout_below="@+id/cardViewLength"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 

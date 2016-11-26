@@ -74,7 +74,7 @@ public class NewGame extends AppCompatActivity
     private NestedScrollView mScrollView;
 
     private Game mCurrentGame;
-    private List<EditTextOption> mEditTextOptions = new ArrayList<>();
+    private List<IntEditTextOption> mIntEditTextOptions = new ArrayList<>();
     private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
     @Override
@@ -167,9 +167,8 @@ public class NewGame extends AppCompatActivity
                 , (RelativeLayout) findViewById(R.id.timeLimitHeader), 0));
 
         for (final OptionCardView card: mCardViewList){
-            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation
-                    == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
-            }else{
+            if (card.getmHeader().getId() != R.id.playersHeader && getResources().getConfiguration().orientation
+                    != getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
 
                 card.getmHeader().setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -235,10 +234,11 @@ public class NewGame extends AppCompatActivity
             }
         });
 
-        mEditTextOptions = EditTextOption.loadEditTextOptions(this);
+        mIntEditTextOptions = IntEditTextOption.loadEditTextOptions(this);
         mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions(this);
 
         if (savedInstanceState != null){
+
             mDBHelper.open();
             mGameID = savedInstanceState.getInt(STATE_GAMEID);
 
@@ -259,13 +259,18 @@ public class NewGame extends AppCompatActivity
 
         }else{
 
-            mCurrentGame = new Game(new ArrayList<Player>(), null, mEditTextGameTitle.getText().toString().trim() , "00:00:00:0" , mTime, false, 0
-                    , EditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this), null);
+            mCurrentGame = new Game(new ArrayList<Player>(), null, false, 0
+                    , IntEditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(this), StringEditTextOption.loadEditTextOptions(), null);
 
             mDBHelper.open().createGame(mCurrentGame);
-            mGameID = mDBHelper.getNewestGame();
 
+            mCurrentGame.setmLength("00:00:00:0");
+            mCurrentGame.setmTime(mTime);
+            mCurrentGame.setmTitle(mEditTextGameTitle.getText().toString().trim());
+
+            mGameID = mDBHelper.getNewestGame();
             mCurrentGame.setmID(mGameID);
+
             mDBHelper.close();
             SPINNER_TIME_LIMIT.setVisibility(View.INVISIBLE);
             displayRecyclerView();
@@ -282,7 +287,7 @@ public class NewGame extends AppCompatActivity
         mButtonAddPlayer.setOnClickListener(this);
 
         for (final CheckBoxOption c : mCheckBoxOptions){
-            getCheckBox(c.getmCheckBoxID()).setOnClickListener(new View.OnClickListener() {
+            getCheckBox(c).setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
@@ -296,11 +301,11 @@ public class NewGame extends AppCompatActivity
                 }
             });
 
-            getCheckBox(c.getmCheckBoxID()).setChecked(false);
+            getCheckBox(c).setChecked(false);
         }
 
-        for (final EditTextOption e: mEditTextOptions){
-            getEditText(e.getmEditTextID()).addTextChangedListener(new TextWatcher() {
+        for (final IntEditTextOption e: mIntEditTextOptions){
+            getEditText(e).addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -312,19 +317,19 @@ public class NewGame extends AppCompatActivity
                     try
                     {
                         if (charSequence.toString().equals("")){
-                            if (e.getmID() == EditTextOption.SCORE_INTERVAL) {
-                                e.setmData(1);
+                            if (e.getmID() == IntEditTextOption.SCORE_INTERVAL) {
+                                e.setInt(1);
                             }else{
-                                e.setmData(0);
+                                e.setInt(0);
                             }
                         }else {
-                            e.setmData(Integer.parseInt(charSequence.toString()));
+                            e.setInt(Integer.parseInt(charSequence.toString()));
                         }
                     }
                     catch (NumberFormatException error)
                     {
                         error.printStackTrace();
-                        e.setmData(0);
+                        e.setInt(0);
 
                     }
 
@@ -332,7 +337,7 @@ public class NewGame extends AppCompatActivity
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    mCurrentGame.setmEditTextOption(e);
+                    mCurrentGame.setmIntEditTextOption(e);
 
                     mDBHelper.open().updateGame(mCurrentGame);
 
@@ -365,14 +370,66 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    private CheckBox getCheckBox(int id){
-        return ((CheckBox) findViewById(id));
+    private CheckBox getCheckBox(CheckBoxOption checkBoxOption){
+        try{
+
+            return ((CheckBox) findViewById(checkBoxOption.getmCheckBoxID()));
+
+        }catch (ClassCastException e){
+
+            switch (checkBoxOption.getmID()){
+                case CheckBoxOption.REVERSE_SCORING:
+                    checkBoxOption.setmCheckBoxID(R.id.checkBoxReverseScoring);
+                    return ((CheckBox) findViewById(R.id.checkBoxReverseScoring));
+
+                case CheckBoxOption.STOPWATCH:
+                    checkBoxOption.setmCheckBoxID(R.id.checkBoxStopwatch);
+                    return ((CheckBox) findViewById(R.id.checkBoxStopwatch));
+
+                default:
+                    return null;
+
+            }
+
+        }
     }
 
-    private EditText getEditText(int id){
-        return ((EditText) findViewById(id));
-    }
+    private EditText getEditText(EditTextOption editTextOption){
+        try{
 
+            return ((EditText) findViewById(editTextOption.getmEditTextID()));
+
+        }catch (ClassCastException e){
+
+            switch (editTextOption.getmID()){
+                case EditTextOption.NUMBER_SETS:
+                    editTextOption.setmEditTextID(R.id.editTextNumSets);
+                    return ((EditText) findViewById(R.id.editTextNumSets));
+
+                case EditTextOption.SCORE_DIFF_TO_WIN:
+                    editTextOption.setmEditTextID(R.id.editTextDiffToWin);
+                    return ((EditText) findViewById(R.id.editTextDiffToWin));
+
+                case EditTextOption.WINNING_SCORE:
+                    editTextOption.setmEditTextID(R.id.editTextMaxScore);
+                    return ((EditText) findViewById(R.id.editTextMaxScore));
+
+                case EditTextOption.STARTING_SCORE:
+                    editTextOption.setmEditTextID(R.id.editTextStartingScore);
+                    return ((EditText) findViewById(R.id.editTextStartingScore));
+
+                case EditTextOption.SCORE_INTERVAL:
+                    editTextOption.setmEditTextID(R.id.editTextScoreInterval);
+                    return ((EditText) findViewById(R.id.editTextScoreInterval));
+
+                default:
+                    return null;
+
+            }
+
+        }
+
+    }
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             removeLayoutListenerJB(v, victim);
@@ -438,12 +495,12 @@ public class NewGame extends AppCompatActivity
         presetPlayers = presetGame.getmPlayerArray();
         presetTimeLimit = presetGame.getmTimeLimit();
 
-        for (EditTextOption e : mCurrentGame.getmEditTextOptions()){
-            e.setmData(presetGame.getData(e.getmID()));
+        for (IntEditTextOption e : mCurrentGame.getmIntEditTextOptions()){
+            e.setInt(presetGame.getInt(e.getmID()));
         }
 
         for (CheckBoxOption c : mCurrentGame.getmCheckBoxOptions()){
-            c.setmData(presetGame.getData(c.getmID()));
+            c.setChecked(presetGame.isChecked(c.getmID()));
         }
 
         mPresetDBAdapter.close();
@@ -496,19 +553,19 @@ public class NewGame extends AppCompatActivity
         disableTimeLimitSpinner();
 
         mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions(this);
-        mEditTextOptions = EditTextOption.loadEditTextOptions(this);
+        mIntEditTextOptions = IntEditTextOption.loadEditTextOptions(this);
 
-        for (EditTextOption e: mEditTextOptions){
-            getEditText(e.getmEditTextID()).setText("");
-            getEditText(e.getmEditTextID()).setHint(e.getmHint());
+        for (IntEditTextOption e: mIntEditTextOptions){
+            getEditText(e).setText("");
+            getEditText(e).setHint(e.getmHint());
         }
 
         for (CheckBoxOption c: mCheckBoxOptions){
-            getCheckBox(c.getmCheckBoxID()).setChecked(c.isChecked());
+            getCheckBox(c).setChecked(c.isChecked());
         }
 
         mCurrentGame.setmCheckBoxOptions(mCheckBoxOptions);
-        mCurrentGame.setmEditTextOptions(mEditTextOptions);
+        mCurrentGame.setmIntEditTextOption(mIntEditTextOptions);
 
         SPINNER_PRESET.setSelection(0);
 
@@ -706,6 +763,7 @@ public class NewGame extends AppCompatActivity
             }
 
             case R.id.checkBoxNoTimeLimit: {
+
                 if (mCheckBoxNoTimeLimit.isChecked()){
                     SPINNER_TIME_LIMIT.setEnabled(true);
                     SPINNER_TIME_LIMIT.setVisibility(View.VISIBLE);
@@ -742,6 +800,7 @@ public class NewGame extends AppCompatActivity
                 cardView.setmHeight(cardView.getmContent().getMeasuredHeight());
                 // collapse
                 collapseView(cardView);
+
 
             }
         }
@@ -893,7 +952,7 @@ public class NewGame extends AppCompatActivity
 
                 if (startGame) {
 
-                    int startingScore = mCurrentGame.getData(EditTextOption.STARTING_SCORE);
+                    int startingScore = mCurrentGame.getInt(IntEditTextOption.STARTING_SCORE);
 
                     for (Player p : mCurrentGame.getmPlayerArray()){
                         p.setmScore(startingScore);
@@ -938,19 +997,19 @@ public class NewGame extends AppCompatActivity
             SPINNER_TIME_LIMIT.setEnabled(false);
         }
 
-        for (EditTextOption e : mEditTextOptions){
+        for (IntEditTextOption e : mIntEditTextOptions){
 
-            if (e.getmData() != 0) {
-                getEditText(e.getmID()).setText(String.valueOf(e.getmData()));
+            if (e.getInt() != 0) {
+                getEditText(e).setText(String.valueOf(e.getInt()));
             }
 
         }
 
         for(CheckBoxOption c : mCheckBoxOptions){
             if (c.isChecked()){
-                getCheckBox(c.getmCheckBoxID()).setChecked(true);
+                getCheckBox(c).setChecked(true);
             }else{
-                getCheckBox(c.getmCheckBoxID()).setChecked(false);
+                getCheckBox(c).setChecked(false);
             }
         }
 

@@ -196,6 +196,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public void removeAt(int position) {
         mBackupPlayer = null;
         mBackupPlayer = mGame.getPlayer(position);
+
         mGame.removePlayer(position);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -237,7 +238,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     @Override
     public void addPlayer() {
-        mGame.addPlayer(new Player("", 0));
+        mGame.addPlayer(new Player("", mGame.getInt(EditTextOption.STARTING_SCORE)));
         notifyItemInserted(mGame.size());
 
     }

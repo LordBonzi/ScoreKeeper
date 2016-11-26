@@ -29,7 +29,6 @@ public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHold
     public boolean isSelected(int gameID) {
 
         return getSelectedItems().contains(gameID);
-
     }
 
     /**
@@ -62,6 +61,7 @@ public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHold
      * Count the selected items
      * @return Selected items count
      */
+
     public int getSelectedItemCount() {
         return selectedItems.size();
     }

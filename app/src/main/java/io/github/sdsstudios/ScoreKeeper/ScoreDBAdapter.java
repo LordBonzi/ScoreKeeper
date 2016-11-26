@@ -125,12 +125,16 @@ public class ScoreDBAdapter{
         return value;
     }
 
-    boolean deleteGame(int id){
+    void deleteGame(int id){
+        DataHelper dataHelper = new DataHelper();
 
         open();
+
+        Log.e(TAG, "Game deleted " + id);
         DATABASE.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
+        //updates the IDs of the other games after they have been deleted
         for (int i = 1; i <= numRows(); i++){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_ROWID, i);
@@ -138,11 +142,18 @@ public class ScoreDBAdapter{
             int index = cursor.getColumnIndex(KEY_ROWID);
             int rowID = cursor.getInt(index);
             DATABASE.update(SQLITE_TABLE, initialValues,KEY_ROWID + "=" + rowID, null);
+
+            //gets the game and updates the ID int in the Game object
+            Game game = dataHelper.getGame(i, this);
+            game.setmID(i);
+            updateGame(game);
+
+            Log.e(TAG, "Game ID: " + dataHelper.getGame(i, this).getmID());
         }
 
         cursor.close();
         close();
-        return true;
+
     }
 
     boolean deleteAllGames() {

@@ -185,10 +185,10 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY)
+                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY)
                         , this, this, Pointers.HISTORY, type);
 
-                mRecyclerView.setAdapter(historyAdapter);
+                mRecyclerView.setAdapter(mHistoryAdapter);
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);
             }
@@ -346,6 +346,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
+
                     mDbHelper.open();
                     mHistoryAdapter.deleteSelectedGames(mDbHelper);
                     mDbHelper.close();

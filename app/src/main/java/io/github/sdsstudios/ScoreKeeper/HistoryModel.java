@@ -111,7 +111,7 @@ public class HistoryModel {
 
         for (Game game: gameList){
             modelList.add(new HistoryModel(playerString(game),
-                    infoString(game), game.getmTime(), game.getmTitle(), isUnfinishedString(game, context), game.getmID()));
+                    infoString(game), String.valueOf(game.getmID()), game.getmTitle(), isUnfinishedString(game, context), game.getmID()));
         }
 
         Collections.sort(modelList, new Comparator<HistoryModel>() {

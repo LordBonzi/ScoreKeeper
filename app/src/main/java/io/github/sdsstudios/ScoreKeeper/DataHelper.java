@@ -34,7 +34,6 @@ public class DataHelper {
     }
 
 
-
     Game getGame(int id, ScoreDBAdapter dbHelper){
 
         dbHelper.open();

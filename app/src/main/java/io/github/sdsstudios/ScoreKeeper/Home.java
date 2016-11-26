@@ -293,7 +293,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 mRecyclerView.setVisibility(View.INVISIBLE);
             }
             mDbHelper.close();
+
         }catch (Exception e){
+
             e.printStackTrace();
             Log.e(TAG, e.toString());
 

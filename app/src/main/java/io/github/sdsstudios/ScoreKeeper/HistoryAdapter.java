@@ -58,6 +58,15 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         return vh;
     }
 
+    public void selectAllItems(){
+        for (int i = 0; i < getItemCount(); i++){
+            final HistoryModel item;
+            item = mItemArray.get(mItemArray.size() - i - 1);
+            toggleSelection(i , item.getmID());
+        }
+
+    }
+
     // Replace the contents of a view (invoked by the layout manager)
 
     @Override
@@ -127,7 +136,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         public RelativeLayout relativeLayout;
         public int color;
         public String inProgress;
-        public String completed;
 
         private ClickListener listener;
 

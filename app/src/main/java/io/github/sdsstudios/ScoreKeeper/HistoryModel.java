@@ -84,16 +84,20 @@ public class HistoryModel {
         this.mTitle = mTitle;
     }
 
-    synchronized static List<HistoryModel> getHistoryModelList(ScoreDBAdapter dbAdapter, Context context, int activity){
+    synchronized static List<HistoryModel> getHistoryModelList(ScoreDBAdapter dbAdapter, Context context, int activity, int gamesToShow){
         List<HistoryModel> modelList = new ArrayList<>();
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
-        int numGames = dbAdapter.numRows();
+        int numGames;
 
         if (activity == Pointers.HOME){
             numGames = Integer.valueOf(PreferenceManager
                     .getDefaultSharedPreferences(context).getString("prefNumGames", "3"));
+        }else{
+
+            numGames = dbAdapter.numRows();
+
         }
 
         for (int i = 1; i <= dbAdapter.numRows(); i++){
@@ -104,7 +108,27 @@ public class HistoryModel {
                 if (!game.ismCompleted() && activity == Pointers.HOME) {
                     gameList.add(game);
                 }else if (activity == Pointers.HISTORY){
-                    gameList.add(game);
+
+                    switch (gamesToShow){
+                        case HistoryAdapter.BOTH:
+                            gameList.add(game);
+                            break;
+
+                        case HistoryAdapter.COMPLETED:
+                            if (game.ismCompleted()) {
+                                gameList.add(game);
+                            }
+                            break;
+
+                        case HistoryAdapter.UNFINISHED:
+                            if (!game.ismCompleted()) {
+                                gameList.add(game);
+                            }
+                            break;
+
+
+                    }
+
                 }
             }
         }

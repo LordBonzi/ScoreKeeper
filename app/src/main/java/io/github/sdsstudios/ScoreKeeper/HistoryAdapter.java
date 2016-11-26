@@ -28,20 +28,14 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     static boolean ACTION_MODE_DISABLED = true;
     private ViewHolder.ClickListener mViewClickListener;
     private int mActivity;
-    private int mGamesToShow;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, int activity, int mGamesToShow) {
+    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, int activity) {
         this.mItemArray = mItemArray;
         this.mCtx = context;
         this.mViewClickListener = clickListener;
         this.mActivity = activity;
-        this.mGamesToShow = mGamesToShow;
-
-
     }
-
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -70,8 +64,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-
-
 
         if (mItemArray.size() == 0){
             Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will respond", Toast.LENGTH_LONG).show();

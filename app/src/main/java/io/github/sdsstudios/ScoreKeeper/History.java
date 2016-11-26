@@ -167,26 +167,26 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         try {
             if (mDbHelper.numRows() != 0) {
-                int type = HistoryAdapter.BOTH;
+                int gamesToShow = HistoryAdapter.BOTH;
 
                 if (menuItemCompleted.isChecked()) {
-                    type = HistoryAdapter.COMPLETED;
+                    gamesToShow = HistoryAdapter.COMPLETED;
                 }
 
                 if (menuItemUnfinished.isChecked()) {
-                    type = HistoryAdapter.UNFINISHED;
+                    gamesToShow = HistoryAdapter.UNFINISHED;
                 }
 
                 if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()) {
-                    type = HistoryAdapter.BOTH;
+                    gamesToShow = HistoryAdapter.BOTH;
                 }
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY)
-                        , this, this, Pointers.HISTORY, type);
+                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY, gamesToShow)
+                        , this, this, Pointers.HISTORY);
 
                 mRecyclerView.setAdapter(mHistoryAdapter);
             } else {

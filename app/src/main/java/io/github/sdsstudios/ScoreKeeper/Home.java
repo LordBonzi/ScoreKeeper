@@ -284,8 +284,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME)
-                        , this, this, Pointers.HISTORY, HistoryAdapter.UNFINISHED);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME, HistoryAdapter.UNFINISHED)
+                        , this, this, Pointers.HISTORY);
 
                 mRecyclerView.setAdapter(historyAdapter);
 

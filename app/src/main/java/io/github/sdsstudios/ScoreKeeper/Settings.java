@@ -96,16 +96,18 @@ public class Settings extends PreferenceActivity{
                 Date now = new Date();
                 String mTime = sdfDate.format(now);
 
+                boolean lastBool = false;
+
                 for (int i = 1; i <= 10; i++){
-
-
-                    Game game = new Game(new ArrayList<Player>(), null, "Debugging Game " + i , "00:00:00:0" , mTime, false, 0
+                    Game game = new Game(new ArrayList<Player>(), null, "Debugging Game " + i , "00:00:00:0" , mTime, !lastBool, 0
                             , EditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions(Settings.this), null);
 
                     dbAdapter.open().createGame(game);
                     game.setmID(dbAdapter.getNewestGame());
                     dbAdapter.updateGame(game);
                     dbAdapter.close();
+
+                    lastBool = !lastBool;
 
                 }
 

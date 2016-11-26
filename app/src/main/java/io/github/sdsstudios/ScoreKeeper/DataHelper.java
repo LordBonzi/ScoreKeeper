@@ -61,11 +61,11 @@ public class DataHelper {
         dbHelper.open();
         Cursor cursor = dbHelper.fetchPresetByID(id);
 
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_GAME);
+        int index = cursor.getColumnIndex(PresetDBAdapter.KEY_GAME);
 
         Game gameList = null;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().serializeNulls().create();
 
             Type type = new TypeToken<Game>(){}.getType();
             gameList = gson.fromJson(cursor.getString(index), type);

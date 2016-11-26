@@ -11,13 +11,14 @@ import java.util.List;
 
 public class EditTextOption extends Option{
 
-    //DO NOT CHANGE VALUES. WILL CRASH THE APP IF CHANGED
+    //DO NOT CHANGE VALUES. WILL CRASH THE APP IN FUTURE UPDATES IF CHANGED
 
     //EditText IDs only
     public static final int WINNING_SCORE = 0;
     public static final int SCORE_INTERVAL = 1;
     public static final int SCORE_DIFF_TO_WIN = 2;
     public static final int NUMBER_SETS = 3;
+    public static final int STARTING_SCORE = 4;
     //ADD NEW POINTERS HERE
 
     private String mHint;
@@ -47,6 +48,8 @@ public class EditTextOption extends Option{
         mEditTextOptions.add(new EditTextOption(R.id.editTextNumSets, a.getString(R.string.num_sets)
                 , EditTextOption.NUMBER_SETS, 1));
 
+        mEditTextOptions.add(new EditTextOption(R.id.editTextStartingScore, a.getString(R.string.starting_score)
+                , EditTextOption.STARTING_SCORE, 0));
 
         return mEditTextOptions;
     }

@@ -85,8 +85,8 @@ public class GameActivity extends AppCompatActivity
     private Game mGame;
     private GridView mSetGridView;
     private int maxNumDice;
+    private int mStartingScore;
     private int mScoreInterval;
-    private int mScoreDiffToWin;
     private boolean mReverseScoring;
     private int mMaxScore;
 
@@ -180,8 +180,9 @@ public class GameActivity extends AppCompatActivity
 
     public void loadGame() {
 
-        mScoreDiffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
+        int mScoreDiffToWin = mGame.getData(EditTextOption.SCORE_DIFF_TO_WIN);
         mScoreInterval = mGame.getData(EditTextOption.SCORE_INTERVAL);
+        mStartingScore = mGame.getData(EditTextOption.STARTING_SCORE);
         mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
         mMaxScore = mGame.getData(EditTextOption.WINNING_SCORE);
 

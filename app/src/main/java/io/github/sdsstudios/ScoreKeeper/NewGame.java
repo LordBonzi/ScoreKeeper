@@ -401,7 +401,7 @@ public class NewGame extends AppCompatActivity
             List<String> titleArrayList = new ArrayList();
             titleArrayList.add("No Preset");
 
-            for (int i = 0; i < mPresetDBAdapter.open().numRows(); i++){
+            for (int i = 1; i <= mPresetDBAdapter.open().numRows(); i++){
                 mPresetDBAdapter.open();
                 titleArrayList.add(mDataHelper.getPreset(i, mPresetDBAdapter).getmTitle());
                 mPresetDBAdapter.close();
@@ -783,6 +783,8 @@ public class NewGame extends AppCompatActivity
     }
 
     public void createPresetDialog() {
+        final String[] presetName = {mCurrentGame.getmTitle()};
+
         final View dialogView;
 
         LayoutInflater inflter = LayoutInflater.from(this);
@@ -811,44 +813,10 @@ public class NewGame extends AppCompatActivity
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                final String[] title = new String[1];
-                List<Player> mPlayerArray = mCurrentGame.getmPlayerArray();
 
-                if (mPlayerArray.size() == 2){
-                    editTextPresetTitle.setHint(mPlayerArray.get(0) + " vs " + mPlayerArray.get(1));
-
-                }else if (mPlayerArray.size() == 3){
-                    editTextPresetTitle.setHint(mPlayerArray.get(0) + " vs " + mPlayerArray.get(1) + " vs " + mPlayerArray.get(2));
-
-                }else if (mPlayerArray.size() > 3 && mPlayerArray.size() < 10){
-                    String playerTitle = "";
-                    for (int i = 0; i < mPlayerArray.size(); i++){
-                        playerTitle += mPlayerArray.get(i);
-                        if (i != mPlayerArray.size()-1){
-                            playerTitle += ",";
-                        }
-                    }
-
-                    editTextPresetTitle.setHint(playerTitle);
-
-                }else if (mPlayerArray.size() > 10){
-                    String playerTitle = "";
-                    for (int i = 0; i < mPlayerArray.size(); i++){
-                        playerTitle += mPlayerArray.get(i);
-                        if (i != mPlayerArray.size()-1){
-                            playerTitle += ",";
-                        }
-                    }
-
-                    editTextPresetTitle.setHint(playerTitle);
-
-                }else if (mPlayerArray.size() == 1){
-                    editTextPresetTitle.setHint(String.valueOf(mPlayerArray.get(0)));
-
-                }
+                editTextPresetTitle.setHint(presetName[0]);
 
                 mDefaultTitle = editTextPresetTitle.getHint().toString();
-                title[0] = editTextPresetTitle.getHint().toString();
 
                 editTextPresetTitle.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -858,9 +826,9 @@ public class NewGame extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        title[0] = charSequence.toString();
+                        presetName[0] = charSequence.toString();
                         if (charSequence == ""){
-                            title[0]= mDefaultTitle;
+                            presetName[0]= mDefaultTitle;
                         }
 
                     }
@@ -876,7 +844,7 @@ public class NewGame extends AppCompatActivity
 
                     @Override
                     public void onClick(View view) {
-                        createPreset(title[0]);
+                        createPreset();
                         alertDialog.dismiss();
                         displaySpinner(false);
                         SPINNER_PRESET.setVisibility(View.VISIBLE);
@@ -925,9 +893,18 @@ public class NewGame extends AppCompatActivity
 
                 if (startGame) {
 
+                    int startingScore = mCurrentGame.getData(EditTextOption.STARTING_SCORE);
+
+                    for (Player p : mCurrentGame.getmPlayerArray()){
+                        p.setmScore(startingScore);
+                    }
+
+                    mDBHelper.updateGame(mCurrentGame);
+
                     mainActivityIntent.putExtra("GAME_ID", mGameID);
                     startActivity(mainActivityIntent);
                     finish();
+
                 }else{
                     createPresetDialog();
                 }
@@ -937,19 +914,12 @@ public class NewGame extends AppCompatActivity
 
     }
 
-    public void createPreset(String title){
-        mCurrentGame.setmTitle(title);
+    public void createPreset(){
+
         mPresetDBAdapter = new PresetDBAdapter(this);
+
         mPresetDBAdapter.open();
-        if (SPINNER_TIME_LIMIT.getSelectedItemPosition()+1 != timeLimitArrayNum.size()) {
-            mPresetDBAdapter.open();
-
-            mPresetDBAdapter.createPreset(mCurrentGame);
-
-            mPresetDBAdapter.close();
-        }else{
-            mPresetDBAdapter.createPreset(mCurrentGame);
-        }
+        mPresetDBAdapter.createPreset(mCurrentGame);
         mPresetDBAdapter.close();
     }
 

@@ -19,7 +19,7 @@ public class PresetDBAdapter {
     public static final String KEY_ROWID = "_id";
     public static final String KEY_GAME = "_game";
     public static final String SQLITE_TABLE = "presets";
-    private static final String TAG = "ScoreDBAdapter";
+    private static final String TAG = "PresetDBAdapter";
     private static final String DATABASE_NAME = "Presets";
     private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_CREATE =
@@ -51,7 +51,6 @@ public class PresetDBAdapter {
 
         return str;
     }
-
 
     public void close() {
         if (mDbHelper != null) {

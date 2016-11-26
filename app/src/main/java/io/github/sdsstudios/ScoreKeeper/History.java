@@ -366,12 +366,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                     break;
 
                 case R.id.action_select_all:
-
-                    for (int i = 0; i < mHistoryAdapter.getItemCount(); i++) {
-                        if (mHistoryAdapter.isSelected(i)) {
-                            mHistoryAdapter.toggleSelection(i, i);
-                        }
-                    }
+                    mHistoryAdapter.clearSelection();
 
                     break;
 

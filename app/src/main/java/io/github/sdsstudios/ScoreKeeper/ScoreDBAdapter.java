@@ -11,6 +11,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 public class ScoreDBAdapter{
 
     public static final String KEY_ROWID = "_id";
@@ -98,7 +100,9 @@ public class ScoreDBAdapter{
     int numRows(){
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
-        return  cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 
     int getNewestGame(){
@@ -125,22 +129,28 @@ public class ScoreDBAdapter{
         return value;
     }
 
-    void deleteGame(int id){
+    void deleteSelectedGames(List<Integer> idList){
         DataHelper dataHelper = new DataHelper();
 
-        open();
 
-        Log.e(TAG, "Game deleted " + id);
-        DATABASE.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
+        for (Integer id : idList) {
+            open();
+            DATABASE.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
+            close();
+        }
+
+        int numRows = open().numRows();
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
         //updates the IDs of the other games after they have been deleted
-        for (int i = 1; i <= numRows(); i++){
+        for (int i = 1; i <= numRows; i++){
             ContentValues initialValues = new ContentValues();
             initialValues.put(KEY_ROWID, i);
             cursor.moveToNext();
             int index = cursor.getColumnIndex(KEY_ROWID);
             int rowID = cursor.getInt(index);
+
+            open();
             DATABASE.update(SQLITE_TABLE, initialValues,KEY_ROWID + "=" + rowID, null);
 
             //gets the game and updates the ID int in the Game object
@@ -148,7 +158,39 @@ public class ScoreDBAdapter{
             game.setmID(i);
             updateGame(game);
 
-            Log.e(TAG, "Game ID: " + dataHelper.getGame(i, this).getmID());
+        }
+
+        cursor.close();
+
+        close();
+    }
+
+    void deleteGame(int id){
+        DataHelper dataHelper = new DataHelper();
+
+        open();
+
+        DATABASE.delete(SQLITE_TABLE, KEY_ROWID + "=" + String.valueOf(id), null);
+
+        int numRows = open().numRows();
+        Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
+
+        //updates the IDs of the other games after they have been deleted
+        for (int i = 1; i <= numRows; i++){
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(KEY_ROWID, i);
+            cursor.moveToNext();
+            int index = cursor.getColumnIndex(KEY_ROWID);
+            int rowID = cursor.getInt(index);
+
+            open();
+            DATABASE.update(SQLITE_TABLE, initialValues,KEY_ROWID + "=" + rowID, null);
+
+            //gets the game and updates the ID int in the Game object
+            Game game = dataHelper.getGame(i, this);
+            game.setmID(i);
+            updateGame(game);
+
         }
 
         cursor.close();

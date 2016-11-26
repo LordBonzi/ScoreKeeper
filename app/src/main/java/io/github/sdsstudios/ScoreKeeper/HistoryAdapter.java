@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class HistoryAdapter extends MyDatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
+public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
     private String TAG = "HistoryAdapter";
 
     static final int COMPLETED = 1;

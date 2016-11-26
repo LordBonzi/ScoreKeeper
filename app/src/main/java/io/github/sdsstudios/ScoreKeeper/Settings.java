@@ -27,6 +27,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Settings extends PreferenceActivity{
     private ScoreDBAdapter mDbHelper;
@@ -81,8 +84,34 @@ public class Settings extends PreferenceActivity{
         Preference importPreference = findPreference("prefImport");
         Preference deleteAllPresets = findPreference("prefDeleteAllPresets");
         Preference notificationsPreference = findPreference("prefReceiveNotifications");
+        Preference createGamesPref = findPreference("prefCreateGames");
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        createGamesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ScoreDBAdapter dbAdapter = new ScoreDBAdapter(Settings.this);
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+                Date now = new Date();
+                String mTime = sdfDate.format(now);
+
+                for (int i = 1; i <= 10; i++){
+
+
+                    Game game = new Game(new ArrayList<Player>(), null, "Debugging Game " + i , "00:00:00:0" , mTime, false, 0
+                            , EditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions(Settings.this), null);
+
+                    dbAdapter.open().createGame(game);
+                    game.setmID(dbAdapter.getNewestGame());
+                    dbAdapter.updateGame(game);
+                    dbAdapter.close();
+
+                }
+
+                return true;
+            }
+        });
 
         notificationsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

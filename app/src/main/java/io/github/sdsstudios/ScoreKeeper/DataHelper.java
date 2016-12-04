@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,14 +25,6 @@ import java.util.regex.Pattern;
  */
 
 public class DataHelper {
-    public List convertToArray(String s){
-        List arrayList = null;
-
-        String[] strValues = s.split(",");
-        arrayList = new ArrayList<>(Arrays.asList(strValues));
-
-        return arrayList;
-    }
 
 
     Game getGame(int id, ScoreDBAdapter dbHelper){
@@ -76,23 +69,6 @@ public class DataHelper {
         }
 
         return gameList;
-    }
-
-    public String convertToString(List array) {
-
-        String str = TextUtils.join(",", array);
-
-        return str;
-    }
-
-    public void saveSharedPrefs(List array, List arrayNum, Context context){
-        SharedPreferences sharedPref = context.getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("timelimitarray", convertToString(array));
-        editor.putString("timelimitarraynum", convertToString(arrayNum));
-
-        editor.apply();
     }
 
     public boolean checkDuplicates(List arrayList){
@@ -140,7 +116,6 @@ public class DataHelper {
         if (!hour.equals("00")){
             stringBuilder.append(Integer.valueOf(hour).toString()).append(" Hrs ");
             timeLimitCondensed = stringBuilder.toString();
-
         }
 
         if(!minute.equals("00")){

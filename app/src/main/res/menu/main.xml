@@ -115,9 +115,16 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_edit_presets"
+        android:id="@+id/action_delete_presets"
         android:orderInCategory="10"
         android:title="@string/delete_presets"
+        android:visible="false"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_delete_timelimits"
+        android:orderInCategory="13"
+        android:title="@string/delete_time_limits"
         android:visible="false"
         app:showAsAction="never"/>
 

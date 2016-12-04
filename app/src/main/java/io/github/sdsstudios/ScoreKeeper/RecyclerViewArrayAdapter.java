@@ -3,6 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,35 +15,54 @@ import java.util.List;
 /**
  * Created by seth on 08/05/16.
  */
-public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<RecyclerViewArrayAdapter.ViewHolder> {
+public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArrayAdapter.ViewHolder> {
+
+    private String TAG = "RViewArrayAdapter";
 
     private List<String> mArrayList;
     private Context mCtx;
     private ViewHolder.ClickListener mClickListener;
-    private int mActivity;
-
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewArrayAdapter(List<String> titleArray, Context context1, ViewHolder.ClickListener listener, int activity) {
-        mCtx = context1;
+    public RecyclerViewArrayAdapter(List<String> titleArray, Context context, ViewHolder.ClickListener listener) {
+        mCtx = context;
         this.mArrayList = titleArray;
         this.mClickListener = listener;
-        this.mActivity = activity;
+
+        /** Remove create... and no timelimit items from array **/
+        mArrayList.remove(0);
+        mArrayList.remove(0);
 
     }
 
-    public void deleteSelectedPresets(PresetDBAdapter presetDBAdapter, int gameID) {
-        if (mActivity == Pointers.NEW_GAME) {
-            for (int i = 0; i < getSelectedItems().size(); i++) {
-                int position = getSelectedItems().get(getSelectedItems().size() - i - 1);
+    public void deleteSelectedItems(int type, Context context) {
+
+        if (type == Pointers.DELETE_PRESETS) {
+
+            PresetDBAdapter presetDBAdapter = new PresetDBAdapter(context);
+
+            for (int i = 0; i < getmSelectedItems().size(); i++) {
+                int position = getmSelectedItems().get(i);
                 presetDBAdapter.deletePreset(position);
             }
 
+        }else{
+
+            List<TimeLimit> timeLimitArray = TimeLimit.getTimeLimitArray(mCtx);
+
+            for (int i = 0; i < getmSelectedItems().size(); i++){
+
+                timeLimitArray.remove(getmSelectedItems().get(i) - i);
+
+            }
+
+            TimeLimit.saveTimeLimit(timeLimitArray, mCtx);
+
         }
+
         notifyDataSetChanged();
 
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -68,15 +88,15 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mArrayList.get(position).toString());
+        holder.textView.setText(mArrayList.get(position));
 
         TypedValue outValue = new TypedValue();
         mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 
-        if (isSelected(position + 1)) {
+        if (isSelected(position)) {
             holder.cardView.setCardBackgroundColor(mCtx.getResources().getColor(R.color.stop));
 
-        } else if (!isSelected(position + 1)) {
+        } else if (!isSelected(position)) {
 
             holder.cardView.setCardBackgroundColor(outValue.resourceId);
         }
@@ -84,21 +104,15 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mArrayList.size();
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @SuppressWarnings("unused")
 
-        // each data item is just a string in this case
-
-                TextView textView;
+        TextView textView;
         CardView cardView;
         ClickListener listener;
 
@@ -114,14 +128,13 @@ public class RecyclerViewArrayAdapter extends DatabaseSelectableAdapter<Recycler
         @Override
         public void onClick(View view) {
             if (listener != null) {
-
-                listener.onItemClicked(getAdapterPosition(), getAdapterPosition() + 1);
+                listener.onItemClicked(getAdapterPosition());
             }
 
         }
 
         public interface ClickListener {
-            void onItemClicked(int position, int gameID);
+            void onItemClicked(int position);
         }
 
     }

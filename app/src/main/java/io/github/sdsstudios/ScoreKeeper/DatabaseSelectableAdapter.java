@@ -39,7 +39,6 @@ public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHold
     }
 
     public boolean isSelected(int gameID) {
-
         return getSelectedItems().contains(gameID);
     }
 

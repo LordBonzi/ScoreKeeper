@@ -58,7 +58,7 @@
     <string name="your_score">Your Score:</string>
     <string name="cancel">Cancel</string>
     <string name="complete_game">Finish</string>
-    <string name="delete_time_limit">Delete Time Limits</string>
+    <string name="delete_time_limits">Delete Time Limits</string>
     <string name="delete_all_games_mes">You will not get them back.</string>
     <string name="players">Players:</string>
     <string name="delete_game">Delete Game?</string>
@@ -132,6 +132,7 @@
     <string name="edit_presets">Edit Presets</string>
     <string name="create_preset_message">What do you want to call it?</string>
     <string name="delete_presets_message">Select which presets to delete.</string>
+    <string name="delete_time_limits_message">Select which time limits to delete.</string>
     <string name="delete_presets">Delete Presets</string>
     <string name="delete_players_message">Select which players to delete.</string>
     <string name="delete_players">Delete Players</string>

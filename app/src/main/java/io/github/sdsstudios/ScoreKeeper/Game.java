@@ -13,7 +13,7 @@ public class Game {
     private GameListener mGameListener;
 
     private List<Player> mPlayerArray;
-    private String mTimeLimit;
+    private TimeLimit mTimeLimit;
     private boolean mCompleted;
     private int mID;
 
@@ -21,7 +21,7 @@ public class Game {
     private List<StringEditTextOption> mStringEditTextOptions;
     private List<CheckBoxOption> mCheckBoxOptions;
 
-    public Game(List<Player> mPlayerArray, String mTimeLimit, boolean mCompleted, int mID
+    public Game(List<Player> mPlayerArray, TimeLimit mTimeLimit, boolean mCompleted, int mID
         , List<IntEditTextOption> intEditTextOptions, List<CheckBoxOption> checkBoxOptions, List<StringEditTextOption> stringEditTextOptions,
                 GameListener mGameListener) {
 
@@ -75,12 +75,13 @@ public class Game {
         this.mPlayerArray = mPlayerArray;
     }
 
-    public String getmTimeLimit() {
+    public TimeLimit getmTimeLimit() {
         return mTimeLimit;
     }
 
-    public void setmTimeLimit(String mTimeLimit) {
+    public void setmTimeLimit(TimeLimit mTimeLimit) {
         this.mTimeLimit = mTimeLimit;
+
     }
 
     public String getmTitle() {
@@ -278,6 +279,7 @@ public class Game {
         void deletePlayer(int position);
 
         void editPlayer(int position);
+
     }
 
 }

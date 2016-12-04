@@ -35,8 +35,11 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         mDbHelper = dbHelper;
         this.mActivity = mActivity;
         this.mEditable = mEditable;
+
         if(this.mActivity == Pointers.NEW_GAME){
-            mRelativeLayout = NewGame.RELATIVE_LAYOUT;
+
+            mRelativeLayout = NewGame.NEW_GAME_LAYOUT;
+
         } else if (this.mActivity == Pointers.EDIT_GAME) {
             mRelativeLayout = EditGame.EDIT_GAME_LAYOUT;
         }

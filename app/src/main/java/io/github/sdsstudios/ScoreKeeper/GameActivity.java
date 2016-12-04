@@ -25,7 +25,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -89,6 +88,8 @@ public class GameActivity extends AppCompatActivity
     private int mScoreInterval;
     private boolean mReverseScoring;
     private int mMaxScore;
+
+    private String mTimeLimit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,21 +295,27 @@ public class GameActivity extends AppCompatActivity
         mGame.setGameListener(this);
         mGame.isGameWon();
 
-        Log.e(TAG, mGame.getmTimeLimit());
-
     }
 
-    private boolean timeLimitReached(Stopwatch chronometer) {
+    private boolean timeLimitReached() {
         boolean b = false;
+
         if (mGame.getmTimeLimit() != null) {
-            if (chronometer.getText().toString().equalsIgnoreCase(mGame.getmTimeLimit())) {
+
+            if (mStopwatch.getText().equals(mTimeLimit)) {
+
+                if (!mFinished){
+                    timeLimitDialog();
+                }
+
                 mFinished = true;
                 b = true;
-                timeLimitDialog();
+
             }
         }
 
         return b;
+
     }
 
     @Override
@@ -752,12 +759,11 @@ public class GameActivity extends AppCompatActivity
 
             winnerDialog(mWinnerString);
 
-        }else if (timeLimitReached(mStopwatch) && !isFullScreen()) {
+        }else if (timeLimitReached() && !isFullScreen()) {
 
             timeLimitDialog();
 
         }else{
-
             setFullScreen(false);
 
         }
@@ -951,82 +957,20 @@ public class GameActivity extends AppCompatActivity
                 final CheckBox checkBoxExtend = (CheckBox) mDialogView.findViewById(R.id.checkBoxExtend);
 
                 if (checkBoxExtend.isChecked()) {
-                    final EditText editTextHour = (EditText) mDialogView.findViewById(R.id.editTextHour);
-                    final EditText editTextMinute = (EditText) mDialogView.findViewById(R.id.editTextMinute);
-                    final EditText editTextSecond = (EditText) mDialogView.findViewById(R.id.editTextSeconds);
-                    String hour = editTextHour.getText().toString().trim();
-                    String minute = editTextMinute.getText().toString().trim();
-                    String seconds = editTextSecond.getText().toString().trim();
+                    try {
 
-                    String oldTimeLimit = mStopwatch.getText().toString();
-                    String[] timeLimitSplit = oldTimeLimit.split(":");
+                        String timeLimitString = TimeLimit.updateTimeLimit(mDialogView, mGame.getmTimeLimit().getmTime());
 
-                    String oldHour = timeLimitSplit[0];
-                    String oldMinute = timeLimitSplit[1];
-                    String oldSeconds = timeLimitSplit[2];
-
-                    String timeLimitString = "";
-
-                    if (TextUtils.isEmpty(hour)) {
-                        editTextHour.setError("Can't be empty");
-
-                    } else if (TextUtils.isEmpty(minute)) {
-                        editTextMinute.setError("Can't be empty");
-
-                    } else if (TextUtils.isEmpty(seconds)) {
-                        editTextSecond.setError("Can't be empty");
-
-                    } else {
-
-                        if (Integer.valueOf(hour) + Integer.valueOf(oldHour) >= 24) {
-                            editTextHour.setError("Hour must be less than " + String.valueOf(24 - Integer.valueOf(oldHour)));
-
-                        } else if (Integer.valueOf(minute) + Integer.valueOf(oldMinute) >= 60) {
-                            editTextMinute.setError("Minute must be less than " + String.valueOf(60 - Integer.valueOf(oldMinute)));
-
-                        } else if (Integer.valueOf(seconds) + Integer.valueOf(oldSeconds) >= 60) {
-                            editTextSecond.setError("Seconds must be less than " + String.valueOf(60 - Integer.valueOf(oldSeconds)));
-
-                        } else {
-                            hour = String.valueOf(Integer.valueOf(hour) + Integer.valueOf(oldHour));
-                            minute = String.valueOf(Integer.valueOf(minute) + Integer.valueOf(oldMinute));
-                            seconds = String.valueOf(Integer.valueOf(seconds) + Integer.valueOf(oldSeconds));
-
-                            try {
-                                if (hour.length() == 1 && !hour.equals("0")) {
-                                    hour = ("0" + hour);
-
-                                }
-                                if (minute.length() == 1 && !minute.equals("0")) {
-                                    minute = ("0" + minute);
-                                }
-
-                                if (seconds.length() == 1 && !seconds.equals("0")) {
-                                    seconds = ("0" + seconds);
-                                }
-
-                                if (hour.equals("0")) {
-                                    hour = "00";
-                                }
-
-                                if (minute.equals("0")) {
-                                    minute = "00";
-                                }
-
-                                if (seconds.equals("0")) {
-                                    seconds = "00";
-                                }
-
-                                timeLimitString += hour + ":";
-                                timeLimitString += minute + ":";
-                                timeLimitString += seconds + ":";
-                                timeLimitString += "0";
+                        if (timeLimitString != null) {
 
                                 if (!timeLimitString.equals("00:00:00:0")) {
 
-                                    mGame.setmTimeLimit(timeLimitString);
+                                    mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
+                                    mDbHelper.updateGame(mGame);
 
-                                    timeLimitReached(mStopwatch);
+                                    mTimeLimit = timeLimitString;
+
+                                    timeLimitReached();
                                     mButtonP1.setEnabled(true);
                                     mButtonP2.setEnabled(true);
                                     displayRecyclerView(true);
@@ -1039,12 +983,13 @@ public class GameActivity extends AppCompatActivity
                                     mAlertDialog.dismiss();
                                 }
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_length, Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
+
                         }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_length, Toast.LENGTH_SHORT);
+                        toast.show();
                     }
 
                 } else {
@@ -1121,7 +1066,7 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     public void onChronometerTick(Stopwatch chronometer) {
-        timeLimitReached(mStopwatch);
+        timeLimitReached();
     }
 
     @Override
@@ -1316,6 +1261,11 @@ public class GameActivity extends AppCompatActivity
         if (mGame.isChecked(CheckBoxOption.STOPWATCH)) {
 
             try {
+
+                if (mGame.getmTimeLimit() != null) {
+                    mTimeLimit = mGame.getmTimeLimit().getmTime();
+                }
+
                 if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(CheckBoxOption.STOPWATCH)) {
                     mGame.setmLength("00:00:00:0");
 
@@ -1327,7 +1277,7 @@ public class GameActivity extends AppCompatActivity
                     mStopwatch.setBase((-(3600000 + mTimeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
-                timeLimitReached(mStopwatch);
+                timeLimitReached();
 
                 if (!mFinished){
                     mStopwatch.start();

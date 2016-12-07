@@ -508,7 +508,6 @@ public class NewGame extends AppCompatActivity
                     return null;
 
             }
-
         }
     }
 

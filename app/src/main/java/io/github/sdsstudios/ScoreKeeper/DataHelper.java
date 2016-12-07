@@ -145,7 +145,4 @@ public class DataHelper {
         return timeLimitCondensed;
 
     }
-
-
-
 }

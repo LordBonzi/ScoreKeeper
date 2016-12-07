@@ -89,6 +89,7 @@ public class Settings extends PreferenceActivity{
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         createGamesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 ScoreDBAdapter dbAdapter = new ScoreDBAdapter(Settings.this);
@@ -280,8 +281,7 @@ public class Settings extends PreferenceActivity{
         String DB_PATH;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
-        }
-        else {
+        } else {
             DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
         }
 

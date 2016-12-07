@@ -6,11 +6,18 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 public class ScoreDBAdapter{
@@ -223,9 +230,11 @@ public class ScoreDBAdapter{
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
+        private Context mCtx;
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            this.mCtx = context;
         }
 
         @Override
@@ -235,8 +244,49 @@ public class ScoreDBAdapter{
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-            onCreate(db);
+
+            if (oldVersion < 5){
+                File sd = Environment.getExternalStorageDirectory();
+                String DB_PATH;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    DB_PATH = mCtx.getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+                } else {
+                    DB_PATH =  mCtx.getDatabasePath("ScoreKeeper").toString();
+                }
+
+                if (sd.canWrite()) {
+                    String currentDBPath = "ScoreKeeper";
+                    String backupDBPath = "/ScoreKeeper/PRE_1.1_BACKUP.db";
+                    File currentDB = new File(DB_PATH, currentDBPath);
+                    File backupDB = new File(sd, backupDBPath);
+
+                    try{
+                        FileChannel src = new FileInputStream(currentDB).getChannel();
+                        FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                        dst.transferFrom(src, 0, src.size());
+                        src.close();
+                        dst.close();
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.e("Settings", e.toString());
+                    }
+                }
+
+                db.delete(SQLITE_TABLE, null, null);
+
+                DialogHelper.createAlertDialog(mCtx, "ALL YOUR GAMES HAVE BEEN DELETED!"
+                        , "All your games have been deleted when you updated to version 1.1 due to an overhaul in the code for the app." +
+                                "This is the only time this will happen." +
+                                "A backup of your old games has been made" +
+                        "in the ScoreKeeper folder on your phone. You can import it, if you roll back" +
+                                " to the old version by leaving the beta. I am extremely sorry for any inconvenience this may have caused.");
+
+            }else {
+
+                db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
+                onCreate(db);
+            }
 
         }
 

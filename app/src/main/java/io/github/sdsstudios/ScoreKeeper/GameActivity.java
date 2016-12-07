@@ -88,6 +88,7 @@ public class GameActivity extends AppCompatActivity
     private int mScoreInterval;
     private boolean mReverseScoring;
     private int mMaxScore;
+    private int mAccentColor, mPrimaryColor;
 
     private String mTimeLimit;
 
@@ -100,9 +101,8 @@ public class GameActivity extends AppCompatActivity
         GAME_ID = extras.getInt("GAME_ID");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-
-        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
+        mAccentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
+        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         maxNumDice = Integer.valueOf(mSharedPreferences.getString("prefDiceMaxNum", "6"));
@@ -114,7 +114,7 @@ public class GameActivity extends AppCompatActivity
 
         mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
 
-        setTheme(accentColor);
+        setTheme(mAccentColor);
 
         if (mClassicTheme) {
             setContentView(R.layout.activity_main_classic);
@@ -128,7 +128,7 @@ public class GameActivity extends AppCompatActivity
             setContentView(R.layout.activity_main);
 
             toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setBackgroundColor(primaryColor);
+            toolbar.setBackgroundColor(mPrimaryColor);
             toolbar.setTitle(mGame.getmTitle());
 
             setSupportActionBar(toolbar);
@@ -237,6 +237,10 @@ public class GameActivity extends AppCompatActivity
 
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
             mTabLayout.setupWithViewPager(mViewPager);
+
+            for(int i = 0; i < mTabLayout.getChildCount(); i++) {
+                mTabLayout.getChildAt(i).setBackgroundColor(mPrimaryColor);
+            }
 
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

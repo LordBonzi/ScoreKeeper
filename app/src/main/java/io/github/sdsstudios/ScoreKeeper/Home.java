@@ -319,6 +319,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         super.onResume();
         mDbHelper.open();
     }
+
     @Override
     protected void onPause() {
         super.onPause();

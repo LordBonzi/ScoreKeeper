@@ -142,6 +142,7 @@ public class NewGame extends AppCompatActivity
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
@@ -216,6 +217,7 @@ public class NewGame extends AppCompatActivity
 
         mEditTextGameTitle = (EditText) findViewById(R.id.editTextGameTitle);
         mEditTextGameTitle.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

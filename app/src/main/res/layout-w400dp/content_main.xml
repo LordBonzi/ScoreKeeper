@@ -109,6 +109,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:layout_toStartOf="@+id/buttonEditP1"
             android:layout_toLeftOf="@+id/buttonEditP1" />
+
         <ImageButton
             android:id="@+id/buttonEditP1"
             android:layout_width="30dp"

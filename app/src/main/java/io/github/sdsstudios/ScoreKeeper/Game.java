@@ -8,8 +8,6 @@ import java.util.List;
 
 public class Game {
 
-    private String TAG = "Game";
-
     private GameListener mGameListener;
 
     private List<Player> mPlayerArray;

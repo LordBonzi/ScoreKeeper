@@ -80,7 +80,6 @@ public class ScoreDBAdapter{
             Log.e(TAG, e.toString());
         }
 
-
         initialValues.put(KEY_GAME, arrayList);
         open();
         DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + game.getmID(), null);
@@ -282,11 +281,12 @@ public class ScoreDBAdapter{
                         "in the ScoreKeeper folder on your phone. You can import it, if you roll back" +
                                 " to the old version by leaving the beta. I am extremely sorry for any inconvenience this may have caused.");
 
-            }else {
 
-                db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
-                onCreate(db);
             }
+
+            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
+            onCreate(db);
+
 
         }
 

@@ -2,11 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
-## 1.1 ***WHAT DATE IS IT RELEASED***
+## 1.1 Beta 1 07/12/16
 ### Added
+ - sets
  - updated text shown in "Are you sure you want to quit" dialog to work with the new History activity introduced in 0.9.0alpha
  - ask for review after 1 game and not 3
  - update review dialog message
+ - expand all cards in New Game and Edit Game
+ - delete all presets from Settings
+ - give each game a unique title
+ - divider inbetween list items in History to easier distinguish them from each other
+ - update Google+ icon in About
+ - show the title of the game in the toolbar while playing it
+ - the title of each Text Field in New Game and Edit Game moves above it. Before, it was hidden if it wasnt hidden, which meant the user didnt know what it does.
+ - receive notifications from the developer. will be used very rarely. Mainly to warn all users if something will happen to the app.
+ - starting score option
 
 ### Bug Fixes
  - deletes other duplicate player if trying to add a duplicate player in New Game
@@ -16,6 +26,8 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - removed acronym 'diff' from 'Score Diff. to win' to difference
  - go back to History when deleting game from Game Info instead of homescreen
  - optimised code
+ - dont show dialog when exiting full screen
+ - score interval sets itself to 0 if empty in New Game
 
 ## 1.0.6 10/08/16
 ### Added

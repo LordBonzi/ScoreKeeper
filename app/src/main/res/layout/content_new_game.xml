@@ -400,6 +400,8 @@
                         android:textColor="?attr/colorAccent"
                         android:visibility="visible" />
 
+
+
                     <Spinner
                         android:id="@+id/spinnerPreset"
                         android:layout_width="match_parent"
@@ -426,13 +428,13 @@
                         android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:text="@string/preset_title"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
 
                 </RelativeLayout>
             </RelativeLayout>

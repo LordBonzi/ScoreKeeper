@@ -17,14 +17,14 @@ public class GridViewAdapter extends BaseAdapter {
     private Context mCtx;
     private int mSelected;
     private final int[] mColors, mRawColors;
-    private boolean mAccent;
+    private int mType;
 
-    public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, boolean accents){
+    public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, int mType){
         this.mCtx = mCtx;
         this.mSelected = mSelected;
         this.mColors = colors;
         this.mRawColors = rawColors;
-        mAccent =accents;
+        this.mType = mType;
     }
 
     @Override
@@ -52,25 +52,28 @@ public class GridViewAdapter extends BaseAdapter {
         itemView.setScaleType(ImageView.ScaleType.CENTER);
 
         gridView.setBackgroundColor(mRawColors[position]);
-        if (mSelected == position +1) {
+
+        if (mSelected == position) {
             itemView.setImageResource(R.mipmap.ic_check_white_24dp);
 
         }else{
             itemView.setBackgroundDrawable(null);
 
         }
+
         itemView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                mSelected = position+1;
+                mSelected = position;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mCtx);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                if (mAccent) {
-                    editor.putInt("prefAccentColor", mColors[mSelected - 1]);
+                if (mType == ThemeSettings.ACCENT_COLOR) {
+                    editor.putInt("prefAccentColor", mColors[mSelected]);
                 }else{
-                    editor.putInt("prefPrimaryColor", mColors[mSelected - 1]);
-                    editor.putInt("prefPrimaryDarkColor", mRawColors[mSelected - 1]);
+                    editor.putInt("prefPrimaryColor", mColors[mSelected]);
+                    editor.putInt("prefPrimaryDarkColor", mRawColors[mSelected]);
                 }
 
                 editor.apply();

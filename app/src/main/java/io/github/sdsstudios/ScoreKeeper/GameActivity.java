@@ -224,6 +224,7 @@ public class GameActivity extends AppCompatActivity
         mSetGridView = (GridView)findViewById(R.id.setGridView);
 
         if (!mClassicTheme) {
+
             mPlayerList = (RecyclerView) findViewById(R.id.bigGameList);
 
             mNormalLayout = (RelativeLayout) findViewById(R.id.layoutNormal);

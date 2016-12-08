@@ -18,7 +18,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - receive notifications from the developer. will be used very rarely. Mainly to warn all users if something will happen to the app.
  - starting score option
 
-### Bug Fixes
+### Bugs Fixed from Version 1.0.6
  - deletes other duplicate player if trying to add a duplicate player in New Game
  - buttons in 2 player games will be clickable after closing the ""[insert player] has won" dialog shown when entering a game which has already been won.
  - renamed boolean reverseScrolling to reverseScoring.

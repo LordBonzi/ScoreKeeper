@@ -6,7 +6,7 @@ package io.github.sdsstudios.ScoreKeeper;
 
 public class EditTextOption extends Option{
 
-    //DO NOT CHANGE VALUES. WILL CRASH THE APP IN FUTURE UPDATES IF CHANGED
+    /**DO NOT CHANGE VALUES. WILL CRASH THE APP IN FUTURE UPDATES IF CHANGED **/
 
     public static final int NUM_INT_OPTIONS = 5;
 

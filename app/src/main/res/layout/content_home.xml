@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:mContext="io.github.sdsstudios.ScoreKeeper.Home"
-    tools:ignore="MergeRootFrame">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.Home">
 
     <RelativeLayout
         android:layout_width="match_parent"

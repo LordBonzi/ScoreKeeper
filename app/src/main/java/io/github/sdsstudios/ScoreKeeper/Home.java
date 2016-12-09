@@ -10,8 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +36,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 
-public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener{
+public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener{
 
     private Intent mNewGameIntent;
     private Intent mSettingsIntent;
@@ -73,9 +78,11 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         setTheme(accentColor);
         setContentView(R.layout.activity_home);
+
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(primaryDarkColor);
         }
@@ -84,6 +91,15 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.home_nav_drawer);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if (mSharedPreferences.getBoolean("prefReceiveNotifications", true)){
             FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -350,6 +366,13 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     public void onBackPressed() {
         super.onBackPressed();
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override
@@ -369,7 +392,19 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
+        switch(id){
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
 
 

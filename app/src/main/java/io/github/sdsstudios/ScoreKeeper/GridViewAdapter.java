@@ -69,7 +69,7 @@ public class GridViewAdapter extends BaseAdapter {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mCtx);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                if (mType == ThemeSettings.ACCENT_COLOR) {
+                if (mType == Themes.ACCENT_COLOR) {
                     editor.putInt("prefAccentColor", mColors[mSelected]);
                 }else{
                     editor.putInt("prefPrimaryColor", mColors[mSelected]);

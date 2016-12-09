@@ -101,9 +101,12 @@ public class GameActivity extends AppCompatActivity
         GAME_ID = extras.getInt("GAME_ID");
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mAccentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         maxNumDice = Integer.valueOf(mSharedPreferences.getString("prefDiceMaxNum", "6"));
 

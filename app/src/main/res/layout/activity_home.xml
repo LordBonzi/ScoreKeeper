@@ -31,6 +31,7 @@
 
 
     </android.support.design.widget.AppBarLayout>
+
     <include
         layout="@layout/content_home"
         android:layout_marginTop="?attr/actionBarSize"
@@ -38,7 +39,13 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
-
+    <android.support.design.widget.NavigationView
+        android:id="@+id/home_nav_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/home_drawer" />
 
 </android.support.design.widget.CoordinatorLayout>
 

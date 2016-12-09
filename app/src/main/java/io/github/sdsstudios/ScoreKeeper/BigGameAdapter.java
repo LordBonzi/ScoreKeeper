@@ -123,13 +123,13 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             mDbHelper.updateGame(mGame);
 
         } else {
-            holder.buttonScore.setEnabled(false);
-        }
 
+            holder.buttonScore.setEnabled(false);
+
+        }
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mGame.size();

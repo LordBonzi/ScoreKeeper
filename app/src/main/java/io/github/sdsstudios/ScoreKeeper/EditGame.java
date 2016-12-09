@@ -70,9 +70,11 @@ public class EditGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = sharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
 
         if (colorNavBar){

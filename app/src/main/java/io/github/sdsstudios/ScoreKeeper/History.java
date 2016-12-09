@@ -48,9 +48,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = sharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
         if (colorNavBar) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

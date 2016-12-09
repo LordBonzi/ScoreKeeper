@@ -45,9 +45,11 @@ public class Settings extends PreferenceActivity{
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
 
         if (colorNavBar) {
@@ -265,7 +267,7 @@ public class Settings extends PreferenceActivity{
         themesPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Settings.this, ThemeSettings.class);
+                Intent intent = new Intent(Settings.this, Themes.class);
                 startActivity(intent);
                 return true;
             }

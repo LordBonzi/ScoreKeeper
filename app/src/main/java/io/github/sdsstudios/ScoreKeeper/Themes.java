@@ -1,5 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,18 +22,18 @@ import android.widget.GridView;
 
 import com.google.android.gms.ads.AdView;
 
-public class ThemeSettings extends PreferenceActivity{
-    public static int ACCENT_COLOR = 0;
-    public static int PRIMARY_COLOR = 1;
+public class Themes extends PreferenceActivity{
+
+    public static int ACCENT_COLOR = 1;
+    public static int PRIMARY_COLOR = 2;
+    public static int DEFAULT_ACCENT_COLOR = R.style.DarkTheme_Red;
 
     private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
     private SharedPreferences mSharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
-    private boolean mDarkTheme, mColorNavBar;
+    private boolean mDarkTheme;
     private int mAccentColor, mPrimaryColor, mPrimaryDarkColor;
-    private int mColorIndex;
-    private int mOldColorIndex;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -42,13 +43,12 @@ public class ThemeSettings extends PreferenceActivity{
 
         mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", true);
 
-        mColorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
-        mAccentColor = mSharedPreferences.getInt("prefAccentColor", accentColors()[0]);
-        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", primaryColors()[0]);
-        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", primaryDarkColors()[0]);
+        boolean mColorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+        mAccentColor = mSharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
+        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(this));
+        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , DEFAULT_PRIMARY_DARK_COLOR(this));
 
-        assignColorIndex();
-        mOldColorIndex = mColorIndex;
 
         setTheme(mAccentColor);
         getDelegate().installViewFactory();
@@ -101,9 +101,9 @@ public class ThemeSettings extends PreferenceActivity{
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                mAccentColor = accentColors()[1];
-                mPrimaryColor = primaryColors()[0];
-                mPrimaryDarkColor = primaryDarkColors()[0];
+                mAccentColor = DEFAULT_ACCENT_COLOR;
+                mPrimaryColor = DEFAULT_PRIMARY_COLOR(Themes.this);
+                mPrimaryDarkColor = DEFAULT_PRIMARY_DARK_COLOR(Themes.this);
 
                 SharedPreferences.Editor editor = mSharedPreferences.edit();
                 editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
@@ -112,6 +112,7 @@ public class ThemeSettings extends PreferenceActivity{
                 editor.apply();
 
                 reloadActivity();
+
                 return true;
             }
         });
@@ -120,12 +121,11 @@ public class ThemeSettings extends PreferenceActivity{
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
+                final int oldColorIndex = accentColorIndex();
+
                 mDarkTheme = !mDarkTheme;
 
-                accentColors();
-                assignColorIndex();
-
-                mAccentColor = accentColors()[mOldColorIndex];
+                mAccentColor = accentThemes()[oldColorIndex];
 
                 SharedPreferences.Editor editor = mSharedPreferences.edit();
                 editor.putInt("prefAccentColor", mAccentColor);
@@ -156,135 +156,58 @@ public class ThemeSettings extends PreferenceActivity{
 
     }
 
-    private void colorDialog(final int type){
-
-        final View dialogView;
-
-        LayoutInflater inflter = LayoutInflater.from(getBaseContext());
-        final AlertDialog alertDialog;
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-
-        dialogView = inflter.inflate(R.layout.color_fragment, null);
-
-        assignColorIndex();
-
-        final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
-
-        final GridViewAdapter gridViewAdapter = new GridViewAdapter(this, mColorIndex
-                , type == ACCENT_COLOR ? accentColors() : primaryColors()
-                , type == ACCENT_COLOR ? rawAccentColors() : primaryDarkColors()
-                , type);
-
-        gridView.setAdapter(gridViewAdapter);
-
-        dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-
-                if (type == ACCENT_COLOR) {
-                    mAccentColor = accentColors()[1];
-                    editor.putInt("prefAccentColor", mAccentColor);
-                }else{
-                    mPrimaryColor = primaryColors()[0];
-                    mPrimaryDarkColor = primaryDarkColors()[0];
-                    editor.putInt("prefPrimaryColor", mPrimaryColor);
-                    editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
-                }
-
-                editor.apply();
-
-                assignColorIndex();
-                reloadActivity();
-            }
-        });
-
-        dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                assignColorIndex();
-
-                reloadActivity();
-            }
-
-        });
-
-        dialogBuilder.setView(dialogView);
-
-        alertDialog = dialogBuilder.create();
-
-
-        alertDialog.show();
-
+    /** DEFAULT COLORS**/
+    public static int DEFAULT_PRIMARY_COLOR(Context ctx){
+        return ctx.getResources().getColor(R.color.primaryBlue);
     }
 
-    private void reloadActivity(){
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
+    public static int DEFAULT_PRIMARY_DARK_COLOR(Context ctx){
+        return ctx.getResources().getColor(R.color.primaryBlueDark);
     }
 
-    private int[] primaryColors(){
+    public static int[] PRIMARY_COLORS(Context ctx){
         return new int[]{
-                getResources().getColor(R.color.primaryIndigo),
-                getResources().getColor(R.color.primaryRed),
-                getResources().getColor(R.color.primaryPurple),
-                getResources().getColor(R.color.primaryTeal),
-                getResources().getColor(R.color.primaryOrange),
-                getResources().getColor(R.color.primaryGrey),
-                getResources().getColor(R.color.primaryWhite),
-                getResources().getColor(R.color.primaryBlue)
+                ctx.getResources().getColor(R.color.primaryIndigo),
+                ctx.getResources().getColor(R.color.primaryRed),
+                ctx.getResources().getColor(R.color.primaryPurple),
+                ctx.getResources().getColor(R.color.primaryTeal),
+                ctx.getResources().getColor(R.color.primaryOrange),
+                ctx.getResources().getColor(R.color.primaryGrey),
+                ctx.getResources().getColor(R.color.primaryWhite),
+                ctx.getResources().getColor(R.color.primaryBlue)
 
         };
     }
 
-    private int[] primaryDarkColors(){
+    public static int[] PRIMARY_DARK_COLORS(Context ctx){
         return new int[]{
-                getResources().getColor(R.color.primaryIndigoDark),
-                getResources().getColor(R.color.primaryRedDark),
-                getResources().getColor(R.color.primaryPurpleDark),
-                getResources().getColor(R.color.primaryTealDark),
-                getResources().getColor(R.color.primaryOrangeDark),
-                getResources().getColor(R.color.primaryGreyDark),
-                getResources().getColor(R.color.primaryWhiteDark),
-                getResources().getColor(R.color.primaryBlueDark)
+                ctx.getResources().getColor(R.color.primaryIndigoDark),
+                ctx.getResources().getColor(R.color.primaryRedDark),
+                ctx.getResources().getColor(R.color.primaryPurpleDark),
+                ctx.getResources().getColor(R.color.primaryTealDark),
+                ctx.getResources().getColor(R.color.primaryOrangeDark),
+                ctx.getResources().getColor(R.color.primaryGreyDark),
+                ctx.getResources().getColor(R.color.primaryWhiteDark),
+                ctx.getResources().getColor(R.color.primaryBlueDark)
 
         };
     }
 
-    private void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
-
-    private void getSupportActionBar() {
-        getDelegate().getSupportActionBar();
-    }
-
-    private void assignColorIndex(){
-        mColorIndex = 1;
-        for (int i = 0; i < accentColors().length; i++){
-            if (mAccentColor == accentColors()[i]){
-                mColorIndex = i;
-            }
-        }
-    }
-
-    private int[] rawAccentColors(){
+    public static int[] RAW_ACCENT_COLORS(Context ctx){
         return new int[] {
-                getResources().getColor(R.color.accentGrey),
-                getResources().getColor(R.color.accentPink),
-                getResources().getColor(R.color.accentYellow),
-                getResources().getColor(R.color.accentGreen),
-                getResources().getColor(R.color.accentRed),
-                getResources().getColor(R.color.accentPurple),
-                getResources().getColor(R.color.accentOrange),
-                getResources().getColor(R.color.accentBlue)
+                ctx.getResources().getColor(R.color.accentGrey),
+                ctx.getResources().getColor(R.color.accentPink),
+                ctx.getResources().getColor(R.color.accentYellow),
+                ctx.getResources().getColor(R.color.accentGreen),
+                ctx.getResources().getColor(R.color.accentRed),
+                ctx.getResources().getColor(R.color.accentPurple),
+                ctx.getResources().getColor(R.color.accentOrange),
+                ctx.getResources().getColor(R.color.accentBlue)
 
         };
     }
 
-    private int[] accentColors(){
+    private int[] accentThemes(){
         if (mDarkTheme) {
             return new int[]{
                     R.style.DarkTheme_Grey,
@@ -311,6 +234,106 @@ public class ThemeSettings extends PreferenceActivity{
             };
         }
     }
+
+    private void colorDialog(final int type){
+
+        final View dialogView;
+
+        LayoutInflater inflter = LayoutInflater.from(getBaseContext());
+
+        final AlertDialog alertDialog;
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogView = inflter.inflate(R.layout.color_fragment, null);
+
+        final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
+
+        final GridViewAdapter gridViewAdapter = new GridViewAdapter(this
+                , type == ACCENT_COLOR ? accentColorIndex() : primaryColorIndex()
+                , type == ACCENT_COLOR ? accentThemes() : PRIMARY_COLORS(Themes.this)
+                , type == ACCENT_COLOR ? RAW_ACCENT_COLORS(Themes.this) : PRIMARY_DARK_COLORS(Themes.this)
+                , type);
+
+        gridView.setAdapter(gridViewAdapter);
+
+        dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+
+                if (type == ACCENT_COLOR) {
+                    mAccentColor = DEFAULT_ACCENT_COLOR;
+                    editor.putInt("prefAccentColor", mAccentColor);
+                }else{
+                    mPrimaryColor = DEFAULT_PRIMARY_COLOR(Themes.this);
+                    mPrimaryDarkColor = DEFAULT_PRIMARY_DARK_COLOR(Themes.this);
+                    editor.putInt("prefPrimaryColor", mPrimaryColor);
+                    editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
+                }
+
+                editor.apply();
+
+                reloadActivity();
+            }
+        });
+
+        dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                reloadActivity();
+            }
+
+        });
+
+        dialogBuilder.setView(dialogView);
+
+        alertDialog = dialogBuilder.create();
+
+
+        alertDialog.show();
+
+    }
+
+    private void reloadActivity(){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
+
+
+
+    private void setSupportActionBar(@Nullable Toolbar toolbar) {
+        getDelegate().setSupportActionBar(toolbar);
+    }
+
+    private void getSupportActionBar() {
+        getDelegate().getSupportActionBar();
+    }
+
+    private int primaryColorIndex(){
+        int index = 0;
+        for (int i = 0; i < PRIMARY_COLORS(this).length; i++){
+            if (mPrimaryColor == PRIMARY_COLORS(this)[i]){
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    private int accentColorIndex(){
+        int index = 0;
+        for (int i = 0; i < accentThemes().length; i++){
+            if (mAccentColor == accentThemes()[i]){
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

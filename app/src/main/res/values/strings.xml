@@ -32,7 +32,7 @@
     <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>
     <string name="scorekeeper_by_sds_studios">ScoreKeeper By SDS-Studios.</string>
     <string name="about_page_info">
-        \n If you encounter any problems, feel free to submit themtoo our GitHub repository.
+        \n If you encounter any problems, feel free to submit them too our GitHub repository.
         \n Feel free to create pull requests and improve our code.
         \n Please rate and review Score Keeper in the Play Store.
     </string>
@@ -60,7 +60,7 @@
     <string name="complete_game">Finish</string>
     <string name="delete_time_limits">Delete Time Limits</string>
     <string name="delete_all_games_mes">You will not get them back.</string>
-    <string name="players">Players:</string>
+    <string name="players">Players</string>
     <string name="delete_game">Delete Game?</string>
     <string name="must_have_name">The player must have a name!</string>
     <string name="complete_later">Finish Later</string>
@@ -180,6 +180,10 @@
     <string name="receive_notifications">Receive Notifications</string>
     <string name="receive_notifications_summary">Receive Notifications from the developer about news and updates. They will not spam your notification drawer and will not be very often. It is just a way for the developer to communicate with their users occasionally.</string>
     <string name="starting_score">Starting Score</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>
 

@@ -121,10 +121,12 @@ public class NewGame extends AppCompatActivity
     public void loadActivity(Bundle savedInstanceState){
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
 
-        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
 
         if (colorNavBar){

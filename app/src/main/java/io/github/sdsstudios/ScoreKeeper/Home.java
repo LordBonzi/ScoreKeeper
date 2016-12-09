@@ -40,7 +40,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private ScoreDBAdapter mDbHelper;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
-    private RelativeLayout mRelativeLayoutRecents;
     private String TAG = "Home";
     private int mLastPlayedGame;
     private boolean mReviewLaterBool;
@@ -58,9 +57,11 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         super.onCreate(savedInstanceState);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = mSharedPreferences.getInt("prefAccentColor", R.style.DarkTheme);
-        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+        int accentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
 
@@ -99,7 +100,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);
         mHistoryIntent = new Intent(this, History.class);
-        mRelativeLayoutRecents = (RelativeLayout)findViewById(R.id.layoutRecentGames);
+        RelativeLayout mRelativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
 
         Button buttonMore = (Button) findViewById(R.id.buttonMore);
         buttonMore.setOnClickListener(new View.OnClickListener() {

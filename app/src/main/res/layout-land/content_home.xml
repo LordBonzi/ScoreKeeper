@@ -94,16 +94,6 @@
 
     </RelativeLayout>
 
-    <Button
-        android:text="More"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/adViewHome"
-        android:id="@+id/buttonMore"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_alignLeft="@+id/homeRecyclerView"
-        android:layout_alignStart="@+id/homeRecyclerView" />
-
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewHome"
         android:layout_width="match_parent"

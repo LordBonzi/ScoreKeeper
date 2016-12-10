@@ -96,15 +96,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         mHistoryIntent = new Intent(this, History.class);
         RelativeLayout mRelativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
 
-        Button buttonMore = (Button) findViewById(R.id.buttonMore);
-        buttonMore.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                startActivity(mHistoryIntent);
-            }
-        });
-
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
 
         mRecyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
@@ -132,10 +123,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         if (mNumRows == 0){
             mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
-            buttonMore.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else if (!anyUnfinishedGames()){
+
             mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
@@ -364,6 +355,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             Toast.makeText(this, e.getCause().toString(), Toast.LENGTH_LONG).show();
         }
     }
+
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
         return false;
@@ -376,7 +368,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         int id = item.getItemId();
 
         switch(id){
+            case R.id.nav_history:
 
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

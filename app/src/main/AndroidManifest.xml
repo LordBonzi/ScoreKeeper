@@ -66,6 +66,12 @@
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PlayersActivity"
+            android:label="@string/players"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".EditGame"
             android:label="@string/game_info"
             android:parentActivityName=".History"

@@ -20,10 +20,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -38,10 +36,12 @@ import java.io.File;
 
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener{
 
-    private Intent mNewGameIntent;
-    private Intent mSettingsIntent;
-    private Intent mAboutIntent;
-    private Intent mHistoryIntent;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    private Intent mNewGameIntent, mSettingsIntent, mAboutIntent, mHistoryIntent, mPlayersIntent;
     private ScoreDBAdapter mDbHelper;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
@@ -49,12 +49,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     private int mLastPlayedGame;
     private boolean mReviewLaterBool;
     private DataHelper mDataHelper = new DataHelper();
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
     private int mNumRows = 0;
 
     @Override
@@ -94,6 +88,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);
         mHistoryIntent = new Intent(this, History.class);
+        mPlayersIntent = new Intent(this, PlayersActivity.class);
+
         RelativeLayout mRelativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
 
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
@@ -342,6 +338,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 break;
 
             case R.id.nav_players:
+                startActivity(mPlayersIntent);
                 break;
 
             case R.id.nav_settings:

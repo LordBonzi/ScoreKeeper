@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
@@ -45,7 +43,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
-        Themes.themeActivity(this, R.layout.activity_history, true);
+        Themes.themeActivity(this, R.layout.activity_recycler_view, true);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
@@ -55,7 +53,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         mDataHelper = new DataHelper();
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);
-        mRecyclerView = (RecyclerView) findViewById(R.id.historyRecyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
     }
 

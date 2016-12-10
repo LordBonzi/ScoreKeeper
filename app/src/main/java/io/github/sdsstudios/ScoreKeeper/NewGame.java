@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -61,7 +60,7 @@ public class NewGame extends AppCompatActivity
     private int mGameID;
     private Intent mHomeIntent;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ScoreDBAdapter mDBHelper;
+    private GameDBAdapter mDBHelper;
     private boolean mStop = true;
     private Spinner mSpinnerTimeLimit, mSpinnerPreset;
     private String mDefaultTitle;
@@ -128,7 +127,7 @@ public class NewGame extends AppCompatActivity
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        mDBHelper = new ScoreDBAdapter(this);
+        mDBHelper = new GameDBAdapter(this);
         mDataHelper = new DataHelper();
 
         mTimeLimitArray = TimeLimit.getTimeLimitArray(this);
@@ -989,6 +988,7 @@ public class NewGame extends AppCompatActivity
 
                     @Override
                     public void onClick(View view) {
+                        mCurrentGame.setmTitle(presetName[0]);
                         createPreset();
                         alertDialog.dismiss();
                         displaySpinner(mSpinnerPreset, presetStringArray());

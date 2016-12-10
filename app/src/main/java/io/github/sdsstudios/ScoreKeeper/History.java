@@ -26,7 +26,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     private Intent mSettingsIntent;
     private Intent mAboutIntent;
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private RecyclerView mRecyclerView;
     private DataHelper mDataHelper;
     private MenuItem menuItemCompleted;
@@ -49,7 +49,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new GameDBAdapter(this);
         mDataHelper = new DataHelper();
         mAboutIntent = new Intent(this, About.class);
         mSettingsIntent = new Intent(this, Settings.class);

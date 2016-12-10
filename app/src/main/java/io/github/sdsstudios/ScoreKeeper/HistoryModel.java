@@ -36,55 +36,7 @@ public class HistoryModel {
         this.mIsUnfinished = isUnfinished;
     }
 
-    public String getmIsUnfinished() {
-        return mIsUnfinished;
-    }
-
-    public void setmIsUnfinished(String mIsUnfinished) {
-        this.mIsUnfinished = mIsUnfinished;
-    }
-
-    public int getmID() {
-        return mID;
-    }
-
-    public void setmID(int mID) {
-        this.mID = mID;
-    }
-
-    public String getmPlayers() {
-        return mPlayers;
-    }
-
-    public void setmPlayers(String mPlayers) {
-        this.mPlayers = mPlayers;
-    }
-
-    public String getmInfo() {
-        return mInfo;
-    }
-
-    public void setmInfo(String mInfo) {
-        this.mInfo = mInfo;
-    }
-
-    public String getmDate() {
-        return mDate;
-    }
-
-    public void setmDate(String mDate) {
-        this.mDate = mDate;
-    }
-
-    public String getmTitle() {
-        return mTitle;
-    }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
-    synchronized static List<HistoryModel> getHistoryModelList(ScoreDBAdapter dbAdapter, Context context, int activity, int gamesToShow){
+    synchronized static List<HistoryModel> getHistoryModelList(GameDBAdapter dbAdapter, Context context, int activity, int gamesToShow) {
         List<HistoryModel> modelList = new ArrayList<>();
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
@@ -195,6 +147,54 @@ public class HistoryModel {
         }else{
             return ctx.getResources().getString(R.string.unfinished);
         }
+    }
+
+    public String getmIsUnfinished() {
+        return mIsUnfinished;
+    }
+
+    public void setmIsUnfinished(String mIsUnfinished) {
+        this.mIsUnfinished = mIsUnfinished;
+    }
+
+    public int getmID() {
+        return mID;
+    }
+
+    public void setmID(int mID) {
+        this.mID = mID;
+    }
+
+    public String getmPlayers() {
+        return mPlayers;
+    }
+
+    public void setmPlayers(String mPlayers) {
+        this.mPlayers = mPlayers;
+    }
+
+    public String getmInfo() {
+        return mInfo;
+    }
+
+    public void setmInfo(String mInfo) {
+        this.mInfo = mInfo;
+    }
+
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
+    }
+
+    public String getmTitle() {
+        return mTitle;
+    }
+
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
     }
 
 }

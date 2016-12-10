@@ -42,7 +42,7 @@ public abstract class DatabaseSelectableAdapter<VH extends RecyclerView.ViewHold
         return getSelectedItems().contains(gameID);
     }
 
-    public void deleteSelectedGames(ScoreDBAdapter dbHelper){
+    public void deleteSelectedGames(GameDBAdapter dbHelper) {
 
         dbHelper.deleteSelectedGames(getSelectedItems());
 

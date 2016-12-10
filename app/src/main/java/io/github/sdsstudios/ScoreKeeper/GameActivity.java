@@ -65,7 +65,7 @@ public class GameActivity extends AppCompatActivity
     private String TAG = "GameActivity.class";
     private DataHelper mDataHelper;
     private Intent mHomeIntent;
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private Stopwatch mStopwatch;
     private TimeHelper mTimeHelper;
     private boolean mClassicTheme = false;
@@ -157,7 +157,7 @@ public class GameActivity extends AppCompatActivity
         mDataHelper = new DataHelper();
         mTimeHelper = new TimeHelper();
 
-        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new GameDBAdapter(this);
     }
 
     public void loadGame() {

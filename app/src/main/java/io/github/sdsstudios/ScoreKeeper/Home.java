@@ -42,7 +42,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private Intent mNewGameIntent, mSettingsIntent, mAboutIntent, mHistoryIntent, mPlayersIntent;
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
     private String TAG = "Home";
@@ -79,7 +79,7 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
         }
 
-        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new GameDBAdapter(this);
         mNumRows = mDbHelper.open().numRows();
         mDbHelper.close();
 

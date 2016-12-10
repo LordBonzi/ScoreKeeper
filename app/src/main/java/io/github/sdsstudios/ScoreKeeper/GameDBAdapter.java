@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,12 +19,12 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-public class ScoreDBAdapter{
+public class GameDBAdapter {
 
     public static final String KEY_ROWID = "_id";
     public static final String KEY_GAME = "_game";
     private static final String SQLITE_TABLE = "score";
-    private static final String TAG = "ScoreDBAdapter";
+    private static final String TAG = "GameDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
     private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_CREATE =
@@ -35,16 +34,16 @@ public class ScoreDBAdapter{
                     " );";
 
     private static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_GAME};
+    private static SQLiteDatabase DATABASE;
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
-    private static SQLiteDatabase DATABASE;
 
-    public ScoreDBAdapter(Context ctx) {
+    public GameDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
 
 
-    public ScoreDBAdapter open() throws SQLException {
+    public GameDBAdapter open() throws SQLException {
         close();
         if (mDbHelper == null) {
             mDbHelper = new DatabaseHelper(mCtx);
@@ -290,24 +289,6 @@ public class ScoreDBAdapter{
 
         }
 
-        public boolean columnExistsInTable(String column, SQLiteDatabase database) {
-            Cursor mCursor = null;
-            try {
-                // Query 1 row
-                mCursor = database.rawQuery("SELECT * FROM " + SQLITE_TABLE + " LIMIT 0", null);
-
-                // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
-                if (mCursor.getColumnIndex(column) != -1)
-                    return true;
-                else
-                    return false;
-
-            } catch (Exception Exp) {
-                return false;
-            } finally {
-                if (mCursor != null) mCursor.close();
-            }
-        }
     }
 
 

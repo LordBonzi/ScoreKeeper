@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Settings extends PreferenceActivity{
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private Intent mHomeIntent;
     private AppCompatDelegate mDelegate;
     private SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
@@ -108,7 +108,7 @@ public class Settings extends PreferenceActivity{
 
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                ScoreDBAdapter dbAdapter = new ScoreDBAdapter(Settings.this);
+                GameDBAdapter dbAdapter = new GameDBAdapter(Settings.this);
                 SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
                 Date now = new Date();
                 String mTime = sdfDate.format(now);
@@ -287,7 +287,7 @@ public class Settings extends PreferenceActivity{
             }
         });
 
-        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new GameDBAdapter(this);
 
         mHomeIntent = new Intent(this, Home.class);
     }

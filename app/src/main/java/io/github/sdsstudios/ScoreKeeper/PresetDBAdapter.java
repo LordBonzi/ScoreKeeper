@@ -29,9 +29,9 @@ public class PresetDBAdapter {
                     " );";
 
     public static String[] COLUMN_ARRAY = {KEY_ROWID, KEY_GAME};
+    public static SQLiteDatabase DATABASE;
     private final Context mCtx;
     private DatabaseHelper mDbHelper;
-    public static SQLiteDatabase DATABASE;
 
     public PresetDBAdapter(Context ctx) {
         this.mCtx = ctx;
@@ -181,38 +181,17 @@ public class PresetDBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
 
-            if (newVersion > oldVersion) {
-                for (int i = 0; i < COLUMN_ARRAY.length; i++) {
-                    if (!columnExistsInTable(COLUMN_ARRAY[i], db)) {
-                        db.execSQL("ALTER TABLE " + SQLITE_TABLE + " ADD COLUMN " + COLUMN_ARRAY[i] + " TEXT");
-                    }
-                }
+            if (oldVersion < 5) {
+                db.delete(SQLITE_TABLE, null, null);
             }
+
+            db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
 
             onCreate(db);
 
         }
 
-        public boolean columnExistsInTable(String column, SQLiteDatabase database) {
-            Cursor mCursor = null;
-            try {
-                // Query 1 row
-                mCursor = database.rawQuery("SELECT * FROM " + SQLITE_TABLE + " LIMIT 0", null);
-
-                // getColumnIndex() gives us the index (0 to ...) of the column - otherwise we get a -1
-                if (mCursor.getColumnIndex(column) != -1)
-                    return true;
-                else
-                    return false;
-
-            } catch (Exception Exp) {
-                return false;
-            } finally {
-                if (mCursor != null) mCursor.close();
-            }
-        }
     }
 
 

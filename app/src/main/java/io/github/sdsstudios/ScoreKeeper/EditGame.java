@@ -41,7 +41,7 @@ public class EditGame extends AppCompatActivity {
     private String TAG = "EditGame";
     private int mGameID;
     private RecyclerView mRecyclerView;
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private DataHelper mDataHelper;
     private PlayerListAdapter mPlayerListAdapter;
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -93,7 +93,7 @@ public class EditGame extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         mGameID = extras.getInt("GAME_ID");
 
-        mDbHelper = new ScoreDBAdapter(this);
+        mDbHelper = new GameDBAdapter(this);
         mDbHelper.open();
 
         mDataHelper = new DataHelper();

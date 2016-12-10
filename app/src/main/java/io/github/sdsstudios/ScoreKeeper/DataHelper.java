@@ -1,10 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,8 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,13 +20,14 @@ import java.util.regex.Pattern;
 
 public class DataHelper {
 
+    private String TAG = "DataHelper";
 
-    Game getGame(int id, ScoreDBAdapter dbHelper){
+    Game getGame(int id, GameDBAdapter dbHelper) {
 
         dbHelper.open();
         Cursor cursor = dbHelper.fetchGamesById(id);
 
-        int index = cursor.getColumnIndex(ScoreDBAdapter.KEY_GAME);
+        int index = cursor.getColumnIndex(GameDBAdapter.KEY_GAME);
 
         Game gameList = null;
         try {
@@ -56,19 +51,22 @@ public class DataHelper {
 
         int index = cursor.getColumnIndex(PresetDBAdapter.KEY_GAME);
 
-        Game gameList = null;
+        Game game = null;
+
         try {
             Gson gson = new GsonBuilder().serializeNulls().create();
 
             Type type = new TypeToken<Game>(){}.getType();
-            gameList = gson.fromJson(cursor.getString(index), type);
+            game = gson.fromJson(cursor.getString(index), type);
 
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataHelper.class", e.toString());
         }
 
-        return gameList;
+        Log.e(TAG, String.valueOf(game == null));
+
+        return game;
     }
 
     public boolean checkDuplicates(List arrayList){

@@ -12,7 +12,7 @@ import android.widget.TextView;
  * Created by seth on 08/05/16.
  */
 public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHolder> {
-    private ScoreDBAdapter mDbHelper;
+    private GameDBAdapter mDbHelper;
     private Game mGame;
     private boolean mEnabled;
     private boolean mReverseScoring;
@@ -20,7 +20,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     private Game.GameListener mGameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(Game mGame, ScoreDBAdapter dbAdapter, boolean menabled, Game.GameListener mGameListener) {
+    public BigGameAdapter(Game mGame, GameDBAdapter dbAdapter, boolean menabled, Game.GameListener mGameListener) {
 
         mDbHelper = dbAdapter;
         mEnabled = menabled;

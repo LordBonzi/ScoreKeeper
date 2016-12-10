@@ -20,17 +20,17 @@ import java.util.List;
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>
         implements EditGame.PlayerListListener{
 
+    public GameDBAdapter mDbHelper;
     private Snackbar mSnackBar = null;
     private Player mBackupPlayer;
     private Game mGame;
-    public ScoreDBAdapter mDbHelper;
     private int mActivity;
     private boolean mEditable;
     private RelativeLayout mRelativeLayout;
     private DataHelper mDataHelper = new DataHelper();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PlayerListAdapter(Game game, ScoreDBAdapter dbHelper, int mActivity, boolean mEditable) {
+    public PlayerListAdapter(Game game, GameDBAdapter dbHelper, int mActivity, boolean mEditable) {
         mGame = game;
         mDbHelper = dbHelper;
         this.mActivity = mActivity;

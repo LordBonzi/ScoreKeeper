@@ -52,7 +52,6 @@ public class EditGame extends AppCompatActivity {
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
     private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
             , mMenuItemShare, mMenuItemComplete;
-    private Intent mShareIntent;
 
     private NestedScrollView mScrollView;
 
@@ -336,10 +335,9 @@ public class EditGame extends AppCompatActivity {
 
             updateCompleteMenuItem();
 
-            createShareIntent();
-            // Fetch and store ShareActionProvider
             ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
-            mShareActionProvider.setShareIntent(mShareIntent);
+            mShareActionProvider.setShareIntent(shareIntent());
+
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -347,11 +345,15 @@ public class EditGame extends AppCompatActivity {
         return true;
     }
 
-    public void createShareIntent(){
-        mShareIntent = new Intent();
-        mShareIntent.setAction(Intent.ACTION_SEND);
-        mShareIntent.setType("text/plain");
-        mShareIntent.putExtra(Intent.EXTRA_TEXT, "");
+    public Intent shareIntent(){
+
+        Intent intent;
+        intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "");
+
+        return intent;
     }
 
     @Override

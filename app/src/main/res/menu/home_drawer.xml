@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_history"
             android:icon="@mipmap/ic_watch_later_white_24dp"
             android:title="@string/action_history" />
+
         <item
             android:id="@+id/nav_players"
             android:icon="@mipmap/ic_person_white_24dp"
-            android:title="@string/players" />
+            android:title="@string/players"
+            android:visible="false" />
 
         <item
             android:id="@+id/nav_about"

@@ -191,7 +191,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void multiSelectEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primaryBlueDark));
         }
 
     }
@@ -270,6 +270,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 dialog = builder.create();
                 dialog.show();
+
             } else {
                 Intent intent = new Intent(this, EditGame.class);
                 intent.putExtra("GAME_ID", gameID);

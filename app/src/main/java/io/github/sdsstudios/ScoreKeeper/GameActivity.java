@@ -23,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -53,9 +52,10 @@ public class GameActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
         , Game.GameListener {
 
+    private static final String STATE_GAMEID = "GAME_ID";
+    public static int GAME_ID;
     private boolean mWon = false;
     private String mWinnerString;
-    public static int GAME_ID;
     private Button mButtonP1, mButtonP2;
     private TextView mTextViewP1, mTextViewP2;
     private int mP1Score, mP2Score;
@@ -79,7 +79,6 @@ public class GameActivity extends AppCompatActivity
     private CoordinatorLayout mCoordinatorLayout;
     private Player mNewPlayer = null;
     private ViewGroup.LayoutParams mParams;
-    private static final String STATE_GAMEID = "GAME_ID";
     private TabLayout mTabLayout;
     private Game mGame;
     private GridView mSetGridView;
@@ -687,6 +686,67 @@ public class GameActivity extends AppCompatActivity
         return !mClassicTheme && !getSupportActionBar().isShowing();
     }
 
+    public void setFullScreen(boolean fullscreen) {
+
+        if (fullscreen) {
+            mParams = mBaseLayout.getLayoutParams();
+            getSupportActionBar().hide();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+                mCoordinatorLayout.setFitsSystemWindows(false);
+
+            }
+
+            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                    CoordinatorLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            params.setMargins(0, mTabLayout.getHeight(), 0, 0);
+            mBaseLayout.setLayoutParams(params);
+
+        } else {
+            if (!mClassicTheme) {
+                getSupportActionBar().show();
+
+                boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+                int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+
+                if (colorNavBar && !mClassicTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getWindow().setNavigationBarColor(primaryDarkColor);
+                    }
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    getWindow().getDecorView().setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+                    mCoordinatorLayout.setFitsSystemWindows(true);
+                }
+
+                if (mParams != null) {
+                    mBaseLayout.setLayoutParams(mParams);
+                }
+
+                mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+            }
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
 
@@ -950,27 +1010,25 @@ public class GameActivity extends AppCompatActivity
 
                         if (timeLimitString != null) {
 
-                                if (!timeLimitString.equals("00:00:00:0")) {
+                            if (!timeLimitString.equals("00:00:00:0")) {
 
-                                    mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
-                                    mDbHelper.updateGame(mGame);
+                                mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
+                                mDbHelper.updateGame(mGame);
 
-                                    mTimeLimit = timeLimitString;
+                                mTimeLimit = timeLimitString;
 
-                                    timeLimitReached();
-                                    mButtonP1.setEnabled(true);
-                                    mButtonP2.setEnabled(true);
-                                    displayRecyclerView(true);
-                                    mAlertDialog.dismiss();
-                                    mFabChronometer.setEnabled(true);
-                                    mFinished = false;
+                                timeLimitReached();
+                                mButtonP1.setEnabled(true);
+                                mButtonP2.setEnabled(true);
+                                displayRecyclerView(true);
+                                mAlertDialog.dismiss();
+                                mFabChronometer.setEnabled(true);
+                                mFinished = false;
 
-                                } else {
-                                    mFinished = true;
-                                    mAlertDialog.dismiss();
-                                }
-
-
+                            } else {
+                                mFinished = true;
+                                mAlertDialog.dismiss();
+                            }
                         }
 
                     } catch (Exception e) {
@@ -988,67 +1046,6 @@ public class GameActivity extends AppCompatActivity
         });
 
         mDbHelper.open().updateGame(mGame);
-    }
-
-    public void setFullScreen(boolean fullscreen) {
-
-        if (fullscreen) {
-            mParams = mBaseLayout.getLayoutParams();
-            getSupportActionBar().hide();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-                mCoordinatorLayout.setFitsSystemWindows(false);
-
-            }
-
-            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(0, mTabLayout.getHeight(), 0, 0);
-            mBaseLayout.setLayoutParams(params);
-
-        } else {
-            if (!mClassicTheme) {
-                getSupportActionBar().show();
-
-                boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
-                int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-
-                if (colorNavBar && !mClassicTheme) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().setNavigationBarColor(primaryDarkColor);
-                    }
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    getWindow().getDecorView().setSystemUiVisibility(
-                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-                    mCoordinatorLayout.setFitsSystemWindows(true);
-                }
-
-                if (mParams != null) {
-                    mBaseLayout.setLayoutParams(mParams);
-                }
-
-                mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-            }
-        }
-
     }
 
     @Override

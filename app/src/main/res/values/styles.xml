@@ -66,6 +66,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryDark">#000</item>
+
     </style>
 
     <style name="Primary_White" parent="DarkTheme">
@@ -179,7 +180,7 @@
     </style>
 
     <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/colorPrimary</item>
+        <item name="background">@color/primaryBlue</item>
 
     </style>
 

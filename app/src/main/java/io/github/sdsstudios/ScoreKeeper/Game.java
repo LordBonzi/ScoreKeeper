@@ -20,7 +20,7 @@ public class Game {
     private List<CheckBoxOption> mCheckBoxOptions;
 
     public Game(List<Player> mPlayerArray, TimeLimit mTimeLimit, boolean mCompleted, int mID
-        , List<IntEditTextOption> intEditTextOptions, List<CheckBoxOption> checkBoxOptions, List<StringEditTextOption> stringEditTextOptions,
+            , List<IntEditTextOption> intEditTextOptions, List<CheckBoxOption> checkBoxOptions, List<StringEditTextOption> stringEditTextOptions,
                 GameListener mGameListener) {
 
         this.mPlayerArray = mPlayerArray;

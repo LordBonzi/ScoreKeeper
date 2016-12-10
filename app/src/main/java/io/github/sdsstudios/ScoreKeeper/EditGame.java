@@ -4,10 +4,8 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -16,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -40,14 +37,13 @@ import java.util.List;
 
 public class EditGame extends AppCompatActivity {
 
+    public static RelativeLayout EDIT_GAME_LAYOUT;
     private String TAG = "EditGame";
-
     private int mGameID;
     private RecyclerView mRecyclerView;
     private ScoreDBAdapter mDbHelper;
     private DataHelper mDataHelper;
     private PlayerListAdapter mPlayerListAdapter;
-    public static RelativeLayout EDIT_GAME_LAYOUT;
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
     private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
@@ -63,6 +59,22 @@ public class EditGame extends AppCompatActivity {
     private List<StringEditTextOption> mStringEditTextOptions = new ArrayList<>();
 
     private Game mGame;
+
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            removeLayoutListenerJB(v, victim);
+        } else removeLayoutListener(v, victim);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
+        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,22 +249,6 @@ public class EditGame extends AppCompatActivity {
 
         }
 
-    }
-
-    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            removeLayoutListenerJB(v, victim);
-        } else removeLayoutListener(v, victim);
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
     }
 
     private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
@@ -704,9 +700,9 @@ public class EditGame extends AppCompatActivity {
     private void loadOptions(){
 
         for (IntEditTextOption e : mIntEditTextOptions){
-                EditText editText = getEditText(e);
-                editText.setText(String.valueOf(e.getInt()));
-                editText.setEnabled(false);
+            EditText editText = getEditText(e);
+            editText.setText(String.valueOf(e.getInt()));
+            editText.setEnabled(false);
 
         }
 

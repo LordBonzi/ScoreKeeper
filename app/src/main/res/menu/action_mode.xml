@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <item android:id="@+id/action_delete_all"
             android:icon="@mipmap/ic_delete_sweep_white_24dp"
-            app:showAsAction="always"
-            android:title="Delete All" />
+            android:title="Delete All"
+            app:showAsAction="ifRoom" />
 
         <item android:id="@+id/action_select_all"
             android:icon="@mipmap/ic_select_all_white_24dp"
-            app:showAsAction="always"
-            android:title="Select All" />
+            android:title="Select All"
+            app:showAsAction="ifRoom" />
 
         <item android:id="@+id/action_delete"
             android:icon="@mipmap/ic_delete_white_24dp"
-            app:showAsAction="always"
-            android:title="Delete" />
+            android:title="Delete"
+            app:showAsAction="ifRoom" />
 
 </menu>

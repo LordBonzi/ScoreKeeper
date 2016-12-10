@@ -58,7 +58,6 @@ public class GameDBAdapter {
         }
     }
 
-
     private String convertGameToString(Game game){
         Gson gson = new GsonBuilder().serializeNulls().create();
         return gson.toJson(game);

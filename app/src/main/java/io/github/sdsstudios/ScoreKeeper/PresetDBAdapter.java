@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 
 /**
@@ -58,8 +61,9 @@ public class PresetDBAdapter {
         }
     }
 
-    public String convertObjectToString(Game game){
-        return null;
+    private String convertGameToString(Game game) {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        return gson.toJson(game);
     }
 
     public void updatePreset(Game game){
@@ -68,7 +72,7 @@ public class PresetDBAdapter {
 
         try {
 
-            arrayList = convertObjectToString(game);
+            arrayList = convertGameToString(game);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +96,7 @@ public class PresetDBAdapter {
             initialValues.put(KEY_ROWID, getNewestGame() + 1);
         }
 
-        initialValues.put(KEY_GAME, convertObjectToString(game));
+        initialValues.put(KEY_GAME, convertGameToString(game));
 
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }
@@ -100,7 +104,9 @@ public class PresetDBAdapter {
     public int numRows(){
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
-        return  cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 
     public int getNewestGame(){

@@ -64,8 +64,6 @@ public class DataHelper {
             Log.e("DataHelper.class", e.toString());
         }
 
-        Log.e(TAG, String.valueOf(game == null));
-
         return game;
     }
 

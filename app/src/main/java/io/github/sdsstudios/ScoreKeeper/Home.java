@@ -289,18 +289,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem settingsMenuItem = menu.findItem(R.id.action_settings);
-        MenuItem aboutMenuItem = menu.findItem(R.id.action_about);
-        settingsMenuItem.setVisible(true);
-        aboutMenuItem.setVisible(true);
-
-        return true;
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         mDbHelper.open();
@@ -310,25 +298,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     protected void onPause() {
         super.onPause();
         mDbHelper.close();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(mSettingsIntent);
-            return true;
-        }if (id == R.id.action_about) {
-            startActivity(mAboutIntent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -369,7 +338,29 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         switch(id){
             case R.id.nav_history:
+                startActivity(mHistoryIntent);
+                break;
 
+            case R.id.nav_players:
+                break;
+
+            case R.id.nav_settings:
+                startActivity(mSettingsIntent);
+                break;
+
+            case R.id.nav_about:
+                startActivity(mAboutIntent);
+                break;
+
+            case R.id.nav_rate_review:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
+                startActivity(browserIntent);
+                break;
+
+            case R.id.nav_share:
+                break;
+
+            case R.id.nav_email_dev:
                 break;
         }
 

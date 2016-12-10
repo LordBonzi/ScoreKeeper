@@ -37,6 +37,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class About extends PreferenceActivity {
+    private int CHANGELOG = 0;
+    private int LICENSE = 1;
 
     private AppCompatDelegate mDelegate;
     private Intent mHomeIntent;
@@ -65,14 +67,14 @@ public class About extends PreferenceActivity {
 
         setContentView(R.layout.activity_settings);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setBackgroundColor(primaryColor);
         getDelegate().setSupportActionBar(toolbar);
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            if (colorNavBar){
+            if (colorNavBar) {
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
             getWindow().setStatusBarColor(primaryDarkColor);
@@ -132,29 +134,7 @@ public class About extends PreferenceActivity {
         licensePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                final View dialogView;
-
-                LayoutInflater inflter = LayoutInflater.from(getBaseContext());
-                final AlertDialog alertDialog;
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
-                dialogView = inflter.inflate(R.layout.changelog_fragment, null);
-
-                TextView textView = (TextView)dialogView.findViewById(R.id.textViewChangelog);
-                displayOutput(textView, 2);
-
-                dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-
-                });
-
-                dialogBuilder.setView(dialogView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.show();
+                DialogHelper.textViewAlertDialog(About.this, textFromFile(LICENSE));
 
                 return true;
             }
@@ -163,30 +143,7 @@ public class About extends PreferenceActivity {
         changeLogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                final View dialogView;
-
-                LayoutInflater inflter = LayoutInflater.from(getBaseContext());
-                final AlertDialog alertDialog;
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
-                dialogView = inflter.inflate(R.layout.changelog_fragment, null);
-
-                TextView textView = (TextView)dialogView.findViewById(R.id.textViewChangelog);
-                displayOutput(textView, 1);
-
-                dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-
-                });
-
-                dialogBuilder.setView(dialogView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.show();
-
+                DialogHelper.textViewAlertDialog(About.this, textFromFile(CHANGELOG));
                 return true;
             }
         });
@@ -201,7 +158,7 @@ public class About extends PreferenceActivity {
                 final AlertDialog alertDialog;
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
                 dialogView = inflter.inflate(R.layout.developers_fragment, null);
-                ImageButton sethGoogle = (ImageButton)dialogView.findViewById(R.id.sethGoogleButton);
+                ImageButton sethGoogle = (ImageButton) dialogView.findViewById(R.id.sethGoogleButton);
                 Button sethGithub = (Button) dialogView.findViewById(R.id.sethGithubButton);
                 Button sethEmail = (Button) dialogView.findViewById(R.id.sethEmailButton);
 
@@ -265,21 +222,17 @@ public class About extends PreferenceActivity {
 
     }
 
-    public void displayOutput(TextView textView, int type)
-    {
+    public String textFromFile(int type) {
+
         File sdcard = Environment.getExternalStorageDirectory();
         File file = null;
-        if (type == 1) {
-            file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
+        if (type == CHANGELOG) {
             file = new File(sdcard, "/ScoreKeeper/changelog_scorekeeper.txt");
 
-        }else if(type == 2){
-            file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
+        } else if (type == LICENSE) {
             file = new File(sdcard, "/ScoreKeeper/license_scorekeeper.txt");
-
         }
+
         StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -289,14 +242,15 @@ public class About extends PreferenceActivity {
                 text.append('\n');
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(getApplicationContext(),"File not found!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "File not found!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(),"Error reading file!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-        // Assuming that 'output' is the id of your TextView
-        textView.setText(text);
+
+        return text.toString();
+
     }
 
     @Override
@@ -312,7 +266,7 @@ public class About extends PreferenceActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
         }
 

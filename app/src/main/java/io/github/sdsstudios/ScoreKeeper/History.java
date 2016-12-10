@@ -37,42 +37,20 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     private ActionMode mHistoryActionMode = null;
     private int mPrimaryDarkColor;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-
-    private GoogleApiClient mGoogleAPIClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+
         mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        if (colorNavBar) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(mPrimaryDarkColor);
-            }
-        }
+        Themes.themeActivity(this, R.layout.activity_history, true);
 
-        setTheme(accentColor);
-        setContentView(R.layout.activity_history);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(mPrimaryDarkColor);
-        }
-        getSupportActionBar();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mDbHelper = new ScoreDBAdapter(this);
         mDataHelper = new DataHelper();
         mAboutIntent = new Intent(this, About.class);

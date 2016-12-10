@@ -69,22 +69,8 @@ public class EditGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
-                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+        Themes.themeActivity(this, R.layout.activity_edit_game, true);
 
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-
-        if (colorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-        }
-
-        setTheme(accentColor);
-        setContentView(R.layout.activity_edit_game);
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
@@ -92,14 +78,7 @@ public class EditGame extends AppCompatActivity {
         AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
         AdCreator adCreator2 = new AdCreator(mAdView2, this);
         adCreator2.createAd();
-        getSupportActionBar();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
-        }
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle extras = getIntent().getExtras();
         mGameID = extras.getInt("GAME_ID");
 

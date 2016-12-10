@@ -1,8 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,10 +55,21 @@ public class Settings extends PreferenceActivity{
 
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
 
-        if (colorNavBar) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (colorNavBar){
                 getWindow().setNavigationBarColor(primaryDarkColor);
             }
+            getWindow().setStatusBarColor(primaryDarkColor);
+
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), bm
+                    , primaryDarkColor);
+
+            setTaskDescription(taskDesc);
+
         }
 
         setTheme(accentColor);

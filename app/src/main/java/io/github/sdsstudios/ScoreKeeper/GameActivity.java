@@ -95,7 +95,6 @@ public class GameActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toolbar toolbar;
 
         Bundle extras = getIntent().getExtras();
         GAME_ID = extras.getInt("GAME_ID");
@@ -104,10 +103,6 @@ public class GameActivity extends AppCompatActivity
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
 
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
-                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
-
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         maxNumDice = Integer.valueOf(mSharedPreferences.getString("prefDiceMaxNum", "6"));
 
         loadObjects();
@@ -117,35 +112,19 @@ public class GameActivity extends AppCompatActivity
 
         mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
 
-        setTheme(mAccentColor);
-
         if (mClassicTheme) {
-            setContentView(R.layout.activity_main_classic);
+            Themes.themeActivity(this, R.layout.activity_main_classic, true);
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.black));
             }
 
         } else {
 
-            setContentView(R.layout.activity_main);
+            Themes.themeActivity(this, R.layout.activity_main, true);
 
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setBackgroundColor(mPrimaryColor);
-            toolbar.setTitle(mGame.getmTitle());
-
-            setSupportActionBar(toolbar);
-            getSupportActionBar();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(primaryDarkColor);
-            }
-
-            if (colorNavBar && !mClassicTheme) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
-                }
-            }
         }
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);

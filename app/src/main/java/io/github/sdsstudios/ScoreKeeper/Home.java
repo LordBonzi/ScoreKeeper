@@ -62,39 +62,17 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         super.onCreate(savedInstanceState);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int accentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
-        int primaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
-        int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
-                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
-
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
 
-        if (colorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-        }
-
-        setTheme(accentColor);
-        setContentView(R.layout.activity_home);
+        Themes.themeActivity(this, R.layout.activity_home, false);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
-        }
-
-        getSupportActionBar();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, (Toolbar) findViewById(R.id.toolbar), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 

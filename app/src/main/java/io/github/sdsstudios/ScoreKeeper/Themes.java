@@ -1,9 +1,13 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -43,7 +48,7 @@ public class Themes extends PreferenceActivity{
 
         mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", true);
 
-        boolean mColorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(this));
         mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
@@ -64,12 +69,20 @@ public class Themes extends PreferenceActivity{
         getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(mPrimaryDarkColor);
-        }
-        if (mColorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (colorNavBar){
                 getWindow().setNavigationBarColor(mPrimaryDarkColor);
             }
+            getWindow().setStatusBarColor(mPrimaryDarkColor);
+
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), bm
+                    , mPrimaryDarkColor);
+
+            setTaskDescription(taskDesc);
+
         }
 
         addPreferencesFromResource(R.xml.theme_settings);
@@ -153,6 +166,47 @@ public class Themes extends PreferenceActivity{
                 return true;
             }
         });
+
+    }
+
+    public static void themeActivity(AppCompatActivity activity, int layout, boolean backButton){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        int accentColor = sharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(activity));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+                , DEFAULT_PRIMARY_DARK_COLOR(activity));
+
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", true);
+
+        activity.setTheme(accentColor);
+        activity.setContentView(layout);
+
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+
+        activity.getSupportActionBar();
+        toolbar.setBackgroundColor(primaryColor);
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(backButton);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+            activity.getWindow().setStatusBarColor(primaryDarkColor);
+
+            if (colorNavBar){
+                activity.getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+
+            Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(activity.getString(R.string.app_name), bm
+                    , primaryDarkColor);
+
+            activity.setTaskDescription(taskDesc);
+
+        }
 
     }
 

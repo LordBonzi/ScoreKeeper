@@ -1,8 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -36,11 +40,15 @@ public class About extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
     private Intent mHomeIntent;
-    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getDelegate().installViewFactory();
+        getDelegate().onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
@@ -56,21 +64,33 @@ public class About extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        getDelegate().setSupportActionBar(toolbar);
+        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (colorNavBar){
+                getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+            getWindow().setStatusBarColor(primaryDarkColor);
+
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), bm
+                    , primaryDarkColor);
+
+            setTaskDescription(taskDesc);
+
+        }
+
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
-        }
-        if (colorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-        }
+
         addPreferencesFromResource(R.xml.about_settings);
         Preference changeLogPreference = findPreference("prefChangelog");
         Preference developersPreference = findPreference("prefDevelopers");
@@ -279,10 +299,6 @@ public class About extends PreferenceActivity {
         textView.setText(text);
     }
 
-    private void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -304,12 +320,6 @@ public class About extends PreferenceActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         getDelegate().onPostResume();
@@ -319,15 +329,6 @@ public class About extends PreferenceActivity {
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
 
     }
 
@@ -335,8 +336,7 @@ public class About extends PreferenceActivity {
     protected void onDestroy() {
         super.onDestroy();
         getDelegate().onDestroy();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+
     }
 
 

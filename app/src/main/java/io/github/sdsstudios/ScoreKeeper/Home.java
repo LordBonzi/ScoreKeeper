@@ -326,7 +326,6 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
         return false;
     }
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -334,11 +333,16 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         switch(id){
             case R.id.nav_history:
-                startActivity(mHistoryIntent);
+                if (mDbHelper.numRows() > 0) {
+                    startActivity(mHistoryIntent);
+                } else {
+                    Toast.makeText(this, R.string.no_games, Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.nav_players:
-                startActivity(mPlayersIntent);
+                Toast.makeText(this, R.string.graph_coming_soon, Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.nav_settings:

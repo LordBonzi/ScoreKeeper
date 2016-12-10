@@ -210,6 +210,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
     }
 

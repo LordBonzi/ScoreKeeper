@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true"
     android:fillViewport="true"
-    android:id="@+id/scrollView"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
 
@@ -19,17 +19,17 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
             android:id="@+id/cardViewPlayers"
             android:layout_width="wrap_content"
-            android:layout_toLeftOf="@+id/cardViewPresets"
-            android:layout_toStartOf="@+id/cardViewPresets"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/cardViewAd"
+            android:layout_alignTop="@+id/cardViewPresets"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_above="@+id/cardViewAd"
-            android:layout_alignTop="@+id/cardViewPresets">
+            android:layout_toLeftOf="@+id/cardViewPresets"
+            android:layout_toStartOf="@+id/cardViewPresets"
+            card_view:cardCornerRadius="4dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -103,39 +103,39 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
             android:id="@+id/cardViewTimeLimit"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/cardViewPlayers"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cardViewPresets"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_toRightOf="@+id/cardViewPlayers"
+            card_view:cardCornerRadius="4dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
+                    android:id="@+id/timeLimitHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:id="@+id/timeLimitHeader"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
                     <TextView
-                        android:text="@string/time_limit"
-                        android:paddingLeft="16dp"
-                        android:paddingStart="16dp"
-                        android:textStyle="bold"
+                        android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView3"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="16dp"
+                        android:paddingStart="16dp"
+                        android:text="@string/time_limit"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
@@ -143,9 +143,9 @@
                     android:id="@+id/relativeLayoutTimeLimit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/timeLimitHeader"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_below="@+id/timeLimitHeader">
+                    android:layout_marginRight="16dp">
 
                     <Spinner
                         android:id="@+id/spinnerTimeLimit"
@@ -162,17 +162,17 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
             android:id="@+id/cardViewOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cardViewTimeLimit"
-            android:layout_toRightOf="@+id/cardViewPlayers"
-            android:layout_toEndOf="@+id/cardViewPlayers"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@+id/cardViewPlayers"
+            android:layout_toRightOf="@+id/cardViewPlayers"
+            card_view:cardCornerRadius="4dp"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -180,46 +180,46 @@
                 >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_height="48dp"
                     android:id="@+id/optionsHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
 
                     <TextView
-                        android:text="@string/advanced_options"
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView7"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:text="@string/advanced_options"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutOptions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/relativeLayoutOptions"
                     android:layout_below="@+id/optionsHeader"
                     >
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutStartingScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextStartingScore"
@@ -239,15 +239,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutMaxScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_below="@+id/inputLayoutStartingScore"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/inputLayoutStartingScore"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextMaxScore"
@@ -267,15 +267,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/inputLayoutMaxScore"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextScoreInterval"
@@ -293,15 +293,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutDiffToWin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutScoreInterval"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextDiffToWin"
@@ -317,15 +317,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutNumSets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutDiffToWin"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextNumSets"
@@ -342,24 +342,24 @@
 
                     <CheckBox
                         android:id="@+id/checkBoxReverseScoring"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reverse_scoring"
-                        android:layout_below="@+id/inputLayoutNumSets"
-                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_alignLeft="@+id/inputLayoutDiffToWin"
-                        android:layout_alignStart="@+id/inputLayoutDiffToWin" />
+                        android:layout_alignStart="@+id/inputLayoutDiffToWin"
+                        android:layout_below="@+id/inputLayoutNumSets"
+                        android:text="@string/reverse_scoring" />
 
 
                     <CheckBox
                         android:id="@+id/checkBoxStopwatch"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/stopwatch"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_below="@+id/checkBoxReverseScoring"
                         android:layout_alignLeft="@+id/checkBoxReverseScoring"
-                        android:layout_alignStart="@+id/checkBoxReverseScoring" />
+                        android:layout_alignStart="@+id/checkBoxReverseScoring"
+                        android:layout_below="@+id/checkBoxReverseScoring"
+                        android:text="@string/stopwatch" />
 
                 </RelativeLayout>
             </RelativeLayout>
@@ -368,19 +368,21 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
             android:id="@+id/cardViewPresets"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginTop="4dp"
+            card_view:cardCornerRadius="4dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <RelativeLayout
                     android:id="@+id/relativeLayoutPresets"
                     android:layout_width="match_parent"
@@ -407,11 +409,11 @@
                         android:id="@+id/spinnerPreset"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_toLeftOf="@+id/buttonCreatePreset"
                         android:layout_toStartOf="@+id/buttonCreatePreset"
-                        android:visibility="visible"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -431,8 +433,8 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:paddingLeft="16dp"
+                        android:paddingStart="16dp"
                         android:text="@string/preset_title"
                         android:textStyle="bold" />
 
@@ -442,25 +444,25 @@
 
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
             android:id="@+id/cardViewAd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cardViewOptions"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginTop="4dp"
+            card_view:cardCornerRadius="4dp">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adViewHome"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                ads:adSize="BANNER"
-                android:layout_gravity="center"
-                ads:adUnitId="@string/banner_ad_unit_id"
                 android:layout_below="@+id/view"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_ad_unit_id" />
 
         </android.support.v7.widget.CardView>
 

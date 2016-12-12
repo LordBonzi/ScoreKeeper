@@ -54,7 +54,6 @@ public abstract class OptionActivity extends AppCompatActivity {
     public List<StringEditTextOption> mStringEditTextOptions = new ArrayList<>();
     public RecyclerView.LayoutManager mLayoutManager;
     private NestedScrollView mScrollView;
-    private List<OptionCardView> mCardViewList = new ArrayList<>();
 
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -97,7 +96,7 @@ public abstract class OptionActivity extends AppCompatActivity {
         mDbHelper = new GameDBAdapter(this);
         mDbHelper.open();
 
-        mCardViewList = loadOptionCardViews();
+        List<OptionCardView> mCardViewList = loadOptionCardViews();
 
         if (CURRENT_ACTIVITY == EDIT_GAME) {
             AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
@@ -109,6 +108,8 @@ public abstract class OptionActivity extends AppCompatActivity {
             mGameID = extras.getInt("GAME_ID");
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
+        } else {
+            mRelativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
         }
 
         for (final OptionCardView card : mCardViewList) {

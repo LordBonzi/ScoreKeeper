@@ -7,10 +7,8 @@ package io.github.sdsstudios.ScoreKeeper;
 class Pointers {
     /** ACTIVITIES **/
 
-    static int EDIT_GAME = 1;
-    static int HISTORY = 2;
-    static int HOME = 3;
-    static int NEW_GAME = 4;
+    static int HISTORY = 0;
+    static int HOME = 1;
 
     /** WHICH DELETE DIALOG TO SHOW IN NEWGAME **/
 

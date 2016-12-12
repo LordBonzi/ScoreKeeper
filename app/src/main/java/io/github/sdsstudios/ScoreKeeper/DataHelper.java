@@ -29,19 +29,19 @@ public class DataHelper {
 
         int index = cursor.getColumnIndex(GameDBAdapter.KEY_GAME);
 
-        Game gameList = null;
+        Game game = null;
         try {
             Gson gson = new GsonBuilder().serializeNulls().create();
 
             Type type = new TypeToken<Game>(){}.getType();
-            gameList = gson.fromJson(cursor.getString(index), type);
+            game = gson.fromJson(cursor.getString(index), type);
 
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("DataHelper.class", e.toString());
         }
 
-        return gameList;
+        return game;
     }
 
     public Game getPreset(int id, PresetDBAdapter dbHelper){

@@ -3,11 +3,11 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    android:id="@+id/scrollView"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.EditGame"
     tools:showIn="@layout/activity_edit_game">
@@ -60,11 +60,11 @@
                     android:id="@+id/titleHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
 
                     <TextView
                         android:id="@+id/textView17"
@@ -126,11 +126,11 @@
                     android:id="@+id/dateHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
 
                     <TextView
                         android:id="@+id/textView15"
@@ -188,8 +188,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginLeft="13dp"
-                    android:layout_below="@+id/lengthHeader">
+                    android:layout_below="@+id/lengthHeader"
+                    android:layout_marginLeft="13dp">
 
                     <EditText
                         android:id="@+id/editTextLength"
@@ -265,19 +265,19 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginRight="13dp"
-                    android:layout_below="@+id/optionsHeader">
+                    android:layout_below="@+id/optionsHeader"
+                    android:layout_marginRight="13dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutStartingScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextStartingScore"
@@ -297,15 +297,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutMaxScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_below="@+id/inputLayoutStartingScore"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/inputLayoutStartingScore"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextMaxScore"
@@ -325,15 +325,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/inputLayoutMaxScore"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextScoreInterval"
@@ -351,15 +351,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutDiffToWin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutScoreInterval"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextDiffToWin"
@@ -375,15 +375,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutNumSets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutDiffToWin"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextNumSets"
@@ -470,7 +470,7 @@
                     android:layout_below="@+id/playersHeader">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerViewEditGame"
+                        android:id="@+id/playerRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -484,11 +484,11 @@
                     android:id="@+id/playersHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -508,13 +508,13 @@
             android:id="@+id/cardViewAd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/cardViewLength"
+            android:layout_alignRight="@+id/cardViewLength"
             android:layout_below="@+id/cardViewLength"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            ads:cardCornerRadius="4dp"
-            android:layout_alignRight="@+id/cardViewLength"
-            android:layout_alignEnd="@+id/cardViewLength">
+            ads:cardCornerRadius="4dp">
 
             <com.google.android.gms.ads.AdView
                 android:id="@+id/adViewHome"

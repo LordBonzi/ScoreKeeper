@@ -333,7 +333,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
 
         switch(id){
             case R.id.nav_history:
-                if (mDbHelper.numRows() > 0) {
+
+                if (mDbHelper.open().numRows() > 0) {
                     startActivity(mHistoryIntent);
                 } else {
                     Toast.makeText(this, R.string.no_games, Toast.LENGTH_SHORT).show();

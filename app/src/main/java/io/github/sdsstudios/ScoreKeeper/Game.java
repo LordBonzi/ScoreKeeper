@@ -152,7 +152,7 @@ public class Game {
     }
 
     public boolean isChecked(int id){
-        return mCheckBoxOptions.get(id).getBoolean();
+        return mCheckBoxOptions.get(id).isChecked();
     }
 
     public void setChecked(int id, boolean data){

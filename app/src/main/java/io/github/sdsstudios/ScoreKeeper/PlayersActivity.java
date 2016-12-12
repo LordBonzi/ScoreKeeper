@@ -8,7 +8,7 @@ public class PlayersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Themes.themeActivity(this, R.layout.activity_recycler_view, true);
+        Themes.themeActivity(this, R.layout.activity_recyclerview, true);
     }
 
 }

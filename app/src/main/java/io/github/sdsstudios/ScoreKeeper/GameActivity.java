@@ -107,7 +107,6 @@ public class GameActivity extends AppCompatActivity
         loadObjects();
 
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
-        mGame.setGameListener(this);
 
         mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
 

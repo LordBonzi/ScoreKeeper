@@ -118,7 +118,7 @@ public class Settings extends PreferenceActivity{
                 for (int i = 1; i <= 10; i++){
 
                     Game game = new Game(new ArrayList<Player>(), null, false, 0
-                            , IntEditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions(Settings.this)
+                            , IntEditTextOption.loadEditTextOptions(Settings.this), CheckBoxOption.loadCheckBoxOptions()
                             , StringEditTextOption.loadEditTextOptions(), null);
 
                     dbAdapter.open().createGame(game);

@@ -1,33 +1,16 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import com.google.android.gms.ads.AdView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,71 +18,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EditGame extends AppCompatActivity {
+public class EditGame extends OptionActivity {
 
-    public static RelativeLayout EDIT_GAME_LAYOUT;
-    private String TAG = "EditGame";
-    private int mGameID;
-    private RecyclerView mRecyclerView;
-    private GameDBAdapter mDbHelper;
-    private DataHelper mDataHelper;
-    private PlayerListAdapter mPlayerListAdapter;
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
     private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
             , mMenuItemShare, mMenuItemComplete;
 
-    private NestedScrollView mScrollView;
-
-    private List<OptionCardView> mCardViewList = new ArrayList<>();
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
-    private List<IntEditTextOption> mIntEditTextOptions = new ArrayList<>();
-    private List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
-    private List<StringEditTextOption> mStringEditTextOptions = new ArrayList<>();
-
-    private Game mGame;
-
-    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            removeLayoutListenerJB(v, victim);
-        } else removeLayoutListener(v, victim);
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
-    }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Themes.themeActivity(this, R.layout.activity_edit_game, true);
-
-        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
-        AdCreator adCreator = new AdCreator(mAdView, this);
-        adCreator.createAd();
-
-        AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
-        AdCreator adCreator2 = new AdCreator(mAdView2, this);
-        adCreator2.createAd();
-
-        Bundle extras = getIntent().getExtras();
-        mGameID = extras.getInt("GAME_ID");
-
-        mDbHelper = new GameDBAdapter(this);
-        mDbHelper.open();
-
-        mDataHelper = new DataHelper();
-
-        EDIT_GAME_LAYOUT = (RelativeLayout) findViewById(R.id.edit_game_content);
-        mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
+    void loadActivity(Bundle savedInstanceState) {
 
         ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
         ImageButton buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
@@ -117,189 +46,13 @@ public class EditGame extends AppCompatActivity {
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewEditGame);
-
-        mGame = mDataHelper.getGame(mGameID, mDbHelper);
-
         mIntEditTextOptions = mGame.getmIntEditTextOptions();
         mCheckBoxOptions = mGame.getmCheckBoxOptions();
         mStringEditTextOptions = mGame.getmStringEditTextOptions();
 
         loadOptions();
 
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
-                , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
-
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutDate)
-                , (RelativeLayout) findViewById(R.id.dateHeader), 0));
-
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
-                , (RelativeLayout) findViewById(R.id.playersHeader), 0));
-
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutLength)
-                , (RelativeLayout) findViewById(R.id.lengthHeader), 0));
-
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTitle)
-                , (RelativeLayout) findViewById(R.id.titleHeader), 0));
-
-        for (final OptionCardView card: mCardViewList){
-            if (card.getmHeader().getId() == R.id.playersHeader && getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
-            }else{
-                card.getmHeader().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleCardViewHeight(card.getmHeight(), card, mScrollView.getBottom());
-
-                    }
-                });
-            }
-
-            card.getmContent().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int height = card.getmContent().getMeasuredHeight();
-
-                    card.setmHeight(height);
-
-                    if (card.getmHeader().getId() != R.id.playersHeader) {
-                        toggleCardViewHeight(height, card, mScrollView.getScrollY());
-                    }
-                    // Do whatever you want with h
-                    // Remove the onSharedPreferenceChangeListener so it is not called repeatedly
-                    removeOnGlobalLayoutListener(card.getmContent(), this);
-                }
-            });
-        }
-
-
-
         displayRecyclerView(false);
-
-
-    }
-
-    private CheckBox getCheckBox(CheckBoxOption checkBoxOption){
-        try{
-
-            return ((CheckBox) findViewById(checkBoxOption.getmCheckBoxID()));
-
-        }catch (ClassCastException e){
-
-            switch (checkBoxOption.getmID()){
-                case CheckBoxOption.REVERSE_SCORING:
-                    checkBoxOption.setmCheckBoxID(R.id.checkBoxReverseScoring);
-                    return ((CheckBox) findViewById(R.id.checkBoxReverseScoring));
-
-                case CheckBoxOption.STOPWATCH:
-                    checkBoxOption.setmCheckBoxID(R.id.checkBoxStopwatch);
-                    return ((CheckBox) findViewById(R.id.checkBoxStopwatch));
-
-                default:
-                    return null;
-
-            }
-
-        }
-    }
-
-    private EditText getEditText(EditTextOption editTextOption){
-        try{
-
-            return ((EditText) findViewById(editTextOption.getmEditTextID()));
-
-        }catch (ClassCastException e){
-
-            switch (editTextOption.getmID()){
-                case IntEditTextOption.NUMBER_SETS:
-                    editTextOption.setmEditTextID(R.id.editTextNumSets);
-                    return ((EditText) findViewById(R.id.editTextNumSets));
-
-                case EditTextOption.SCORE_DIFF_TO_WIN:
-                    editTextOption.setmEditTextID(R.id.editTextDiffToWin);
-                    return ((EditText) findViewById(R.id.editTextDiffToWin));
-
-                case EditTextOption.WINNING_SCORE:
-                    editTextOption.setmEditTextID(R.id.editTextMaxScore);
-                    return ((EditText) findViewById(R.id.editTextMaxScore));
-
-                case EditTextOption.STARTING_SCORE:
-                    editTextOption.setmEditTextID(R.id.editTextStartingScore);
-                    return ((EditText) findViewById(R.id.editTextStartingScore));
-
-                case EditTextOption.SCORE_INTERVAL:
-                    editTextOption.setmEditTextID(R.id.editTextScoreInterval);
-                    return ((EditText) findViewById(R.id.editTextScoreInterval));
-
-                case EditTextOption.LENGTH:
-                    editTextOption.setmEditTextID(R.id.editTextLength);
-                    return ((EditText) findViewById(R.id.editTextLength));
-
-                case EditTextOption.TITLE:
-                    editTextOption.setmEditTextID(R.id.editTextTitle);
-                    return ((EditText) findViewById(R.id.editTextTitle));
-
-                case EditTextOption.DATE:
-                    editTextOption.setmEditTextID(R.id.editTextDate);
-                    return ((EditText) findViewById(R.id.editTextDate));
-
-                default:
-                    return null;
-
-            }
-
-        }
-
-    }
-
-    private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
-        if (cardView.getmHeader().getId() != R.id.playersHeader) {
-
-            if (cardView.getmContent().getHeight() != height) {
-                // expand
-
-                expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
-
-            } else {
-                // collapse
-                collapseView(cardView);
-
-            }
-        }
-    }
-
-    public void collapseView(final OptionCardView cardView) {
-
-        ValueAnimator anim = ValueAnimator.ofInt(cardView.getmHeight(), 0);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = cardView.getmContent().getLayoutParams();
-                layoutParams.height = val;
-                cardView.getmContent().setLayoutParams(layoutParams);
-
-            }
-        });
-        anim.start();
-    }
-
-    public void expandView(int height, final RelativeLayout layout, final int scrollTo) {
-
-        ValueAnimator anim = ValueAnimator.ofInt(layout.getMeasuredHeightAndState(),
-                height);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
-                layoutParams.height = val;
-                layout.setLayoutParams(layoutParams);
-
-
-            }
-        });
-        anim.start();
-
     }
 
     private void updateCompleteMenuItem(){
@@ -352,31 +105,12 @@ public class EditGame extends AppCompatActivity {
         return intent;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mDbHelper.open();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mDbHelper.close();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mDbHelper.close();
-    }
 
     public void completeGame(){
 
         mGame.setmCompleted(!mGame.ismCompleted());
-
         updateCompleteMenuItem();
-
-        mDbHelper.updateGame(mGame);
+        updateGame();
     }
 
     @Override
@@ -436,73 +170,7 @@ public class EditGame extends AppCompatActivity {
 
     public void onMenuEditClick() {
 
-        for (final StringEditTextOption e: mStringEditTextOptions){
-            EditText editText = getEditText(e);
-            editText.setEnabled(true);
-            editText.setText(e.getString());
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    e.setString(charSequence.toString());
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-        }
-
-        for (final CheckBoxOption c: mCheckBoxOptions){
-            final CheckBox checkBox = getCheckBox(c);
-            checkBox.setEnabled(true);
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    c.setChecked(checkBox.isChecked());
-                }
-            });
-        }
-
-        for (final IntEditTextOption e: mIntEditTextOptions){
-            EditText editText = getEditText(e);
-
-            editText.setEnabled(true);
-
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    try
-                    {
-                        e.setInt(Integer.valueOf(charSequence.toString()));
-                    }
-                    catch (NumberFormatException error)
-                    {
-                        error.printStackTrace();
-                        e.setInt(0);
-
-                    }
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
-        }
+        setOptionChangeListeners();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -516,13 +184,6 @@ public class EditGame extends AppCompatActivity {
 
         displayRecyclerView(true);
 
-    }
-
-    public void displayRecyclerView(boolean editable) {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mPlayerListAdapter = new PlayerListAdapter(mGame, mDbHelper, Pointers.EDIT_GAME, editable);
-        mRecyclerView.setAdapter(mPlayerListAdapter);
     }
 
     public void onMenuDoneClick() {
@@ -606,7 +267,7 @@ public class EditGame extends AppCompatActivity {
 
                 }else{
 
-                    mDbHelper.updateGame(mGame);
+                    updateGame();
 
                     for (CheckBoxOption c : mCheckBoxOptions){
                         getCheckBox(c).setEnabled(false);
@@ -668,13 +329,6 @@ public class EditGame extends AppCompatActivity {
         return validity;
     }
 
-    public void invalidSnackbar(String message) {
-        Snackbar snackbar;
-
-        snackbar = Snackbar.make(EDIT_GAME_LAYOUT, message, Snackbar.LENGTH_SHORT);
-        snackbar.show();
-    }
-
     public void onMenuCancelClick(){
 
         for (StringEditTextOption e: mStringEditTextOptions){
@@ -695,32 +349,6 @@ public class EditGame extends AppCompatActivity {
         displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    }
-
-    private void loadOptions(){
-
-        for (IntEditTextOption e : mIntEditTextOptions){
-            EditText editText = getEditText(e);
-            editText.setText(String.valueOf(e.getInt()));
-            editText.setEnabled(false);
-
-        }
-
-        for(CheckBoxOption c : mCheckBoxOptions){
-            CheckBox checkBox = getCheckBox(c);
-            if (c.isChecked()){
-                checkBox.setChecked(true);
-            }else{
-                checkBox.setChecked(false);
-            }
-
-            checkBox.setEnabled(false);
-        }
-
-        for (EditTextOption e: mStringEditTextOptions){
-            getEditText(e).setHint(e.getString());
-            getEditText(e).setEnabled(false);
-        }
     }
 
     public void delete(){
@@ -746,6 +374,11 @@ public class EditGame extends AppCompatActivity {
 
         dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    int getActivity() {
+        return EDIT_GAME;
     }
 
     public interface PlayerListListener{

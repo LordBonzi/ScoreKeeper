@@ -43,7 +43,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
-        Themes.themeActivity(this, R.layout.activity_recycler_view, true);
+        Themes.themeActivity(this, R.layout.activity_recyclerview, true);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);

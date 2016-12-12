@@ -1,7 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,34 +17,24 @@ public class CheckBoxOption extends Option{
     //ADD NEW POINTERS HERE
 
     private int mCheckBoxID;
-    private String mHint;
 
-    public CheckBoxOption(int mCheckBoxID, String mHint, int id, boolean data) {
+    public CheckBoxOption(int mCheckBoxID, int id, boolean data) {
         super(id, data);
         this.mCheckBoxID = mCheckBoxID;
-        this.mHint = mHint;
     }
 
-    public static List<CheckBoxOption> loadCheckBoxOptions(Activity a){
+    public static List<CheckBoxOption> loadCheckBoxOptions() {
         //MUST BE IN ORDER OF THE LIST OF POINTERS ABOVE!!!
 
         List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
-        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch, a.getString(R.string.stopwatch)
-        , CheckBoxOption.STOPWATCH, false));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch,
+                CheckBoxOption.STOPWATCH, false));
 
-        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring, a.getString(R.string.reverse_scoring)
-        , CheckBoxOption.REVERSE_SCORING, false));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring,
+                CheckBoxOption.REVERSE_SCORING, false));
 
         return mCheckBoxOptions;
-    }
-
-    public String getmHint() {
-        return mHint;
-    }
-
-    public void setmHint(String mHint) {
-        this.mHint = mHint;
     }
 
     public int getmCheckBoxID() {

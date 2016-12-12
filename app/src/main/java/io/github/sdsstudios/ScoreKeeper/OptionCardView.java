@@ -40,4 +40,5 @@ public class OptionCardView {
     public void setmHeight(int mHeight) {
         this.mHeight = mHeight;
     }
+
 }

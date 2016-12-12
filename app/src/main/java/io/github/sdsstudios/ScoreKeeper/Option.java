@@ -17,14 +17,14 @@ public class Option {
     }
 
     public Option(int id, String data) {
-            this.mID = id;
-            this.mStringData = data;
-        }
+        this.mID = id;
+        this.mStringData = data;
+    }
 
     public Option(int id, boolean data) {
-            this.mID = id;
-            this.mBoolData = data;
-        }
+        this.mID = id;
+        this.mBoolData = data;
+    }
 
     public int getmID() {
         return mID;
@@ -32,14 +32,6 @@ public class Option {
 
     public void setmID(int mID) {
         this.mID = mID;
-    }
-
-    public void setString(String data){
-        mStringData = data;
-    }
-
-    public void setInt(int data){
-        mIntData = data;
     }
 
     public boolean getBoolean(){
@@ -50,8 +42,16 @@ public class Option {
         return mIntData;
     }
 
+    public void setInt(int data) {
+        mIntData = data;
+    }
+
     public String getString(){
         return (String) mStringData;
+    }
+
+    public void setString(String data) {
+        mStringData = data;
     }
 
     public boolean isChecked(){

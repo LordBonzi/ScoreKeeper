@@ -3,10 +3,10 @@
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:id="@+id/scrollView"
     android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
@@ -53,7 +53,7 @@
                         android:paddingTop="@dimen/activity_vertical_margin" />
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/playerList"
+                        android:id="@+id/playerRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/editTextPlayer"
@@ -67,8 +67,8 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignEnd="@+id/playerList"
-                        android:layout_alignRight="@+id/playerList"
+                        android:layout_alignEnd="@+id/playerRecyclerView"
+                        android:layout_alignRight="@+id/playerRecyclerView"
                         android:paddingLeft="16dp"
                         android:text="@string/add_player"
                         android:textColor="?attr/colorAccent" />
@@ -119,9 +119,9 @@
                 android:id="@+id/relativeLayoutTimeLimit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/timeLimitHeader"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_below="@+id/timeLimitHeader">
+                android:layout_marginRight="16dp">
 
                 <Spinner
                     android:id="@+id/spinnerTimeLimit"
@@ -207,14 +207,14 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutStartingScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextStartingScore"
@@ -234,15 +234,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutMaxScore"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_below="@+id/inputLayoutStartingScore"
                         android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/inputLayoutStartingScore"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextMaxScore"
@@ -264,15 +264,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/inputLayoutMaxScore"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextScoreInterval"
@@ -290,15 +290,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutDiffToWin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutScoreInterval"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextDiffToWin"
@@ -314,15 +314,15 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/inputLayoutNumSets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/inputLayoutScoreInterval"
                         android:layout_alignLeft="@+id/inputLayoutScoreInterval"
                         android:layout_alignRight="@+id/inputLayoutScoreInterval"
                         android:layout_alignStart="@+id/inputLayoutScoreInterval"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="match_parent"
                         android:layout_below="@+id/inputLayoutDiffToWin"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
 
                         <EditText
                             android:id="@+id/editTextNumSets"
@@ -404,11 +404,11 @@
                         android:id="@+id/spinnerPreset"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:layout_toLeftOf="@+id/buttonCreatePreset"
                         android:layout_toStartOf="@+id/buttonCreatePreset"
-                        android:visibility="visible"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+                        android:visibility="visible" />
 
                 </RelativeLayout>
 
@@ -426,13 +426,13 @@
                         android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:text="@string/preset_title"
-                        android:textStyle="bold"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
             </RelativeLayout>

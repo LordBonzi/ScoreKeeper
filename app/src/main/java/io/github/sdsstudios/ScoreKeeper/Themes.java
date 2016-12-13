@@ -1,6 +1,5 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,13 +31,108 @@ public class Themes extends PreferenceActivity{
     public static int ACCENT_COLOR = 1;
     public static int PRIMARY_COLOR = 2;
     public static int DEFAULT_ACCENT_COLOR = R.style.DarkTheme_Red;
-
+    SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
     private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
     private SharedPreferences mSharedPreferences;
-    SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
     private boolean mDarkTheme;
     private int mAccentColor, mPrimaryColor, mPrimaryDarkColor;
+
+    public static void themeActivity(AppCompatActivity activity, int layout, boolean backButton) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        int accentColor = sharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(activity));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+                , DEFAULT_PRIMARY_DARK_COLOR(activity));
+
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", true);
+
+        activity.setTheme(accentColor);
+        activity.setContentView(layout);
+
+        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+
+        if (toolbar != null) {
+            activity.getSupportActionBar();
+            toolbar.setBackgroundColor(primaryColor);
+            activity.setSupportActionBar(toolbar);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(backButton);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+            activity.getWindow().setStatusBarColor(primaryDarkColor);
+
+            if (colorNavBar) {
+                activity.getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+
+            Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(activity.getString(R.string.app_name), bm
+                    , primaryDarkColor);
+
+            activity.setTaskDescription(taskDesc);
+
+        }
+
+    }
+
+    /**
+     * DEFAULT COLORS
+     **/
+    public static int DEFAULT_PRIMARY_COLOR(Context ctx) {
+        return ctx.getResources().getColor(R.color.primaryBlue);
+    }
+
+    public static int DEFAULT_PRIMARY_DARK_COLOR(Context ctx) {
+        return ctx.getResources().getColor(R.color.primaryBlueDark);
+    }
+
+    public static int[] PRIMARY_COLORS(Context ctx) {
+        return new int[]{
+                ctx.getResources().getColor(R.color.primaryIndigo),
+                ctx.getResources().getColor(R.color.primaryRed),
+                ctx.getResources().getColor(R.color.primaryPurple),
+                ctx.getResources().getColor(R.color.primaryTeal),
+                ctx.getResources().getColor(R.color.primaryOrange),
+                ctx.getResources().getColor(R.color.primaryGrey),
+                ctx.getResources().getColor(R.color.primaryWhite),
+                ctx.getResources().getColor(R.color.primaryBlue)
+
+        };
+    }
+
+    public static int[] PRIMARY_DARK_COLORS(Context ctx) {
+        return new int[]{
+                ctx.getResources().getColor(R.color.primaryIndigoDark),
+                ctx.getResources().getColor(R.color.primaryRedDark),
+                ctx.getResources().getColor(R.color.primaryPurpleDark),
+                ctx.getResources().getColor(R.color.primaryTealDark),
+                ctx.getResources().getColor(R.color.primaryOrangeDark),
+                ctx.getResources().getColor(R.color.primaryGreyDark),
+                ctx.getResources().getColor(R.color.primaryWhiteDark),
+                ctx.getResources().getColor(R.color.primaryBlueDark)
+
+        };
+    }
+
+    public static int[] RAW_ACCENT_COLORS(Context ctx) {
+        return new int[]{
+                ctx.getResources().getColor(R.color.accentGrey),
+                ctx.getResources().getColor(R.color.accentPink),
+                ctx.getResources().getColor(R.color.accentYellow),
+                ctx.getResources().getColor(R.color.accentGreen),
+                ctx.getResources().getColor(R.color.accentRed),
+                ctx.getResources().getColor(R.color.accentPurple),
+                ctx.getResources().getColor(R.color.accentOrange),
+                ctx.getResources().getColor(R.color.accentBlue)
+
+        };
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -167,98 +261,6 @@ public class Themes extends PreferenceActivity{
             }
         });
 
-    }
-
-    public static void themeActivity(AppCompatActivity activity, int layout, boolean backButton){
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-
-        int accentColor = sharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(activity));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
-                , DEFAULT_PRIMARY_DARK_COLOR(activity));
-
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", true);
-
-        activity.setTheme(accentColor);
-        activity.setContentView(layout);
-
-        Toolbar toolbar = (Toolbar) activity.findViewById(R.id.toolbar);
-
-        activity.getSupportActionBar();
-        toolbar.setBackgroundColor(primaryColor);
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(backButton);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-
-            activity.getWindow().setStatusBarColor(primaryDarkColor);
-
-            if (colorNavBar){
-                activity.getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-
-            Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.ic_launcher);
-            ActivityManager.TaskDescription taskDesc;
-
-            taskDesc = new ActivityManager.TaskDescription(activity.getString(R.string.app_name), bm
-                    , primaryDarkColor);
-
-            activity.setTaskDescription(taskDesc);
-
-        }
-
-    }
-
-    /** DEFAULT COLORS**/
-    public static int DEFAULT_PRIMARY_COLOR(Context ctx){
-        return ctx.getResources().getColor(R.color.primaryBlue);
-    }
-
-    public static int DEFAULT_PRIMARY_DARK_COLOR(Context ctx){
-        return ctx.getResources().getColor(R.color.primaryBlueDark);
-    }
-
-    public static int[] PRIMARY_COLORS(Context ctx){
-        return new int[]{
-                ctx.getResources().getColor(R.color.primaryIndigo),
-                ctx.getResources().getColor(R.color.primaryRed),
-                ctx.getResources().getColor(R.color.primaryPurple),
-                ctx.getResources().getColor(R.color.primaryTeal),
-                ctx.getResources().getColor(R.color.primaryOrange),
-                ctx.getResources().getColor(R.color.primaryGrey),
-                ctx.getResources().getColor(R.color.primaryWhite),
-                ctx.getResources().getColor(R.color.primaryBlue)
-
-        };
-    }
-
-    public static int[] PRIMARY_DARK_COLORS(Context ctx){
-        return new int[]{
-                ctx.getResources().getColor(R.color.primaryIndigoDark),
-                ctx.getResources().getColor(R.color.primaryRedDark),
-                ctx.getResources().getColor(R.color.primaryPurpleDark),
-                ctx.getResources().getColor(R.color.primaryTealDark),
-                ctx.getResources().getColor(R.color.primaryOrangeDark),
-                ctx.getResources().getColor(R.color.primaryGreyDark),
-                ctx.getResources().getColor(R.color.primaryWhiteDark),
-                ctx.getResources().getColor(R.color.primaryBlueDark)
-
-        };
-    }
-
-    public static int[] RAW_ACCENT_COLORS(Context ctx){
-        return new int[] {
-                ctx.getResources().getColor(R.color.accentGrey),
-                ctx.getResources().getColor(R.color.accentPink),
-                ctx.getResources().getColor(R.color.accentYellow),
-                ctx.getResources().getColor(R.color.accentGreen),
-                ctx.getResources().getColor(R.color.accentRed),
-                ctx.getResources().getColor(R.color.accentPurple),
-                ctx.getResources().getColor(R.color.accentOrange),
-                ctx.getResources().getColor(R.color.accentBlue)
-
-        };
     }
 
     private int[] accentThemes(){

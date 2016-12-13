@@ -51,6 +51,7 @@ public class EditGame extends OptionActivity {
         mStringEditTextOptions = mGame.getmStringEditTextOptions();
 
         loadOptions();
+        setOptionChangeListeners();
 
         displayRecyclerView(false);
     }
@@ -170,8 +171,6 @@ public class EditGame extends OptionActivity {
 
     public void onMenuEditClick() {
 
-        setOptionChangeListeners();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mMenuItemAdd.setVisible(true);
@@ -182,6 +181,7 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(false);
         mMenuItemComplete.setVisible(false);
 
+        enableOptions(true);
         displayRecyclerView(true);
 
     }
@@ -192,6 +192,7 @@ public class EditGame extends OptionActivity {
         mPlayerListAdapter.deleteEmptyPlayers(mGame);
 
         mGame = mPlayerListAdapter.getGame();
+
         mGame.setmStringEditTextOptions(mStringEditTextOptions);
         mGame.setmCheckBoxOptions(mCheckBoxOptions);
         mGame.setmIntEditTextOption(mIntEditTextOptions);
@@ -267,20 +268,9 @@ public class EditGame extends OptionActivity {
 
                 }else{
 
+                    enableOptions(false);
+
                     updateGame();
-
-                    for (CheckBoxOption c : mCheckBoxOptions){
-                        getCheckBox(c).setEnabled(false);
-                    }
-
-                    for (IntEditTextOption e : mIntEditTextOptions){
-                        getEditText(e).setEnabled(false);
-                    }
-
-                    for (StringEditTextOption e: mStringEditTextOptions){
-                        getEditText(e).setText(e.getString());
-                        getEditText(e).setEnabled(false);
-                    }
 
                     displayRecyclerView(false);
 

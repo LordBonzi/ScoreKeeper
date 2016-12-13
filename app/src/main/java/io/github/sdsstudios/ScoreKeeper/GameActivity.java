@@ -88,7 +88,6 @@ public class GameActivity extends AppCompatActivity
     private boolean mReverseScoring;
     private int mMaxScore;
     private int mAccentColor, mPrimaryColor;
-
     private String mTimeLimit;
 
     @Override
@@ -107,12 +106,13 @@ public class GameActivity extends AppCompatActivity
         loadObjects();
 
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
+        mGame.setGameListener(this);
 
         mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
 
         if (mClassicTheme) {
-            Themes.themeActivity(this, R.layout.activity_main_classic, true);
-
+            setContentView(R.layout.activity_main_classic);
+            setTheme(mAccentColor);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -318,7 +318,6 @@ public class GameActivity extends AppCompatActivity
     public void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mPlayerList.setLayoutManager(mLayoutManager);
-
         RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, mDbHelper, enabled, this);
         mPlayerList.setAdapter(bigGameAdapter);
     }
@@ -1065,7 +1064,10 @@ public class GameActivity extends AppCompatActivity
         chronometerClick();
         mWon = true;
         winnerDialog(winner);
-        displayRecyclerView(false);
+
+        if (!mClassicTheme) {
+            displayRecyclerView(false);
+        }
 
     }
 
@@ -1073,6 +1075,7 @@ public class GameActivity extends AppCompatActivity
     public void deletePlayer(int position) {
         mPaused = true;
         chronometerClick();
+
         if (mGame.size() > 2) {
             mGame.removePlayer(position);
 

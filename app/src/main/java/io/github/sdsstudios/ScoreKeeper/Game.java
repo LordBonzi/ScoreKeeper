@@ -221,7 +221,7 @@ public class Game {
         return winningPlayer.getmName();
     }
 
-    public boolean isGameWon(){
+    boolean isGameWon() {
 
         int maxScore = getInt(IntEditTextOption.WINNING_SCORE);
         boolean isWon = false;
@@ -279,7 +279,6 @@ public class Game {
         void editPlayer(int position);
 
     }
-
 }
 
 

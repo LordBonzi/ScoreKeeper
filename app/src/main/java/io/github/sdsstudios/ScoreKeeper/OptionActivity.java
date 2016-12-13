@@ -182,6 +182,22 @@ public abstract class OptionActivity extends AppCompatActivity {
 
     abstract void loadActivity(Bundle savedInstanceState);
 
+    public void enableOptions(boolean enabled) {
+
+        for (CheckBoxOption c : mCheckBoxOptions) {
+            getCheckBox(c).setEnabled(enabled);
+        }
+
+        for (IntEditTextOption e : mIntEditTextOptions) {
+            getEditText(e).setEnabled(enabled);
+        }
+
+        for (StringEditTextOption e : mStringEditTextOptions) {
+            getEditText(e).setText(e.getString());
+            getEditText(e).setEnabled(enabled);
+        }
+    }
+
     public void setOptionChangeListeners() {
 
         for (final CheckBoxOption c : mCheckBoxOptions) {

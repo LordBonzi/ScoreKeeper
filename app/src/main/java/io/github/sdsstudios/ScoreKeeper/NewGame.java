@@ -456,6 +456,7 @@ public class NewGame extends OptionActivity
             mSnackbar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             mSnackbar.show();
+
         } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
 
             mEditTextPlayer.setText("");

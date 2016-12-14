@@ -82,13 +82,14 @@ public class GameActivity extends AppCompatActivity
     private TabLayout mTabLayout;
     private Game mGame;
     private GridView mSetGridView;
-    private int maxNumDice;
+    private int mMaxNumDice, mMinNumDice;
     private int mStartingScore;
     private int mScoreInterval;
     private boolean mReverseScoring;
     private int mMaxScore;
     private int mAccentColor, mPrimaryColor;
     private String mTimeLimit;
+    private Random mRandom = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +101,6 @@ public class GameActivity extends AppCompatActivity
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
-
-        maxNumDice = Integer.valueOf(mSharedPreferences.getString("prefDiceMaxNum", "6"));
 
         loadObjects();
 
@@ -166,6 +165,8 @@ public class GameActivity extends AppCompatActivity
         mStartingScore = mGame.getInt(IntEditTextOption.STARTING_SCORE);
         mReverseScoring = mGame.isChecked(CheckBoxOption.REVERSE_SCORING);
         mMaxScore = mGame.getInt(IntEditTextOption.WINNING_SCORE);
+        mMaxNumDice = mGame.getInt(IntEditTextOption.DICE_MAX);
+        mMinNumDice = mGame.getInt(IntEditTextOption.DICE_MIN);
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -462,14 +463,12 @@ public class GameActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_dice) {
+
             if (!mMenuItemDiceNum.isVisible()) {
                 mMenuItemDiceNum.setVisible(true);
-                Random rand = new Random();
-                int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
-                mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
             }
-            Random rand = new Random();
-            int randomNum = rand.nextInt((maxNumDice - 1) + 1) + 1;
+
+            int randomNum = mRandom.nextInt(mMaxNumDice - mMinNumDice) + mMinNumDice;
             mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
         }
 

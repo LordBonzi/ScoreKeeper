@@ -402,6 +402,14 @@ public abstract class OptionActivity extends AppCompatActivity {
                     editTextOption.setmEditTextID(R.id.editTextDate);
                     return ((EditText) findViewById(R.id.editTextDate));
 
+                case EditTextOption.DICE_MAX:
+                    editTextOption.setmEditTextID(R.id.editTextDiceMax);
+                    return ((EditText) findViewById(R.id.editTextDiceMax));
+
+                case EditTextOption.DICE_MIN:
+                    editTextOption.setmEditTextID(R.id.editTextDiceMin);
+                    return ((EditText) findViewById(R.id.editTextDiceMin));
+
                 default:
                     return null;
 

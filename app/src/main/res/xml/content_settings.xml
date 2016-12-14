@@ -1,93 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
 
     <ListPreference
-        android:title="Number of games on Homepage"
-        android:summary="The number of recent games to show on the homepage"
-        android:key="prefNumGames"
+        android:defaultValue="3"
         android:entries="@array/numGames"
         android:entryValues="@array/numGames"
-        android:defaultValue="3"
+        android:key="prefNumGames"
+        android:summary="The number of recent games to show on the homepage"
+        android:title="Number of games on Homepage"
         />
 
     <Preference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="@string/themes"
+        android:layout_height="wrap_content"
         android:key="prefThemes"
-        />
-
-    <EditTextPreference
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="@string/max_num_on_dice"
-        android:defaultValue="6"
-        android:inputType="number"
-        android:summary="Change the max amount of numbers on the dice"
-        android:key="prefDiceMaxNum"
+        android:title="@string/themes"
         />
 
     <SwitchPreference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="@string/receive_notifications"
-        android:summary="@string/receive_notifications_summary"
-        android:key="prefReceiveNotifications"
+        android:layout_height="wrap_content"
         android:defaultValue="true"
+        android:key="prefReceiveNotifications"
+        android:summary="@string/receive_notifications_summary"
+        android:title="@string/receive_notifications"
         />
 
     <PreferenceCategory
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:title="Backup and Restore">
         <Preference
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="@string/export"
+            android:layout_height="wrap_content"
             android:key="prefExport"
+            android:title="@string/export"
             />
         <Preference
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="@string/_import"
+            android:layout_height="wrap_content"
             android:key="prefImport"
+            android:title="@string/_import"
             />
         </PreferenceCategory>
 
     <PreferenceCategory
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:title="DANGER ZONE!">
         <Preference
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="@string/delete_all_games"
+            android:layout_height="wrap_content"
             android:key="prefDeleteAllGames"
+            android:title="@string/delete_all_games"
             />
 
         <Preference
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="@string/delete_all_presets"
+            android:layout_height="wrap_content"
             android:key="prefDeleteAllPresets"
+            android:title="@string/delete_all_presets"
             />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:title="Debugging. Only for developer">
 
         <Preference
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:title="Create 10 Random Games"
-            android:key="prefCreateGames"
+            android:layout_height="wrap_content"
             android:enabled="true"
+            android:key="prefCreateGames"
+            android:title="Create 10 Random Games"
             />
 
     </PreferenceCategory>

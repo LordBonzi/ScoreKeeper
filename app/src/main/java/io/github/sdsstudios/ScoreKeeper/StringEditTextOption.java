@@ -19,13 +19,13 @@ public class StringEditTextOption extends EditTextOption{
         List<StringEditTextOption> mEditTextOptions = new ArrayList<>();
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextLength
-                , StringEditTextOption.LENGTH, "00:00:00:0"));
+                , LENGTH, "00:00:00:0"));
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextDate
-                , StringEditTextOption.DATE, ""));
+                , DATE, ""));
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextTitle
-                , StringEditTextOption.TITLE, "The Game With No Name"));
+                , TITLE, "The Game With No Name"));
 
         return mEditTextOptions;
     }

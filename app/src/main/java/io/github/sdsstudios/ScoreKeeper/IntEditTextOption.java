@@ -27,19 +27,25 @@ public class IntEditTextOption extends EditTextOption{
         List<IntEditTextOption> mIntEditTextOptions = new ArrayList<>();
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextMaxScore, a.getString(R.string.max_score)
-                , IntEditTextOption.WINNING_SCORE, 0, 0));
+                , WINNING_SCORE, 0, 0));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextScoreInterval, a.getString(R.string.score_interval)
-                , IntEditTextOption.SCORE_INTERVAL, 1, 1));
+                , SCORE_INTERVAL, 1, 1));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextDiffToWin, a.getString(R.string.diff_to_win)
-                , IntEditTextOption.SCORE_DIFF_TO_WIN, 0, 0));
+                , SCORE_DIFF_TO_WIN, 0, 0));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextNumSets, a.getString(R.string.num_sets)
-                , IntEditTextOption.NUMBER_SETS, 1, 1));
+                , NUMBER_SETS, 1, 1));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextStartingScore, a.getString(R.string.starting_score)
-                , IntEditTextOption.STARTING_SCORE, 0, 0));
+                , STARTING_SCORE, 0, 0));
+
+        mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextDiceMin, a.getString(R.string.dice_minimum)
+                , DICE_MIN, 0, 0));
+
+        mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextDiceMax, a.getString(R.string.dice_maximum)
+                , DICE_MAX, 0, 0));
 
         return mIntEditTextOptions;
     }

@@ -176,7 +176,7 @@ public class Game {
     }
 
     public void setString(int id, String data){
-        mStringEditTextOptions.get(id - EditTextOption.NUM_INT_OPTIONS).setString(data);
+        mStringEditTextOptions.get(id - EditTextOption.NUM_INT_EDITTEXT_OPTIONS).setString(data);
     }
 
     public void setInt(int id, int data){

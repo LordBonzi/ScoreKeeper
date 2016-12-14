@@ -77,8 +77,8 @@ public class Settings extends PreferenceActivity{
         getDelegate().onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
-        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
 
+        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 

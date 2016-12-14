@@ -42,10 +42,10 @@ public class IntEditTextOption extends EditTextOption{
                 , STARTING_SCORE, 0, 0));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextDiceMin, a.getString(R.string.dice_minimum)
-                , DICE_MIN, 0, 0));
+                , DICE_MIN, 1, 1));
 
         mIntEditTextOptions.add(new IntEditTextOption(R.id.editTextDiceMax, a.getString(R.string.dice_maximum)
-                , DICE_MAX, 0, 0));
+                , DICE_MAX, 6, 6));
 
         return mIntEditTextOptions;
     }

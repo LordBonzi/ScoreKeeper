@@ -1299,14 +1299,14 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    public static class PlaceholderFragment extends Fragment {
+    public static class GameActivityTabFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
+        public GameActivityTabFragment() {
         }
 
         /**
@@ -1314,8 +1314,8 @@ public class GameActivity extends AppCompatActivity
          * number.
          */
 
-        public static GameActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            GameActivity.PlaceholderFragment fragment = new GameActivity.PlaceholderFragment();
+        public static GameActivityTabFragment newInstance(int sectionNumber) {
+            GameActivityTabFragment fragment = new GameActivityTabFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -1347,8 +1347,8 @@ public class GameActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return GameActivity.PlaceholderFragment.newInstance(position + 1);
+            // Return a GameActivityTabFragment (defined as a static inner class below).
+            return GameActivityTabFragment.newInstance(position + 1);
         }
 
         @Override

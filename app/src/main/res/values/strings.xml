@@ -184,6 +184,9 @@
     <string name="share">Share</string>
     <string name="dice_minimum">Minimum Dice Number</string>
     <string name="dice_maximum">Maximum Dice Number</string>
+    <string name="info">Info</string>
+    <string name="options">Options</string>
+    <string name="advanced">Advanced</string>
 
 </resources>
 

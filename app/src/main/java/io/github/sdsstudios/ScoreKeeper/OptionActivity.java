@@ -9,12 +9,18 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -88,6 +94,20 @@ public abstract class OptionActivity extends AppCompatActivity {
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), CURRENT_ACTIVITY);
+
+        // Set up the ViewPager with the sections adapter.
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        for (int i = 0; i < mTabLayout.getChildCount(); i++) {
+            mTabLayout.getChildAt(i).setBackgroundColor(
+                    mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this)));
+        }
+
         mHomeIntent = new Intent(this, Home.class);
 
         mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
@@ -126,15 +146,15 @@ public abstract class OptionActivity extends AppCompatActivity {
             card.getmContent().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    int height = card.getmContent().getMeasuredHeight();
-
-                    card.setmHeight(height);
 
                     if (card.getmHeader().getId() != R.id.playersHeader) {
+                        int height = card.getmContent().getMeasuredHeight();
+                        card.setmHeight(height);
                         toggleCardViewHeight(height, card, mScrollView.getScrollY());
+                        removeOnGlobalLayoutListener(card.getmContent(), this);
+
                     }
 
-                    removeOnGlobalLayoutListener(card.getmContent(), this);
                 }
             });
         }
@@ -466,6 +486,88 @@ public abstract class OptionActivity extends AppCompatActivity {
             for (EditTextOption e : mGame.getmStringEditTextOptions()) {
                 getEditText(e).setHint(e.getString());
                 getEditText(e).setEnabled(false);
+            }
+        }
+    }
+
+    public static class OptionActivityTabFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public OptionActivityTabFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+
+        public static OptionActivityTabFragment newInstance(int sectionNumber) {
+            OptionActivityTabFragment fragment = new OptionActivityTabFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = null;
+            container.setVisibility(View.INVISIBLE);
+            return rootView;
+        }
+
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        int mActivity;
+
+        public SectionsPagerAdapter(FragmentManager fm, int activity) {
+            super(fm);
+            mActivity = activity;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a GameActivityTabFragment (defined as a static inner class below).
+            return OptionActivityTabFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            if (mActivity == EDIT_GAME) {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+            if (position == 2 && mActivity == EDIT_GAME) {
+                return getString(R.string.sets);
+            }
+
+            switch (position) {
+                case 0:
+                    return mActivity == EDIT_GAME ? getString(R.string.info) : getString(R.string.options);
+                case 1:
+                    return mActivity == EDIT_GAME ? getString(R.string.options) : getString(R.string.advanced);
+
+                default:
+                    return getString(R.string.game);
             }
         }
     }

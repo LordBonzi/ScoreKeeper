@@ -398,6 +398,56 @@
 
                     </android.support.design.widget.TextInputLayout>
 
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/inputLayoutDiceMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/inputLayoutScoreInterval"
+                        android:layout_alignLeft="@+id/inputLayoutScoreInterval"
+                        android:layout_alignRight="@+id/inputLayoutScoreInterval"
+                        android:layout_alignStart="@+id/inputLayoutScoreInterval"
+                        android:layout_below="@+id/inputLayoutNumSets"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
+
+                        <EditText
+                            android:id="@+id/editTextDiceMin"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/editTextDiffToWin"
+                            android:hint="@string/dice_minimum"
+                            android:imeOptions="actionDone"
+                            android:inputType="number|numberSigned"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:paddingTop="@dimen/activity_vertical_margin" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/inputLayoutDiceMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/inputLayoutScoreInterval"
+                        android:layout_alignLeft="@+id/inputLayoutScoreInterval"
+                        android:layout_alignRight="@+id/inputLayoutScoreInterval"
+                        android:layout_alignStart="@+id/inputLayoutScoreInterval"
+                        android:layout_below="@+id/inputLayoutDiceMin"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center">
+
+                        <EditText
+                            android:id="@+id/editTextDiceMax"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/editTextDiffToWin"
+                            android:hint="@string/dice_maximum"
+                            android:imeOptions="actionDone"
+                            android:inputType="number|numberSigned"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:paddingTop="@dimen/activity_vertical_margin" />
+
+                    </android.support.design.widget.TextInputLayout>
+
                     <CheckBox
                         android:id="@+id/checkBoxReverseScoring"
                         style="@style/Widget.AppCompat.Button.Borderless"
@@ -405,7 +455,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/inputLayoutDiffToWin"
                         android:layout_alignStart="@+id/inputLayoutDiffToWin"
-                        android:layout_below="@+id/inputLayoutNumSets"
+                        android:layout_below="@+id/inputLayoutDiceMax"
                         android:text="@string/reverse_scoring" />
 
                     <CheckBox
@@ -413,10 +463,10 @@
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/checkBoxReverseScoring"
-                        android:layout_alignStart="@+id/checkBoxReverseScoring"
-                        android:layout_below="@+id/checkBoxReverseScoring"
-                        android:layout_marginBottom="24dp"
+                        android:layout_below="@+id/inputLayoutDiceMax"
+                        android:layout_marginBottom="16dp"
+                        android:layout_toEndOf="@+id/checkBoxReverseScoring"
+                        android:layout_toRightOf="@+id/checkBoxReverseScoring"
                         android:text="@string/stopwatch" />
 
                 </RelativeLayout>

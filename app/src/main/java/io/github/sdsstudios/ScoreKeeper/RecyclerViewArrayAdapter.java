@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +34,9 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
     }
 
-    public void deleteSelectedItems(int type, Context context) {
+    public void deleteSelectedItems(NewGame.Delete type, Context context) {
 
-        if (type == Pointers.DELETE_PRESETS) {
+        if (type == NewGame.Delete.PRESETS) {
 
             PresetDBAdapter presetDBAdapter = new PresetDBAdapter(context);
 

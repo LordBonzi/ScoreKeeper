@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+
 public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
     private String TAG = "History";
@@ -163,8 +165,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HISTORY, gamesToShow)
-                        , this, this, Pointers.HISTORY);
+                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Activity.HISTORY, gamesToShow)
+                        , this, this, Activity.HISTORY);
 
                 mRecyclerView.setAdapter(mHistoryAdapter);
             } else {

@@ -34,6 +34,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+
 public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener{
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -174,11 +176,9 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
     }
 
     public void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
@@ -266,8 +266,8 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Pointers.HOME, HistoryAdapter.UNFINISHED)
-                        , this, this, Pointers.HISTORY);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.HOME, HistoryAdapter.UNFINISHED)
+                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.HISTORY);
 
                 mRecyclerView.setAdapter(historyAdapter);
 

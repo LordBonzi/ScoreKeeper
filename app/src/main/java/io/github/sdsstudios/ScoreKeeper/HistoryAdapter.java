@@ -13,24 +13,24 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.TimeHelper;
+
 /**
  * Created by seth on 08/05/16.
  */
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
-    private String TAG = "HistoryAdapter";
-
     static final int COMPLETED = 1;
     static final int UNFINISHED = 2;
     static final int BOTH = 3;
-
-    private static List<HistoryModel> mItemArray;
-    private Context mCtx;
     static boolean ACTION_MODE_DISABLED = true;
+    private static List<HistoryModel> mItemArray;
+    private String TAG = "HistoryAdapter";
+    private Context mCtx;
     private ViewHolder.ClickListener mViewClickListener;
-    private int mActivity;
+    private Activity mActivity;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, int activity) {
+    public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, Activity activity) {
         this.mItemArray = mItemArray;
         this.mCtx = context;
         this.mViewClickListener = clickListener;
@@ -43,7 +43,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
         // create a new view
 
         View view;
-        if (mActivity == Pointers.HOME){
+        if (mActivity == Activity.HOME) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recent_history_adapter, parent, false);
         }else{
@@ -83,7 +83,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                 HistoryModel item = mItemArray.get(mItemArray.size() - position - 1);
 
-                if (mActivity == Pointers.HISTORY){
+                if (mActivity == Activity.HISTORY) {
 
                     TypedValue outValue = new TypedValue();
 

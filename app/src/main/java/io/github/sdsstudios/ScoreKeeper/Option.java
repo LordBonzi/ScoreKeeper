@@ -6,59 +6,54 @@ package io.github.sdsstudios.ScoreKeeper;
 
 public class Option {
 
-    private int mID;
-    private int mIntData;
+    public static int NUM_STRING_OPTIONS = 3;
+
+    private OptionID mID;
+    private boolean mBooleanData;
     private String mStringData;
-    private boolean mBoolData;
+    private Integer mIntData;
 
-    public Option(int id, int data) {
+    public Option(OptionID id, Object data) {
         this.mID = id;
-        this.mIntData = data;
+        setData(data);
     }
 
-    public Option(int id, String data) {
-        this.mID = id;
-        this.mStringData = data;
-    }
-
-    public Option(int id, boolean data) {
-        this.mID = id;
-        this.mBoolData = data;
-    }
-
-    public int getmID() {
+    public OptionID getmID() {
         return mID;
     }
 
-    public void setmID(int mID) {
-        this.mID = mID;
-    }
-
-    public boolean getBoolean(){
-        return mBoolData;
-    }
-
-    public int getInt(){
+    public int getInt() {
         return mIntData;
     }
 
-    public void setInt(int data) {
-        mIntData = data;
+    public void setData(Object mData) {
+        if (mData instanceof Integer) {
+            mIntData = (Integer) mData;
+
+        } else if (mData instanceof String) {
+            mStringData = (String) mData;
+
+        } else if (mData instanceof Boolean) {
+
+            mBooleanData = (Boolean) mData;
+        }
+
     }
 
     public String getString(){
-        return (String) mStringData;
+        return mStringData;
     }
 
-    public void setString(String data) {
-        mStringData = data;
+    public boolean isChecked() {
+        return mBooleanData;
     }
 
-    public boolean isChecked(){
-        return mBoolData;
+    public enum OptionID {
+        WINNING_SCORE, SCORE_INTERVAL, SCORE_DIFF_TO_WIN, NUMBER_SETS, STARTING_SCORE,
+        DICE_MIN, DICE_MAX, LENGTH, DATE, TITLE, STOPWATCH, REVERSE_SCORING
     }
 
-    public void setChecked(boolean checked){
-        mBoolData = checked;
+    public interface OptionListener {
+        void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter);
     }
 }

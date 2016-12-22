@@ -1,23 +1,21 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Helper;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.lang.reflect.Method;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 04/12/16.
  */
 
-class DialogHelper {
+public class DialogHelper {
 
-    static void createAlertDialog(Context ctx, String title, String message){
+    public static void createAlertDialog(Context ctx, String title, String message) {
 
         AlertDialog alertDialog;
 
@@ -37,7 +35,7 @@ class DialogHelper {
         alertDialog.show();
     }
 
-    static void textViewAlertDialog(Context ctx, String text){
+    public static void textViewAlertDialog(Context ctx, String text) {
 
         final View dialogView;
 

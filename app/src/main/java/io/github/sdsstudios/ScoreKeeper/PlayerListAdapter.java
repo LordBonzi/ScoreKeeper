@@ -14,8 +14,7 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
-import static io.github.sdsstudios.ScoreKeeper.OptionActivity.EDIT_GAME;
-import static io.github.sdsstudios.ScoreKeeper.OptionActivity.NEW_GAME;
+import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 
 /**
  * Created by seth on 08/05/16.
@@ -27,13 +26,13 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     private Snackbar mSnackBar = null;
     private Player mBackupPlayer;
     private Game mGame;
-    private int mActivity;
+    private Activity mActivity;
     private boolean mEditable;
     private RelativeLayout mRelativeLayout;
     private DataHelper mDataHelper = new DataHelper();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PlayerListAdapter(Game game, GameDBAdapter dbHelper, int mActivity, boolean mEditable, RelativeLayout mRelativeLayout) {
+    public PlayerListAdapter(Game game, GameDBAdapter dbHelper, Activity mActivity, boolean mEditable, RelativeLayout mRelativeLayout) {
         mGame = game;
         mDbHelper = dbHelper;
         this.mActivity = mActivity;
@@ -62,7 +61,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        if (mActivity == NEW_GAME) {
+        if (mActivity == Activity.NEW_GAME) {
             holder.layout.setVisibility(View.VISIBLE);
 
             holder.editTextPlayer.setText(mGame.getPlayer(position).getmName());
@@ -118,7 +117,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 }
             });
 
-        } else if (mActivity == EDIT_GAME) {
+        } else if (mActivity == Activity.EDIT_GAME) {
             holder.layoutExt.setVisibility(View.VISIBLE);
             holder.buttonDelete.setVisibility(View.INVISIBLE);
 
@@ -237,7 +236,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     @Override
     public void addPlayer() {
-        mGame.addPlayer(new Player("", mGame.getInt(EditTextOption.STARTING_SCORE)));
+        mGame.addPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
         notifyItemInserted(mGame.size());
 
     }

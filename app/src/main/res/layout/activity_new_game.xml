@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
-
-    <include
-        layout="@layout/content_new_game"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/include"
-        android:layout_below="@+id/appbar"
-        android:fitsSystemWindows="true" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -66,14 +59,25 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-
         android:fitsSystemWindows="true" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+        android:id="@+id/option_tab_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/adViewHome"
+        android:layout_below="@+id/appbar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/include"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 
 
 </RelativeLayout>

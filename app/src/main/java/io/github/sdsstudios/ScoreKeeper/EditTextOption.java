@@ -6,44 +6,26 @@ package io.github.sdsstudios.ScoreKeeper;
 
 public class EditTextOption extends Option{
 
-    //IntEditTextOptions IDs only
-    public static final int WINNING_SCORE = 0;
-    public static final int SCORE_INTERVAL = 1;
-    public static final int SCORE_DIFF_TO_WIN = 2;
-    public static final int NUMBER_SETS = 3;
-    public static final int STARTING_SCORE = 4;
-    public static final int DICE_MIN = 5;
-    public static final int DICE_MAX = 6;
-    //StringEditTextOptions
-    public static final int LENGTH = 7;
-    //ADD NEW POINTERS HERE for IntEditTextOptions
-    public static final int DATE = 8;
-    public static final int TITLE = 9;
-    /**
-     * DO NOT CHANGE VALUES. WILL CRASH THE APP IN FUTURE UPDATES IF CHANGED
-     **/
-    static final int NUM_INT_EDITTEXT_OPTIONS = 7;
-    //ADD NEW POINTERS HERE
-    private int mEditTextID;
+    private String mDefaultValue;
+    private String mHint;
 
-    public EditTextOption(int editTextID, int id, int data) {
+    public EditTextOption(OptionID id, Object data, String mHint) {
         super(id, data);
-
-        this.mEditTextID = editTextID;
+        this.mHint = mHint;
+        mDefaultValue = String.valueOf(data);
     }
 
-    public EditTextOption(int editTextID, int id, String data) {
-        super(id, data);
 
-        this.mEditTextID = editTextID;
+    public String getmDefaultValue() {
+        return mDefaultValue;
     }
 
-    public int getmEditTextID() {
-        return mEditTextID;
+    public String getmHint() {
+        return mHint;
     }
 
-    public void setmEditTextID(int mEditTextID) {
-        this.mEditTextID = mEditTextID;
+    public void setmHint(String mHint) {
+        this.mHint = mHint;
     }
 
 }

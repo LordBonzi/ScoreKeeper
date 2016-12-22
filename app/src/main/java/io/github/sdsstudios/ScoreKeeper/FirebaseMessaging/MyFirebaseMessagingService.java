@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.FirebaseMessaging;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +11,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import io.github.sdsstudios.ScoreKeeper.Home;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by Seth on 25/11/2016.

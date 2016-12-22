@@ -27,7 +27,6 @@ public class EditGame extends OptionActivity {
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
-    @Override
     void loadActivity(Bundle savedInstanceState) {
 
         ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
@@ -50,10 +49,8 @@ public class EditGame extends OptionActivity {
         mCheckBoxOptions = mGame.getmCheckBoxOptions();
         mStringEditTextOptions = mGame.getmStringEditTextOptions();
 
-        loadOptions();
         setOptionChangeListeners();
 
-        displayRecyclerView(false);
     }
 
     private void updateCompleteMenuItem(){
@@ -181,9 +178,6 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(false);
         mMenuItemComplete.setVisible(false);
 
-        enableOptions(true);
-        displayRecyclerView(true);
-
     }
 
     public void onMenuDoneClick() {
@@ -206,17 +200,17 @@ public class EditGame extends OptionActivity {
         final boolean booleanLength;
 
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
-            mGame.setChecked(CheckBoxOption.STOPWATCH, true);
+            mGame.setChecked(Option.OptionID.STOPWATCH, true);
             booleanLength = true;
             invalidSnackbar(getString(R.string.invalid_length));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
             booleanLength = false;
-            mGame.setChecked(CheckBoxOption.STOPWATCH, false);
+            mGame.setChecked(Option.OptionID.STOPWATCH, false);
 
         }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
             booleanLength = false;
-            mGame.setChecked(CheckBoxOption.STOPWATCH, true);
+            mGame.setChecked(Option.OptionID.STOPWATCH, true);
         }else{
             booleanLength = false;
         }
@@ -268,11 +262,7 @@ public class EditGame extends OptionActivity {
 
                 }else{
 
-                    enableOptions(false);
-
                     updateGame();
-
-                    displayRecyclerView(false);
 
                     mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);
@@ -321,11 +311,6 @@ public class EditGame extends OptionActivity {
 
     public void onMenuCancelClick(){
 
-        for (StringEditTextOption e: mStringEditTextOptions){
-            getEditText(e).setText(e.getString());
-            getEditText(e).setEnabled(false);
-        }
-
         mMenuItemDelete.setVisible(true);
         mMenuItemDone.setVisible(false);
         mMenuItemEdit.setVisible(true);
@@ -334,9 +319,6 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
 
-        loadOptions();
-
-        displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -367,8 +349,8 @@ public class EditGame extends OptionActivity {
     }
 
     @Override
-    int getActivity() {
-        return EDIT_GAME;
+    Activity getActivity() {
+        return Activity.EDIT_GAME;
     }
 
     public interface PlayerListListener{

@@ -2,11 +2,13 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
+
 /**
  * Created by Seth on 06/10/2016.
  */
 
-public class Game {
+public class Game implements Option.OptionListener {
 
     private GameListener mGameListener;
 
@@ -42,19 +44,19 @@ public class Game {
     }
 
     public String getmTime() {
-        return getString(EditTextOption.DATE);
+        return getString(OptionID.DATE);
     }
 
     public void setmTime(String mTime) {
-        setString(EditTextOption.DATE, mTime);
+        setString(OptionID.DATE, mTime);
     }
 
     public String getmLength() {
-        return getString(EditTextOption.LENGTH);
+        return getString(OptionID.LENGTH);
     }
 
     public void setmLength(String mLength) {
-        setString(EditTextOption.LENGTH, mLength);
+        setString(OptionID.LENGTH, mLength);
     }
 
     public int getmID() {
@@ -83,11 +85,11 @@ public class Game {
     }
 
     public String getmTitle() {
-        return getString(EditTextOption.TITLE);
+        return getString(OptionID.TITLE);
     }
 
     public void setmTitle(String mTitle) {
-        setString(EditTextOption.TITLE, mTitle);
+        setString(OptionID.TITLE, mTitle);
     }
 
     public void setPlayer(Player player, int index){
@@ -107,26 +109,23 @@ public class Game {
         for (Player p: mPlayerArray){
             num += p.getmSetScores().size();
         }
-
         return num  / size();
     }
 
-    public int getInt(int id){
+    public int getInt(OptionID id) {
         int data = 1;
 
         for (IntEditTextOption e: mIntEditTextOptions){
-
             if (e.getmID() == id){
                 data = Integer.valueOf(String.valueOf(e.getInt()));
                 break;
             }
-
         }
 
         return data;
     }
 
-    public String getString(int id){
+    public String getString(OptionID id) {
         String data = "";
 
         for (StringEditTextOption e: mStringEditTextOptions){
@@ -148,15 +147,26 @@ public class Game {
     }
 
     public int numSets(){
-        return mIntEditTextOptions.get(IntEditTextOption.NUMBER_SETS).getInt();
+        return getInt(OptionID.NUMBER_SETS);
     }
 
-    public boolean isChecked(int id){
-        return mCheckBoxOptions.get(id).isChecked();
+    public boolean isChecked(OptionID id) {
+        boolean isChecked = false;
+        for (CheckBoxOption c : mCheckBoxOptions) {
+            if (c.getmID() == id) {
+                isChecked = c.isChecked();
+                break;
+            }
+        }
+        return isChecked;
     }
 
-    public void setChecked(int id, boolean data){
-        mCheckBoxOptions.get(id).setChecked(data);
+    public void setChecked(OptionID id, boolean data) {
+        for (CheckBoxOption s : mCheckBoxOptions) {
+            if (s.getmID() == id) {
+                s.setData(data);
+            }
+        }
     }
 
     public List<IntEditTextOption> getmIntEditTextOptions() {
@@ -175,12 +185,12 @@ public class Game {
         this.mStringEditTextOptions = mStringEditTextOptions;
     }
 
-    public void setString(int id, String data){
-        mStringEditTextOptions.get(id - EditTextOption.NUM_INT_EDITTEXT_OPTIONS).setString(data);
-    }
-
-    public void setInt(int id, int data){
-        mIntEditTextOptions.get(id).setInt(data);
+    public void setString(OptionID id, String data) {
+        for (StringEditTextOption s : mStringEditTextOptions) {
+            if (s.getmID() == id) {
+                s.setData(data);
+            }
+        }
     }
 
     public void addPlayer(Player player){
@@ -196,11 +206,27 @@ public class Game {
     }
 
     public void setmIntEditTextOption(IntEditTextOption option){
-        mIntEditTextOptions.set(option.getmID(), option);
+        for (int i = 0; i < mIntEditTextOptions.size(); i++) {
+            if (mIntEditTextOptions.get(i).getmID() == option.getmID()) {
+                mIntEditTextOptions.set(i, option);
+            }
+        }
+    }
+
+    public void setmStringEditTextOption(StringEditTextOption option) {
+        for (int i = 0; i < mStringEditTextOptions.size(); i++) {
+            if (mStringEditTextOptions.get(i).getmID() == option.getmID()) {
+                mStringEditTextOptions.set(i, option);
+            }
+        }
     }
 
     public void setmCheckBoxOption(CheckBoxOption checkBoxOption){
-        mCheckBoxOptions.set(checkBoxOption.getmID(), checkBoxOption);
+        for (int i = 0; i < mCheckBoxOptions.size(); i++) {
+            if (mCheckBoxOptions.get(i).getmID() == checkBoxOption.getmID()) {
+                mCheckBoxOptions.set(i, checkBoxOption);
+            }
+        }
     }
 
     public String getWinnerString(){
@@ -223,7 +249,8 @@ public class Game {
 
     boolean isGameWon() {
 
-        int maxScore = getInt(IntEditTextOption.WINNING_SCORE);
+        int maxScore = getInt(OptionID.WINNING_SCORE);
+
         boolean isWon = false;
 
         for (Player p : mPlayerArray) {
@@ -254,8 +281,8 @@ public class Game {
     private boolean scoreDifference(int score) {
         boolean b = false;
         for (Player p : mPlayerArray) {
-            if (getInt(IntEditTextOption.WINNING_SCORE) != 0) {
-                if (Math.abs(score - p.getmScore()) >= getInt(IntEditTextOption.SCORE_DIFF_TO_WIN)) {
+            if (getInt(OptionID.WINNING_SCORE) != 0) {
+                if (Math.abs(score - p.getmScore()) >= getInt(OptionID.SCORE_DIFF_TO_WIN)) {
                     b = true;
                 }
             }
@@ -269,6 +296,24 @@ public class Game {
 
     GameListener getmGameListener(){
         return mGameListener;
+    }
+
+    @Override
+    public void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter) {
+        if (option instanceof IntEditTextOption) {
+            setmIntEditTextOption((IntEditTextOption) option);
+
+        } else if (option instanceof StringEditTextOption) {
+            setmStringEditTextOption((StringEditTextOption) option);
+
+        } else if (option instanceof CheckBoxOption) {
+            setmCheckBoxOption((CheckBoxOption) option);
+        }
+
+        if (activity == Activity.NEW_GAME) {
+            gameDBAdapter.updateGame(this);
+        }
+
     }
 
     interface GameListener {

@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Helper;
 
 import android.database.Cursor;
 import android.util.Log;
@@ -14,6 +14,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.sdsstudios.ScoreKeeper.Game;
+import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Player;
+import io.github.sdsstudios.ScoreKeeper.PresetDBAdapter;
+
 /**
  * Created by Seth Schroeder on 21/05/2016.
  */
@@ -22,7 +27,7 @@ public class DataHelper {
 
     private String TAG = "DataHelper";
 
-    Game getGame(int id, GameDBAdapter dbHelper) {
+    public Game getGame(int id, GameDBAdapter dbHelper) {
 
         dbHelper.open();
         Cursor cursor = dbHelper.fetchGamesById(id);

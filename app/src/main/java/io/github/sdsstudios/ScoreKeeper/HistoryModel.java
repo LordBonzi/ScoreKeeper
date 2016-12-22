@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+
 /**
  * Created by Seth on 03/10/2016.
  */
@@ -36,14 +38,14 @@ public class HistoryModel {
         this.mIsUnfinished = isUnfinished;
     }
 
-    synchronized static List<HistoryModel> getHistoryModelList(GameDBAdapter dbAdapter, Context context, int activity, int gamesToShow) {
+    synchronized static List<HistoryModel> getHistoryModelList(GameDBAdapter dbAdapter, Context context, Activity activity, int gamesToShow) {
         List<HistoryModel> modelList = new ArrayList<>();
         List<Game> gameList = new ArrayList<>();
         DataHelper dataHelper = new DataHelper();
 
         int numGames;
 
-        if (activity == Pointers.HOME){
+        if (activity == Activity.HOME) {
             numGames = Integer.valueOf(PreferenceManager
                     .getDefaultSharedPreferences(context).getString("prefNumGames", "3"));
         }else{
@@ -57,9 +59,9 @@ public class HistoryModel {
 
                 Game game = dataHelper.getGame(i, dbAdapter);
 
-                if (!game.ismCompleted() && activity == Pointers.HOME) {
+                if (!game.ismCompleted() && activity == Activity.HOME) {
                     gameList.add(game);
-                }else if (activity == Pointers.HISTORY){
+                } else if (activity == Activity.HISTORY) {
 
                     switch (gamesToShow){
                         case HistoryAdapter.BOTH:

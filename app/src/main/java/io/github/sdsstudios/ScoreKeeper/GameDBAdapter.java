@@ -19,6 +19,9 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
+
 public class GameDBAdapter {
 
     public static final String KEY_ROWID = "_id";
@@ -202,14 +205,14 @@ public class GameDBAdapter {
 
     }
 
-    boolean deleteAllGames() {
+    public boolean deleteAllGames() {
 
         int doneDelete = 0;
         doneDelete = DATABASE.delete(SQLITE_TABLE, null , null);
         return doneDelete > 0;
     }
 
-    Cursor fetchGamesById(int id) throws SQLException {
+    public Cursor fetchGamesById(int id) throws SQLException {
         Cursor mCursor = null;
         if (id == 0) {
             mCursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY,

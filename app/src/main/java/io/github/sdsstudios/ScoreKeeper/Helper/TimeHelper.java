@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Helper;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -32,11 +32,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".NewGame"
             android:label="@string/new_game"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".OptionActivity"
+            android:label="@string/new_game"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".Home"
             android:label="@string/app_name"
@@ -78,12 +86,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <service android:name=".MyFirebaseMessagingService">
+        <service android:name=".FirebaseMessaging.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".FirebaseMessaging.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

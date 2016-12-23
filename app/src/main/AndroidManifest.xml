@@ -36,12 +36,7 @@
         <activity
             android:name=".NewGame"
             android:label="@string/new_game"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity
-            android:name=".OptionActivity"
-            android:label="@string/new_game"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
@@ -83,6 +78,7 @@
             android:name=".EditGame"
             android:label="@string/game_info"
             android:parentActivityName=".History"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 

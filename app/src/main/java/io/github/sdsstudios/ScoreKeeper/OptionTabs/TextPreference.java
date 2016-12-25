@@ -1,11 +1,11 @@
 package io.github.sdsstudios.ScoreKeeper.OptionTabs;
 
 import android.content.Context;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import io.github.sdsstudios.ScoreKeeper.Activity;
 import io.github.sdsstudios.ScoreKeeper.EditTextOption;
@@ -20,6 +20,7 @@ import io.github.sdsstudios.ScoreKeeper.R;
 public class TextPreference extends OptionPreference {
 
     private EditText mEditText;
+    private TextView mTextViewTitle;
     private EditTextOption mEditTextOption;
     private Activity mActivity;
     private GameDBAdapter mGameDBAdapter;
@@ -29,6 +30,7 @@ public class TextPreference extends OptionPreference {
         super(context, optionListener);
 
         setLayoutResource(R.layout.edit_text_option);
+
         this.mEditTextOption = editTextOption;
         this.mActivity = activity;
         this.mGameDBAdapter = gameDBAdapter;
@@ -38,11 +40,11 @@ public class TextPreference extends OptionPreference {
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
 
-        TextInputLayout mTextInputLayout = (TextInputLayout) holder.findViewById(R.id.textInputLayout);
-        mEditText = mTextInputLayout.getEditText();
+        mEditText = (EditText) holder.findViewById(R.id.editText);
+        mTextViewTitle = (TextView) holder.findViewById(R.id.textViewTitle);
 
-        mTextInputLayout.setHint(mEditTextOption.getmHint());
-        mTextInputLayout.getEditText().setText(mEditTextOption.getString());
+        mTextViewTitle.setText(mEditTextOption.getmHint());
+        mEditText.setText(mEditTextOption.getString());
 
         mEditText.addTextChangedListener(new TextWatcher() {
 
@@ -91,7 +93,7 @@ public class TextPreference extends OptionPreference {
     }
 
     @Override
-    public void loadOption(Option option) {
+    public void setOption(Option option) {
         mEditTextOption = (EditTextOption) option;
 
         if (Integer.parseInt(mEditTextOption.getmDefaultValue()) != mEditTextOption.getInt()) {

@@ -19,60 +19,57 @@ import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 /**
  * Created by seth on 08/05/16.
  */
-public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder>
-        implements EditGame.PlayerListListener {
+public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
 
-    public GameDBAdapter mDbHelper;
     private Snackbar mSnackBar = null;
     private Player mBackupPlayer;
-    private Game mGame;
+    private List<Player> mPlayerList;
     private Activity mActivity;
     private boolean mEditable;
     private RelativeLayout mRelativeLayout;
     private DataHelper mDataHelper = new DataHelper();
+    private PlayerChangeListener mPlayerChangeListener;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public PlayerListAdapter(Game game, GameDBAdapter dbHelper, Activity mActivity, boolean mEditable, RelativeLayout mRelativeLayout) {
-        mGame = game;
-        mDbHelper = dbHelper;
+    public PlayerListAdapter(List<Player> mPlayerList, Activity mActivity, boolean mEditable, RelativeLayout mRelativeLayout
+            , PlayerChangeListener playerChangeListener) {
         this.mActivity = mActivity;
         this.mEditable = mEditable;
         this.mRelativeLayout = mRelativeLayout;
-
+        this.mPlayerList = mPlayerList;
+        this.mPlayerChangeListener = playerChangeListener;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                          int viewType) {
-        // create a new view
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.player_list_adapter, parent, false);
-        // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view);
 
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
 
         if (mActivity == Activity.NEW_GAME) {
-            holder.layout.setVisibility(View.VISIBLE);
 
-            holder.editTextPlayer.setText(mGame.getPlayer(position).getmName());
+            holder.layout.setVisibility(View.VISIBLE);
+            holder.editTextPlayer.setText(mPlayerList.get(position).getmName());
             holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     if (holder.editTextPlayer.isEnabled()) {
-                        mBackupPlayer = null;
-                        mBackupPlayer = new Player(holder.editTextPlayer.getText().toString(), 0);
-                        mGame.setPlayerName(holder.editTextPlayer.getText().toString(), position);
-                        if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
+
+                        Player player = mPlayerList.get(position);
+                        mBackupPlayer = player;
+
+                        player.setmName(holder.editTextPlayer.getText().toString());
+
+                        if (mDataHelper.checkPlayerDuplicates(mPlayerList)) {
                             View.OnClickListener onClickListener = new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -80,7 +77,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                                 }
                             };
 
-                            mGame.setPlayer(mBackupPlayer, position);
+                            mPlayerList.set(position, mBackupPlayer);
 
                             if (mRelativeLayout != null) {
                                 mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
@@ -93,9 +90,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                             }
 
                         } else {
-                            mDbHelper.open();
-                            mDbHelper.updateGame(mGame);
-                            mDbHelper.close();
+
+                            mPlayerChangeListener.onPlayerChange(player, position);
+
                             holder.editTextPlayer.setEnabled(false);
                             holder.buttonEdit.setImageResource(R.mipmap.ic_create_black_24dp);
                             holder.buttonDelete.setVisibility(View.VISIBLE);
@@ -109,14 +106,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 }
             });
 
-            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeAt(position);
-
-                }
-            });
-
         } else if (mActivity == Activity.EDIT_GAME) {
             holder.layoutExt.setVisibility(View.VISIBLE);
             holder.buttonDelete.setVisibility(View.INVISIBLE);
@@ -125,8 +114,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 holder.editTextPlayerExt.setEnabled(true);
                 holder.editTextScoreExt.setEnabled(true);
                 holder.buttonDelete.setVisibility(View.VISIBLE);
-                holder.editTextPlayerExt.setText(mGame.getPlayer(position).getmName());
-                holder.editTextScoreExt.setText(String.valueOf(mGame.getPlayer(position).getmScore()));
+                holder.editTextPlayerExt.setText(mPlayerList.get(position).getmName());
+                holder.editTextScoreExt.setText(String.valueOf(mPlayerList.get(position).getmScore()));
                 holder.editTextPlayerExt.addTextChangedListener(new TextWatcher() {
 
                     @Override
@@ -137,7 +126,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         try {
-                            mGame.getPlayer(position).setmName(s.toString());
+                            Player player = mPlayerList.get(position);
+                            player.setmName(s.toString());
+                            mPlayerChangeListener.onPlayerChange(player, position);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -150,6 +141,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 });
 
                 holder.editTextScoreExt.addTextChangedListener(new TextWatcher() {
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -158,7 +150,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (!s.toString().equals("")) {
-                            mGame.getPlayer(position).setmScore(Integer.valueOf(s.toString()));
+                            Player player = mPlayerList.get(position);
+                            player.setmScore(Integer.valueOf(s.toString()));
+                            mPlayerChangeListener.onPlayerChange(player, position);
                         }
                     }
 
@@ -168,35 +162,39 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                     }
                 });
 
-                holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeAt(position);
-                    }
-                });
+            } else {
 
-            } else if (!mEditable) {
-                holder.editTextPlayerExt.setHint(mGame.getPlayer(position).getmName());
-                holder.editTextScoreExt.setHint(String.valueOf(mGame.getPlayer(position).getmScore()));
+                holder.editTextPlayerExt.setHint(mPlayerList.get(position).getmName());
+                holder.editTextScoreExt.setHint(String.valueOf(mPlayerList.get(position).getmScore()));
                 holder.editTextPlayerExt.setEnabled(false);
                 holder.editTextScoreExt.setEnabled(false);
                 holder.buttonDelete.setVisibility(View.INVISIBLE);
 
             }
+
+            holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removePlayer(position);
+                }
+            });
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return mGame.size();
+    public void addPlayer(String playerName) {
+        /** The starting score will be set to the game starting score in OptionActivity **/
+        mPlayerChangeListener.addPlayer(new Player(playerName, 0));
     }
 
-    public void removeAt(int position) {
-        mBackupPlayer = null;
-        mBackupPlayer = mGame.getPlayer(position);
+    @Override
+    public int getItemCount() {
+        return mPlayerList.size();
+    }
 
-        mGame.removePlayer(position);
+    public void removePlayer(int position) {
+        mBackupPlayer = mPlayerList.get(position);
+
+        mPlayerChangeListener.onPlayerRemove(position);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -206,7 +204,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         };
 
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, mGame.size());
 
         if (mRelativeLayout != null) {
             mSnackBar = Snackbar.make(mRelativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
@@ -217,9 +214,8 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     }
 
     public void undoPlayerRemoval() {
-        int playerArraySize = mGame.size();
 
-        mGame.addPlayer(mBackupPlayer);
+        mPlayerChangeListener.addPlayer(mBackupPlayer);
 
         if (mRelativeLayout != null) {
             mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
@@ -229,42 +225,20 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             mSnackBar.show();
         }
 
-        notifyItemInserted(playerArraySize);
-        notifyItemRangeChanged(playerArraySize, playerArraySize);
+        notifyItemInserted(mPlayerList.size());
 
     }
 
-    @Override
-    public void addPlayer() {
-        mGame.addPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
-        notifyItemInserted(mGame.size());
+    public interface PlayerChangeListener {
+        void onPlayerChange(Player player, int position);
 
+        void addPlayer(Player player);
+
+        void onPlayerRemove(int position);
     }
 
-    @Override
-    public Game getGame() {
-        return mGame;
-    }
-
-    @Override
-    public void deleteEmptyPlayers(Game game) {
-        List<Player> playerArray = game.getmPlayerArray();
-        for (int i = 0; i < playerArray.size(); i++) {
-            if (playerArray.get(i).getmName().equals("") || playerArray.get(i).getmName() == null || playerArray.get(i).getmName().equals(" ")) {
-                playerArray.remove(i);
-            }
-        }
-
-        game.setmPlayerArray(playerArray);
-
-        this.mGame = game;
-    }
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+
         public EditText editTextPlayer, editTextPlayerExt, editTextScoreExt;
         public ImageButton buttonDelete;
         public ImageButton buttonEdit;
@@ -281,12 +255,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
             layout = (RelativeLayout) v.findViewById(R.id.relativeLayoutPlayerAdapter);
             layoutExt = (RelativeLayout) v.findViewById(R.id.playerAdapterExtended);
             check = v.getResources().getDrawable(R.mipmap.ic_check_white_24dp);
-
-
         }
-
-
     }
-
-
 }

@@ -13,9 +13,21 @@ public class Option {
     private String mStringData;
     private Integer mIntData;
 
-    public Option(OptionID id, Object data) {
+    private String mHint;
+
+    public Option(OptionID id, Object data, String mHint) {
         this.mID = id;
+        this.mHint = mHint;
+
         setData(data);
+    }
+
+    public String getmHint() {
+        return mHint;
+    }
+
+    public void setmHint(String mHint) {
+        this.mHint = mHint;
     }
 
     public OptionID getmID() {
@@ -50,7 +62,7 @@ public class Option {
 
     public enum OptionID {
         WINNING_SCORE, SCORE_INTERVAL, SCORE_DIFF_TO_WIN, NUMBER_SETS, STARTING_SCORE,
-        DICE_MIN, DICE_MAX, LENGTH, DATE, TITLE, STOPWATCH, REVERSE_SCORING
+        DICE_MIN, DICE_MAX, LENGTH, DATE, TITLE, STOPWATCH, REVERSE_SCORING, PLAYER_LIST
     }
 
     public interface OptionListener {

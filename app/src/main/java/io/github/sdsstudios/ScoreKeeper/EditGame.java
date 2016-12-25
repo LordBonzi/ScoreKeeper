@@ -45,10 +45,6 @@ public class EditGame extends OptionActivity {
             }
         });
 
-        mIntEditTextOptions = mGame.getmIntEditTextOptions();
-        mCheckBoxOptions = mGame.getmCheckBoxOptions();
-        mStringEditTextOptions = mGame.getmStringEditTextOptions();
-
         setOptionChangeListeners();
 
     }
@@ -136,7 +132,7 @@ public class EditGame extends OptionActivity {
                 break;
 
             case R.id.action_add:
-                mPlayerListAdapter.addPlayer();
+                addPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
                 break;
 
             case R.id.complete_game:
@@ -183,17 +179,7 @@ public class EditGame extends OptionActivity {
     public void onMenuDoneClick() {
         final Game oldGame = mGame;
 
-        mPlayerListAdapter.deleteEmptyPlayers(mGame);
-
-        mGame = mPlayerListAdapter.getGame();
-
-        mGame.setmStringEditTextOptions(mStringEditTextOptions);
-        mGame.setmCheckBoxOptions(mCheckBoxOptions);
-        mGame.setmIntEditTextOption(mIntEditTextOptions);
-
-
-        /** TODO fix this mess with pulling Game from playerlistadapter
-         * Just pull player array and not whole game **/
+        deleteEmptyPlayers();
 
         final String newLength = mGame.getmLength();
 
@@ -231,10 +217,7 @@ public class EditGame extends OptionActivity {
 
             public void onClick(DialogInterface dialog, int id) {
 
-                mPlayerListAdapter.deleteEmptyPlayers(mGame);
-                mPlayerListAdapter.notifyDataSetChanged();
-
-                mGame = mPlayerListAdapter.getGame();
+                deleteEmptyPlayers();
 
                 if (bCheckEmpty) {
 
@@ -353,9 +336,4 @@ public class EditGame extends OptionActivity {
         return Activity.EDIT_GAME;
     }
 
-    public interface PlayerListListener{
-        void addPlayer();
-        Game getGame();
-        void deleteEmptyPlayers(Game game);
-    }
 }

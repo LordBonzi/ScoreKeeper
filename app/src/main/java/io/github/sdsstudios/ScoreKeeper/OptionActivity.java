@@ -9,15 +9,14 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,12 +27,13 @@ import io.github.sdsstudios.ScoreKeeper.OptionTabs.OptionTabPager;
  * Created by seth on 11/12/16.
  */
 
-public abstract class OptionActivity extends AppCompatActivity {
+public abstract class OptionActivity extends AppCompatActivity implements PlayerListAdapter.PlayerChangeListener {
 
     public static final String STATE_GAMEID = "mGameID";
     public static String TAG;
+
+    public Snackbar mSnackBar;
     public Activity CURRENT_ACTIVITY;
-    public PlayerListAdapter mPlayerListAdapter;
     public Intent mHomeIntent;
     public RelativeLayout mRelativeLayout;
     public GameDBAdapter mDbHelper;
@@ -41,12 +41,6 @@ public abstract class OptionActivity extends AppCompatActivity {
     public Game mGame;
     public DataHelper mDataHelper = new DataHelper();
     public SharedPreferences mSharedPreferences;
-
-    public List<IntEditTextOption> mIntEditTextOptions = new ArrayList<>();
-    public List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
-    public List<StringEditTextOption> mStringEditTextOptions = new ArrayList<>();
-
-    public RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,11 +80,6 @@ public abstract class OptionActivity extends AppCompatActivity {
         }
 
         loadActivity(savedInstanceState);
-
-        mIntEditTextOptions = mGame.getmIntEditTextOptions();
-        mStringEditTextOptions = mGame.getmStringEditTextOptions();
-        mCheckBoxOptions = mGame.getmCheckBoxOptions();
-
         loadTabs();
     }
 
@@ -112,12 +101,10 @@ public abstract class OptionActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id) {
+
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -132,7 +119,7 @@ public abstract class OptionActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         OptionTabPager mOptionTabPager = new OptionTabPager(getSupportFragmentManager(), CURRENT_ACTIVITY
-                , this, mGame, mDbHelper);
+                , this, mGame, mDbHelper, mRelativeLayout);
 
         ViewPager mViewPager = (ViewPager) findViewById(R.id.option_tab_container);
         mViewPager.setAdapter(mOptionTabPager);
@@ -173,7 +160,6 @@ public abstract class OptionActivity extends AppCompatActivity {
         mDbHelper.close();
     }
 
-
     public void setGameTime() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
@@ -185,6 +171,78 @@ public abstract class OptionActivity extends AppCompatActivity {
         mDbHelper.close();
     }
 
+    public void deleteEmptyPlayers() {
+        List<Player> playerArray = mGame.getmPlayerArray();
+
+        for (int i = 0; i < playerArray.size(); i++) {
+            if (playerArray.get(i).getmName().equals("")
+                    || playerArray.get(i).getmName() == null
+                    || playerArray.get(i).getmName().equals(" ")) {
+                playerArray.remove(i);
+            }
+        }
+
+        mGame.setmPlayerArray(playerArray);
+
+    }
+
+    /**
+     * OnPlayerChangeListener
+     **/
+    @Override
+    public void onPlayerChange(Player player, int position) {
+        mGame.setPlayer(player, position);
+        updateGame();
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+        player.setmScore(mGame.getInt(Option.OptionID.STARTING_SCORE));
+
+        mGame.addPlayer(player);
+        boolean areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
+        String playerName = player.getmName();
+
+        if (areDuplicatePlayers) {
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSnackBar.dismiss();
+                }
+            };
+
+            mGame.removePlayer(mGame.size() - 1);
+
+            mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            mSnackBar.show();
+        }
+
+        if (playerName.equals("") || playerName.equals(" ")) {
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSnackBar.dismiss();
+                }
+            };
+
+            mGame.removePlayer(mGame.size() - 1);
+
+            mSnackBar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
+                    .setAction("Dismiss", onClickListener);
+            mSnackBar.show();
+
+        } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
+
+            updateGame();
+
+        }
+    }
+
+    @Override
+    public void onPlayerRemove(int position) {
+        mGame.removePlayer(position);
+    }
 }
 
 

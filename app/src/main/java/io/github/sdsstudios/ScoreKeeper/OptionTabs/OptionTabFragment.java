@@ -31,8 +31,10 @@ public class OptionTabFragment extends PreferenceFragmentCompat {
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(getContext());
         setPreferenceScreen(screen);
 
-        for (OptionPreference optionPreference : mOptionsList) {
-            screen.addPreference(optionPreference);
+        if (mOptionsList != null) {
+            for (OptionPreference optionPreference : mOptionsList) {
+                screen.addPreference(optionPreference);
+            }
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -49,10 +51,6 @@ public class OptionTabFragment extends PreferenceFragmentCompat {
 
     public void setmOptionsList(List<OptionPreference> mOptionsList) {
         this.mOptionsList = mOptionsList;
-    }
-
-    public enum Tab {
-        ADVANCED, OPTIONS
     }
 
 }

@@ -22,7 +22,6 @@ import java.util.List;
 public class NewGame extends OptionActivity
         implements View.OnClickListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener {
 
-    private Snackbar mSnackbar;
     private PresetDBAdapter mPresetDBAdapter;
     private EditText mEditTextGameTitle;
     private Button mButtonNewGame, mButtonQuit;
@@ -88,14 +87,10 @@ public class NewGame extends OptionActivity
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
 
-            updateGame();
-
-            mDbHelper.close();
-
         } else {
 
             mGame = new Game(new ArrayList<Player>(), null, false, 0
-                    , IntEditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(), StringEditTextOption.loadEditTextOptions(this), null);
+                    , IntEditTextOption.loadEditTextOptions(this), CheckBoxOption.loadCheckBoxOptions(NewGame.this), StringEditTextOption.loadEditTextOptions(this), null);
 
             mDbHelper.open().createGame(mGame);
 
@@ -104,8 +99,6 @@ public class NewGame extends OptionActivity
 
             mGameID = mDbHelper.getNewestGame();
             mGame.setmID(mGameID);
-
-            mDbHelper.close();
 
         }
 
@@ -196,59 +189,9 @@ public class NewGame extends OptionActivity
         mEditTextGameTitle.setText(mGame.getmTitle());
         mGame.getmPlayerArray().clear();
 
-        mCheckBoxOptions = CheckBoxOption.loadCheckBoxOptions();
-        mIntEditTextOptions = IntEditTextOption.loadEditTextOptions(this);
-
-        mGame.setmCheckBoxOptions(mCheckBoxOptions);
-        mGame.setmIntEditTextOption(mIntEditTextOptions);
-
-    }
-
-    public void addPlayers() {
-        String playerName = "AINT WORKING YET, KID";
-
-        boolean areDuplicatePlayers;
-
-        mGame.addPlayer(new Player(playerName, 0));
-        areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
-
-        if (areDuplicatePlayers) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackbar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(mGame.size() - 1);
-
-            mSnackbar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackbar.show();
-        }
-
-        if (playerName.equals("") || playerName.equals(" ")) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackbar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(mGame.size() - 1);
-
-            mSnackbar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackbar.show();
-
-        } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
-
-
-            updateGame();
-            // specify an adapter (see also next example)
-            mPlayerListAdapter.notifyItemInserted(mGame.size());
-
-        }
+        mGame.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(NewGame.this));
+        mGame.setmIntEditTextOption(IntEditTextOption.loadEditTextOptions(this));
+        mGame.setmStringEditTextOptions(StringEditTextOption.loadEditTextOptions(this));
 
     }
 
@@ -405,25 +348,23 @@ public class NewGame extends OptionActivity
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSnackbar.dismiss();
+                mSnackBar.dismiss();
             }
         };
 
-        //snackbar must have 2 or more players
-
         if (mGame.size() < 2) {
 
-            mSnackbar = Snackbar.make(mRelativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
+            mSnackBar = Snackbar.make(mRelativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
-            mSnackbar.show();
+            mSnackBar.show();
 
         } else {
 
             if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
 
-                mSnackbar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
-                mSnackbar.show();
+                mSnackBar.show();
 
             } else {
 

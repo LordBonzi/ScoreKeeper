@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.widget.RelativeLayout;
 
 import io.github.sdsstudios.ScoreKeeper.Activity;
 import io.github.sdsstudios.ScoreKeeper.Game;
@@ -12,27 +13,27 @@ import io.github.sdsstudios.ScoreKeeper.R;
 
 public class OptionTabPager extends FragmentStatePagerAdapter {
 
-    //integer to count number of tabs
     private Activity mActivity;
     private Context mCtx;
     private Game mGame;
     private GameDBAdapter mGameDBAdapter;
+    private RelativeLayout mRelativeLayout;
 
-    //Constructor to the class 
-    public OptionTabPager(FragmentManager fm, Activity mActivity, Context ctx, Game mGame, GameDBAdapter mDbHelper) {
+    public OptionTabPager(FragmentManager fm, Activity mActivity, Context ctx, Game mGame, GameDBAdapter mDbHelper, RelativeLayout mRelativeLayout) {
         super(fm);
-        //Initializing tab count
         this.mActivity = mActivity;
         this.mCtx = ctx;
         this.mGame = mGame;
         this.mGameDBAdapter = mDbHelper;
+        this.mRelativeLayout = mRelativeLayout;
     }
 
     @Override
     public Fragment getItem(int position) {
+
         switch (position) {
             case 0:
-                return OptionTabFragment.newInstance(OptionPreference.createAdvancedOptionsList(mGame, mActivity, mCtx, mGameDBAdapter)
+                return OptionTabFragment.newInstance(OptionPreference.createNewGameList(mGame, mActivity, mCtx, mRelativeLayout)
                         , mActivity);
 
             case 1:
@@ -41,6 +42,7 @@ public class OptionTabPager extends FragmentStatePagerAdapter {
 
             default:
                 return null;
+
         }
     }
 

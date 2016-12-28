@@ -52,7 +52,7 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Themes.themeActivity(this, CURRENT_ACTIVITY == Activity.EDIT_GAME ? R.layout.activity_edit_game : R.layout.activity_new_game
+        Themes.themeActivity(this, R.layout.option_activity
                 , true);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
@@ -69,15 +69,14 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
             AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
             AdCreator adCreator2 = new AdCreator(mAdView2, this);
             adCreator2.createAd();
-            mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
 
             Bundle extras = getIntent().getExtras();
             mGameID = extras.getInt("GAME_ID");
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
-        } else {
-            mRelativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
         }
+
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayoutOptionActivity);
 
         loadActivity(savedInstanceState);
         loadTabs();

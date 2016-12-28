@@ -63,11 +63,13 @@
             android:label="@string/themes"
             android:parentActivityName=".Settings"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".History"
             android:label="@string/action_history"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".PlayersActivity"
             android:label="@string/players"

@@ -8,8 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -28,22 +26,6 @@ public class EditGame extends OptionActivity {
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
     void loadActivity(Bundle savedInstanceState) {
-
-        ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
-        ImageButton buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
-        buttonHelpDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
-            }
-        });
-
-        buttonHelpLength.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                helpDialog(getString(R.string.length_help), getString(R.string.length_help_message));
-            }
-        });
 
         setOptionChangeListeners();
 

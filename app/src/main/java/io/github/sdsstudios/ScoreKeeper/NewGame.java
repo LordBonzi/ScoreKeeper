@@ -247,14 +247,7 @@ public class NewGame extends OptionActivity
             case R.id.buttonNewGame: {
                 createNewGame(true);
                 break;
-
             }
-
-            case R.id.buttonCreatePreset: {
-                createNewGame(false);
-                break;
-            }
-
         }
     }
 

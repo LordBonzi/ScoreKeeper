@@ -4,10 +4,13 @@ import android.content.Context;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -55,19 +58,35 @@ public class PlayerListPreference extends OptionPreference {
 
         if (mActivity == Activity.NEW_GAME) {
             mEditTextPlayer = (EditText) holder.findViewById(R.id.editTextPlayer);
+
+            mEditTextPlayer.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        addPlayer();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
             mButtonAddPlayer = (Button) holder.findViewById(R.id.buttonAddPlayer);
             mButtonAddPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mPlayerListAdapter.addPlayer(mEditTextPlayer.getText().toString().trim());
-                    mPlayerListAdapter.notifyItemInserted(mPlayerList.size());
-
+                    addPlayer();
                 }
             });
         }
 
         populatePlayerRecyclerView(false);
 
+    }
+
+    private void addPlayer() {
+        mPlayerListAdapter.addPlayer(mEditTextPlayer.getText().toString().trim());
+        mPlayerListAdapter.notifyItemInserted(mPlayerList.size());
     }
 
     private void populatePlayerRecyclerView(boolean editable) {

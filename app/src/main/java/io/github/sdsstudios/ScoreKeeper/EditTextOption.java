@@ -6,15 +6,19 @@ package io.github.sdsstudios.ScoreKeeper;
 
 public class EditTextOption extends Option{
 
-    private String mDefaultValue;
+    private int mEditTextID;
 
-    public EditTextOption(OptionID id, Object data, String mHint) {
+    public EditTextOption(int editTextID, OptionID id, Object data, String mHint) {
         super(id, data, mHint);
-        mDefaultValue = String.valueOf(data);
+        mEditTextID = editTextID;
     }
 
-    public String getmDefaultValue() {
-        return mDefaultValue;
+    public int getmEditTextID() {
+        return mEditTextID;
+    }
+
+    public void setmEditTextID(int mEditTextID) {
+        this.mEditTextID = mEditTextID;
     }
 
 }

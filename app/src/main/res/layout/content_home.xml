@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.Home">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentTop="true"
-        android:id="@+id/relativeLayout">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
     <TextView
-        android:text="16"
+        android:id="@+id/textViewNumGamesPlayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textColor="?attr/colorAccent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/textViewNumGamesPlayed"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display4" />
+        android:layout_alignParentTop="true"
+        android:text="16"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+        android:textColor="?attr/colorAccent" />
 
     <TextView
-        android:text="Games Played"
+        android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView12"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
         android:layout_alignBaseline="@+id/textViewNumGamesPlayed"
         android:layout_alignBottom="@+id/textViewNumGamesPlayed"
-        android:layout_toRightOf="@+id/textViewNumGamesPlayed"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:layout_toEndOf="@+id/textViewNumGamesPlayed"
+        android:layout_toRightOf="@+id/textViewNumGamesPlayed"
+        android:text="Games Played"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
         android:id="@+id/homeRecyclerView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonMore"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/buttonMore"
         android:layout_below="@+id/layoutRecentGames" />
 
     <RelativeLayout
+        android:id="@+id/layoutRecentGames"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:id="@+id/layoutRecentGames"
-        android:layout_below="@+id/buttonContinueLastGame"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/buttonContinueLastGame">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/dividerColor"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:background="?attr/dividerColor" />
 
         <TextView
-            android:text="@string/recent_games"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:textStyle="bold"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="@string/recent_games"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
     <Button
-        android:text="Continue Last Game"
+        android:id="@+id/buttonContinueLastGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:id="@+id/buttonContinueLastGame"
-        android:layout_below="@+id/relativeLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:text="Continue Last Game"
 />
 
     <com.google.android.gms.ads.AdView

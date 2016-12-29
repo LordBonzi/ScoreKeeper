@@ -8,6 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -15,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
 
 public class EditGame extends OptionActivity {
 
@@ -25,10 +29,29 @@ public class EditGame extends OptionActivity {
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
 
+    @Override
     void loadActivity(Bundle savedInstanceState) {
 
+        ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
+        ImageButton buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
+        buttonHelpDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
+            }
+        });
+
+        buttonHelpLength.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helpDialog(getString(R.string.length_help), getString(R.string.length_help_message));
+            }
+        });
+
+        loadOptions();
         setOptionChangeListeners();
 
+        displayRecyclerView(false);
     }
 
     private void updateCompleteMenuItem(){
@@ -81,7 +104,6 @@ public class EditGame extends OptionActivity {
         return intent;
     }
 
-
     public void completeGame(){
 
         mGame.setmCompleted(!mGame.ismCompleted());
@@ -114,7 +136,7 @@ public class EditGame extends OptionActivity {
                 break;
 
             case R.id.action_add:
-                addPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
+                addPlayerToGame(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
                 break;
 
             case R.id.complete_game:
@@ -156,10 +178,13 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(false);
         mMenuItemComplete.setVisible(false);
 
+        enableOptions(true);
+        displayRecyclerView(true);
+        setOptionChangeListeners();
+
     }
 
     public void onMenuDoneClick() {
-        final Game oldGame = mGame;
 
         deleteEmptyPlayers();
 
@@ -170,15 +195,12 @@ public class EditGame extends OptionActivity {
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
             mGame.setChecked(Option.OptionID.STOPWATCH, true);
             booleanLength = true;
-            invalidSnackbar(getString(R.string.invalid_length));
 
         }else if (newLength.length() == 0|| newLength.equals("")){
             booleanLength = false;
-            mGame.setChecked(Option.OptionID.STOPWATCH, false);
 
         }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
             booleanLength = false;
-            mGame.setChecked(Option.OptionID.STOPWATCH, true);
         }else{
             booleanLength = false;
         }
@@ -203,26 +225,22 @@ public class EditGame extends OptionActivity {
 
                 if (bCheckEmpty) {
 
-                    mGame = oldGame;
                     invalidSnackbar("You can't have empty names!");
 
                 }else if (!bDateAndTime) {
 
-                    mGame = oldGame;
                     invalidSnackbar(getString(R.string.invalid_date_and_time));
 
                 }else if (booleanLength) {
-                    mGame = oldGame;
+
                     invalidSnackbar(getString(R.string.invalid_length));
 
                 } else if (bCheckDuplicates) {
 
-                    mGame = oldGame;
                     invalidSnackbar("You can't have duplicate players!");
 
                 } else if (!bNumPlayers) {
 
-                    mGame = oldGame;
                     invalidSnackbar("Must have 2 or more players");
 
                 }else{
@@ -237,8 +255,10 @@ public class EditGame extends OptionActivity {
                     mMenuItemShare.setVisible(true);
                     mMenuItemComplete.setVisible(true);
 
+                    displayRecyclerView(false);
+                    loadOptions();
+
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    mDbHelper.close();
                 }
 
             }
@@ -246,7 +266,6 @@ public class EditGame extends OptionActivity {
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mGame = oldGame;
                 dialog.dismiss();
             }
         });
@@ -284,6 +303,9 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
 
+        loadOptions();
+
+        displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
@@ -315,7 +337,7 @@ public class EditGame extends OptionActivity {
 
     @Override
     Activity getActivity() {
-        return Activity.EDIT_GAME;
+        return EDIT_GAME;
     }
 
 }

@@ -181,11 +181,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
     }
 
-    public void addPlayer(String playerName) {
-        /** The starting score will be set to the game starting score in OptionActivity **/
-        mPlayerChangeListener.addPlayer(new Player(playerName, 0));
-    }
-
     @Override
     public int getItemCount() {
         return mPlayerList.size();
@@ -215,7 +210,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
     public void undoPlayerRemoval() {
 
-        mPlayerChangeListener.addPlayer(mBackupPlayer);
+        mPlayerChangeListener.addPlayerToGame(mBackupPlayer);
 
         if (mRelativeLayout != null) {
             mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
@@ -232,7 +227,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
     public interface PlayerChangeListener {
         void onPlayerChange(Player player, int position);
 
-        void addPlayer(Player player);
+        void addPlayerToGame(Player player);
 
         void onPlayerRemove(int position);
     }

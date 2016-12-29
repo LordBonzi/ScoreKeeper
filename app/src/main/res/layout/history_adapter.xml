@@ -31,14 +31,14 @@
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/textViewHistoryDate"
             android:layout_toStartOf="@+id/textViewHistoryDate"
-            android:layout_alignParentLeft="true"
-            android:scrollbars="none"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:scrollbars="none">
             <TextView
                 android:id="@+id/textViewHistoryPlayers"
                 android:layout_width="wrap_content"
@@ -68,12 +68,12 @@
         <TextView
             android:id="@+id/textViewHistoryInProgress"
             android:layout_width="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingStart="4dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/textViewHistoryType"
             android:layout_toEndOf="@+id/textViewHistoryType"
+            android:layout_toRightOf="@+id/textViewHistoryType"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </RelativeLayout>
@@ -81,10 +81,10 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/dividerColor"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="?attr/dividerColor" />
 
 </RelativeLayout>
 

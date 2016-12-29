@@ -21,15 +21,15 @@
 
 
         <HorizontalScrollView
+            android:id="@+id/playerScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:scrollbars="none"
-            android:layout_marginRight="8dp"
-            android:id="@+id/playerScrollView"
-            android:layout_marginEnd="8dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:scrollbars="none">
             <TextView
                 android:id="@+id/textViewHistoryPlayers"
                 android:layout_width="wrap_content"
@@ -42,10 +42,10 @@
             android:id="@+id/textViewHistoryScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0:0"
-            android:layout_below="@+id/playerScrollView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/playerScrollView"
+            android:text="0:0"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     </RelativeLayout>

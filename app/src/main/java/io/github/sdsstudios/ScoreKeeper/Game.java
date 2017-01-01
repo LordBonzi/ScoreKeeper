@@ -8,7 +8,7 @@ import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
  * Created by Seth on 06/10/2016.
  */
 
-public class Game implements Option.OptionListener {
+public class Game {
 
     private GameListener mGameListener;
 
@@ -193,7 +193,15 @@ public class Game implements Option.OptionListener {
         }
     }
 
-    public void addPlayer(Player player){
+    public void addPlayerAtPosition(Player player, int position) {
+        mPlayerArray.add(position, player);
+    }
+
+    public void addNewPlayer(Player player) {
+        if (size() > 0) {
+            player.fillSetArray(getPlayer(0).getmSetScores().size());
+        }
+
         mPlayerArray.add(player);
     }
 
@@ -296,24 +304,6 @@ public class Game implements Option.OptionListener {
 
     GameListener getmGameListener(){
         return mGameListener;
-    }
-
-    @Override
-    public void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter) {
-        if (option instanceof IntEditTextOption) {
-            setmIntEditTextOption((IntEditTextOption) option);
-
-        } else if (option instanceof StringEditTextOption) {
-            setmStringEditTextOption((StringEditTextOption) option);
-
-        } else if (option instanceof CheckBoxOption) {
-            setmCheckBoxOption((CheckBoxOption) option);
-        }
-
-        if (activity == Activity.NEW_GAME) {
-            gameDBAdapter.updateGame(this);
-        }
-
     }
 
     interface GameListener {

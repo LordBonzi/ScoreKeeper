@@ -39,7 +39,7 @@ import static io.github.sdsstudios.ScoreKeeper.Activity.NEW_GAME;
  * Created by seth on 11/12/16.
  */
 
-public abstract class OptionActivity extends AppCompatActivity implements PlayerListAdapter.PlayerChangeListener {
+public abstract class OptionActivity extends AppCompatActivity implements PlayerListAdapter.PlayerListAdapterListener {
 
     public static final String STATE_GAMEID = "mGameID";
     public static String TAG;
@@ -108,7 +108,8 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
             mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
 
             Bundle extras = getIntent().getExtras();
-            mGameID = extras.getInt(STATE_GAMEID);
+
+            mGameID = extras.getInt("GAME_ID");
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
         } else {
@@ -222,11 +223,7 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     c.setData(b);
-
-                    if (CURRENT_ACTIVITY == NEW_GAME) {
-                        mGame.setmCheckBoxOption(c);
-                        mDbHelper.open().updateGame(mGame);
-                    }
+                    mDbHelper.open().updateGame(mGame);
 
                 }
             });
@@ -253,7 +250,6 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
                         }
 
                     } catch (NumberFormatException error) {
-                        error.printStackTrace();
                         e.setData(e.getmDefaultValue());
 
                     }
@@ -262,54 +258,10 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-
-                    if (CURRENT_ACTIVITY == NEW_GAME) {
-                        mGame.setmIntEditTextOption(e);
                         mDbHelper.open().updateGame(mGame);
-                    }
 
                 }
             });
-        }
-
-        if (CURRENT_ACTIVITY == EDIT_GAME) {
-            for (final StringEditTextOption e : StringEditTextOptions()) {
-
-                getEditText(e).addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        try {
-
-                            //if statement necessary to avoid numberformatexception if edittext empty
-                            if (charSequence != "") {
-                                e.setData(charSequence.toString());
-                            } else {
-                                e.setData(e.getmDefaultValue());
-                            }
-
-                        } catch (NumberFormatException error) {
-                            error.printStackTrace();
-                            e.setData(e.getmDefaultValue());
-
-                        }
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                        mGame.setmStringEditTextOption(e);
-                        mDbHelper.open().updateGame(mGame);
-
-                    }
-                });
-            }
         }
     }
 
@@ -472,7 +424,7 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
         mPlayerRecyclerView.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         mPlayerRecyclerView.setLayoutManager(mLayoutManager);
-        mPlayerListAdapter = new PlayerListAdapter(mGame.getmPlayerArray(), CURRENT_ACTIVITY, editable, mRelativeLayout, this);
+        mPlayerListAdapter = new PlayerListAdapter(CURRENT_ACTIVITY, editable, mRelativeLayout, this);
         mPlayerRecyclerView.setAdapter(mPlayerListAdapter);
     }
 
@@ -483,8 +435,11 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
     }
 
     public void updateGame() {
-        mDbHelper.open().updateGame(mGame);
-        mDbHelper.close();
+
+        if (CURRENT_ACTIVITY == NEW_GAME) {
+            mDbHelper.open().updateGame(mGame);
+            mDbHelper.close();
+        }
     }
 
     public void deleteEmptyPlayers() {
@@ -543,13 +498,19 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
     public void onPlayerChange(Player player, int position) {
         mGame.setPlayer(player, position);
         updateGame();
+
+    }
+
+    public void deleteGame() {
+        mDbHelper.open().deleteGame(mGameID);
+        mDbHelper.close();
     }
 
     @Override
-    public void addPlayerToGame(Player player) {
-        player.setmScore(mGame.getInt(Option.OptionID.STARTING_SCORE));
+    public void addPlayerToGame(Player player, int position) {
 
-        mGame.addPlayer(player);
+        mGame.addPlayerAtPosition(player, position);
+
         boolean areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
         String playerName = player.getmName();
 
@@ -561,7 +522,7 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
                 }
             };
 
-            mGame.removePlayer(mGame.size() - 1);
+            mGame.removePlayer(position);
 
             mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
@@ -576,17 +537,21 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
                 }
             };
 
-            mGame.removePlayer(mGame.size() - 1);
+            mGame.removePlayer(position);
 
             mSnackBar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
                     .setAction("Dismiss", onClickListener);
             mSnackBar.show();
 
         } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
-
             updateGame();
-
         }
+
+    }
+
+    @Override
+    public List<Player> getPlayerArray() {
+        return mGame.getmPlayerArray();
     }
 
     @Override

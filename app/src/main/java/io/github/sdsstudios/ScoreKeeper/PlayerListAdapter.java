@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,22 +22,34 @@ import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
  */
 public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.ViewHolder> {
 
+    private static String TAG = "PlayerListAdapter";
     private Snackbar mSnackBar = null;
+    private View.OnClickListener dismissClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mSnackBar.dismiss();
+        }
+    };
     private Player mBackupPlayer;
-    private List<Player> mPlayerList;
+    private int mBackupPosition;
     private Activity mActivity;
     private boolean mEditable;
     private RelativeLayout mRelativeLayout;
     private DataHelper mDataHelper = new DataHelper();
-    private PlayerChangeListener mPlayerChangeListener;
+    private PlayerListAdapterListener mPlayerListAdapterListener;
+    private View.OnClickListener undoPlayerClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            undoPlayerRemoval();
+        }
+    };
 
-    public PlayerListAdapter(List<Player> mPlayerList, Activity mActivity, boolean mEditable, RelativeLayout mRelativeLayout
-            , PlayerChangeListener playerChangeListener) {
+    public PlayerListAdapter(Activity mActivity, boolean mEditable, RelativeLayout mRelativeLayout
+            , PlayerListAdapterListener playerListAdapterListener) {
         this.mActivity = mActivity;
         this.mEditable = mEditable;
         this.mRelativeLayout = mRelativeLayout;
-        this.mPlayerList = mPlayerList;
-        this.mPlayerChangeListener = playerChangeListener;
+        this.mPlayerListAdapterListener = playerListAdapterListener;
     }
 
     @Override
@@ -51,47 +64,41 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         return vh;
     }
 
+    private List<Player> mPlayerArray() {
+        return mPlayerListAdapterListener.getPlayerArray();
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if (mActivity == Activity.NEW_GAME) {
 
             holder.layout.setVisibility(View.VISIBLE);
-            holder.editTextPlayer.setText(mPlayerList.get(position).getmName());
+            holder.editTextPlayer.setText(mPlayerArray().get(position).getmName());
             holder.buttonEdit.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     if (holder.editTextPlayer.isEnabled()) {
 
-                        Player player = mPlayerList.get(position);
+                        Player player = mPlayerArray().get(position);
                         mBackupPlayer = player;
 
                         player.setmName(holder.editTextPlayer.getText().toString());
 
-                        if (mDataHelper.checkPlayerDuplicates(mPlayerList)) {
-                            View.OnClickListener onClickListener = new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mSnackBar.dismiss();
-                                }
-                            };
+                        if (mDataHelper.checkPlayerDuplicates(mPlayerArray())) {
 
-                            mPlayerList.set(position, mBackupPlayer);
 
-                            if (mRelativeLayout != null) {
-                                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                                        .setAction("Dismiss", onClickListener);
-                                mSnackBar.show();
-                            } else {
-                                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                                        .setAction("Dismiss", onClickListener);
-                                mSnackBar.show();
-                            }
+                            mPlayerArray().set(position, mBackupPlayer);
+
+                            mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
+                                    .setAction("Dismiss", dismissClickListener);
+                            mSnackBar.show();
+
 
                         } else {
 
-                            mPlayerChangeListener.onPlayerChange(player, position);
+                            mPlayerListAdapterListener.onPlayerChange(player, position);
 
                             holder.editTextPlayer.setEnabled(false);
                             holder.buttonEdit.setImageResource(R.mipmap.ic_create_black_24dp);
@@ -114,29 +121,28 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
                 holder.editTextPlayerExt.setEnabled(true);
                 holder.editTextScoreExt.setEnabled(true);
                 holder.buttonDelete.setVisibility(View.VISIBLE);
-                holder.editTextPlayerExt.setText(mPlayerList.get(position).getmName());
-                holder.editTextScoreExt.setText(String.valueOf(mPlayerList.get(position).getmScore()));
+                holder.editTextPlayerExt.setText(mPlayerArray().get(position).getmName());
+                holder.editTextScoreExt.setText(String.valueOf(mPlayerArray().get(position).getmScore()));
                 holder.editTextPlayerExt.addTextChangedListener(new TextWatcher() {
 
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        try {
-                            Player player = mPlayerList.get(position);
-                            player.setmName(s.toString());
-                            mPlayerChangeListener.onPlayerChange(player, position);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
+                        try {
+                            Player player = mPlayerArray().get(position);
+                            player.setmName(s.toString());
+                            mPlayerListAdapterListener.onPlayerChange(player, position);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -149,23 +155,23 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (!s.toString().equals("")) {
-                            Player player = mPlayerList.get(position);
-                            player.setmScore(Integer.valueOf(s.toString()));
-                            mPlayerChangeListener.onPlayerChange(player, position);
-                        }
+
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
-
+                        if (!s.toString().equals("")) {
+                            Player player = mPlayerArray().get(position);
+                            player.setmScore(Integer.valueOf(s.toString()));
+                            mPlayerListAdapterListener.onPlayerChange(player, position);
+                        }
                     }
                 });
 
             } else {
 
-                holder.editTextPlayerExt.setHint(mPlayerList.get(position).getmName());
-                holder.editTextScoreExt.setHint(String.valueOf(mPlayerList.get(position).getmScore()));
+                holder.editTextPlayerExt.setHint(mPlayerArray().get(position).getmName());
+                holder.editTextScoreExt.setHint(String.valueOf(mPlayerArray().get(position).getmScore()));
                 holder.editTextPlayerExt.setEnabled(false);
                 holder.editTextScoreExt.setEnabled(false);
                 holder.buttonDelete.setVisibility(View.INVISIBLE);
@@ -181,55 +187,46 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListAdapter.Vi
         }
     }
 
+
     @Override
     public int getItemCount() {
-        return mPlayerList.size();
+        return mPlayerArray().size();
     }
 
     public void removePlayer(int position) {
-        mBackupPlayer = mPlayerList.get(position);
 
-        mPlayerChangeListener.onPlayerRemove(position);
+        Log.e(TAG, String.valueOf(position));
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                undoPlayerRemoval();
-            }
-        };
+        mBackupPosition = position;
+        mBackupPlayer = mPlayerArray().get(position);
+        mPlayerListAdapterListener.onPlayerRemove(position);
 
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
 
         if (mRelativeLayout != null) {
             mSnackBar = Snackbar.make(mRelativeLayout, "Player removed.", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", onClickListener);
+                    .setAction("Undo", undoPlayerClickListener);
             mSnackBar.show();
         }
+
 
     }
 
     public void undoPlayerRemoval() {
 
-        mPlayerChangeListener.addPlayerToGame(mBackupPlayer);
-
-        if (mRelativeLayout != null) {
-            mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-            mSnackBar.show();
-        } else {
-            mSnackBar = Snackbar.make(mRelativeLayout, "Undo complete.", Snackbar.LENGTH_SHORT);
-            mSnackBar.show();
-        }
-
-        notifyItemInserted(mPlayerList.size());
+        mPlayerListAdapterListener.addPlayerToGame(mBackupPlayer, mBackupPosition);
+        notifyItemInserted(mBackupPosition);
 
     }
 
-    public interface PlayerChangeListener {
+    public interface PlayerListAdapterListener {
         void onPlayerChange(Player player, int position);
 
-        void addPlayerToGame(Player player);
+        void addPlayerToGame(Player player, int position);
 
         void onPlayerRemove(int position);
+
+        List<Player> getPlayerArray();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

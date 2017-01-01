@@ -130,8 +130,8 @@ public class NewGame extends OptionActivity
             mGameID = mDbHelper.getNewestGame();
             mGame.setmID(mGameID);
 
+            updateGame();
             mDbHelper.close();
-
         }
 
         mButtonNewGame = (Button) findViewById(R.id.buttonNewGame);
@@ -142,7 +142,6 @@ public class NewGame extends OptionActivity
 
         mButtonAddPlayer = (Button) findViewById(R.id.buttonAddPlayer);
         mButtonAddPlayer.setOnClickListener(this);
-
 
         setGameTime();
 
@@ -194,10 +193,10 @@ public class NewGame extends OptionActivity
         displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
         displaySpinner(mSpinnerPreset, presetStringArray());
 
-        updateGame();
-
         displayRecyclerView(false);
         setOptionChangeListeners();
+
+        updateGame();
 
     }
 
@@ -409,11 +408,6 @@ public class NewGame extends OptionActivity
             getEditText(e).setHint(e.getmHint());
         }
 
-        for (StringEditTextOption e : StringEditTextOptions()) {
-            getEditText(e).setText("");
-            getEditText(e).setHint(e.getmHint());
-        }
-
         for (CheckBoxOption c : CheckBoxOptions()) {
             getCheckBox(c).setChecked(c.isChecked());
         }
@@ -427,7 +421,7 @@ public class NewGame extends OptionActivity
 
         boolean areDuplicatePlayers;
 
-        mGame.addPlayer(new Player(playerName, 0));
+        mGame.addNewPlayer(new Player(playerName, 0));
         areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
 
         if (areDuplicatePlayers) {
@@ -464,7 +458,7 @@ public class NewGame extends OptionActivity
             mEditTextPlayer.setText("");
 
             updateGame();
-            // specify an adapter (see also next example)
+
             mPlayerListAdapter.notifyItemInserted(mGame.size());
 
         }
@@ -475,9 +469,7 @@ public class NewGame extends OptionActivity
     protected void onStop() {
         super.onStop();
         if (mStop) {
-            mDbHelper.open();
-            mDbHelper.deleteGame(mGameID);
-            mDbHelper.close();
+            deleteGame();
         }
     }
 
@@ -494,9 +486,7 @@ public class NewGame extends OptionActivity
             public void onClick(DialogInterface dialog, int id) {
 
                 mStop = true;
-                mDbHelper.open();
-                mDbHelper.deleteGame(mGameID);
-                mDbHelper.close();
+                deleteGame();
                 startActivity(mHomeIntent);
             }
         });

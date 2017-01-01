@@ -472,7 +472,7 @@ public class GameActivity extends AppCompatActivity
                 mMenuItemDiceNum.setVisible(true);
             }
 
-            int randomNum = mRandom.nextInt(mMaxNumDice - mMinNumDice) + mMinNumDice;
+            int randomNum = mRandom.nextInt((mMaxNumDice - mMinNumDice) + 1) + mMinNumDice;
             mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
         }
 
@@ -561,7 +561,7 @@ public class GameActivity extends AppCompatActivity
 
     private void addPlayer(AlertDialog alertDialog){
 
-        mGame.addPlayer(mNewPlayer);
+        mGame.addNewPlayer(mNewPlayer);
 
         List<Player> mPlayersArray = mGame.getmPlayerArray();
 
@@ -571,8 +571,6 @@ public class GameActivity extends AppCompatActivity
             Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
         }else{
-
-            mPlayersArray.get(mPlayersArray.size() - 1).createNewSet(mPlayersArray.get(0).getmSetScores().size());
 
             alertDialog.dismiss();
 

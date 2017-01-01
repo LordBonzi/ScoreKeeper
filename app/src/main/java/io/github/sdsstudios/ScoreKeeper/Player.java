@@ -42,7 +42,11 @@ public class Player {
         return mSetScores;
     }
 
-    public void createNewSet(int numSets){
+    public void setmSetScores(ArrayList<Integer> mSetScores) {
+        this.mSetScores = mSetScores;
+    }
+
+    public void fillSetArray(int numSets) {
         for (int i = 0; i < numSets - 1; i++) {
             addSet(0);
         }
@@ -65,9 +69,5 @@ public class Player {
         }
 
         return overallScore;
-    }
-
-    public void setmSetScores(ArrayList<Integer> mSetScores) {
-        this.mSetScores = mSetScores;
     }
 }

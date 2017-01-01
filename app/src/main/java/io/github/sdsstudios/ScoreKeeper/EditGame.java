@@ -108,7 +108,9 @@ public class EditGame extends OptionActivity {
 
         mGame.setmCompleted(!mGame.ismCompleted());
         updateCompleteMenuItem();
-        updateGame();
+
+        mDbHelper.open().updateGame(mGame);
+        mDbHelper.close();
     }
 
     @Override
@@ -136,7 +138,8 @@ public class EditGame extends OptionActivity {
                 break;
 
             case R.id.action_add:
-                addPlayerToGame(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
+                mGame.addNewPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
+                mPlayerListAdapter.notifyItemInserted(mGame.size());
                 break;
 
             case R.id.complete_game:
@@ -187,6 +190,10 @@ public class EditGame extends OptionActivity {
     public void onMenuDoneClick() {
 
         deleteEmptyPlayers();
+
+        for (final StringEditTextOption e : StringEditTextOptions()) {
+            e.setData(getEditText(e).getText().toString());
+        }
 
         final String newLength = mGame.getmLength();
 
@@ -303,6 +310,8 @@ public class EditGame extends OptionActivity {
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
 
+        mGame = mDataHelper.getGame(mGameID, mDbHelper);
+
         loadOptions();
 
         displayRecyclerView(false);
@@ -320,7 +329,7 @@ public class EditGame extends OptionActivity {
 
         builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mDbHelper.deleteGame(mGameID);
+                deleteGame();
                 startActivity(new Intent(EditGame.this, History.class));
             }
         });

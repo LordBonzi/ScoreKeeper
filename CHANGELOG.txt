@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 2 01/01/17
+### Added
+ - navigation bar to navigate through the app
+ - general code improvements
+ - performance improvements
+ - new default colors
+ - moved max and min dice numbers to New Game so each game can have a unique set of numbers
+ 
+### Removed
+ - More games button on home screen
+ 
+### Bug Fixes
+ - padding issues on cardviews on larger screens
+ - presets were not being created
+ - wrong color was checked in accent color dialog in Theme Settings
+
 ## 1.1 Beta 1 07/12/16
 ### Added
  - sets

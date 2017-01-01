@@ -127,6 +127,13 @@ public class SetGridViewAdapter extends BaseAdapter{
                     List<Integer> setList = player.getmSetScores();
                     textView.setText(String.valueOf(setList.get(setList.size() - currentRow - 1)));
 
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+
                 } catch (Exception e) {
 
                     e.printStackTrace();

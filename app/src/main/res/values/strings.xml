@@ -27,6 +27,7 @@
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
+    <string name="set">Set</string>
     <string name="are_you_sure_edit_game">Are you sure you want to change this game?</string>
     <string name="loser">Loser:</string>
     <string name="git_link">https://github.com/SDS-Studios/ScoreKeeper/</string>

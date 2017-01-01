@@ -108,7 +108,7 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
             mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
 
             Bundle extras = getIntent().getExtras();
-            mGameID = extras.getInt("GAME_ID");
+            mGameID = extras.getInt(STATE_GAMEID);
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
         } else {
@@ -272,44 +272,44 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
             });
         }
 
-        for (final StringEditTextOption e : StringEditTextOptions()) {
+        if (CURRENT_ACTIVITY == EDIT_GAME) {
+            for (final StringEditTextOption e : StringEditTextOptions()) {
 
-            getEditText(e).addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                getEditText(e).addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    try {
+                        try {
 
-                        //if statement necessary to avoid numberformatexception if edittext empty
-                        if (charSequence != "") {
-                            e.setData(charSequence.toString());
-                        } else {
+                            //if statement necessary to avoid numberformatexception if edittext empty
+                            if (charSequence != "") {
+                                e.setData(charSequence.toString());
+                            } else {
+                                e.setData(e.getmDefaultValue());
+                            }
+
+                        } catch (NumberFormatException error) {
+                            error.printStackTrace();
                             e.setData(e.getmDefaultValue());
+
                         }
 
-                    } catch (NumberFormatException error) {
-                        error.printStackTrace();
-                        e.setData(e.getmDefaultValue());
-
                     }
 
-                }
+                    @Override
+                    public void afterTextChanged(Editable editable) {
 
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                    if (CURRENT_ACTIVITY == NEW_GAME) {
                         mGame.setmStringEditTextOption(e);
                         mDbHelper.open().updateGame(mGame);
-                    }
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 

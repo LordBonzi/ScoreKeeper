@@ -708,7 +708,6 @@ public class NewGame extends OptionActivity
 
     }
 
-
     public void createNewGame(boolean startGame) {
         Intent mainActivityIntent = new Intent(this, GameActivity.class);
         mStop = false;

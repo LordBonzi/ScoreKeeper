@@ -371,7 +371,7 @@ public class NewGame extends OptionActivity
 
             case R.id.action_delete_presets:
                 if (mPresetDBAdapter.open().numRows() != 0) {
-                    deleteDialog(presetStringArray(), Delete.PRESETS);
+                    deleteDialog(presetStringArray(), Dialog.PRESETS);
                 } else {
                     Toast.makeText(this, "No Presets Created", Toast.LENGTH_SHORT).show();
                 }
@@ -379,7 +379,7 @@ public class NewGame extends OptionActivity
 
             case R.id.action_delete_timelimits:
                 if (timeLimitStringArray().size() > 2) {
-                    deleteDialog(timeLimitStringArray(), Delete.TIME_LIMIT);
+                    deleteDialog(timeLimitStringArray(), Dialog.TIME_LIMIT);
                 } else {
                     Toast.makeText(this, "No Time Limits Created", Toast.LENGTH_SHORT).show();
                 }
@@ -501,7 +501,7 @@ public class NewGame extends OptionActivity
         dialog.show();
     }
 
-    public void deleteDialog(List<String> array, final Delete type) {
+    public void deleteDialog(List<String> array, final Dialog type) {
 
         final View dialogView;
 
@@ -513,7 +513,7 @@ public class NewGame extends OptionActivity
         dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
 
-        if (type == Delete.PRESETS) {
+        if (type == Dialog.PRESETS) {
 
             dialogBuilder.setTitle(getResources().getString(R.string.delete_presets));
             dialogBuilder.setMessage(getResources().getString(R.string.delete_presets_message));
@@ -529,7 +529,7 @@ public class NewGame extends OptionActivity
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                if (type == Delete.PRESETS) {
+                if (type == Dialog.PRESETS) {
                     mPresetDBAdapter.open();
                     mPresetDBAdapter.deleteAllPresets();
                     mPresetDBAdapter.close();
@@ -552,7 +552,7 @@ public class NewGame extends OptionActivity
 
                 mRecyclerViewAdapter.deleteSelectedItems(type, NewGame.this);
 
-                if (type == Delete.PRESETS) {
+                if (type == Dialog.PRESETS) {
                     displaySpinner(mSpinnerPreset, presetStringArray());
 
                 } else {
@@ -781,8 +781,4 @@ public class NewGame extends OptionActivity
         mRecyclerViewAdapter.toggleSelection(position);
     }
 
-
-    enum Delete {
-        PRESETS, TIME_LIMIT
-    }
 }

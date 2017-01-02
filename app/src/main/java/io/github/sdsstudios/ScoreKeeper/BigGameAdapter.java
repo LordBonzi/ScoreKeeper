@@ -108,14 +108,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGame.getmGameListener().deletePlayer(position);
+                    mGameListener.deletePlayer(position);
                 }
             });
 
             holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGame.getmGameListener().editPlayer(position);
+                    mGameListener.editPlayer(position);
                 }
             });
 

@@ -67,6 +67,8 @@ public class GameDBAdapter {
     }
 
     void updateGame(Game game){
+        Game.GameListener gameListener = game.getmGameListener();
+
         game.setGameListener(null);
 
         ContentValues initialValues = new ContentValues();
@@ -85,6 +87,8 @@ public class GameDBAdapter {
         open();
         DATABASE.update(SQLITE_TABLE, initialValues, KEY_ROWID + "=" + game.getmID(), null);
         close();
+
+        game.setGameListener(gameListener);
     }
 
     long createGame(Game game) {

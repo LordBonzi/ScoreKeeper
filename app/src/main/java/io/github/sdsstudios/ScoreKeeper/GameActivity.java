@@ -26,7 +26,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +53,7 @@ import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
 
 public class GameActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
-        , Game.GameListener {
+        , Game.GameListener, SetGridViewAdapter.OnScoreClickListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
     public static int GAME_ID;
@@ -81,7 +80,6 @@ public class GameActivity extends AppCompatActivity
     private SharedPreferences mSharedPreferences;
     private RelativeLayout mBaseLayout, mBigLayout, mNormalLayout;
     private CoordinatorLayout mCoordinatorLayout;
-    private Player mNewPlayer = null;
     private ViewGroup.LayoutParams mParams;
     private TabLayout mTabLayout;
     private Game mGame;
@@ -148,9 +146,9 @@ public class GameActivity extends AppCompatActivity
 
     }
 
-    public void populateSetGridView(){
+    public void populateSetGridView() {
         mSetGridView.setNumColumns(mGame.size());
-        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this);
+        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this, this);
         mSetGridView.setAdapter(setGridViewAdapter);
     }
 
@@ -206,7 +204,7 @@ public class GameActivity extends AppCompatActivity
         mTextViewP1 = (TextView) findViewById(R.id.textViewP1);
         mTextViewP2 = (TextView) findViewById(R.id.textViewP2);
 
-        mSetGridView = (GridView)findViewById(R.id.setGridView);
+        mSetGridView = (GridView) findViewById(R.id.setGridView);
 
         if (!mClassicTheme) {
 
@@ -224,7 +222,7 @@ public class GameActivity extends AppCompatActivity
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
             mTabLayout.setupWithViewPager(mViewPager);
 
-            for(int i = 0; i < mTabLayout.getChildCount(); i++) {
+            for (int i = 0; i < mTabLayout.getChildCount(); i++) {
                 mTabLayout.getChildAt(i).setBackgroundColor(mPrimaryColor);
             }
 
@@ -237,7 +235,7 @@ public class GameActivity extends AppCompatActivity
                 @Override
                 public void onPageSelected(int position) {
 
-                    switch (position){
+                    switch (position) {
 
                         case 0:
                             findViewById(R.id.gameRelativeLayout).setVisibility(View.VISIBLE);
@@ -262,7 +260,7 @@ public class GameActivity extends AppCompatActivity
             });
 
 
-        }else{
+        } else {
 
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
 
@@ -294,7 +292,7 @@ public class GameActivity extends AppCompatActivity
 
             if (mStopwatch.getText().equals(mTimeLimit)) {
 
-                if (!mFinished){
+                if (!mFinished) {
                     timeLimitDialog();
                 }
 
@@ -478,115 +476,14 @@ public class GameActivity extends AppCompatActivity
 
         if (id == R.id.action_add) {
             if (!mFinished) {
-                addPlayerDialog();
-            }else{
-                Toast.makeText(this, "Game has finished, you can't add more players", Toast.LENGTH_SHORT).show();
+                playerDialog(new Player("", mStartingScore), mGame.size(), Dialog.ADD_PLAYER, 0);
+            } else {
+                Toast.makeText(this, "Game has completed, you can't add more players", Toast.LENGTH_SHORT).show();
 
             }
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void addPlayerDialog() {
-        mPaused = true;
-        chronometerClick();
-        final View dialogView;
-
-        LayoutInflater inflter = LayoutInflater.from(this);
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.create_preset_fragment, null);
-        final EditText editTextPresetTitle = (EditText) dialogView.findViewById(R.id.editTextPresetTitle);
-        editTextPresetTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                addPlayer(mAlertDialog);
-
-                return false;
-            }
-        });
-        dialogBuilder.setPositiveButton(R.string.create, null);
-
-        dialogBuilder.setTitle(getResources().getString(R.string.add_player));
-
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        dialogBuilder.setView(dialogView);
-
-        mAlertDialog = dialogBuilder.create();
-
-        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                editTextPresetTitle.addTextChangedListener(new TextWatcher() {
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer = new Player(charSequence.toString(), mStartingScore);
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                    }
-                });
-
-                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        addPlayer(mAlertDialog);
-
-                    }
-                });
-            }
-
-        });
-        mAlertDialog.show();
-
-    }
-
-    private void addPlayer(AlertDialog alertDialog){
-
-        mGame.addNewPlayer(mNewPlayer);
-
-        List<Player> mPlayersArray = mGame.getmPlayerArray();
-
-        if (mDataHelper.checkPlayerDuplicates(mPlayersArray)){
-
-            mPlayersArray.remove(mPlayersArray.size() - 1);
-            Toast.makeText(this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
-
-        }else{
-
-            alertDialog.dismiss();
-
-            if (mGame.isChecked(OptionID.STOPWATCH)) {
-                mGame.setmLength(mStopwatch.getText().toString());
-            }
-
-            mDbHelper.open().updateGame(mGame);
-
-            selectLayout();
-            mPaused = true;
-            chronometerClick();
-
-            populateSetGridView();
-
-        }
     }
 
     @Override
@@ -669,11 +566,11 @@ public class GameActivity extends AppCompatActivity
                 break;
 
             case R.id.buttonEditP1:
-                editPlayerDialog(0);
+                playerDialog(mGame.getPlayer(0), 0, Dialog.EDIT_PLAYER, 0);
                 break;
 
             case R.id.buttonEditP2:
-                editPlayerDialog(1);
+                playerDialog(mGame.getPlayer(1), 1, Dialog.EDIT_PLAYER, 0);
 
                 break;
 
@@ -801,15 +698,15 @@ public class GameActivity extends AppCompatActivity
 
             dialog.show();
 
-        }else if (mWon && !isFullScreen()) {
+        } else if (mWon && !isFullScreen()) {
 
             winnerDialog(mWinnerString);
 
-        }else if (timeLimitReached() && !isFullScreen()) {
+        } else if (timeLimitReached() && !isFullScreen()) {
 
             timeLimitDialog();
 
-        }else{
+        } else {
             setFullScreen(false);
 
         }
@@ -822,10 +719,10 @@ public class GameActivity extends AppCompatActivity
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if (mGame.numSetsPlayed() == mGame.numSets()){
+        if (mGame.numSetsPlayed() == mGame.numSets()) {
 
             builder.setTitle(winner + " " + getString(R.string.has_won) + " overall");
-        }else{
+        } else {
 
             builder.setTitle(winner + " " + getString(R.string.has_won));
 
@@ -844,7 +741,7 @@ public class GameActivity extends AppCompatActivity
 
                 public void onClick(DialogInterface dialog, int id) {
 
-                    for (Player p : mGame.getmPlayerArray()){
+                    for (Player p : mGame.getmPlayerArray()) {
                         p.addSet(mStartingScore);
                         p.setmScore(mStartingScore);
                     }
@@ -860,12 +757,12 @@ public class GameActivity extends AppCompatActivity
 
                     mDbHelper.open().updateGame(mGame);
 
-                    if (mGame.size() == 2){
+                    if (mGame.size() == 2) {
                         mP1Score = 0;
                         mP2Score = 0;
                         mButtonP1.setText(String.valueOf(mP1Score));
                         mButtonP2.setText(String.valueOf(mP2Score));
-                    }else{
+                    } else {
                         displayRecyclerView(true);
                     }
 
@@ -884,7 +781,7 @@ public class GameActivity extends AppCompatActivity
                 }
             });
 
-        }else{
+        } else {
 
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -1053,7 +950,7 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
-    public void gameWon(String winner) {
+    public void onGameWon(String winner) {
         this.mWinnerString = winner;
 
         if (mGame.size() == 2) {
@@ -1064,11 +961,12 @@ public class GameActivity extends AppCompatActivity
         mPaused = true;
         chronometerClick();
         mWon = true;
-        winnerDialog(winner);
 
         if (!mClassicTheme) {
             displayRecyclerView(false);
         }
+
+        winnerDialog(winner);
 
     }
 
@@ -1096,12 +994,19 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     public void editPlayer(int position) {
-        editPlayerDialog(position);
+        playerDialog(mGame.getPlayer(position), position, Dialog.EDIT_PLAYER, 0);
     }
 
-    public void editPlayerDialog(final int position){
+    public void playerDialog(final Player player, final int position, final Dialog type, final int setPosition) {
         mPaused = true;
         chronometerClick();
+
+        final Player oldPlayer = player;
+
+        final int oldScore = (type == Dialog.CHANGE_SET)
+                ? player.getmSetScores().get(setPosition)
+                : player.getmScore();
+
         final View dialogView;
 
         LayoutInflater inflter = LayoutInflater.from(this);
@@ -1111,17 +1016,45 @@ public class GameActivity extends AppCompatActivity
         final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
         final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);
 
-        editTextPlayer.setHint(String.valueOf(mGame.getPlayer(position).getmName()));
-        editTextScore.setHint(String.valueOf(mGame.getPlayer(position).getmScore()));
+        editTextPlayer.setHint(player.getmName());
+
+        switch (type) {
+
+            case CHANGE_SET:
+                editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
+                break;
+
+            default:
+                editTextScore.setHint(String.valueOf(player.getmScore()));
+                break;
+
+        }
 
         dialogBuilder.setPositiveButton(R.string.done, null);
 
-        dialogBuilder.setTitle(getResources().getString(R.string.edit_player));
+        switch (type) {
+
+            case EDIT_PLAYER:
+                dialogBuilder.setTitle(getResources().getString(R.string.edit_player));
+                break;
+
+            case CHANGE_SET:
+                dialogBuilder.setTitle(getResources().getString(R.string.change_set_score));
+                break;
+
+            case ADD_PLAYER:
+                dialogBuilder.setTitle(getResources().getString(R.string.add_player));
+                break;
+
+        }
 
         dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if (type != Dialog.ADD_PLAYER) {
+                    mGame.setPlayer(oldPlayer, position);
+                }
                 dialog.dismiss();
             }
         });
@@ -1131,6 +1064,7 @@ public class GameActivity extends AppCompatActivity
         mAlertDialog = dialogBuilder.create();
 
         mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 editTextPlayer.addTextChangedListener(new TextWatcher() {
@@ -1141,12 +1075,12 @@ public class GameActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer = new Player(charSequence.toString(), 0);
 
                     }
 
                     @Override
                     public void afterTextChanged(Editable editable) {
+                        player.setmName(editable.toString());
                     }
                 });
 
@@ -1158,11 +1092,24 @@ public class GameActivity extends AppCompatActivity
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        mNewPlayer.setmScore(Integer.valueOf(charSequence.toString()));
                     }
 
                     @Override
                     public void afterTextChanged(Editable editable) {
+                        if (type == Dialog.CHANGE_SET) {
+                            if (editable.toString().equals("")) {
+                                player.changeSetScore(setPosition, oldScore);
+                            } else {
+                                player.changeSetScore(setPosition, Integer.valueOf(editable.toString()));
+                            }
+                        } else {
+                            if (editable.toString().equals("")) {
+                                player.setmScore(oldScore);
+                            } else {
+                                player.setmScore(Integer.valueOf(editable.toString()));
+                            }
+                        }
+
                     }
                 });
 
@@ -1172,21 +1119,20 @@ public class GameActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
 
-                        Player oldPlayer = mGame.getPlayer(position);
-
-                        if (mNewPlayer == null || mNewPlayer.equals("")) {
-                            mNewPlayer = oldPlayer;
+                        if (type == Dialog.ADD_PLAYER) {
+                            mGame.addNewPlayer(player);
+                        } else {
+                            mGame.setPlayer(player, position);
                         }
-                        mGame.setPlayer(mNewPlayer, position);
 
                         if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
-
                             mGame.setPlayer(oldPlayer, position);
-
                             Toast.makeText(GameActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
-                        } else {
 
-                            mDbHelper.open().updateGame(mGame);
+                        } else if (player.getmName().equals("")) {
+                            mGame.setPlayer(oldPlayer, position);
+                            Toast.makeText(GameActivity.this, R.string.must_have_name, Toast.LENGTH_SHORT).show();
+                        } else {
 
                             mAlertDialog.dismiss();
 
@@ -1195,10 +1141,14 @@ public class GameActivity extends AppCompatActivity
                             }
 
                             mDbHelper.open().updateGame(mGame);
+                            mDbHelper.close();
 
+                            populateSetGridView();
                             selectLayout();
                             mPaused = true;
                             chronometerClick();
+
+                            mGame.isGameWon();
                         }
 
                     }
@@ -1209,7 +1159,8 @@ public class GameActivity extends AppCompatActivity
         });
         mAlertDialog.show();
     }
-    private void selectLayout(){
+
+    private void selectLayout() {
         if (mGame.size() > 2) {
             mBigLayout.setVisibility(View.VISIBLE);
             mNormalLayout.setVisibility(View.INVISIBLE);
@@ -1256,17 +1207,17 @@ public class GameActivity extends AppCompatActivity
                 if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(OptionID.STOPWATCH)) {
                     mGame.setmLength("00:00:00:0");
 
-                }else if (mTimeWhenStopped != 0L){
+                } else if (mTimeWhenStopped != 0L) {
                     //when coming back from the app running in the background treat it as unpausing the mStopwatch
                     mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
 
-                }else{
+                } else {
                     mStopwatch.setBase((-(3600000 + mTimeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
                 timeLimitReached();
 
-                if (!mFinished){
+                if (!mFinished) {
                     mStopwatch.start();
                     mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
                     mStopwatch.setTextColor(getResources().getColor(R.color.start));
@@ -1275,7 +1226,7 @@ public class GameActivity extends AppCompatActivity
 
                 mDbHelper.open().updateGame(mGame);
 
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 Snackbar snackbar;
                 snackbar = Snackbar.make(mNormalLayout, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
@@ -1286,19 +1237,24 @@ public class GameActivity extends AppCompatActivity
             }
 
 
-        }else{
+        } else {
             if (mGame.size() > 2) {
-                CardView cardView = (CardView)findViewById(R.id.buttonChronometerBig);
+                CardView cardView = (CardView) findViewById(R.id.buttonChronometerBig);
                 cardView.setVisibility(View.INVISIBLE);
                 mPlayerList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            }else{
-                CardView cardView = (CardView)findViewById(R.id.buttonChronometer);
+            } else {
+                CardView cardView = (CardView) findViewById(R.id.buttonChronometer);
                 cardView.setVisibility(View.INVISIBLE);
             }
             mStopwatch.setVisibility(View.INVISIBLE);
             mFabChronometer.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onScoreClick(Player player, int position, int setPosition) {
+        playerDialog(player, position, Dialog.CHANGE_SET, setPosition);
     }
 
     public static class GameActivityTabFragment extends Fragment {

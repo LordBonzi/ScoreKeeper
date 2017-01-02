@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.1 Beta 2 Debug</string>
-    <string name="versionCode">111</string>
+    <string name="app_version">v1.1 Beta 3 Debug</string>
+    <string name="versionCode">112</string>
     <string name="title">Title:</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
@@ -13,6 +13,7 @@
     <string name="date">Date:</string>
     <string name="dice">Dice</string>
     <string name="no">No</string>
+    <string name="change_set_score">Change Set Score</string>
     <string name="new_set">New Set</string>
     <string name="sets">Sets</string>
     <string name="message">Message</string>

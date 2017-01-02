@@ -34,9 +34,9 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
     }
 
-    public void deleteSelectedItems(NewGame.Delete type, Context context) {
+    public void deleteSelectedItems(Dialog type, Context context) {
 
-        if (type == NewGame.Delete.PRESETS) {
+        if (type == Dialog.PRESETS) {
 
             PresetDBAdapter presetDBAdapter = new PresetDBAdapter(context);
 

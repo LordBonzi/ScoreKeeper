@@ -107,7 +107,7 @@ public class Game {
     public int numSetsPlayed(){
         int num = 0;
         for (Player p: mPlayerArray){
-            num += p.getmSetScores().size();
+            num += p.getNumSetsPlayed();
         }
         return num  / size();
     }
@@ -198,8 +198,15 @@ public class Game {
     }
 
     public void addNewPlayer(Player player) {
+
+        /** fill player set array with 0s before the score specified in the dialog in GameActivity
+         * so the score displayed after adding the player is the score specified
+         */
+
         if (size() > 0) {
-            player.fillSetArray(getPlayer(0).getmSetScores().size());
+            for (int i = 0; i < mPlayerArray.get(0).getNumSetsPlayed() - 1; i++) {
+                player.addSetAtPosition(i, 0);
+            }
         }
 
         mPlayerArray.add(player);
@@ -266,14 +273,16 @@ public class Game {
             if (maxScore != 0) {
                 if (maxScore < 0) {
                     if (p.getmScore() <= maxScore && scoreDifference(maxScore)) {
-                        mGameListener.gameWon(getWinnerString());
+                        mGameListener.onGameWon(getWinnerString());
                         isWon = true;
+                        break;
                     }
 
                 } else if (maxScore >= 0) {
                     if (p.getmScore() >= maxScore && scoreDifference(maxScore)) {
-                        mGameListener.gameWon(getWinnerString());
+                        mGameListener.onGameWon(getWinnerString());
                         isWon = true;
+                        break;
                     }
 
                 }
@@ -307,7 +316,7 @@ public class Game {
     }
 
     interface GameListener {
-        void gameWon(String winner);
+        void onGameWon(String winner);
 
         void deletePlayer(int position);
 

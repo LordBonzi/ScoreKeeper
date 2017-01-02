@@ -8,16 +8,14 @@ import java.util.ArrayList;
 
 public class Player {
     private String mName;
-    private int mScore;
     private ArrayList<Integer> mSetScores;
     //TODO add image for player
 
     public Player(String mName, int mScore) {
         this.mName = mName;
-        this.mScore = mScore;
         this.mSetScores = new ArrayList<Integer>();
         //create a blank set.
-        mSetScores.add(0,0);
+        mSetScores.add(mScore);
     }
 
     public String getmName() {
@@ -29,11 +27,10 @@ public class Player {
     }
 
     public int getmScore() {
-        return mScore;
+        return mSetScores.get(mSetScores.size() - 1);
     }
 
     public void setmScore(int mScore) {
-        this.mScore = mScore;
         mSetScores.set(mSetScores.size() - 1, mScore);
 
     }
@@ -46,10 +43,12 @@ public class Player {
         this.mSetScores = mSetScores;
     }
 
-    public void fillSetArray(int numSets) {
-        for (int i = 0; i < numSets - 1; i++) {
-            addSet(0);
-        }
+    void changeSetScore(int position, int score) {
+        mSetScores.set(position, score);
+    }
+
+    public void addSetAtPosition(int index, int score) {
+        mSetScores.add(index, score);
     }
 
     public void addSet(int score){
@@ -59,6 +58,10 @@ public class Player {
     public void deleteSet(int index){
         mSetScores.remove(index);
 
+    }
+
+    public int getNumSetsPlayed() {
+        return mSetScores.size();
     }
 
     public int overallScore(){

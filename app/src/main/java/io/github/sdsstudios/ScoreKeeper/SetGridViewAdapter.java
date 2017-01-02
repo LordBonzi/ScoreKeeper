@@ -22,10 +22,12 @@ public class SetGridViewAdapter extends BaseAdapter{
     private Context mCtx;
     private Player mLastPlayer;
     private int mLastRow;
+    private OnScoreClickListener mOnScoreClickListener;
 
-    public SetGridViewAdapter(List<Player> mPlayerArray, Context ctx) {
+    public SetGridViewAdapter(List<Player> mPlayerArray, Context ctx, OnScoreClickListener mOnScoreClickListener) {
         this.mPlayerArray = mPlayerArray;
         this.mCtx = ctx;
+        this.mOnScoreClickListener = mOnScoreClickListener;
 
         mNumPlayers = mPlayerArray.size();
     }
@@ -124,13 +126,17 @@ public class SetGridViewAdapter extends BaseAdapter{
                     TextView textView = (TextView) itemView.findViewById(R.id.textView);
 
                     assert player != null;
-                    List<Integer> setList = player.getmSetScores();
-                    textView.setText(String.valueOf(setList.get(setList.size() - currentRow - 1)));
+                    final List<Integer> setList = player.getmSetScores();
 
+                    final int setPosition = setList.size() - currentRow - 1;
+
+                    textView.setText(String.valueOf(setList.get(setPosition)));
+
+                    final Player finalPlayer = player;
                     itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            mOnScoreClickListener.onScoreClick(finalPlayer, mPlayerArray.indexOf(finalPlayer), setPosition);
                         }
                     });
 
@@ -149,5 +155,9 @@ public class SetGridViewAdapter extends BaseAdapter{
         }
 
         return itemView;
+    }
+
+    public interface OnScoreClickListener {
+        void onScoreClick(Player player, int position, int setPosition);
     }
 }

@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
@@ -10,12 +12,14 @@ import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
 
 public class Game {
 
+    private static String TAG = "Game";
     private GameListener mGameListener;
 
     private List<Player> mPlayerArray;
     private TimeLimit mTimeLimit;
     private boolean mCompleted;
     private int mID;
+    private int mNumSetsPlayed;
 
     private List<IntEditTextOption> mIntEditTextOptions;
     private List<StringEditTextOption> mStringEditTextOptions;
@@ -105,11 +109,15 @@ public class Game {
     }
 
     public int numSetsPlayed(){
-        int num = 0;
-        for (Player p: mPlayerArray){
-            num += p.getNumSetsPlayed();
+        return mNumSetsPlayed;
+    }
+
+    public void startNewSet() {
+        for (Player p : getmPlayerArray()) {
+            p.addSet(getInt(OptionID.STARTING_SCORE));
         }
-        return num  / size();
+
+        mNumSetsPlayed += 1;
     }
 
     public int getInt(OptionID id) {
@@ -268,18 +276,21 @@ public class Game {
 
         boolean isWon = false;
 
-        for (Player p : mPlayerArray) {
+        for (int i = 0; i < size(); i++) {
+
+            Player p = mPlayerArray.get(i);
 
             if (maxScore != 0) {
                 if (maxScore < 0) {
-                    if (p.getmScore() <= maxScore && scoreDifference(maxScore)) {
+                    if (p.getmScore() <= maxScore && scoreDifference()) {
                         mGameListener.onGameWon(getWinnerString());
                         isWon = true;
                         break;
                     }
 
                 } else if (maxScore >= 0) {
-                    if (p.getmScore() >= maxScore && scoreDifference(maxScore)) {
+
+                    if (p.getmScore() >= maxScore && scoreDifference()) {
                         mGameListener.onGameWon(getWinnerString());
                         isWon = true;
                         break;
@@ -295,15 +306,39 @@ public class Game {
 
     }
 
-    private boolean scoreDifference(int score) {
+    public int largestScoreIndex(List<Integer> mScoreList) {
+        return mScoreList.indexOf(Collections.max(mScoreList));
+    }
+
+    public List<Integer> getListOfScores() {
+        List<Integer> scoreList = new ArrayList<>();
+        for (int i = 0; i < size(); i++) {
+            scoreList.add(mPlayerArray.get(i).getmScore());
+
+        }
+
+        return scoreList;
+    }
+
+    private boolean scoreDifference() {
         boolean b = false;
-        for (Player p : mPlayerArray) {
-            if (getInt(OptionID.WINNING_SCORE) != 0) {
-                if (Math.abs(score - p.getmScore()) >= getInt(OptionID.SCORE_DIFF_TO_WIN)) {
-                    b = true;
-                }
+        int maxScore = getInt(OptionID.WINNING_SCORE);
+
+        if (maxScore != 0) {
+            List<Integer> scoreListWithoutLargestScore = getListOfScores();
+            scoreListWithoutLargestScore.remove(largestScoreIndex(scoreListWithoutLargestScore));
+
+            int largestScore = (maxScore > 0) ? Collections.max(getListOfScores())
+                    : Collections.min(getListOfScores());
+
+            int secondLargestScore = (maxScore > 0) ? Collections.max(scoreListWithoutLargestScore)
+                    : Collections.min(scoreListWithoutLargestScore);
+
+            if (largestScore - secondLargestScore >= getInt(OptionID.SCORE_DIFF_TO_WIN)) {
+                b = true;
             }
         }
+
         return b;
     }
 

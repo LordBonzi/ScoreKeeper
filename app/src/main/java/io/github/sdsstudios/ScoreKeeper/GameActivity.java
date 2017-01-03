@@ -741,10 +741,7 @@ public class GameActivity extends AppCompatActivity
 
                 public void onClick(DialogInterface dialog, int id) {
 
-                    for (Player p : mGame.getmPlayerArray()) {
-                        p.addSet(mStartingScore);
-                        p.setmScore(mStartingScore);
-                    }
+                    mGame.startNewSet();
 
                     mFinished = false;
                     mPaused = false;
@@ -1126,12 +1123,23 @@ public class GameActivity extends AppCompatActivity
                         }
 
                         if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
-                            mGame.setPlayer(oldPlayer, position);
+                            if (type == Dialog.ADD_PLAYER) {
+                                mGame.removePlayer(position);
+                            } else {
+                                mGame.setPlayer(oldPlayer, position);
+                            }
                             Toast.makeText(GameActivity.this, R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
                         } else if (player.getmName().equals("")) {
-                            mGame.setPlayer(oldPlayer, position);
+
+                            if (type == Dialog.ADD_PLAYER) {
+                                mGame.removePlayer(position);
+                            } else {
+                                mGame.setPlayer(oldPlayer, position);
+                            }
+
                             Toast.makeText(GameActivity.this, R.string.must_have_name, Toast.LENGTH_SHORT).show();
+
                         } else {
 
                             mAlertDialog.dismiss();
@@ -1258,19 +1266,11 @@ public class GameActivity extends AppCompatActivity
     }
 
     public static class GameActivityTabFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public GameActivityTabFragment() {
         }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
 
         public static GameActivityTabFragment newInstance(int sectionNumber) {
             GameActivityTabFragment fragment = new GameActivityTabFragment();
@@ -1290,11 +1290,6 @@ public class GameActivity extends AppCompatActivity
         }
 
     }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

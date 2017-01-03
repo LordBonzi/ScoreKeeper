@@ -105,7 +105,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }
             });
 
-            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mGameListener.deletePlayer(position);
@@ -142,14 +142,14 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
         // each data item is just a string in this case
         public TextView textViewPlayer;
         public Button buttonScore;
-        public ImageButton imageButton, editButton;
+        public ImageButton deleteButton, editButton;
 
 
         public ViewHolder(View v) {
             super(v);
             textViewPlayer = (TextView) v.findViewById(R.id.listTextViewPlayer);
             buttonScore = (Button) v.findViewById(R.id.listButtonScore);
-            imageButton = (ImageButton) v.findViewById(R.id.buttonDelete);
+            deleteButton = (ImageButton) v.findViewById(R.id.buttonDelete);
             editButton = (ImageButton) v.findViewById(R.id.buttonEdit);
 
         }

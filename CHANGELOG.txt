@@ -4,7 +4,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
 
 ## 1.1 Beta 2 01/01/17
 ### Added
- - navigation bar to navigate through the app
+ - navigation drawer to navigate through the app
  - general code improvements
  - performance improvements
  - new default colors

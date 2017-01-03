@@ -1307,7 +1307,7 @@ public class GameActivity extends AppCompatActivity
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -1317,8 +1317,6 @@ public class GameActivity extends AppCompatActivity
                     return getString(R.string.game);
                 case 1:
                     return getString(R.string.sets);
-                case 2:
-                    return getString(R.string.time_line);
 
             }
             return null;

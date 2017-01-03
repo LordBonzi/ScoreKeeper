@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@mipmap/ic_delete_white_24dp"
+        android:title="Delete"
+
+        app:showAsAction="ifRoom" />
         <item android:id="@+id/action_delete_all"
             android:icon="@mipmap/ic_delete_sweep_white_24dp"
             android:title="Delete All"
@@ -11,9 +18,5 @@
             android:title="Select All"
             app:showAsAction="ifRoom" />
 
-        <item android:id="@+id/action_delete"
-            android:icon="@mipmap/ic_delete_white_24dp"
-            android:title="Delete"
-            app:showAsAction="ifRoom" />
 
 </menu>

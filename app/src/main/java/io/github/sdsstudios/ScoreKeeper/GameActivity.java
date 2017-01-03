@@ -92,6 +92,7 @@ public class GameActivity extends AppCompatActivity
     private int mAccentColor, mPrimaryColor;
     private String mTimeLimit;
     private Random mRandom = new Random();
+    private SetGridViewAdapter mSetGridViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,8 +149,8 @@ public class GameActivity extends AppCompatActivity
 
     public void populateSetGridView() {
         mSetGridView.setNumColumns(mGame.size());
-        SetGridViewAdapter setGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this, this);
-        mSetGridView.setAdapter(setGridViewAdapter);
+        mSetGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this, this);
+        mSetGridView.setAdapter(mSetGridViewAdapter);
     }
 
     public void loadObjects() {
@@ -248,8 +249,6 @@ public class GameActivity extends AppCompatActivity
                             populateSetGridView();
                             break;
 
-                        case 2:
-                            Toast.makeText(GameActivity.this, "Coming Soon ;)", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -479,7 +478,6 @@ public class GameActivity extends AppCompatActivity
                 playerDialog(new Player("", mStartingScore), mGame.size(), Dialog.ADD_PLAYER, 0);
             } else {
                 Toast.makeText(this, "Game has completed, you can't add more players", Toast.LENGTH_SHORT).show();
-
             }
         }
 
@@ -762,6 +760,8 @@ public class GameActivity extends AppCompatActivity
                     } else {
                         displayRecyclerView(true);
                     }
+
+                    populateSetGridView();
 
                 }
             });
@@ -1151,12 +1151,13 @@ public class GameActivity extends AppCompatActivity
                             mDbHelper.open().updateGame(mGame);
                             mDbHelper.close();
 
-                            populateSetGridView();
                             selectLayout();
                             mPaused = true;
                             chronometerClick();
-
                             mGame.isGameWon();
+
+                            populateSetGridView();
+
                         }
 
                     }

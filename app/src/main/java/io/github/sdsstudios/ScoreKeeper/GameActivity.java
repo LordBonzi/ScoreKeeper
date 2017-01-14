@@ -3,9 +3,7 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,7 +76,6 @@ public class GameActivity extends ScoreKeeperActivity
     private String TAG = "GameActivity.class";
     private CardView mCardViewStopwatch;
     private Stopwatch mStopwatch;
-    private boolean mClassicTheme = false;
     private View mDialogView;
     private AlertDialog mAlertDialog;
     private long mTimeWhenStopped = 0L;
@@ -113,22 +110,7 @@ public class GameActivity extends ScoreKeeperActivity
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
         mGame.setGameListener(this);
 
-        mClassicTheme = mSharedPreferences.getBoolean("prefClassicScoreboard", false) && mGame.size() == 2;
-
-        if (mClassicTheme) {
-            setContentView(R.layout.activity_main_classic);
-            setTheme(mAccentColor);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-            }
-
-        } else {
-
-            Themes.themeActivity(this, R.layout.activity_main, true);
-
-        }
+        Themes.themeActivity(this, R.layout.activity_main, true);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
 
@@ -220,8 +202,6 @@ public class GameActivity extends ScoreKeeperActivity
 
         mSetGridView = (GridView) findViewById(R.id.setGridView);
 
-        if (!mClassicTheme) {
-
             mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
             mNormalLayout = findViewById(R.id.layoutNormal);
@@ -269,12 +249,7 @@ public class GameActivity extends ScoreKeeperActivity
             });
 
 
-        } else {
 
-            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
-
-            mStopwatch.setTypeface(tf);
-        }
 
         selectLayout();
 
@@ -555,7 +530,7 @@ public class GameActivity extends ScoreKeeperActivity
     }
 
     public boolean isFullScreen() {
-        return !mClassicTheme && !getSupportActionBar().isShowing();
+        return !getSupportActionBar().isShowing();
     }
 
     public void setFullScreen(boolean fullscreen) {
@@ -587,13 +562,12 @@ public class GameActivity extends ScoreKeeperActivity
             mBaseLayout.setLayoutParams(params);
 
         } else {
-            if (!mClassicTheme) {
                 getSupportActionBar().show();
 
                 boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
                 int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
 
-                if (colorNavBar && !mClassicTheme) {
+            if (colorNavBar) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setNavigationBarColor(primaryDarkColor);
                     }
@@ -617,7 +591,6 @@ public class GameActivity extends ScoreKeeperActivity
             }
         }
 
-    }
 
     @Override
     public void onBackPressed() {
@@ -863,10 +836,8 @@ public class GameActivity extends ScoreKeeperActivity
         mPaused = true;
         chronometerClick();
         mWon = true;
+        displayRecyclerView(false);
 
-        if (!mClassicTheme) {
-            displayRecyclerView(false);
-        }
 
         winnerDialog(winner);
 
@@ -1127,14 +1098,13 @@ public class GameActivity extends ScoreKeeperActivity
 
         } else {
 
-            if (!mClassicTheme) {
-                mNormalLayout.setVisibility(visible);
-                mPlayerRecyclerView.setVisibility(GONE);
+            mNormalLayout.setVisibility(visible);
+            mPlayerRecyclerView.setVisibility(GONE);
 
-                setButtonParams();
+            setButtonParams();
 
-                reloadPlayerButtons();
-            }
+            reloadPlayerButtons();
+
         }
 
     }

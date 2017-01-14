@@ -1,53 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <SwitchPreference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Dark Theme"
+        android:layout_height="wrap_content"
         android:defaultValue="true"
+        android:enabled="true"
+        android:key="prefDarkTheme"
         android:summary="Use a dark theme for the whole app"
-        android:enabled="true"
-        android:key="prefDarkTheme"/>
+        android:title="Dark Theme" />
 
     <SwitchPreference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Classic Scoreboard"
-        android:summary="Use a classic scoreboard theme when playing a game instead of Material Design (Only 2 Players)"
-        android:enabled="true"
-        android:key="prefClassicScoreboard"/>
-
-    <SwitchPreference
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:title="Color Navigation Bar"
-        android:summary="Apply primary color to navigation bar"
         android:enabled="false"
-        android:key="prefColorNavBar"/>
+        android:key="prefColorNavBar"
+        android:summary="Apply primary color to navigation bar"
+        android:title="Color Navigation Bar" />
 
     <Preference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Accent Color"
+        android:layout_height="wrap_content"
         android:enabled="true"
-        android:key="prefAccentColor"/>
+        android:key="prefAccentColor"
+        android:title="Accent Color" />
 
     <Preference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Primary Color"
+        android:layout_height="wrap_content"
         android:enabled="true"
-        android:key="prefPrimaryColor"/>
+        android:key="prefPrimaryColor"
+        android:title="Primary Color" />
 
     <Preference
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:title="Default Colors"
+        android:layout_height="wrap_content"
         android:enabled="true"
-        android:key="prefDefaultTheme"/>
+        android:key="prefDefaultTheme"
+        android:title="Default Colors" />
 
 </PreferenceScreen>
 

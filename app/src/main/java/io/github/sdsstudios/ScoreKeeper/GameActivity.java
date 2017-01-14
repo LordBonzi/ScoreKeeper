@@ -4,14 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,80 +18,87 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
-import io.github.sdsstudios.ScoreKeeper.Helper.TimeHelper;
-import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
+import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
+import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
 
-public class GameActivity extends AppCompatActivity
-        implements View.OnClickListener, View.OnLongClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
-        , Game.GameListener, SetGridViewAdapter.OnScoreClickListener {
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
+public class GameActivity extends ScoreKeeperActivity
+        implements View.OnClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
+        , GameListener, SetGridViewAdapter.OnScoreClickListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
     public static int GAME_ID;
+    /**
+     * Equal the index of the tab
+     **/
+    private final int SETS_LAYOUT = 1;
+    private final int GAME_LAYOUT = 0;
+    private final int PLAYER_1 = 0;
+    private final int PLAYER_2 = 1;
+    private final int STOPWATCH_DELAY = 300;
+    private TypedValue mTypedValue = new TypedValue();
+
     private boolean mWon = false;
     private String mWinnerString;
-    private Button mButtonP1, mButtonP2;
-    private TextView mTextViewP1, mTextViewP2;
-    private int mP1Score, mP2Score;
-    private FloatingActionButton mFabChronometer;
-    private RecyclerView mPlayerList;
+    private RecyclerView mPlayerRecyclerView;
     private boolean mFinished = false;
     private String TAG = "GameActivity.class";
-    private DataHelper mDataHelper;
-    private Intent mHomeIntent;
-    private GameDBAdapter mDbHelper;
+    private CardView mCardViewStopwatch;
     private Stopwatch mStopwatch;
-    private TimeHelper mTimeHelper;
     private boolean mClassicTheme = false;
     private View mDialogView;
     private AlertDialog mAlertDialog;
     private long mTimeWhenStopped = 0L;
     private boolean mPaused = false;
     private MenuItem mMenuItemDiceNum;
-    private SharedPreferences mSharedPreferences;
-    private RelativeLayout mBaseLayout, mBigLayout, mNormalLayout;
+    private RelativeLayout mBaseLayout;
+    private View mNormalLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private ViewGroup.LayoutParams mParams;
     private TabLayout mTabLayout;
-    private Game mGame;
     private GridView mSetGridView;
-    private int mMaxNumDice, mMinNumDice;
-    private int mStartingScore;
-    private int mScoreInterval;
-    private boolean mReverseScoring;
-    private int mMaxScore;
+    private int mMaxNumDice, mMinNumDice, mStartingScore, mScoreInterval;
     private int mAccentColor, mPrimaryColor;
     private String mTimeLimit;
     private Random mRandom = new Random();
     private SetGridViewAdapter mSetGridViewAdapter;
+    private List<ButtonPlayer> mButtonsPlayerList = new ArrayList<>();
+
+    private Handler mPausedHandler = new Handler();
+    private Runnable mPausedRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +107,8 @@ public class GameActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         GAME_ID = extras.getInt("GAME_ID");
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
-
-        loadObjects();
 
         mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
         mGame.setGameListener(this);
@@ -143,33 +146,57 @@ public class GameActivity extends AppCompatActivity
             GAME_ID = savedInstanceState.getInt(STATE_GAMEID);
         }
 
-        mDbHelper.open().updateGame(mGame);
+        updateGame();
+        getTheme().resolveAttribute(android.R.attr.textColorSecondary, mTypedValue, true);
+
+        mPausedRunnable = new Runnable() {
+            boolean red = false;
+
+
+            @Override
+            public void run() {
+                if (red) {
+                    mStopwatch.setTextColor(getResources().getColor(R.color.transparent));
+                } else {
+                    mStopwatch.setTextColor(getResources().getColor(R.color.stop));
+                }
+
+                red = !red;
+                mPausedHandler.postDelayed(this, STOPWATCH_DELAY);
+            }
+        };
 
     }
 
-    public void populateSetGridView() {
+    @Override
+    Activity getActivity() {
+        return Activity.GAME_ACTIVITY;
+    }
+
+    private void populateSetGridView() {
         mSetGridView.setNumColumns(mGame.size());
         mSetGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this, this);
         mSetGridView.setAdapter(mSetGridViewAdapter);
     }
 
-    public void loadObjects() {
-
-        mDataHelper = new DataHelper();
-        mTimeHelper = new TimeHelper();
-
-        mDbHelper = new GameDBAdapter(this);
+    private boolean TWO_PLAYER_GAME() {
+        return mGame.size() == 2;
     }
 
-    public void loadGame() {
+    private void createButtonsPlayerList() {
+        if (TWO_PLAYER_GAME()) {
+            mButtonsPlayerList = ButtonPlayer.createButtonPlayerList(mGame, this, this);
+            mButtonsPlayerList.get(0).getmButton().getViewTreeObserver().addOnGlobalLayoutListener(this);
+        }
+    }
 
-        int mScoreDiffToWin = mGame.getInt(Option.OptionID.SCORE_DIFF_TO_WIN);
-        mScoreInterval = mGame.getInt(Option.OptionID.SCORE_INTERVAL);
-        mStartingScore = mGame.getInt(Option.OptionID.STARTING_SCORE);
-        mReverseScoring = mGame.isChecked(Option.OptionID.REVERSE_SCORING);
-        mMaxScore = mGame.getInt(Option.OptionID.WINNING_SCORE);
-        mMaxNumDice = mGame.getInt(Option.OptionID.DICE_MAX);
-        mMinNumDice = mGame.getInt(Option.OptionID.DICE_MIN);
+    private void loadGame() {
+
+        int mScoreDiffToWin = mGame.getInt(OptionID.SCORE_DIFF_TO_WIN);
+        mScoreInterval = mGame.getInt(OptionID.SCORE_INTERVAL);
+        mStartingScore = mGame.getInt(OptionID.STARTING_SCORE);
+        mMaxNumDice = mGame.getInt(OptionID.DICE_MAX);
+        mMinNumDice = mGame.getInt(OptionID.DICE_MIN);
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -184,35 +211,20 @@ public class GameActivity extends AppCompatActivity
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mBaseLayout = (RelativeLayout) findViewById(R.id.content);
 
-        mButtonP1 = (Button) findViewById(R.id.buttonP1);
-        mButtonP1.setOnClickListener(this);
-        mButtonP1.setOnLongClickListener(this);
+        createButtonsPlayerList();
 
-        mButtonP2 = (Button) findViewById(R.id.buttonP2);
-        mButtonP2.setOnClickListener(this);
-        mButtonP2.setOnLongClickListener(this);
+        mCardViewStopwatch = (CardView) findViewById(R.id.stopwatchCardview);
+        mCardViewStopwatch.setOnClickListener(this);
 
-        if (!mClassicTheme) {
-            ImageButton buttonEditP1 = (ImageButton) findViewById(R.id.buttonEditP1);
-            buttonEditP1.setOnClickListener(this);
-
-            ImageButton buttonEditP2 = (ImageButton) findViewById(R.id.buttonEditP2);
-            buttonEditP2.setOnClickListener(this);
-        }
-
-        mStopwatch = new Stopwatch(this);
-
-        mTextViewP1 = (TextView) findViewById(R.id.textViewP1);
-        mTextViewP2 = (TextView) findViewById(R.id.textViewP2);
+        mStopwatch = (Stopwatch) findViewById(R.id.stopwatch);
 
         mSetGridView = (GridView) findViewById(R.id.setGridView);
 
         if (!mClassicTheme) {
 
-            mPlayerList = (RecyclerView) findViewById(R.id.bigGameList);
+            mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
-            mNormalLayout = (RelativeLayout) findViewById(R.id.layoutNormal);
-            mBigLayout = (RelativeLayout) findViewById(R.id.layoutBig);
+            mNormalLayout = findViewById(R.id.layoutNormal);
 
             SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -239,13 +251,11 @@ public class GameActivity extends AppCompatActivity
                     switch (position) {
 
                         case 0:
-                            findViewById(R.id.gameRelativeLayout).setVisibility(View.VISIBLE);
-                            mSetGridView.setVisibility(View.INVISIBLE);
+                            chooseTab(GAME_LAYOUT);
                             break;
 
                         case 1:
-                            findViewById(R.id.gameRelativeLayout).setVisibility(View.INVISIBLE);
-                            mSetGridView.setVisibility(View.VISIBLE);
+                            chooseTab(SETS_LAYOUT);
                             populateSetGridView();
                             break;
 
@@ -263,12 +273,7 @@ public class GameActivity extends AppCompatActivity
 
             Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digitalfont.ttf");
 
-            // Applying font
-            mTextViewP1.setTypeface(tf);
-            mTextViewP2.setTypeface(tf);
             mStopwatch.setTypeface(tf);
-            mButtonP1.setTypeface(tf);
-            mButtonP2.setTypeface(tf);
         }
 
         selectLayout();
@@ -314,14 +319,14 @@ public class GameActivity extends AppCompatActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        mDbHelper.open().updateGame(mGame);
+        updateGame();
     }
 
-    public void displayRecyclerView(boolean enabled) {
+    private void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mPlayerList.setLayoutManager(mLayoutManager);
+        mPlayerRecyclerView.setLayoutManager(mLayoutManager);
         RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, mDbHelper, enabled, this);
-        mPlayerList.setAdapter(bigGameAdapter);
+        mPlayerRecyclerView.setAdapter(bigGameAdapter);
     }
 
     @Override
@@ -337,10 +342,15 @@ public class GameActivity extends AppCompatActivity
         return true;
     }
 
-    public void timeLimitDialog() {
+    private void enablePlayerButtons(boolean enabled) {
+        for (ButtonPlayer button : mButtonsPlayerList) {
+            button.getmButton().setEnabled(enabled);
+        }
+    }
 
-        mButtonP1.setEnabled(false);
-        mButtonP2.setEnabled(false);
+    private void timeLimitDialog() {
+
+        enablePlayerButtons(false);
         displayRecyclerView(false);
 
         if (!mPaused) {
@@ -368,7 +378,7 @@ public class GameActivity extends AppCompatActivity
                 if (checkBoxExtend.isChecked()) {
                     relativeLayout.setVisibility(View.VISIBLE);
                 } else {
-                    relativeLayout.setVisibility(View.INVISIBLE);
+                    relativeLayout.setVisibility(INVISIBLE);
                 }
             }
         });
@@ -427,16 +437,15 @@ public class GameActivity extends AppCompatActivity
                         mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    mDbHelper.open().updateGame(mGame);
+                    updateGame();
 
                     if (mGame.size() > 2) {
-                        displayRecyclerView(true);
-                    } else {
-                        mP1Score = mPlayersArray.get(0).getmScore();
-                        mP2Score = mPlayersArray.get(0).getmScore();
 
-                        mButtonP1.setText(String.valueOf(mP1Score));
-                        mButtonP2.setText(String.valueOf(mP2Score));
+                        displayRecyclerView(true);
+
+                    } else {
+
+                        createButtonsPlayerList();
                     }
 
                     mStopwatch.setBase(SystemClock.elapsedRealtime());
@@ -504,23 +513,21 @@ public class GameActivity extends AppCompatActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        mDbHelper.open().updateGame(mGame);
+        updateGame();
     }
 
-    public void chronometerClick() {
+    private void chronometerClick() {
         if (mGame.isChecked(OptionID.STOPWATCH)) {
             if (!mPaused) {
                 mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
                 mStopwatch.start();
-                mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
+                mPausedHandler.removeCallbacks(mPausedRunnable);
                 mStopwatch.setTextColor(getResources().getColor(R.color.start));
-                mFabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
             } else {
+                mPausedHandler.removeCallbacks(mPausedRunnable);
+                mPausedHandler.postDelayed(mPausedRunnable, 0);
                 mTimeWhenStopped = mStopwatch.getBase() - SystemClock.elapsedRealtime();
                 mStopwatch.stop();
-                mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.stop)));
-                mStopwatch.setTextColor(getResources().getColor(R.color.stop));
-                mFabChronometer.setImageResource(R.mipmap.ic_pause_white_24dp);
             }
         }
     }
@@ -528,46 +535,17 @@ public class GameActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonP1:
-                onScoreButtonClick(mButtonP1);
-
-                if (mGame.isChecked(OptionID.STOPWATCH)) {
-                    mGame.setmLength(mStopwatch.getText().toString());
-                }
-
-                mDbHelper.open().updateGame(mGame);
-                break;
-
-            case R.id.buttonP2:
-                onScoreButtonClick(mButtonP2);
-
-                if (mGame.isChecked(OptionID.STOPWATCH)) {
-                    mGame.setmLength(mStopwatch.getText().toString());
-                }
-
-                mDbHelper.open().updateGame(mGame);
-
-                break;
-
-            case R.id.fabChronometer:
+            case R.id.stopwatchCardview:
                 if (!mFinished) {
                     mPaused = !mPaused;
                     chronometerClick();
                 }
                 break;
 
-            case R.id.fabChronometerBig:
-                if (!mFinished) {
-                    mPaused = !mPaused;
-                    chronometerClick();
-                }
+            case R.id.textViewP1:
                 break;
 
-            case R.id.buttonEditP1:
-                playerDialog(mGame.getPlayer(0), 0, Dialog.EDIT_PLAYER, 0);
-                break;
-
-            case R.id.buttonEditP2:
+            case R.id.textViewP2:
                 playerDialog(mGame.getPlayer(1), 1, Dialog.EDIT_PLAYER, 0);
 
                 break;
@@ -664,7 +642,7 @@ public class GameActivity extends AppCompatActivity
                     }
 
                     mGame.setmCompleted(false);
-                    mDbHelper.open().updateGame(mGame);
+                    updateGame();
 
                     startActivity(mHomeIntent);
 
@@ -680,7 +658,7 @@ public class GameActivity extends AppCompatActivity
 
                     mGame.setmCompleted(true);
 
-                    mDbHelper.open().updateGame(mGame);
+                    updateGame();
 
                     startActivity(mHomeIntent);
                 }
@@ -710,12 +688,12 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    public void winnerDialog(String winner) {
+    private void winnerDialog(String winner) {
 
         setFullScreen(false);
 
         AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (mGame.numSetsPlayed() == mGame.numSets()) {
 
@@ -745,18 +723,16 @@ public class GameActivity extends AppCompatActivity
                     mPaused = false;
 
                     chronometerClick();
-
-                    mButtonP1.setEnabled(true);
-                    mButtonP2.setEnabled(true);
+                    enablePlayerButtons(true);
                     mWon = false;
+                    updateGame();
 
-                    mDbHelper.open().updateGame(mGame);
+                    if (TWO_PLAYER_GAME()) {
 
-                    if (mGame.size() == 2) {
-                        mP1Score = 0;
-                        mP2Score = 0;
-                        mButtonP1.setText(String.valueOf(mP1Score));
-                        mButtonP2.setText(String.valueOf(mP2Score));
+                        for (ButtonPlayer buttonPlayer : mButtonsPlayerList) {
+                            buttonPlayer.startNewSet();
+                        }
+
                     } else {
                         displayRecyclerView(true);
                     }
@@ -773,7 +749,7 @@ public class GameActivity extends AppCompatActivity
                         mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    mDbHelper.open().updateGame(mGame);
+                    updateGame();
                     startActivity(mHomeIntent);
                 }
             });
@@ -789,15 +765,14 @@ public class GameActivity extends AppCompatActivity
 
                     mGame.setmCompleted(true);
 
-                    mDbHelper.open().updateGame(mGame);
+                    updateGame();
 
                     startActivity(mHomeIntent);
                 }
             });
         }
 
-        mButtonP1.setEnabled(false);
-        mButtonP2.setEnabled(false);
+        enablePlayerButtons(false);
 
         dialog = builder.create();
 
@@ -811,81 +786,6 @@ public class GameActivity extends AppCompatActivity
 
     }
 
-    public void onScoreButtonClick(Button button) {
-
-        if (button == mButtonP1) {
-            if (mReverseScoring) {
-                mP1Score -= mScoreInterval;
-            } else {
-                mP1Score += mScoreInterval;
-            }
-
-            button.setText(String.valueOf(mP1Score));
-
-        } else {
-
-            if (mReverseScoring) {
-                mP2Score -= mScoreInterval;
-            } else {
-                mP2Score += mScoreInterval;
-            }
-
-            button.setText(String.valueOf(mP2Score));
-        }
-
-        updateScores();
-        mGame.setGameListener(this);
-        mGame.isGameWon();
-
-    }
-
-    public void onScoreButtonLongClick(Button button) {
-
-        if (button == mButtonP1 && mP1Score != 0) {
-            if (mReverseScoring) {
-                mP1Score += mScoreInterval;
-            } else {
-                mP1Score -= mScoreInterval;
-            }
-
-            button.setText(String.valueOf(mP1Score));
-
-        } else if (button == mButtonP2 && mP2Score != 0) {
-            if (mReverseScoring) {
-                mP2Score += mScoreInterval;
-            } else {
-                mP2Score -= mScoreInterval;
-            }
-
-            button.setText(String.valueOf(mP2Score));
-
-        }
-
-        updateScores();
-    }
-
-    public void updateScores() {
-        mGame.getPlayer(0).setmScore(mP1Score);
-        mGame.getPlayer(1).setmScore(mP2Score);
-
-        mDbHelper.open().updateGame(mGame);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.buttonP1:
-                onScoreButtonLongClick(mButtonP1);
-                break;
-
-            case R.id.buttonP2:
-                onScoreButtonLongClick(mButtonP2);
-                break;
-        }
-
-        return true;
-    }
 
     @Override
     public void onShow(final DialogInterface dialogInterface) {
@@ -906,16 +806,15 @@ public class GameActivity extends AppCompatActivity
                             if (!timeLimitString.equals("00:00:00:0")) {
 
                                 mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
-                                mDbHelper.updateGame(mGame);
+                                updateGame();
 
                                 mTimeLimit = timeLimitString;
 
                                 timeLimitReached();
-                                mButtonP1.setEnabled(true);
-                                mButtonP2.setEnabled(true);
+                                enablePlayerButtons(true);
                                 displayRecyclerView(true);
                                 mAlertDialog.dismiss();
-                                mFabChronometer.setEnabled(true);
+                                mCardViewStopwatch.setEnabled(true);
                                 mFinished = false;
 
                             } else {
@@ -938,7 +837,7 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
-        mDbHelper.open().updateGame(mGame);
+        updateGame();
     }
 
     @Override
@@ -946,12 +845,18 @@ public class GameActivity extends AppCompatActivity
         timeLimitReached();
     }
 
+    private void reloadPlayerButtons() {
+        for (int i = 0; i < mGame.size(); i++) {
+            mButtonsPlayerList.get(i).reload(mGame.getPlayer(i));
+        }
+    }
+
     @Override
     public void onGameWon(String winner) {
         this.mWinnerString = winner;
 
-        if (mGame.size() == 2) {
-            updateScores();
+        if (TWO_PLAYER_GAME()) {
+            reloadPlayerButtons();
         }
 
         mFinished = true;
@@ -983,7 +888,11 @@ public class GameActivity extends AppCompatActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        mDbHelper.open().updateGame(mGame);
+        updateGame();
+
+        if (mGame.size() == 2) {
+            createButtonsPlayerList();
+        }
 
         selectLayout();
         chronometerClick();
@@ -994,7 +903,7 @@ public class GameActivity extends AppCompatActivity
         playerDialog(mGame.getPlayer(position), position, Dialog.EDIT_PLAYER, 0);
     }
 
-    public void playerDialog(final Player player, final int position, final Dialog type, final int setPosition) {
+    private void playerDialog(final Player player, final int position, final Dialog type, final int setPosition) {
         mPaused = true;
         chronometerClick();
 
@@ -1148,8 +1057,7 @@ public class GameActivity extends AppCompatActivity
                                 mGame.setmLength(mStopwatch.getText().toString());
                             }
 
-                            mDbHelper.open().updateGame(mGame);
-                            mDbHelper.close();
+                            updateGame();
 
                             selectLayout();
                             mPaused = true;
@@ -1157,6 +1065,16 @@ public class GameActivity extends AppCompatActivity
                             mGame.isGameWon();
 
                             populateSetGridView();
+
+                            switch (mTabLayout.getSelectedTabPosition()) {
+                                case GAME_LAYOUT:
+                                    chooseTab(GAME_LAYOUT);
+                                    break;
+
+                                case SETS_LAYOUT:
+                                    chooseTab(SETS_LAYOUT);
+                                    break;
+                            }
 
                         }
 
@@ -1169,14 +1087,35 @@ public class GameActivity extends AppCompatActivity
         mAlertDialog.show();
     }
 
-    private void selectLayout() {
-        if (mGame.size() > 2) {
-            mBigLayout.setVisibility(View.VISIBLE);
-            mNormalLayout.setVisibility(View.INVISIBLE);
+    private void chooseTab(int layout) {
+        if (layout == GAME_LAYOUT) {
+            showPlayerLayout(VISIBLE);
 
-            mStopwatch = (Stopwatch) findViewById(R.id.chronometerBig);
-            mFabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometerBig);
-            mFabChronometer.setOnClickListener(this);
+            if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                showStopwatch(VISIBLE);
+            }
+
+            mSetGridView.setVisibility(INVISIBLE);
+        } else {
+            showPlayerLayout(INVISIBLE);
+
+            if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                showStopwatch(INVISIBLE);
+            }
+            mSetGridView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showStopwatch(int visible) {
+        mCardViewStopwatch.setVisibility(visible);
+    }
+
+    private void showPlayerLayout(int visible) {
+        if (!TWO_PLAYER_GAME()) {
+
+            mPlayerRecyclerView.setVisibility(visible);
+
+            mNormalLayout.setVisibility(GONE);
 
             try {
                 displayRecyclerView(true);
@@ -1189,21 +1128,22 @@ public class GameActivity extends AppCompatActivity
         } else {
 
             if (!mClassicTheme) {
-                mNormalLayout.setVisibility(View.VISIBLE);
-                mBigLayout.setVisibility(View.INVISIBLE);
+                mNormalLayout.setVisibility(visible);
+                mPlayerRecyclerView.setVisibility(GONE);
+
+                setButtonParams();
+
+                reloadPlayerButtons();
             }
-
-            mP1Score = mGame.getPlayer(0).getmScore();
-            mP2Score = mGame.getPlayer(1).getmScore();
-
-            mButtonP1.setText(String.valueOf(mP1Score));
-            mButtonP2.setText(String.valueOf(mP2Score));
-            mTextViewP1.setText(String.valueOf(mGame.getPlayer(0).getmName()));
-            mTextViewP2.setText(String.valueOf(mGame.getPlayer(1).getmName()));
-            mStopwatch = (Stopwatch) findViewById(R.id.chronometer);
-            mFabChronometer = (FloatingActionButton) findViewById(R.id.fabChronometer);
-            mFabChronometer.setOnClickListener(this);
         }
+
+    }
+
+    private void selectLayout() {
+
+        showPlayerLayout(VISIBLE);
+
+        mCardViewStopwatch.setOnClickListener(this);
 
         if (mGame.isChecked(OptionID.STOPWATCH)) {
 
@@ -1217,7 +1157,7 @@ public class GameActivity extends AppCompatActivity
                     mGame.setmLength("00:00:00:0");
 
                 } else if (mTimeWhenStopped != 0L) {
-                    //when coming back from the app running in the background treat it as unpausing the mStopwatch
+                    /** when coming back from the app running in the background treat it as unpausing the mStopwatch **/
                     mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
 
                 } else {
@@ -1228,42 +1168,101 @@ public class GameActivity extends AppCompatActivity
 
                 if (!mFinished) {
                     mStopwatch.start();
-                    mFabChronometer.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.start)));
                     mStopwatch.setTextColor(getResources().getColor(R.color.start));
-                    mFabChronometer.setImageResource(R.mipmap.ic_play_arrow_white_24dp);
                 }
 
-                mDbHelper.open().updateGame(mGame);
+                updateGame();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Snackbar snackbar;
-                snackbar = Snackbar.make(mNormalLayout, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG);
-                mFabChronometer.setEnabled(false);
-                mButtonP1.setEnabled(false);
-                mButtonP2.setEnabled(false);
-                snackbar.show();
+                Snackbar.make(mNormalLayout, "conversion to long error. invalid time type", Snackbar.LENGTH_LONG).show();
+                showStopwatch(INVISIBLE);
+                enablePlayerButtons(false);
             }
-
 
         } else {
-            if (mGame.size() > 2) {
-                CardView cardView = (CardView) findViewById(R.id.buttonChronometerBig);
-                cardView.setVisibility(View.INVISIBLE);
-                mPlayerList.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            } else {
-                CardView cardView = (CardView) findViewById(R.id.buttonChronometer);
-                cardView.setVisibility(View.INVISIBLE);
+            showStopwatch(INVISIBLE);
+
+            if (!TWO_PLAYER_GAME()) {
+                mPlayerRecyclerView.setLayoutParams(
+                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT
+                                , RelativeLayout.LayoutParams.MATCH_PARENT));
             }
-            mStopwatch.setVisibility(View.INVISIBLE);
-            mFabChronometer.setVisibility(View.INVISIBLE);
+
+        }
+    }
+
+    private int getOrientation() {
+        return getResources().getConfiguration().orientation;
+    }
+
+    private void setButtonParams() {
+
+        LinearLayout.LayoutParams params = null;
+
+        if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
+
+            int height = (findViewById(R.id.linearLayout1).getWidth() / 2) - 16;
+            params = new LinearLayout.LayoutParams(height - 16, height);
+
+            params.setMargins(16, 8, 16, 8);
+
+            getPlayerButton(PLAYER_1).setLayoutParams(params);
+            getPlayerButton(PLAYER_2).setLayoutParams(params);
+
         }
     }
 
     @Override
     public void onScoreClick(Player player, int position, int setPosition) {
         playerDialog(player, position, Dialog.CHANGE_SET, setPosition);
+    }
+
+    private Button getPlayerButton(int player) {
+        return mButtonsPlayerList.get(player).getmButton();
+    }
+
+    private void setTextSize(float textSize) {
+        mStopwatch.setTextSize(textSize);
+
+        for (ButtonPlayer button : mButtonsPlayerList) {
+            button.getmButton().setTextSize(textSize);
+        }
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        setButtonParams();
+        removeOnGlobalLayoutListener(getPlayerButton(PLAYER_1), this);
+
+        setTextSize(findViewById(R.id.toolbar).getHeight() / 2);
+
+        mStopwatch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mStopwatch.getLineCount() > 1) {
+                    setTextSize(findViewById(R.id.toolbar).getHeight() / 3);
+                }
+
+                removeOnGlobalLayoutListener(mStopwatch, this);
+            }
+        });
+    }
+
+    @Override
+    public void onScoreChange(int playerIndex, int score) {
+        mGame.getPlayer(playerIndex).setmScore(score);
+
+        mGame.setGameListener(this);
+        mGame.isGameWon();
+        updateGame();
+
+    }
+
+    @Override
+    public void changePlayerName(int playerIndex) {
+        playerDialog(mGame.getPlayer(playerIndex), playerIndex, Dialog.EDIT_PLAYER, 0);
     }
 
     public static class GameActivityTabFragment extends Fragment {
@@ -1286,7 +1285,7 @@ public class GameActivity extends AppCompatActivity
                                  Bundle savedInstanceState) {
 
             View rootView = null;
-            container.setVisibility(View.INVISIBLE);
+            container.setVisibility(INVISIBLE);
             return rootView;
         }
 

@@ -34,6 +34,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
+
 public class Settings extends PreferenceActivity{
     private GameDBAdapter mDbHelper;
     private Intent mHomeIntent;

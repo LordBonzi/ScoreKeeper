@@ -1,9 +1,11 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Options;
 
 import android.app.Activity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 18/09/16.

@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
+import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
+
 import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
 
 public class EditGame extends OptionActivity {

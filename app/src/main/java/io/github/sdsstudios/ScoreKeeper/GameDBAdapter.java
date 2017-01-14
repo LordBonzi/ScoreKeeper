@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
+import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 
 public class GameDBAdapter {
 
@@ -67,7 +68,7 @@ public class GameDBAdapter {
     }
 
     void updateGame(Game game){
-        Game.GameListener gameListener = game.getmGameListener();
+        GameListener gameListener = game.getmGameListener();
 
         game.setGameListener(null);
 

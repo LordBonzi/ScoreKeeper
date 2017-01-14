@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.sdsstudios.ScoreKeeper.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 /**
  * Created by Seth on 06/10/2016.
@@ -350,14 +354,6 @@ public class Game {
         return mGameListener;
     }
 
-    interface GameListener {
-        void onGameWon(String winner);
-
-        void deletePlayer(int position);
-
-        void editPlayer(int position);
-
-    }
 }
 
 

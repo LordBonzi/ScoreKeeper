@@ -29,6 +29,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
+import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
+
 import static io.github.sdsstudios.ScoreKeeper.Activity.NEW_GAME;
 
 public class NewGame extends OptionActivity

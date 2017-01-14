@@ -5,5 +5,5 @@ package io.github.sdsstudios.ScoreKeeper;
  */
 
 public enum Activity {
-    HISTORY, HOME, NEW_GAME, EDIT_GAME
+    HISTORY, HOME, NEW_GAME, EDIT_GAME, GAME_ACTIVITY
 }

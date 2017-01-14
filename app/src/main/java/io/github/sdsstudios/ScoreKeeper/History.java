@@ -2,12 +2,9 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +17,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
-import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+import io.github.sdsstudios.ScoreKeeper.Listeners.UpdateTabsListener;
 
-public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
+public class History extends ScoreKeeperActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
     private String TAG = "History";
 
-    private Intent mSettingsIntent;
-    private Intent mAboutIntent;
-    private GameDBAdapter mDbHelper;
     private RecyclerView mRecyclerView;
-    private DataHelper mDataHelper;
     private MenuItem menuItemCompleted;
     private MenuItem menuItemUnfinished;
     private HistoryAdapter mHistoryAdapter;
@@ -40,9 +33,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
         Themes.themeActivity(this, R.layout.activity_recyclerview, true);
@@ -51,12 +43,13 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        mDbHelper = new GameDBAdapter(this);
-        mDataHelper = new DataHelper();
-        mAboutIntent = new Intent(this, About.class);
-        mSettingsIntent = new Intent(this, Settings.class);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
+    }
+
+    @Override
+    Activity getActivity() {
+        return Activity.HISTORY;
     }
 
     @Override

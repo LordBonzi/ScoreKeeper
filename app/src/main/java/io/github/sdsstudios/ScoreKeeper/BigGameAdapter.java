@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
+
 /**
  * Created by seth on 08/05/16.
  */
@@ -17,10 +20,10 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     private boolean mEnabled;
     private boolean mReverseScoring;
     private int mScoreInterval;
-    private Game.GameListener mGameListener;
+    private GameListener mGameListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(Game mGame, GameDBAdapter dbAdapter, boolean menabled, Game.GameListener mGameListener) {
+    public BigGameAdapter(Game mGame, GameDBAdapter dbAdapter, boolean menabled, GameListener mGameListener) {
 
         mDbHelper = dbAdapter;
         mEnabled = menabled;

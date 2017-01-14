@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Listeners;
 
 /**
  * Created by seth on 04/07/16.

@@ -16,21 +16,23 @@ import java.text.DecimalFormat;
 public class Stopwatch extends TextView {
     @SuppressWarnings("unused")
     private static final String TAG = "Chronometer";
-
-    public interface OnChronometerTickListener {
-
-        void onChronometerTick(Stopwatch chronometer);
-    }
-
+    private static final int TICK_WHAT = 2;
     private long mBase;
     private boolean mVisible;
     private boolean mStarted;
     private boolean mRunning;
     private OnChronometerTickListener mOnChronometerTickListener;
-
-    private static final int TICK_WHAT = 2;
-
     private long timeElapsed;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message m) {
+            if (mRunning) {
+                updateText(SystemClock.elapsedRealtime());
+                dispatchChronometerTick();
+                sendMessageDelayed(Message.obtain(this, TICK_WHAT),
+                        100);
+            }
+        }
+    };
 
     public Stopwatch(Context context) {
         this (context, null, 0);
@@ -51,14 +53,18 @@ public class Stopwatch extends TextView {
         updateText(mBase);
     }
 
+    public long getBase() {
+        return mBase;
+    }
+
     public void setBase(long base) {
         mBase = base;
         dispatchChronometerTick();
         updateText(SystemClock.elapsedRealtime());
     }
 
-    public long getBase() {
-        return mBase;
+    public OnChronometerTickListener getOnChronometerTickListener() {
+        return mOnChronometerTickListener;
     }
 
     public void setOnChronometerTickListener(
@@ -66,8 +72,13 @@ public class Stopwatch extends TextView {
         mOnChronometerTickListener = listener;
     }
 
-    public OnChronometerTickListener getOnChronometerTickListener() {
-        return mOnChronometerTickListener;
+    public boolean isStarted() {
+        return mStarted;
+    }
+
+    public void setStarted(boolean started) {
+        mStarted = started;
+        updateRunning();
     }
 
     public void start() {
@@ -77,12 +88,6 @@ public class Stopwatch extends TextView {
 
     public void stop() {
         mStarted = false;
-        updateRunning();
-    }
-
-
-    public void setStarted(boolean started) {
-        mStarted = started;
         updateRunning();
     }
 
@@ -141,17 +146,6 @@ public class Stopwatch extends TextView {
         }
     }
 
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message m) {
-            if (mRunning) {
-                updateText(SystemClock.elapsedRealtime());
-                dispatchChronometerTick();
-                sendMessageDelayed(Message.obtain(this , TICK_WHAT),
-                        100);
-            }
-        }
-    };
-
     void dispatchChronometerTick() {
         if (mOnChronometerTickListener != null) {
             mOnChronometerTickListener.onChronometerTick(this);
@@ -160,6 +154,11 @@ public class Stopwatch extends TextView {
 
     public long getTimeElapsed() {
         return timeElapsed;
+    }
+
+    public interface OnChronometerTickListener {
+
+        void onChronometerTick(Stopwatch chronometer);
     }
 
 }

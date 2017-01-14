@@ -1,16 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -30,49 +24,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.EditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
-import static io.github.sdsstudios.ScoreKeeper.Activity.NEW_GAME;
 
 /**
  * Created by seth on 11/12/16.
  */
 
-public abstract class OptionActivity extends AppCompatActivity implements PlayerListAdapter.PlayerListAdapterListener {
+public abstract class OptionActivity extends ScoreKeeperActivity implements PlayerListAdapter.PlayerListAdapterListener {
 
     public static final String STATE_GAMEID = "mGameID";
     public static String TAG;
-    public Activity CURRENT_ACTIVITY;
 
-    public Snackbar mSnackBar;
     public PlayerListAdapter mPlayerListAdapter;
-    public Intent mHomeIntent;
     public RelativeLayout mRelativeLayout;
-    public GameDBAdapter mDbHelper;
     public int mGameID;
-    public Game mGame;
     public RecyclerView mPlayerRecyclerView;
-    public DataHelper mDataHelper = new DataHelper();
-    public SharedPreferences mSharedPreferences;
     public RecyclerView.LayoutManager mLayoutManager;
     private NestedScrollView mScrollView;
-
-    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            removeLayoutListenerJB(v, victim);
-        } else removeLayoutListener(v, victim);
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static void removeLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
-        v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,8 +55,6 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
 
         TAG = CURRENT_ACTIVITY == EDIT_GAME ? "EditGame" : "NewGame";
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         Themes.themeActivity(this, CURRENT_ACTIVITY == EDIT_GAME ? R.layout.activity_edit_game : R.layout.activity_new_game
                 , true);
 
@@ -91,12 +62,9 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
 
-        mHomeIntent = new Intent(this, Home.class);
-
         mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
         mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
-        mDbHelper = new GameDBAdapter(this);
         mDbHelper.open();
 
         List<OptionCardView> mCardViewList = loadOptionCardViews();
@@ -196,7 +164,6 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
         return mGame.getmStringEditTextOptions();
     }
 
-    abstract Activity getActivity();
 
     abstract void loadActivity(Bundle savedInstanceState);
 
@@ -432,14 +399,6 @@ public abstract class OptionActivity extends AppCompatActivity implements Player
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         mGame.setmTime(sdfDate.format(now));
-    }
-
-    public void updateGame() {
-
-        if (CURRENT_ACTIVITY == NEW_GAME) {
-            mDbHelper.open().updateGame(mGame);
-            mDbHelper.close();
-        }
     }
 
     public void deleteEmptyPlayers() {

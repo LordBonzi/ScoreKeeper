@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +16,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,30 +32,24 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 
-import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
-
-public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener{
+public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    private Intent mNewGameIntent, mSettingsIntent, mAboutIntent, mHistoryIntent, mPlayersIntent;
-    private GameDBAdapter mDbHelper;
+
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
     private String TAG = "Home";
     private int mLastPlayedGame;
     private boolean mReviewLaterBool;
-    private DataHelper mDataHelper = new DataHelper();
     private int mNumRows = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
 
         Themes.themeActivity(this, R.layout.activity_home, false);
@@ -81,16 +73,10 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
         }
 
-        mDbHelper = new GameDBAdapter(this);
         mNumRows = mDbHelper.open().numRows();
         mDbHelper.close();
 
         mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
-        mNewGameIntent = new Intent(this, NewGame.class);
-        mAboutIntent = new Intent(this, About.class);
-        mSettingsIntent = new Intent(this, Settings.class);
-        mHistoryIntent = new Intent(this, History.class);
-        mPlayersIntent = new Intent(this, PlayersActivity.class);
 
         RelativeLayout mRelativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
 
@@ -151,6 +137,11 @@ public class Home extends AppCompatActivity implements HistoryAdapter.ViewHolder
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
         }
 
+    }
+
+    @Override
+    io.github.sdsstudios.ScoreKeeper.Activity getActivity() {
+        return io.github.sdsstudios.ScoreKeeper.Activity.HOME;
     }
 
     public boolean anyUnfinishedGames() {

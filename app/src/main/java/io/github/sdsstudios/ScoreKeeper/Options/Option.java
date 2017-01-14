@@ -1,4 +1,7 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Options;
+
+import io.github.sdsstudios.ScoreKeeper.Activity;
+import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
 
 /**
  * Created by Seth on 12/10/2016.

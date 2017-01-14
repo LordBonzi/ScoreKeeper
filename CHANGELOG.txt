@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 3 14/01/17
+### Added
+ - change the score of any set for any player
+ - moved delete button to first position in History to avoid confusion with other icons
+ - tabs are inside the toolbar when in landscape to conserve space
+ - changed the GameActivity design so it should work better on all displays
+ 
+### Removed 
+ - Timeline tab because it will not be implemented in Version 1.1
+ - classic theme for now
+ 
+### Bug Fixes
+ - game was not playing for the wrong number of sets
+ - game was ending even though it didn't meet specified score difference
+ - Set Gridview wasnt updating when New Set was clicked
+ - padding around top two rows of the Set GridView
+ 
 ## 1.1 Beta 2 01/01/17
 ### Added
  - navigation drawer to navigate through the app

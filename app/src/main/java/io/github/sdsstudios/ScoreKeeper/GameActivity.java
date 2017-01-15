@@ -11,9 +11,6 @@ import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -48,6 +45,7 @@ import java.util.Random;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Tab.TabPager;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -206,11 +204,11 @@ public class GameActivity extends ScoreKeeperActivity
 
             mNormalLayout = findViewById(R.id.layoutNormal);
 
-            SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        TabPager mTabPager = new TabPager(getSupportFragmentManager(), this, CURRENT_ACTIVITY);
 
             // Set up the ViewPager with the sections adapter.
             ViewPager mViewPager = (ViewPager) findViewById(R.id.option_tab_container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mTabPager);
 
             mTabLayout = (TabLayout) findViewById(R.id.tabs);
             mTabLayout.setupWithViewPager(mViewPager);
@@ -1235,62 +1233,5 @@ public class GameActivity extends ScoreKeeperActivity
         playerDialog(mGame.getPlayer(playerIndex), playerIndex, Dialog.EDIT_PLAYER, 0);
     }
 
-    public static class GameActivityTabFragment extends Fragment {
-
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public GameActivityTabFragment() {
-        }
-
-        public static GameActivityTabFragment newInstance(int sectionNumber) {
-            GameActivityTabFragment fragment = new GameActivityTabFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = null;
-            container.setVisibility(INVISIBLE);
-            return rootView;
-        }
-
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a GameActivityTabFragment (defined as a static inner class below).
-            return GameActivityTabFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.game);
-                case 1:
-                    return getString(R.string.sets);
-
-            }
-            return null;
-        }
-    }
 }
 

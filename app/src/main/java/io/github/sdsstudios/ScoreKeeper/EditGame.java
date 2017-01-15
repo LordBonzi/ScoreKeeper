@@ -53,8 +53,6 @@ public class EditGame extends OptionActivity {
 
         loadOptions();
         setOptionChangeListeners();
-
-        displayRecyclerView(false);
     }
 
     private void updateCompleteMenuItem(){
@@ -185,7 +183,6 @@ public class EditGame extends OptionActivity {
         mMenuItemComplete.setVisible(false);
 
         enableOptions(true);
-        displayRecyclerView(true);
         setOptionChangeListeners();
 
     }
@@ -265,7 +262,6 @@ public class EditGame extends OptionActivity {
                     mMenuItemShare.setVisible(true);
                     mMenuItemComplete.setVisible(true);
 
-                    displayRecyclerView(false);
                     loadOptions();
 
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -317,7 +313,6 @@ public class EditGame extends OptionActivity {
 
         loadOptions();
 
-        displayRecyclerView(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }

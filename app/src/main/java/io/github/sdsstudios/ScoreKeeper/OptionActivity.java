@@ -125,9 +125,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
                 , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
 
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
-                , (RelativeLayout) findViewById(R.id.playersHeader), 0));
-
         if (CURRENT_ACTIVITY == EDIT_GAME) {
 
             mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutDate)
@@ -146,6 +143,9 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
             mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTimeLimit)
                     , (RelativeLayout) findViewById(R.id.timeLimitHeader), 0));
+
+            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
+                    , (RelativeLayout) findViewById(R.id.playersHeader), 0));
         }
 
         return mCardViewList;

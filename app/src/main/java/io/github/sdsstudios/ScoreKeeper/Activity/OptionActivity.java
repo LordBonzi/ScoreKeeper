@@ -1,6 +1,5 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Activity;
 
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,8 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -20,16 +17,21 @@ import android.widget.RelativeLayout;
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.AdCreator;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.EditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Player;
+import io.github.sdsstudios.ScoreKeeper.PlayerListAdapter;
+import io.github.sdsstudios.ScoreKeeper.R;
+import io.github.sdsstudios.ScoreKeeper.Themes;
 
-import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.GAME_ACTIVITY;
 
 /**
  * Created by seth on 11/12/16.
@@ -53,103 +55,42 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
         CURRENT_ACTIVITY = getActivity();
 
-        TAG = CURRENT_ACTIVITY == EDIT_GAME ? "EditGame" : "NewGame";
+        if (CURRENT_ACTIVITY != GAME_ACTIVITY) {
 
-        Themes.themeActivity(this, CURRENT_ACTIVITY == EDIT_GAME ? R.layout.activity_edit_game : R.layout.activity_new_game
-                , true);
+            TAG = CURRENT_ACTIVITY == EDIT_GAME ? "EditGame" : "NewGame";
 
-        AdView mAdView = (AdView) findViewById(R.id.adViewHome);
-        AdCreator adCreator = new AdCreator(mAdView, this);
-        adCreator.createAd();
+            Themes.themeActivity(this, CURRENT_ACTIVITY == EDIT_GAME ? R.layout.activity_edit_game : R.layout.activity_new_game
+                    , true);
 
-        mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
-        mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
+            AdView mAdView = (AdView) findViewById(R.id.adViewHome);
+            AdCreator adCreator = new AdCreator(mAdView, this);
+            adCreator.createAd();
 
-        mDbHelper.open();
+            mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
+            mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
-        List<OptionCardView> mCardViewList = loadOptionCardViews();
+            mDbHelper.open();
 
-        if (CURRENT_ACTIVITY == EDIT_GAME) {
-            AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
-            AdCreator adCreator2 = new AdCreator(mAdView2, this);
-            adCreator2.createAd();
-            mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
+            if (CURRENT_ACTIVITY == EDIT_GAME) {
 
-            Bundle extras = getIntent().getExtras();
+                AdView mAdView2 = (AdView) findViewById(R.id.adViewHome2);
+                AdCreator adCreator2 = new AdCreator(mAdView2, this);
+                adCreator2.createAd();
 
-            mGameID = extras.getInt("GAME_ID");
+                mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
 
-            mGame = mDataHelper.getGame(mGameID, mDbHelper);
-        } else {
-            mRelativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
-        }
+                Bundle extras = getIntent().getExtras();
 
-        for (final OptionCardView card : mCardViewList) {
-            if (card.getmHeader().getId() != R.id.playersHeader) {
-                card.getmHeader().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleCardViewHeight(card.getmHeight(), card, mScrollView.getBottom());
+                mGameID = extras.getInt("GAME_ID");
 
-                    }
-                });
+                mGame = mDataHelper.getGame(mGameID, mDbHelper);
+
+            } else {
+
+                mRelativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
             }
 
-            card.getmContent().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int height = card.getmContent().getMeasuredHeight();
-
-                    card.setmHeight(height);
-
-                    if (card.getmHeader().getId() != R.id.playersHeader) {
-                        toggleCardViewHeight(height, card, mScrollView.getScrollY());
-                    }
-
-                    removeOnGlobalLayoutListener(card.getmContent(), this);
-                }
-            });
         }
-
-        if (savedInstanceState != null) {
-            loadActivity(savedInstanceState);
-        } else {
-            loadActivity(null);
-        }
-
-        loadOptions();
-    }
-
-    public List<OptionCardView> loadOptionCardViews() {
-        List<OptionCardView> mCardViewList = new ArrayList<>();
-        mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutOptions)
-                , (RelativeLayout) findViewById(R.id.optionsHeader), 0));
-
-        if (CURRENT_ACTIVITY == EDIT_GAME) {
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutDate)
-                    , (RelativeLayout) findViewById(R.id.dateHeader), 0));
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutLength)
-                    , (RelativeLayout) findViewById(R.id.lengthHeader), 0));
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTitle)
-                    , (RelativeLayout) findViewById(R.id.titleHeader), 0));
-
-        } else {
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPresets)
-                    , (RelativeLayout) findViewById(R.id.presetHeader), 0));
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutTimeLimit)
-                    , (RelativeLayout) findViewById(R.id.timeLimitHeader), 0));
-
-            mCardViewList.add(new OptionCardView((RelativeLayout) findViewById(R.id.relativeLayoutPlayers)
-                    , (RelativeLayout) findViewById(R.id.playersHeader), 0));
-        }
-
-        return mCardViewList;
-
     }
 
     public List<CheckBoxOption> CheckBoxOptions() {
@@ -164,8 +105,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         return mGame.getmStringEditTextOptions();
     }
 
-
-    abstract void loadActivity(Bundle savedInstanceState);
 
     public void enableOptions(boolean enabled) {
 
@@ -209,7 +148,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                     try {
 
-                        //if statement necessary to avoid numberformatexception if edittext empty
+                        /** if statement necessary to avoid numberformatexception if edittext empty **/
                         if (charSequence != "") {
                             e.setData(Integer.valueOf(charSequence.toString()));
                         } else {
@@ -225,7 +164,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                        mDbHelper.open().updateGame(mGame);
+                    mDbHelper.open().updateGame(mGame);
 
                 }
             });
@@ -255,57 +194,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     protected void onStop() {
         super.onStop();
         mDbHelper.close();
-    }
-
-    private void toggleCardViewHeight(int height, OptionCardView cardView, int scrollTo) {
-        if (cardView.getmHeader().getId() != R.id.playersHeader) {
-
-            if (cardView.getmContent().getHeight() != height) {
-                // expand
-
-                expandView(height, cardView.getmContent(), scrollTo); //'height' is the height of screen which we have measured already.
-
-            } else {
-                // collapse
-                collapseView(cardView);
-
-            }
-        }
-    }
-
-    public void collapseView(final OptionCardView cardView) {
-
-        ValueAnimator anim = ValueAnimator.ofInt(cardView.getmHeight(), 0);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = cardView.getmContent().getLayoutParams();
-                layoutParams.height = val;
-                cardView.getmContent().setLayoutParams(layoutParams);
-
-            }
-        });
-        anim.start();
-    }
-
-    public void expandView(int height, final RelativeLayout layout, final int scrollTo) {
-
-        ValueAnimator anim = ValueAnimator.ofInt(layout.getMeasuredHeightAndState(),
-                height);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
-                layoutParams.height = val;
-                layout.setLayoutParams(layoutParams);
-
-
-            }
-        });
-        anim.start();
-
     }
 
     public CheckBox getCheckBox(CheckBoxOption checkBoxOption) {

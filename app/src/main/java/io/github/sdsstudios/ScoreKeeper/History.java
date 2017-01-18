@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
 import io.github.sdsstudios.ScoreKeeper.Listeners.UpdateTabsListener;
 
 public class History extends ScoreKeeperActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
@@ -48,7 +50,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
     }
 
     @Override
-    Activity getActivity() {
+    public Activity getActivity() {
         return Activity.HISTORY;
     }
 

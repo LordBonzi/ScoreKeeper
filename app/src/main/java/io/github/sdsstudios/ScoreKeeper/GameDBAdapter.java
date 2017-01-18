@@ -56,7 +56,7 @@ public class GameDBAdapter {
         return this;
     }
 
-    void close() {
+    public void close() {
         if (mDbHelper != null) {
             mDbHelper.close();
         }
@@ -67,7 +67,7 @@ public class GameDBAdapter {
         return gson.toJson(game);
     }
 
-    void updateGame(Game game){
+    public void updateGame(Game game) {
         GameListener gameListener = game.getmGameListener();
 
         game.setGameListener(null);
@@ -177,7 +177,7 @@ public class GameDBAdapter {
         close();
     }
 
-    void deleteGame(int id){
+    public void deleteGame(int id) {
         DataHelper dataHelper = new DataHelper();
 
         open();

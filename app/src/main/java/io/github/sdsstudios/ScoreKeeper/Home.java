@@ -32,6 +32,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.File;
 
+import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
+
 public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -140,8 +142,8 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     }
 
     @Override
-    io.github.sdsstudios.ScoreKeeper.Activity getActivity() {
-        return io.github.sdsstudios.ScoreKeeper.Activity.HOME;
+    public io.github.sdsstudios.ScoreKeeper.Activity.Activity getActivity() {
+        return io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME;
     }
 
     public boolean anyUnfinishedGames() {
@@ -257,8 +259,8 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.HOME, HistoryAdapter.UNFINISHED)
-                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.HISTORY);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
+                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HISTORY);
 
                 mRecyclerView.setAdapter(historyAdapter);
 

@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import io.github.sdsstudios.ScoreKeeper.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.R;
 
 /**

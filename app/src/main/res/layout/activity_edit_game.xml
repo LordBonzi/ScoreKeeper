@@ -2,17 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/edit_game_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.EditGame">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/option_tab_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <GridView
+        android:id="@+id/setGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <include
+        android:id="@+id/edit_game_content"
         layout="@layout/content_edit_game"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_below="@+id/appbar"
         android:fitsSystemWindows="true" />
 
     <android.support.design.widget.AppBarLayout
@@ -30,6 +42,13 @@
 
         </android.support.v7.widget.Toolbar>
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="?attr/colorAccent"
+            app:tabMode="fixed" />
 
     </android.support.design.widget.AppBarLayout>
 

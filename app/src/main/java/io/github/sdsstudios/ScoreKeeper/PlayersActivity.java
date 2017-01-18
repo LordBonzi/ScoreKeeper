@@ -2,6 +2,9 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import android.os.Bundle;
 
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
+
 public class PlayersActivity extends ScoreKeeperActivity {
 
     @Override
@@ -11,7 +14,7 @@ public class PlayersActivity extends ScoreKeeperActivity {
     }
 
     @Override
-    Activity getActivity() {
+    public Activity getActivity() {
         return null;
     }
 

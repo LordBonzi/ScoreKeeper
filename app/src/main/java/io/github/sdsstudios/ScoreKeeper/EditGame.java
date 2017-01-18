@@ -18,12 +18,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
-import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 
-public class EditGame extends OptionActivity {
+public class EditGame extends ScoreKeeperTabActivity {
 
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
@@ -31,9 +35,13 @@ public class EditGame extends OptionActivity {
             , mMenuItemShare, mMenuItemComplete;
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
+    private View mEditGameContent;
 
     @Override
-    void loadActivity(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mEditGameContent = findViewById(R.id.edit_game_content);
 
         ImageButton buttonHelpDate = (ImageButton) findViewById(R.id.buttonHelpDate);
         ImageButton buttonHelpLength = (ImageButton) findViewById(R.id.buttonHelpLength);
@@ -53,6 +61,7 @@ public class EditGame extends OptionActivity {
 
         loadOptions();
         setOptionChangeListeners();
+
     }
 
     private void updateCompleteMenuItem(){
@@ -65,8 +74,6 @@ public class EditGame extends OptionActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
         try {
             getMenuInflater().inflate(R.menu.main, menu);
             mMenuItemList.add(mMenuItemDelete = menu.findItem(R.id.action_delete));
@@ -343,8 +350,26 @@ public class EditGame extends OptionActivity {
     }
 
     @Override
-    Activity getActivity() {
+    public Activity getActivity() {
         return EDIT_GAME;
+    }
+
+    @Override
+    public void chooseTab(int layout) {
+        if (layout == OPTIONS_LAYOUT) {
+            mEditGameContent.setVisibility(VISIBLE);
+            mSetGridView.setVisibility(INVISIBLE);
+
+        } else {
+            mEditGameContent.setVisibility(INVISIBLE);
+            mSetGridView.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    @Override
+    public void onScoreClick(Player player, int position, int setPosition) {
+
     }
 
 }

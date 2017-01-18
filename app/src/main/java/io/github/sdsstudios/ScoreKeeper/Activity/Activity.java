@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Activity;
 
 /**
  * Created by seth on 17/12/16.

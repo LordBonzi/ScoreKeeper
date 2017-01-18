@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -8,14 +8,24 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import io.github.sdsstudios.ScoreKeeper.About;
+import io.github.sdsstudios.ScoreKeeper.Game;
+import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.TimeHelper;
+import io.github.sdsstudios.ScoreKeeper.History;
+import io.github.sdsstudios.ScoreKeeper.Home;
+import io.github.sdsstudios.ScoreKeeper.NewGame;
+import io.github.sdsstudios.ScoreKeeper.PlayersActivity;
+import io.github.sdsstudios.ScoreKeeper.Settings;
+import io.github.sdsstudios.ScoreKeeper.Themes;
 
-import static io.github.sdsstudios.ScoreKeeper.Activity.EDIT_GAME;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 
 /**
  * Created by seth on 11/01/17.
@@ -28,10 +38,12 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     public Game mGame;
 
     public GameDBAdapter mDbHelper;
-    public DataHelper mDataHelper;
-    public TimeHelper mTimeHelper;
+    public DataHelper mDataHelper = new DataHelper();
+    public TimeHelper mTimeHelper = new TimeHelper();
 
+    public AlertDialog mAlertDialog;
     public Snackbar mSnackBar;
+    public int mAccentColor, mPrimaryColor;
 
     public SharedPreferences mSharedPreferences;
 
@@ -45,9 +57,9 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mDbHelper = new GameDBAdapter(this);
-        mDataHelper = new DataHelper();
-        mTimeHelper = new TimeHelper();
+        mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+
         mDbHelper = new GameDBAdapter(this);
 
         mNewGameIntent = new Intent(this, NewGame.class);
@@ -64,7 +76,7 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         } else removeLayoutListener(v, victim);
     }
 
-    abstract Activity getActivity();
+    public abstract Activity getActivity();
 
     @SuppressWarnings("deprecation")
     private void removeLayoutListenerJB(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
@@ -82,6 +94,10 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
             mDbHelper.open().updateGame(mGame);
             mDbHelper.close();
         }
+    }
+
+    public int getOrientation() {
+        return getResources().getConfiguration().orientation;
     }
 
 }

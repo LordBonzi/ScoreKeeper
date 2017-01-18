@@ -1,6 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper.Options;
 
-import io.github.sdsstudios.ScoreKeeper.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
 
 /**

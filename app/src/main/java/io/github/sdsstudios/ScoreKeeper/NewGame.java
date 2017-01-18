@@ -29,12 +29,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.OptionActivity;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
-import static io.github.sdsstudios.ScoreKeeper.Activity.NEW_GAME;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.NEW_GAME;
 
 public class NewGame extends OptionActivity
         implements View.OnClickListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener {
@@ -51,7 +53,7 @@ public class NewGame extends OptionActivity
     private List<TimeLimit> mTimeLimitArray = new ArrayList<>();
 
     @Override
-    Activity getActivity() {
+    public Activity getActivity() {
         return NEW_GAME;
     }
 
@@ -69,7 +71,8 @@ public class NewGame extends OptionActivity
     }
 
     @Override
-    public void loadActivity(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         mTimeLimitArray = TimeLimit.getTimeLimitArray(this);
 

@@ -198,7 +198,7 @@ public class GameDBAdapter {
             open();
             DATABASE.update(SQLITE_TABLE, initialValues,KEY_ROWID + "=" + rowID, null);
 
-            //gets the game and updates the ID int in the Game object
+            //gets the game and updates the ID integer in the Game object
             Game game = dataHelper.getGame(i, this);
             game.setmID(i);
             updateGame(game);

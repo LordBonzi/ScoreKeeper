@@ -17,7 +17,9 @@
         android:id="@+id/setGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_below="@+id/appbar"
+        android:fitsSystemWindows="true"
+        android:visibility="invisible" />
 
     <include
         android:id="@+id/edit_game_content"

@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 4 19/01/17
+### Added
+ - tabs to Game Info
+ - list of all scores and sets to Game Info
+ 
+### Removed
+ - player list from Game Info
+ - expanding and collapsing cardviews in Game Info and New Game
+ 
 ## 1.1 Beta 3 14/01/17
 ### Added
  - change the score of any set for any player

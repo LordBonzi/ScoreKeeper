@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseIntArray;

@@ -34,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.PresetDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;

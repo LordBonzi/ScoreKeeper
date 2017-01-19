@@ -21,12 +21,12 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.AdCreator;
+import io.github.sdsstudios.ScoreKeeper.Adapters.PlayerListAdapter;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.EditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Player;
-import io.github.sdsstudios.ScoreKeeper.PlayerListAdapter;
 import io.github.sdsstudios.ScoreKeeper.R;
 import io.github.sdsstudios.ScoreKeeper.Themes;
 

@@ -31,6 +31,8 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Activity.OptionActivity;
+import io.github.sdsstudios.ScoreKeeper.Adapters.PresetDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.RecyclerViewArrayAdapter;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;

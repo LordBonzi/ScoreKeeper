@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import io.github.sdsstudios.ScoreKeeper.R;
+import io.github.sdsstudios.ScoreKeeper.Themes;
+
 /**
  * Created by seth on 16/07/16.
  */
 
 public class GridViewAdapter extends BaseAdapter {
+    private final int[] mColors, mRawColors;
     private Context mCtx;
     private int mSelected;
-    private final int[] mColors, mRawColors;
     private int mType;
 
     public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, int mType){

@@ -26,6 +26,8 @@ import android.widget.GridView;
 
 import com.google.android.gms.ads.AdView;
 
+import io.github.sdsstudios.ScoreKeeper.Adapters.GridViewAdapter;
+
 public class Themes extends PreferenceActivity{
 
     public static int ACCENT_COLOR = 1;

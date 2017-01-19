@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.Snackbar;
@@ -17,6 +17,8 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
+import io.github.sdsstudios.ScoreKeeper.Player;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 08/05/16.

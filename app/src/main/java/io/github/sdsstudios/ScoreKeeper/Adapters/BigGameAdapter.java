@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import io.github.sdsstudios.ScoreKeeper.Game;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
+import io.github.sdsstudios.ScoreKeeper.Player;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 08/05/16.

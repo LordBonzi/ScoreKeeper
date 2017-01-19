@@ -43,7 +43,7 @@ public class Player {
         this.mSetScores = mSetScores;
     }
 
-    void changeSetScore(int position, int score) {
+    public void changeSetScore(int position, int score) {
         mSetScores.set(position, score);
     }
 

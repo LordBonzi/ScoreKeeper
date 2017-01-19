@@ -274,7 +274,7 @@ public class Game {
         return winningPlayer.getmName();
     }
 
-    boolean isGameWon() {
+    public boolean isGameWon() {
 
         int maxScore = getInt(OptionID.WINNING_SCORE);
 
@@ -346,11 +346,11 @@ public class Game {
         return b;
     }
 
-    void setGameListener(GameListener listener){
+    public void setGameListener(GameListener listener) {
         mGameListener = listener;
     }
 
-    GameListener getmGameListener(){
+    public GameListener getmGameListener() {
         return mGameListener;
     }
 

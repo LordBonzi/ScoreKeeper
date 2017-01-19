@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -15,22 +15,23 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Helper.TimeHelper;
+import io.github.sdsstudios.ScoreKeeper.HistoryModel;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 08/05/16.
  */
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
-    static final int COMPLETED = 1;
-    static final int UNFINISHED = 2;
-    static final int BOTH = 3;
-    static boolean ACTION_MODE_DISABLED = true;
+    public static final int COMPLETED = 1;
+    public static final int UNFINISHED = 2;
+    public static final int BOTH = 3;
+    public static boolean ACTION_MODE_DISABLED = true;
     private static List<HistoryModel> mItemArray;
     private String TAG = "HistoryAdapter";
     private Context mCtx;
     private ViewHolder.ClickListener mViewClickListener;
     private Activity mActivity;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, Activity activity) {
         this.mItemArray = mItemArray;
         this.mCtx = context;
@@ -41,8 +42,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                          int viewType) {
-        // create a new view
-
         View view;
         if (mActivity == Activity.HOME) {
             view = LayoutInflater.from(parent.getContext())
@@ -51,8 +50,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.history_adapter, parent, false);
         }
-
-        // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, mViewClickListener);
 
@@ -68,12 +65,9 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
 
         if (mItemArray.size() == 0){
             Toast.makeText(mCtx, "How did you start History? There are no games!!!. Email developer in About. Or leave a review and the developer will respond", Toast.LENGTH_LONG).show();
@@ -116,19 +110,13 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mItemArray.size();
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        @SuppressWarnings("unused")
 
-        // each data item is just a string in this case
         public TextView textViewHistoryTitle;
         public TextView textViewHistoryPlayers;
         public TextView textViewHistoryDate;

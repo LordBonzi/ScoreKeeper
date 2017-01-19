@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import io.github.sdsstudios.ScoreKeeper.About;
+import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Game;
-import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.TimeHelper;
 import io.github.sdsstudios.ScoreKeeper.History;

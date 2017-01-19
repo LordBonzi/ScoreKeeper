@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+
+import io.github.sdsstudios.ScoreKeeper.Game;
 
 /**
  * Created by Seth Schroeder on 27/11/2015.

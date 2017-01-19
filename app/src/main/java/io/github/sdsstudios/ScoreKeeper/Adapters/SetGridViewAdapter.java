@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+
+import io.github.sdsstudios.ScoreKeeper.Player;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 /**
  * Created by seth on 20/09/16.

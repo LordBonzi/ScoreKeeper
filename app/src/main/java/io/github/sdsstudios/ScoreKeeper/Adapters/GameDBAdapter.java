@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import io.github.sdsstudios.ScoreKeeper.Game;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
@@ -92,7 +93,7 @@ public class GameDBAdapter {
         game.setGameListener(gameListener);
     }
 
-    long createGame(Game game) {
+    public long createGame(Game game) {
         game.setGameListener(null);
 
         ContentValues initialValues = new ContentValues();
@@ -109,7 +110,7 @@ public class GameDBAdapter {
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }
 
-    int numRows(){
+    public int numRows() {
         Cursor cursor = DATABASE.query(SQLITE_TABLE, COLUMN_ARRAY, null, null, null, null, null);
 
         int count = cursor.getCount();
@@ -117,7 +118,7 @@ public class GameDBAdapter {
         return count;
     }
 
-    int getNewestGame(){
+    public int getNewestGame() {
 
         int value = 1;
         Cursor cursor = null;

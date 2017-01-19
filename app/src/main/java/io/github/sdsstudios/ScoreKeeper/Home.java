@@ -33,6 +33,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.io.File;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
+import io.github.sdsstudios.ScoreKeeper.Adapters.HistoryAdapter;
 
 public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener {
 

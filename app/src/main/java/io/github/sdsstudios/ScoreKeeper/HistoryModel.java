@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.HistoryAdapter;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 
 /**

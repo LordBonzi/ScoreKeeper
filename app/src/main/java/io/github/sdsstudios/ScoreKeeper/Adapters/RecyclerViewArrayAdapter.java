@@ -1,4 +1,4 @@
-package io.github.sdsstudios.ScoreKeeper;
+package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import io.github.sdsstudios.ScoreKeeper.Dialog;
+import io.github.sdsstudios.ScoreKeeper.R;
+import io.github.sdsstudios.ScoreKeeper.TimeLimit;
 
 /**
  * Created by seth on 08/05/16.

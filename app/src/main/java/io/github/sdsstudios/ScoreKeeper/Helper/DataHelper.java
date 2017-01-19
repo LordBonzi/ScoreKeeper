@@ -14,10 +14,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.PresetDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Game;
-import io.github.sdsstudios.ScoreKeeper.GameDBAdapter;
 import io.github.sdsstudios.ScoreKeeper.Player;
-import io.github.sdsstudios.ScoreKeeper.PresetDBAdapter;
 
 /**
  * Created by Seth Schroeder on 21/05/2016.

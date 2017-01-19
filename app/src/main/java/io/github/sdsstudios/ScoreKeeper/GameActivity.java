@@ -15,8 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -42,9 +40,10 @@ import java.util.Random;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
+import io.github.sdsstudios.ScoreKeeper.Adapters.BigGameAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.SetGridViewAdapter;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
-import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
 
 import static android.view.View.GONE;
@@ -169,189 +168,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
-    public void playerDialog(final Player player, final int position, final Dialog type, final int setPosition) {
-        mPaused = true;
-        chronometerClick();
 
-        final Player oldPlayer = player;
-
-        final int oldScore = (type == Dialog.CHANGE_SET)
-                ? player.getmSetScores().get(setPosition)
-                : player.getmScore();
-
-        final View dialogView;
-
-        LayoutInflater inflter = LayoutInflater.from(this);
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.edit_player_fragment, null);
-
-        final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
-        final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);
-
-        editTextPlayer.setHint(player.getmName());
-
-        switch (type) {
-
-            case CHANGE_SET:
-                editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
-                break;
-
-            default:
-                editTextScore.setHint(String.valueOf(player.getmScore()));
-                break;
-
-        }
-
-        dialogBuilder.setPositiveButton(R.string.done, null);
-
-        switch (type) {
-
-            case EDIT_PLAYER:
-                dialogBuilder.setTitle(getResources().getString(R.string.edit_player));
-                break;
-
-            case CHANGE_SET:
-                dialogBuilder.setTitle(getResources().getString(R.string.change_set_score));
-                break;
-
-            case ADD_PLAYER:
-                dialogBuilder.setTitle(getResources().getString(R.string.add_player));
-                break;
-
-        }
-
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (type != Dialog.ADD_PLAYER) {
-                    mGame.setPlayer(oldPlayer, position);
-                }
-                dialog.dismiss();
-            }
-        });
-
-        dialogBuilder.setView(dialogView);
-
-        mAlertDialog = dialogBuilder.create();
-
-        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                editTextPlayer.addTextChangedListener(new TextWatcher() {
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        player.setmName(editable.toString());
-                    }
-                });
-
-                editTextScore.addTextChangedListener(new TextWatcher() {
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        if (type == Dialog.CHANGE_SET) {
-                            if (editable.toString().equals("")) {
-                                player.changeSetScore(setPosition, oldScore);
-                            } else {
-                                player.changeSetScore(setPosition, Integer.valueOf(editable.toString()));
-                            }
-                        } else {
-                            if (editable.toString().equals("")) {
-                                player.setmScore(oldScore);
-                            } else {
-                                player.setmScore(Integer.valueOf(editable.toString()));
-                            }
-                        }
-
-                    }
-                });
-
-                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-
-                        if (type == Dialog.ADD_PLAYER) {
-                            mGame.addNewPlayer(player);
-                        } else {
-                            mGame.setPlayer(player, position);
-                        }
-
-                        if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
-                            if (type == Dialog.ADD_PLAYER) {
-                                mGame.removePlayer(position);
-                            } else {
-                                mGame.setPlayer(oldPlayer, position);
-                            }
-                            Toast.makeText(getBaseContext(), R.string.duplicates_message, Toast.LENGTH_SHORT).show();
-
-                        } else if (player.getmName().equals("")) {
-
-                            if (type == Dialog.ADD_PLAYER) {
-                                mGame.removePlayer(position);
-                            } else {
-                                mGame.setPlayer(oldPlayer, position);
-                            }
-
-                            Toast.makeText(getBaseContext(), R.string.must_have_name, Toast.LENGTH_SHORT).show();
-
-                        } else {
-
-                            mAlertDialog.dismiss();
-
-                            if (mGame.isChecked(Option.OptionID.STOPWATCH)) {
-                                mGame.setmLength(mStopwatch.getText().toString());
-                            }
-
-                            updateGame();
-
-                            selectLayout();
-                            mPaused = true;
-                            chronometerClick();
-                            mGame.isGameWon();
-
-                            populateSetGridView();
-
-                            switch (mTabLayout.getSelectedTabPosition()) {
-                                case GAME_LAYOUT:
-                                    chooseTab(GAME_LAYOUT);
-                                    break;
-
-                                case SETS_LAYOUT:
-                                    chooseTab(SETS_LAYOUT);
-                                    break;
-                            }
-
-                        }
-
-                    }
-
-                });
-            }
-
-        });
-        mAlertDialog.show();
-    }
 
     private void loadGame() {
 
@@ -1153,14 +970,21 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     @Override
+    public void playerDialog(Player player, int position, Dialog type, int setPosition) {
+
+        /** pauses stopwatch before opening dialog **/
+        mPaused = true;
+        chronometerClick();
+
+        super.playerDialog(player, position, type, setPosition);
+
+    }
+
+    @Override
     public void changePlayerName(int playerIndex) {
         playerDialog(mGame.getPlayer(playerIndex), playerIndex, Dialog.EDIT_PLAYER, 0);
     }
 
-    @Override
-    public void onScoreClick(Player player, int position, int setPosition) {
-        playerDialog(player, position, Dialog.CHANGE_SET, setPosition);
-    }
 
 }
 

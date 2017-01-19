@@ -126,6 +126,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         int id = item.getItemId();
 
         switch (id){
+
             case R.id.action_delete:
                 delete();
                 break;
@@ -332,7 +333,15 @@ public class EditGame extends ScoreKeeperTabActivity {
         builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 deleteGame();
-                startActivity(new Intent(EditGame.this, History.class));
+
+                if (mDbHelper.open().numRows() == 0) {
+                    startActivity(mHomeIntent);
+                } else {
+                    startActivity(mHistoryIntent);
+                }
+
+                mDbHelper.close();
+
             }
         });
 

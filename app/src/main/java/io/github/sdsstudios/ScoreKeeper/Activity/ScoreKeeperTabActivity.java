@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import io.github.sdsstudios.ScoreKeeper.Adapters.SetGridViewAdapter;
 import io.github.sdsstudios.ScoreKeeper.Dialog;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
 import io.github.sdsstudios.ScoreKeeper.Tab.TabPager;
@@ -158,6 +159,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 if (type != Dialog.ADD_PLAYER) {
                     mGame.setPlayer(oldPlayer, position);
                 }
+
                 dialog.dismiss();
             }
         });
@@ -275,6 +277,12 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
         });
         mAlertDialog.show();
+
+    }
+
+    public void addPlayerDialog() {
+        playerDialog(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)), mGame.size(), Dialog.ADD_PLAYER, 0);
+
     }
 
 }

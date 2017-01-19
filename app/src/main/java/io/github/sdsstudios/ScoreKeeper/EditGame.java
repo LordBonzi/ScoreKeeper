@@ -123,9 +123,6 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id){
@@ -146,8 +143,7 @@ public class EditGame extends ScoreKeeperTabActivity {
                 break;
 
             case R.id.action_add:
-                mGame.addNewPlayer(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)));
-                mPlayerListAdapter.notifyItemInserted(mGame.size());
+                addPlayerDialog();
                 break;
 
             case R.id.complete_game:
@@ -221,7 +217,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
         final boolean bDateAndTime = checkValidity(mGame.getmTime(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
+        final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(getPlayerArray());
         final boolean bNumPlayers = mGame.size() >= 2;
 
         AlertDialog dialog;
@@ -319,6 +315,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         mGame = mDataHelper.getGame(mGameID, mDbHelper);
 
         loadOptions();
+        populateSetGridView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -365,11 +362,6 @@ public class EditGame extends ScoreKeeperTabActivity {
             mSetGridView.setVisibility(View.VISIBLE);
 
         }
-    }
-
-    @Override
-    public void onScoreClick(Player player, int position, int setPosition) {
-
     }
 
 }

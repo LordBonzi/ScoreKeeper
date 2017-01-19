@@ -41,7 +41,6 @@ import java.util.Random;
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
 import io.github.sdsstudios.ScoreKeeper.Adapters.BigGameAdapter;
-import io.github.sdsstudios.ScoreKeeper.Adapters.SetGridViewAdapter;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
@@ -52,14 +51,13 @@ import static android.view.View.VISIBLE;
 
 public class GameActivity extends ScoreKeeperTabActivity
         implements View.OnClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
-        , GameListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener, SetGridViewAdapter.OnScoreClickListener, ViewPager.OnPageChangeListener {
+        , GameListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener, ViewPager.OnPageChangeListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
     public static int GAME_ID;
     private final int PLAYER_1 = 0;
     private final int PLAYER_2 = 1;
     private final int STOPWATCH_DELAY = 300;
-    private String TAG = "GameActivity.class";
     private TypedValue mTypedValue = new TypedValue();
 
     private boolean mWon = false;
@@ -410,7 +408,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         if (id == R.id.action_add) {
             if (!mFinished) {
-                playerDialog(new Player("", mStartingScore), mGame.size(), Dialog.ADD_PLAYER, 0);
+                addPlayerDialog();
             } else {
                 Toast.makeText(this, "Game has completed, you can't add more players", Toast.LENGTH_SHORT).show();
             }

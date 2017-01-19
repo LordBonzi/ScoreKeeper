@@ -44,7 +44,6 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     };
 
     private RecyclerView mRecyclerView;
-    private String TAG = "Home";
     private int mLastPlayedGame;
     private boolean mReviewLaterBool;
     private int mNumRows = 0;

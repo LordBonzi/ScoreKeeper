@@ -40,7 +40,6 @@ import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.GAME_ACTIVITY;
 public abstract class OptionActivity extends ScoreKeeperActivity implements PlayerListAdapter.PlayerListAdapterListener {
 
     public static final String STATE_GAMEID = "mGameID";
-    public static String TAG;
 
     public PlayerListAdapter mPlayerListAdapter;
     public RelativeLayout mRelativeLayout;
@@ -56,8 +55,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         CURRENT_ACTIVITY = getActivity();
 
         if (CURRENT_ACTIVITY != GAME_ACTIVITY) {
-
-            TAG = CURRENT_ACTIVITY == EDIT_GAME ? "EditGame" : "NewGame";
 
             Themes.themeActivity(this, CURRENT_ACTIVITY == EDIT_GAME ? R.layout.activity_edit_game : R.layout.activity_new_game
                     , true);

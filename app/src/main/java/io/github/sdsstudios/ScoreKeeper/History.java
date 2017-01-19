@@ -24,8 +24,6 @@ import io.github.sdsstudios.ScoreKeeper.Listeners.UpdateTabsListener;
 
 public class History extends ScoreKeeperActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
-    private String TAG = "History";
-
     private RecyclerView mRecyclerView;
     private MenuItem menuItemCompleted;
     private MenuItem menuItemUnfinished;

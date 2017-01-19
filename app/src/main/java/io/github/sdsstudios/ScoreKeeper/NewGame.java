@@ -406,7 +406,7 @@ public class NewGame extends OptionActivity
     public void reset() {
         mGame.setmTitle("The Game With No Name");
         mEditTextGameTitle.setText(mGame.getmTitle());
-        mGame.getmPlayerArray().clear();
+        getPlayerArray().clear();
         displayRecyclerView(false);
 
         mGame.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(this));
@@ -432,7 +432,7 @@ public class NewGame extends OptionActivity
         boolean areDuplicatePlayers;
 
         mGame.addNewPlayer(new Player(playerName, 0));
-        areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
+        areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(getPlayerArray());
 
         if (areDuplicatePlayers) {
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -729,7 +729,7 @@ public class NewGame extends OptionActivity
 
         } else {
 
-            if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
+            if (mDataHelper.checkPlayerDuplicates(getPlayerArray())) {
 
                 mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
                         .setAction("Dismiss", onClickListener);
@@ -741,7 +741,7 @@ public class NewGame extends OptionActivity
 
                     int startingScore = mGame.getInt(Option.OptionID.STARTING_SCORE);
 
-                    for (Player p : mGame.getmPlayerArray()) {
+                    for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);
                     }
 

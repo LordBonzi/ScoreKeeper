@@ -33,6 +33,7 @@ import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 
 public abstract class ScoreKeeperActivity extends AppCompatActivity {
 
+    public static String TAG;
     public static Activity CURRENT_ACTIVITY;
 
     public Game mGame;
@@ -54,6 +55,7 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         CURRENT_ACTIVITY = getActivity();
+        TAG = getLocalClassName();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -89,7 +91,6 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     }
 
     public void updateGame() {
-
         if (CURRENT_ACTIVITY != EDIT_GAME) {
             mDbHelper.open().updateGame(mGame);
             mDbHelper.close();

@@ -323,6 +323,7 @@ public class EditGame extends ScoreKeeperTabActivity {
     }
 
     public void delete(){
+
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

@@ -65,7 +65,6 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     }
 
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
@@ -142,8 +141,8 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
             this.listener = listener;
 
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
 
         }
 

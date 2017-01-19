@@ -32,7 +32,6 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
     /**
      * Equal to the index of the tab
      **/
-
     public static final int SETS_LAYOUT = 1;
     public static final int GAME_LAYOUT = 0;
     public static final int OPTIONS_LAYOUT = 0;
@@ -252,7 +251,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
                             mAlertDialog.dismiss();
 
-                            updateGame();
+                            forceUpdateGame();
 
                             mGame.isGameWon();
 
@@ -278,6 +277,11 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
         });
         mAlertDialog.show();
 
+    }
+
+    private void forceUpdateGame() {
+        mDbHelper.open().updateGame(mGame);
+        mDbHelper.close();
     }
 
     public void addPlayerDialog() {

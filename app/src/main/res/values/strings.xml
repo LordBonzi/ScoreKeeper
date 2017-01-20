@@ -189,6 +189,11 @@
     <string name="info">Info</string>
     <string name="options">Options</string>
     <string name="advanced">Advanced</string>
+    <string name="upgrade_title">ALL YOUR GAMES HAVE BEEN DELETED!</string>
+    <string name="upgrade_message">All your games have been deleted when you updated to version 1.1 due to an overhaul in the code for the app.
+        This is the only time this will happen.
+        A backup of your old games has been made
+        in the ScoreKeeper folder on your phone. I am extremely sorry for any inconvenience this may have caused."</string>
 
 </resources>
 

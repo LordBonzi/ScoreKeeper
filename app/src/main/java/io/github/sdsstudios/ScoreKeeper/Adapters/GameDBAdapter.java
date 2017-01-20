@@ -23,6 +23,7 @@ import io.github.sdsstudios.ScoreKeeper.Game;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
+import io.github.sdsstudios.ScoreKeeper.R;
 
 public class GameDBAdapter {
 
@@ -281,12 +282,7 @@ public class GameDBAdapter {
 
                 db.delete(SQLITE_TABLE, null, null);
 
-                DialogHelper.createAlertDialog(mCtx, "ALL YOUR GAMES HAVE BEEN DELETED!"
-                        , "All your games have been deleted when you updated to version 1.1 due to an overhaul in the code for the app." +
-                                "This is the only time this will happen." +
-                                "A backup of your old games has been made" +
-                        "in the ScoreKeeper folder on your phone. You can import it, if you roll back" +
-                                " to the old version by leaving the beta. I am extremely sorry for any inconvenience this may have caused.");
+                DialogHelper.createAlertDialog(mCtx, mCtx.getString(R.string.upgrade_title), mCtx.getString(R.string.upgrade_message));
 
 
             }

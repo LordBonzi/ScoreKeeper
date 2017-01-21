@@ -27,7 +27,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 
-public abstract class EditGame extends ScoreKeeperTabActivity {
+public class EditGame extends ScoreKeeperTabActivity {
 
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
@@ -88,6 +88,7 @@ public abstract class EditGame extends ScoreKeeperTabActivity {
             menu.findItem(R.id.action_edit).setVisible(true);
             menu.findItem(R.id.action_settings).setVisible(false);
             mMenuItemComplete.setVisible(true);
+            mMenuItemAdd.setVisible(true);
 
             updateCompleteMenuItem();
 
@@ -178,7 +179,6 @@ public abstract class EditGame extends ScoreKeeperTabActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        mMenuItemAdd.setVisible(true);
         mMenuItemDelete.setVisible(false);
         mMenuItemEdit.setVisible(false);
         mMenuItemDone.setVisible(true);
@@ -308,7 +308,6 @@ public abstract class EditGame extends ScoreKeeperTabActivity {
         mMenuItemDelete.setVisible(true);
         mMenuItemDone.setVisible(false);
         mMenuItemEdit.setVisible(true);
-        mMenuItemAdd.setVisible(false);
         mMenuItemCancel.setVisible(false);
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
@@ -367,6 +366,7 @@ public abstract class EditGame extends ScoreKeeperTabActivity {
             mEditGameContent.setVisibility(VISIBLE);
             mSetGridView.setVisibility(INVISIBLE);
 
+
         } else {
             mEditGameContent.setVisibility(INVISIBLE);
             mSetGridView.setVisibility(View.VISIBLE);
@@ -374,4 +374,15 @@ public abstract class EditGame extends ScoreKeeperTabActivity {
         }
     }
 
+    @Override
+    public void onScoreClick(int playerIndex) {
+    }
+
+    @Override
+    public void onScoreLongClick(int playerIndex) {
+    }
+
+    @Override
+    public void editPlayer(int playerIndex) {
+    }
 }

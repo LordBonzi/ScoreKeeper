@@ -239,9 +239,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         super.onStop();
         chronometerClick();
 
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
-            mGame.setmLength(mStopwatch.getText().toString());
-        }
+        saveStopwatchTime();
 
         updateGameInDatabase();
     }
@@ -357,9 +355,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                         p.setmScore(0);
                     }
 
-                    if (mGame.isChecked(OptionID.STOPWATCH)) {
-                        mGame.setmLength(mStopwatch.getText().toString());
-                    }
+                    saveStopwatchTime();
 
                     updateGameInDatabase();
 
@@ -433,9 +429,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         mPaused = true;
         chronometerClick();
 
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
-            mGame.setmLength(mStopwatch.getText().toString());
-        }
+        saveStopwatchTime();
 
         updateGameInDatabase();
     }
@@ -559,9 +553,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(OptionID.STOPWATCH)) {
-                        mGame.setmLength(mStopwatch.getText().toString());
-                    }
+                    saveStopwatchTime();
 
                     mGame.setmCompleted(false);
                     updateGameInDatabase();
@@ -574,9 +566,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(OptionID.STOPWATCH)) {
-                        mGame.setmLength(mStopwatch.getText().toString());
-                    }
+                    saveStopwatchTime();
 
                     mGame.setmCompleted(true);
 
@@ -667,9 +657,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(OptionID.STOPWATCH)) {
-                        mGame.setmLength(mStopwatch.getText().toString());
-                    }
+                    saveStopwatchTime();
 
                     updateGameInDatabase();
                     startActivity(mHomeIntent);
@@ -681,9 +669,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
 
-                    if (mGame.isChecked(OptionID.STOPWATCH)) {
-                        mGame.setmLength(mStopwatch.getText().toString());
-                    }
+                    saveStopwatchTime();
 
                     mGame.setmCompleted(true);
 
@@ -708,6 +694,11 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     }
 
+    private void saveStopwatchTime() {
+        if (mGame.isChecked(OptionID.STOPWATCH)) {
+            mGame.setmLength(mStopwatch.getText().toString());
+        }
+    }
 
     @Override
     public void onShow(final DialogInterface dialogInterface) {
@@ -794,28 +785,14 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public void deletePlayer(int position) {
-        mPaused = true;
-        chronometerClick();
 
-        if (mGame.size() > 2) {
-            mGame.removePlayer(position);
-
-        } else {
-            Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
-        }
-
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
-            mGame.setmLength(mStopwatch.getText().toString());
-        }
-
-        updateGameInDatabase();
+        super.deletePlayer(position);
 
         if (mGame.size() == 2) {
-            createButtonsPlayerList();
+            reloadPlayerButtons();
         }
 
-        selectLayout();
-        chronometerClick();
+        goToSelectedTab();
     }
 
     @Override
@@ -873,7 +850,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void selectLayout() {
 
-        showPlayerLayout(VISIBLE);
+        goToSelectedTab();
 
         mCardViewStopwatch.setOnClickListener(this);
 
@@ -980,6 +957,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         /** pauses stopwatch before opening dialog **/
         mPaused = true;
         chronometerClick();
+        saveStopwatchTime();
 
         super.playerDialog(player, position, type, setPosition);
 

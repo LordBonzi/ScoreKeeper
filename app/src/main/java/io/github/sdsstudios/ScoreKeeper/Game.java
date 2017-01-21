@@ -148,6 +148,8 @@ public class Game {
     public void onPlayerClick(int playerIndex) {
         getPlayer(playerIndex).playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
                 , isChecked(OptionID.REVERSE_SCORING));
+
+
     }
 
     public void onPlayerLongClick(int playerIndex) {
@@ -312,9 +314,9 @@ public class Game {
             @Override
             public int compare(Integer o1, Integer o2) {
                 if (isChecked(OptionID.REVERSE_SCORING)) {
-                    return o1 - o2;
-                } else {
                     return o1 + o2;
+                } else {
+                    return o1 - o2;
                 }
             }
         });

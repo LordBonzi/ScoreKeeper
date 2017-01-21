@@ -27,7 +27,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 
-public class EditGame extends ScoreKeeperTabActivity {
+public abstract class EditGame extends ScoreKeeperTabActivity {
 
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");

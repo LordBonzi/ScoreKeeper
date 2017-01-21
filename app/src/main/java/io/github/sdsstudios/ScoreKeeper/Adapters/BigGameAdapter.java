@@ -104,8 +104,11 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
     }
 
-    private void colorButton(Button button, int position) {
+    private void colorButton(Button button, Player player) {
+        switch (mGame.scorePosition(player.getmScore())) {
 
+        }
+        ;
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import io.github.sdsstudios.ScoreKeeper.Adapters.SetGridViewAdapter;
 import io.github.sdsstudios.ScoreKeeper.Dialog;
+import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
@@ -27,7 +28,7 @@ import io.github.sdsstudios.ScoreKeeper.Tab.TabPager;
  */
 
 public abstract class ScoreKeeperTabActivity extends OptionActivity implements
-        SetGridViewAdapter.OnScoreClickListener, ViewPager.OnPageChangeListener {
+        SetGridViewAdapter.OnScoreClickListener, ViewPager.OnPageChangeListener, ButtonPlayerListener {
 
     /**
      * Equal to the index of the tab
@@ -125,6 +126,16 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
             case CHANGE_SET:
                 editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
+
+                if (mGame.size() > 2) {
+                    dialogBuilder.setNeutralButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deletePlayer(position);
+                        }
+                    });
+                }
+
                 break;
 
             default:
@@ -250,22 +261,10 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                         } else {
 
                             mAlertDialog.dismiss();
-
                             forceUpdateGame();
-
                             mGame.isGameWon();
-
                             populateSetGridView();
-
-                            switch (mTabLayout.getSelectedTabPosition()) {
-                                case GAME_LAYOUT:
-                                    chooseTab(GAME_LAYOUT);
-                                    break;
-
-                                case SETS_LAYOUT:
-                                    chooseTab(SETS_LAYOUT);
-                                    break;
-                            }
+                            goToSelectedTab();
 
                         }
 
@@ -277,6 +276,33 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
         });
         mAlertDialog.show();
 
+    }
+
+    public void goToSelectedTab() {
+        switch (mTabLayout.getSelectedTabPosition()) {
+            case GAME_LAYOUT:
+                chooseTab(GAME_LAYOUT);
+                break;
+
+            case SETS_LAYOUT:
+                chooseTab(SETS_LAYOUT);
+                break;
+        }
+    }
+
+    @Override
+    public void deletePlayer(int position) {
+
+        if (mGame.size() > 2) {
+            mGame.removePlayer(position);
+
+        } else {
+            Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
+        }
+
+        updateGameInDatabase();
+
+        populateSetGridView();
     }
 
     private void forceUpdateGame() {

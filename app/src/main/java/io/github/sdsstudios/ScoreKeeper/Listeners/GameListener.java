@@ -6,8 +6,4 @@ package io.github.sdsstudios.ScoreKeeper.Listeners;
 public interface GameListener {
     void onGameWon(String winner);
 
-    void deletePlayer(int position);
-
-    void editPlayer(int position);
-
 }

@@ -13,8 +13,9 @@ public class Player {
 
     public Player(String mName, int mScore) {
         this.mName = mName;
-        this.mSetScores = new ArrayList<Integer>();
-        //create a blank set.
+        this.mSetScores = new ArrayList<>();
+
+        /**create a blank set. **/
         mSetScores.add(mScore);
     }
 
@@ -33,6 +34,24 @@ public class Player {
     public void setmScore(int mScore) {
         mSetScores.set(mSetScores.size() - 1, mScore);
 
+    }
+
+    public void playerClick(int scoreInterval, boolean reverseScoring) {
+
+        if (reverseScoring) {
+            setmScore(getmScore() - scoreInterval);
+        } else {
+            setmScore(getmScore() + scoreInterval);
+        }
+
+    }
+
+    public void playerLongClick(int scoreInterval, boolean reverseScoring) {
+        if (reverseScoring) {
+            setmScore(getmScore() + scoreInterval);
+        } else {
+            setmScore(getmScore() - scoreInterval);
+        }
     }
 
     public ArrayList<Integer> getmSetScores() {

@@ -64,7 +64,7 @@ public class NewGame extends OptionActivity
         // Save the user's current game state
 
         mStop = false;
-        updateGame();
+        updateGameInDatabase();
 
         savedInstanceState.putInt(STATE_GAMEID, mGameID);
 
@@ -110,7 +110,7 @@ public class NewGame extends OptionActivity
             @Override
             public void afterTextChanged(Editable s) {
                 mGame.setmTitle(s.toString().trim());
-                updateGame();
+                updateGameInDatabase();
             }
         });
 
@@ -121,7 +121,7 @@ public class NewGame extends OptionActivity
 
             mGame = mDataHelper.getGame(mGameID, mDbHelper);
 
-            updateGame();
+            updateGameInDatabase();
 
             mDbHelper.close();
 
@@ -140,7 +140,7 @@ public class NewGame extends OptionActivity
             mGameID = mDbHelper.getNewestGame();
             mGame.setmID(mGameID);
 
-            updateGame();
+            updateGameInDatabase();
             mDbHelper.close();
         }
 
@@ -206,7 +206,7 @@ public class NewGame extends OptionActivity
         displayRecyclerView(false);
         setOptionChangeListeners();
 
-        updateGame();
+        updateGameInDatabase();
 
     }
 
@@ -283,7 +283,7 @@ public class NewGame extends OptionActivity
                                     } else {
 
                                         mGame.setmTimeLimit(timeLimit);
-                                        updateGame();
+                                        updateGameInDatabase();
                                         mAlertDialog.dismiss();
                                         TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
                                         displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
@@ -467,7 +467,7 @@ public class NewGame extends OptionActivity
 
             mEditTextPlayer.setText("");
 
-            updateGame();
+            updateGameInDatabase();
 
             mPlayerListAdapter.notifyItemInserted(mGame.size());
 
@@ -745,7 +745,7 @@ public class NewGame extends OptionActivity
                         p.setmScore(startingScore);
                     }
 
-                    updateGame();
+                    updateGameInDatabase();
 
                     mainActivityIntent.putExtra("GAME_ID", mGameID);
                     startActivity(mainActivityIntent);
@@ -783,7 +783,7 @@ public class NewGame extends OptionActivity
         loadOptions();
         setGameTime();
 
-        updateGame();
+        updateGameInDatabase();
     }
 
     @Override

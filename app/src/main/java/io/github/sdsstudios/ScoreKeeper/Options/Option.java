@@ -9,8 +9,6 @@ import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
 
 public class Option {
 
-    public static int NUM_STRING_OPTIONS = 3;
-
     private OptionID mID;
     private boolean mBooleanData;
     private String mStringData;

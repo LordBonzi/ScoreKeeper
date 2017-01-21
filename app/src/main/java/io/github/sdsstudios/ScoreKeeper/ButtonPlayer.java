@@ -9,33 +9,27 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
-import io.github.sdsstudios.ScoreKeeper.Options.Option;
 
 /**
  * Created by seth on 07/01/17.
  */
 
 public class ButtonPlayer implements View.OnClickListener, View.OnLongClickListener {
-    private boolean mReverseScoring;
-    private int mScoreInterval;
 
     private Button mButton;
     private TextView mTextView;
-    private int mScore;
-    private String mPlayerName;
+    private Player mPlayer;
     private ButtonPlayerListener mButtonPlayerListener;
     private int mPlayerIndex;
 
-    public ButtonPlayer(boolean mReverseScoring
-            , int mScoreInterval, Player player
+    public ButtonPlayer(Player player
             , TextView mTextView, Button mButton
             , ButtonPlayerListener mButtonPlayerListener) {
 
-        this.mReverseScoring = mReverseScoring;
-        this.mScoreInterval = mScoreInterval;
         this.mTextView = mTextView;
         this.mButton = mButton;
         this.mButtonPlayerListener = mButtonPlayerListener;
+        this.mPlayer = player;
 
         if (mButton.getId() == R.id.buttonP1) {
             mPlayerIndex = 0;
@@ -55,17 +49,13 @@ public class ButtonPlayer implements View.OnClickListener, View.OnLongClickListe
         List<ButtonPlayer> list = new ArrayList<>();
 
         list.add(new ButtonPlayer(
-                game.isChecked(Option.OptionID.REVERSE_SCORING)
-                , game.getInt(Option.OptionID.SCORE_INTERVAL)
-                , game.getmPlayerArray().get(0)
+                game.getmPlayerArray().get(0)
                 , (TextView) ctx.findViewById(R.id.textViewP1)
                 , (Button) ctx.findViewById(R.id.buttonP1)
                 , buttonPlayerListener));
 
         list.add(new ButtonPlayer(
-                game.isChecked(Option.OptionID.REVERSE_SCORING)
-                , game.getInt(Option.OptionID.SCORE_INTERVAL)
-                , game.getmPlayerArray().get(1)
+                game.getmPlayerArray().get(1)
                 , (TextView) ctx.findViewById(R.id.textViewP2)
                 , (Button) ctx.findViewById(R.id.buttonP2)
                 , buttonPlayerListener));
@@ -87,50 +77,34 @@ public class ButtonPlayer implements View.OnClickListener, View.OnLongClickListe
     }
 
     public void reload(Player player) {
-        mScore = player.getmScore();
-        mPlayerName = player.getmName();
+        this.mPlayer = player;
 
         setButtonText();
         setTextViewText();
     }
 
     private void setTextViewText() {
-        mTextView.setText(mPlayerName);
+        mTextView.setText(mPlayer.getmName());
     }
 
     public void onScoreButtonClick() {
-
-        if (mReverseScoring) {
-            mScore -= mScoreInterval;
-        } else {
-            mScore += mScoreInterval;
-        }
-
+        mButtonPlayerListener.onScoreClick(mPlayerIndex);
         setButtonText();
-
-        mButtonPlayerListener.onScoreChange(mPlayerIndex, mScore);
 
     }
 
     public void onScoreButtonLongClick() {
 
-        if (mReverseScoring) {
-            mScore += mScoreInterval;
-        } else {
-            mScore -= mScoreInterval;
-        }
-
+        mButtonPlayerListener.onScoreLongClick(mPlayerIndex);
         setButtonText();
 
-        mButtonPlayerListener.onScoreChange(mPlayerIndex, mScore);
     }
 
     private void setButtonText() {
-        mButton.setText(String.valueOf(mScore));
+        mButton.setText(String.valueOf(mPlayer.getmScore()));
     }
 
     public void startNewSet() {
-        mScore = 0;
         setButtonText();
     }
 
@@ -139,7 +113,7 @@ public class ButtonPlayer implements View.OnClickListener, View.OnLongClickListe
         if (v.getId() == mButton.getId()) {
             onScoreButtonClick();
         } else {
-            mButtonPlayerListener.changePlayerName(mPlayerIndex);
+            mButtonPlayerListener.editPlayer(mPlayerIndex);
         }
     }
 

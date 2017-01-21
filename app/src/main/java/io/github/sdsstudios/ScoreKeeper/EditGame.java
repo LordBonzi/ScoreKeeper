@@ -256,7 +256,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 }else{
 
-                    updateGame();
+                    updateGameInDatabase();
 
                     mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);

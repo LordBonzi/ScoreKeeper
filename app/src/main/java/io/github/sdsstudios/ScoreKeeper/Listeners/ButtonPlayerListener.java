@@ -5,7 +5,11 @@ package io.github.sdsstudios.ScoreKeeper.Listeners;
  */
 
 public interface ButtonPlayerListener {
-    void onScoreChange(int playerIndex, int score);
+    void onScoreClick(int playerIndex);
 
-    void changePlayerName(int playerIndex);
+    void onScoreLongClick(int playerIndex);
+
+    void editPlayer(int playerIndex);
+
+    void deletePlayer(int playerIndex);
 }

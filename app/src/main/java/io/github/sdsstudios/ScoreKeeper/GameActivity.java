@@ -109,7 +109,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             GAME_ID = savedInstanceState.getInt(STATE_GAMEID);
         }
 
-        updateGame();
+        updateGameInDatabase();
         getTheme().resolveAttribute(android.R.attr.textColorSecondary, mTypedValue, true);
 
         mPausedRunnable = new Runnable() {
@@ -243,13 +243,13 @@ public class GameActivity extends ScoreKeeperTabActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        updateGame();
+        updateGameInDatabase();
     }
 
     public void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mPlayerRecyclerView.setLayoutManager(mLayoutManager);
-        RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, mDbHelper, enabled, this);
+        RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, enabled, this);
         mPlayerRecyclerView.setAdapter(bigGameAdapter);
     }
 
@@ -361,7 +361,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                         mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    updateGame();
+                    updateGameInDatabase();
 
                     if (mGame.size() > 2) {
 
@@ -437,7 +437,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        updateGame();
+        updateGameInDatabase();
     }
 
     private void chronometerClick() {
@@ -564,7 +564,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     }
 
                     mGame.setmCompleted(false);
-                    updateGame();
+                    updateGameInDatabase();
 
                     startActivity(mHomeIntent);
 
@@ -580,7 +580,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     mGame.setmCompleted(true);
 
-                    updateGame();
+                    updateGameInDatabase();
 
                     startActivity(mHomeIntent);
                 }
@@ -647,7 +647,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     chronometerClick();
                     enablePlayerButtons(true);
                     mWon = false;
-                    updateGame();
+                    updateGameInDatabase();
 
                     if (TWO_PLAYER_GAME()) {
 
@@ -671,7 +671,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                         mGame.setmLength(mStopwatch.getText().toString());
                     }
 
-                    updateGame();
+                    updateGameInDatabase();
                     startActivity(mHomeIntent);
                 }
             });
@@ -687,7 +687,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     mGame.setmCompleted(true);
 
-                    updateGame();
+                    updateGameInDatabase();
 
                     startActivity(mHomeIntent);
                 }
@@ -728,7 +728,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                             if (!timeLimitString.equals("00:00:00:0")) {
 
                                 mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
-                                updateGame();
+                                updateGameInDatabase();
 
                                 mTimeLimit = timeLimitString;
 
@@ -759,7 +759,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
 
-        updateGame();
+        updateGameInDatabase();
     }
 
     @Override
@@ -808,7 +808,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             mGame.setmLength(mStopwatch.getText().toString());
         }
 
-        updateGame();
+        updateGameInDatabase();
 
         if (mGame.size() == 2) {
             createButtonsPlayerList();
@@ -816,6 +816,22 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         selectLayout();
         chronometerClick();
+    }
+
+    @Override
+    public void onScoreClick(int playerIndex) {
+        mGame.onPlayerClick(playerIndex);
+        mGame.setGameListener(this);
+        mGame.isGameWon();
+        updateGameInDatabase();
+    }
+
+    @Override
+    public void onScoreLongClick(int playerIndex) {
+        mGame.onPlayerLongClick(playerIndex);
+        mGame.setGameListener(this);
+        mGame.isGameWon();
+        updateGameInDatabase();
     }
 
     @Override
@@ -887,7 +903,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     mStopwatch.setTextColor(getResources().getColor(R.color.start));
                 }
 
-                updateGame();
+                updateGameInDatabase();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -957,15 +973,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         });
     }
 
-    @Override
-    public void onScoreChange(int playerIndex, int score) {
-        mGame.getPlayer(playerIndex).setmScore(score);
-
-        mGame.setGameListener(this);
-        mGame.isGameWon();
-        updateGame();
-
-    }
 
     @Override
     public void playerDialog(Player player, int position, Dialog type, int setPosition) {
@@ -976,11 +983,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         super.playerDialog(player, position, type, setPosition);
 
-    }
-
-    @Override
-    public void changePlayerName(int playerIndex) {
-        playerDialog(mGame.getPlayer(playerIndex), playerIndex, Dialog.EDIT_PLAYER, 0);
     }
 
 

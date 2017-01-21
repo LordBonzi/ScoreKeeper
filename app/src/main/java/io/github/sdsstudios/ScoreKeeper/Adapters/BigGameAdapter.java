@@ -9,8 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import io.github.sdsstudios.ScoreKeeper.Game;
-import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
-import io.github.sdsstudios.ScoreKeeper.Options.Option;
+import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
 
@@ -18,70 +17,49 @@ import io.github.sdsstudios.ScoreKeeper.R;
  * Created by seth on 08/05/16.
  */
 public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHolder> {
-    private GameDBAdapter mDbHelper;
     private Game mGame;
     private boolean mEnabled;
-    private boolean mReverseScoring;
-    private int mScoreInterval;
-    private GameListener mGameListener;
+    private ButtonPlayerListener mButtonPlayerListener;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public BigGameAdapter(Game mGame, GameDBAdapter dbAdapter, boolean menabled, GameListener mGameListener) {
+    public BigGameAdapter(Game mGame, boolean mEnabled, ButtonPlayerListener mButtonPlayerListener) {
 
-        mDbHelper = dbAdapter;
-        mEnabled = menabled;
+        this.mEnabled = mEnabled;
         this.mGame = mGame;
-        this.mGameListener = mGameListener;
-
-        mReverseScoring = mGame.isChecked(Option.OptionID.REVERSE_SCORING);
-        mScoreInterval = mGame.getInt(Option.OptionID.SCORE_INTERVAL);
+        this.mButtonPlayerListener = mButtonPlayerListener;
 
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                          int viewType) {
-        // create a new view
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.big_game_adapter, parent, false);
-        // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        final Player p = mGame.getPlayer(position);
 
-        holder.textViewPlayer.setText(p.getmName());
-        holder.buttonScore.setText(String.valueOf(p.getmScore()));
+        final Player player = mGame.getPlayer(position);
+
+        holder.textViewPlayer.setText(player.getmName());
+        holder.buttonScore.setText(String.valueOf(player.getmScore()));
 
         if (mEnabled) {
             holder.buttonScore.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    int score = 0;
-                    int buttonScore = 0;
 
-                    buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
+                    mGame.onPlayerClick(position);
 
-                    if (mReverseScoring) {
-                        score = buttonScore -= mScoreInterval;
-                    } else {
-                        score = buttonScore += mScoreInterval;
-                    }
+                    int score = player.getmScore();
 
                     holder.buttonScore.setText(String.valueOf(score));
-                    p.setmScore(score);
+                    player.setmScore(score);
 
-                    mGame.setGameListener(mGameListener);
                     mGame.isGameWon();
 
                 }
@@ -90,22 +68,13 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             holder.buttonScore.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    int score = 0;
-                    int buttonScore = 0;
 
-                    buttonScore = Integer.valueOf(holder.buttonScore.getText().toString());
+                    mGame.onPlayerLongClick(position);
 
-                    if (mReverseScoring) {
-                        score = buttonScore += mScoreInterval;
-                    } else {
-                        score = buttonScore -= mScoreInterval;
-                    }
-                    if (score == -1) {
+                    int score = player.getmScore();
 
-                    } else {
-                        holder.buttonScore.setText(String.valueOf(score));
-                        p.setmScore(score);
-                    }
+                    holder.buttonScore.setText(String.valueOf(score));
+                    player.setmScore(score);
 
                     return true;
                 }
@@ -114,19 +83,18 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGameListener.deletePlayer(position);
+                    mButtonPlayerListener.deletePlayer(position);
                 }
             });
 
             holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mGameListener.editPlayer(position);
+                    mButtonPlayerListener.editPlayer(position);
                 }
             });
 
-            mGame.setPlayer(p, position);
-            mDbHelper.updateGame(mGame);
+            mGame.setPlayer(player, position);
 
         } else {
 
@@ -136,16 +104,16 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
 
     }
 
+    private void colorButton(Button button, int position) {
+
+    }
+
     @Override
     public int getItemCount() {
         return mGame.size();
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView textViewPlayer;
         public Button buttonScore;
         public ImageButton deleteButton, editButton;

@@ -44,7 +44,6 @@
     <color name="primaryRed">#F44336</color>
     <color name="primaryRedDark">#D32F2F</color>
 
-
     <color name="primaryPurple">#7B1FA2</color>
     <color name="primaryPurpleDark">#4A148C</color>
 
@@ -67,5 +66,14 @@
 
     <color name="primaryBlue">#1976D2</color>
     <color name="primaryBlueDark">#0D47A1</color>
+
+
+    <color name="winning">#4CAF50</color>
+    <color name="second_place">#81c784</color>
+    <color name="third_place">#a5d6a7</color>
+
+    <color name="third_to_last">#ef9a9a</color>
+    <color name="second_to_last">#ef5350</color>
+    <color name="last">#e53935</color>
 
 </resources>

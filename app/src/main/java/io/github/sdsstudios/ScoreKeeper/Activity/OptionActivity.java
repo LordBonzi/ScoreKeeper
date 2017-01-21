@@ -341,7 +341,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     @Override
     public void onPlayerChange(Player player, int position) {
         mGame.setPlayer(player, position);
-        updateGame();
+        updateGameInDatabase();
 
     }
 
@@ -388,7 +388,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             mSnackBar.show();
 
         } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
-            updateGame();
+            updateGameInDatabase();
         }
 
     }

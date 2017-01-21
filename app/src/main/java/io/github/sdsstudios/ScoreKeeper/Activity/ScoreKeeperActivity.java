@@ -90,7 +90,7 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
     }
 
-    public void updateGame() {
+    public void updateGameInDatabase() {
         if (CURRENT_ACTIVITY != EDIT_GAME) {
             mDbHelper.open().updateGame(mGame);
             mDbHelper.close();

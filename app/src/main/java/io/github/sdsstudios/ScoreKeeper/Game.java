@@ -2,6 +2,7 @@ package io.github.sdsstudios.ScoreKeeper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
@@ -24,6 +25,7 @@ public class Game {
     private boolean mCompleted;
     private int mID;
     private int mNumSetsPlayed;
+    private int mScoreIntervalIndex;
 
     private List<IntEditTextOption> mIntEditTextOptions;
     private List<StringEditTextOption> mStringEditTextOptions;
@@ -41,6 +43,7 @@ public class Game {
         this.mIntEditTextOptions = intEditTextOptions;
         this.mStringEditTextOptions = stringEditTextOptions;
         this.mGameListener = mGameListener;
+
     }
 
     public boolean ismCompleted() {
@@ -127,14 +130,29 @@ public class Game {
     public int getInt(OptionID id) {
         int data = 1;
 
-        for (IntEditTextOption e: mIntEditTextOptions){
+        for (int i = 0; i < mIntEditTextOptions.size(); i++) {
+            IntEditTextOption e = mIntEditTextOptions.get(i);
+
             if (e.getmID() == id){
                 data = Integer.valueOf(String.valueOf(e.getInt()));
                 break;
+            } else if (e.getmID() == OptionID.SCORE_INTERVAL) {
+                /** update score interval to quickly get scoreinterval when changing score **/
+                mScoreIntervalIndex = i;
             }
         }
 
         return data;
+    }
+
+    public void onPlayerClick(int playerIndex) {
+        getPlayer(playerIndex).playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+                , isChecked(OptionID.REVERSE_SCORING));
+    }
+
+    public void onPlayerLongClick(int playerIndex) {
+        getPlayer(playerIndex).playerLongClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+                , isChecked(OptionID.REVERSE_SCORING));
     }
 
     public String getString(OptionID id) {
@@ -169,6 +187,7 @@ public class Game {
                 isChecked = c.isChecked();
                 break;
             }
+
         }
         return isChecked;
     }
@@ -232,30 +251,6 @@ public class Game {
         return mPlayerArray.get(position);
     }
 
-    public void setmIntEditTextOption(IntEditTextOption option){
-        for (int i = 0; i < mIntEditTextOptions.size(); i++) {
-            if (mIntEditTextOptions.get(i).getmID() == option.getmID()) {
-                mIntEditTextOptions.set(i, option);
-            }
-        }
-    }
-
-    public void setmStringEditTextOption(StringEditTextOption option) {
-        for (int i = 0; i < mStringEditTextOptions.size(); i++) {
-            if (mStringEditTextOptions.get(i).getmID() == option.getmID()) {
-                mStringEditTextOptions.set(i, option);
-            }
-        }
-    }
-
-    public void setmCheckBoxOption(CheckBoxOption checkBoxOption){
-        for (int i = 0; i < mCheckBoxOptions.size(); i++) {
-            if (mCheckBoxOptions.get(i).getmID() == checkBoxOption.getmID()) {
-                mCheckBoxOptions.set(i, checkBoxOption);
-            }
-        }
-    }
-
     public String getWinnerString(){
         Player winningPlayer = mPlayerArray.get(0);
 
@@ -308,6 +303,27 @@ public class Game {
 
         return isWon;
 
+    }
+
+    private List<Integer> sortedListOfScores() {
+        List<Integer> sortedList = getListOfScores();
+
+        Collections.sort(sortedList, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                if (isChecked(OptionID.REVERSE_SCORING)) {
+                    return o1 - o2;
+                } else {
+                    return o1 + o2;
+                }
+            }
+        });
+
+        return sortedList;
+    }
+
+    public int scorePosition(int score) {
+        return sortedListOfScores().indexOf(score);
     }
 
     public int largestScoreIndex(List<Integer> mScoreList) {

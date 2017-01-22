@@ -353,6 +353,15 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 break;
 
             case R.id.nav_email_dev:
+                Intent send = new Intent(Intent.ACTION_SENDTO);
+                String uriText = "mailto:" + Uri.encode("seth.d.schroeder@gmail.com") +
+                        "?subject=" + Uri.encode("Feedback for Score Keeper app") +
+                        "&body=" + Uri.encode("");
+                Uri uri = Uri.parse(uriText);
+
+                send.setData(uri);
+                startActivity(Intent.createChooser(send, "Send mail..."));
+                startActivity(send);
                 break;
         }
 

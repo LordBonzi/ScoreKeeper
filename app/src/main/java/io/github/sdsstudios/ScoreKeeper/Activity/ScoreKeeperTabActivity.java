@@ -264,7 +264,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                             forceUpdateGame();
                             mGame.isGameWon();
                             populateSetGridView();
-                            goToSelectedTab();
+                            goToCurrentSelectedTab();
 
                         }
 
@@ -278,7 +278,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
     }
 
-    public void goToSelectedTab() {
+    public void goToCurrentSelectedTab() {
         switch (mTabLayout.getSelectedTabPosition()) {
             case GAME_LAYOUT:
                 chooseTab(GAME_LAYOUT);

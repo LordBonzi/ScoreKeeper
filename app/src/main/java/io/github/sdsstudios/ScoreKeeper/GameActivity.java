@@ -129,7 +129,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     }
 
-
     @Override
     public void chooseTab(int layout) {
         if (layout == GAME_LAYOUT) {
@@ -148,6 +147,9 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
             mSetGridView.setVisibility(View.VISIBLE);
         }
+
+        mTabLayout.getTabAt(layout).select();
+
     }
 
     @Override
@@ -324,6 +326,17 @@ public class GameActivity extends ScoreKeeperTabActivity
         mAlertDialog.show();
     }
 
+    private void resetGame() {
+        mGame.reset();
+
+        saveStopwatchTime();
+        updateGameInDatabase();
+        chooseTab(GAME_LAYOUT);
+
+        mStopwatch.setBase(SystemClock.elapsedRealtime());
+        mTimeWhenStopped = 0L;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -350,28 +363,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
             builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    List<Player> mPlayersArray = mGame.getmPlayerArray();
-
-                    for (Player p : mPlayersArray) {
-                        p.setmScore(0);
-                    }
-
-                    saveStopwatchTime();
-
-                    updateGameInDatabase();
-
-                    if (!TWO_PLAYER_GAME()) {
-
-                        displayRecyclerView(true);
-
-                    } else {
-
-                        createButtonsPlayerList();
-                    }
-
-                    mStopwatch.setBase(SystemClock.elapsedRealtime());
-                    mTimeWhenStopped = 0L;
-
+                    resetGame();
                 }
             });
 
@@ -459,14 +451,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                     mPaused = !mPaused;
                     chronometerClick();
                 }
-                break;
-
-            case R.id.textViewP1:
-                break;
-
-            case R.id.textViewP2:
-                playerDialog(mGame.getPlayer(1), 1, Dialog.EDIT_PLAYER, 0);
-
                 break;
 
         }
@@ -796,7 +780,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             reloadPlayerButtons();
         }
 
-        goToSelectedTab();
+        goToCurrentSelectedTab();
     }
 
     @Override
@@ -850,7 +834,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void selectLayout() {
 
-        goToSelectedTab();
+        goToCurrentSelectedTab();
 
         mCardViewStopwatch.setOnClickListener(this);
 

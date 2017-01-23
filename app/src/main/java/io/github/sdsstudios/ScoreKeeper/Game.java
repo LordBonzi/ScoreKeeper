@@ -131,6 +131,15 @@ public class Game {
         mNumSetsPlayed += 1;
     }
 
+    public void reset() {
+        for (Player player : mPlayerArray) {
+            player.reset();
+        }
+
+        setmLength("00:00:00:0");
+
+    }
+
     public int getInt(OptionID id) {
         int data = 1;
 

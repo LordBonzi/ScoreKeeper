@@ -37,6 +37,11 @@ public class Player {
         }
     }
 
+    public void reset() {
+        mSetScores = new ArrayList<>();
+        mSetScores.add(0);
+    }
+
     public String getmName() {
         return mName;
     }

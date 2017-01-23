@@ -87,7 +87,7 @@
         You can see the game in the History activity by clicking History in the side bar.</string>
 
     <string name="delete_game_message">Are you sure you want to delete this game? It will be gone forever!</string>
-    <string name="reset_game_message">Are you sure you want to reset this game?</string>
+    <string name="reset_game_message">Are you sure you want to reset this game? You will lose all the scores in every set and the stopwatch will reset.</string>
 
     <string name="quit_setup_question">Quit Setup?</string>
     <string name="quit_setup_message">Are you sure you want to quit set-up?</string>

@@ -183,7 +183,9 @@ public class Settings extends PreferenceActivity{
                 });
 
                 mDialog = builder.create();
-                mDialog.show();                return true;
+                mDialog.show();
+
+                return true;
             }
 
         });

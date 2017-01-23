@@ -17,7 +17,11 @@ import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 public class Game {
 
+    public static final int WINNING = 154;
+    public static final int LOSING = 45;
     private static String TAG = "Game";
+    private List<Integer> mSortedScoreList;
+
     private GameListener mGameListener;
 
     private List<Player> mPlayerArray;
@@ -145,16 +149,36 @@ public class Game {
         return data;
     }
 
+    public void updatePlayerColors() {
+        if (size() > 2) {
+            for (Player player : mPlayerArray) {
+                if (player.getmButtonColorListener() != null) {
+                    player.getmButtonColorListener().updateColor(playerPosition(player));
+                }
+            }
+        }
+    }
+
+    public List<Integer> getmSortedScoreList() {
+        return mSortedScoreList;
+    }
+
     public void onPlayerClick(int playerIndex) {
-        getPlayer(playerIndex).playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+        Player player = getPlayer(playerIndex);
+
+        player.playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
                 , isChecked(OptionID.REVERSE_SCORING));
 
 
     }
 
+
     public void onPlayerLongClick(int playerIndex) {
-        getPlayer(playerIndex).playerLongClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+        Player player = getPlayer(playerIndex);
+
+        player.playerLongClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
                 , isChecked(OptionID.REVERSE_SCORING));
+
     }
 
     public String getString(OptionID id) {
@@ -307,25 +331,37 @@ public class Game {
 
     }
 
-    private List<Integer> sortedListOfScores() {
-        List<Integer> sortedList = getListOfScores();
+    private void sortScoreList() {
 
-        Collections.sort(sortedList, new Comparator<Integer>() {
+        mSortedScoreList = getListOfScores();
+
+        Collections.sort(mSortedScoreList, new Comparator<Integer>() {
             @Override
-            public int compare(Integer o1, Integer o2) {
+            public int compare(Integer score1, Integer score2) {
                 if (isChecked(OptionID.REVERSE_SCORING)) {
-                    return o1 + o2;
+                    return score1 - score2;
                 } else {
-                    return o1 - o2;
+                    return score2 - score1;
                 }
+
             }
         });
 
-        return sortedList;
     }
 
-    public int scorePosition(int score) {
-        return sortedListOfScores().indexOf(score);
+    public int playerPosition(Player player) {
+        if (mSortedScoreList == null) {
+            /** creates a list with sorted scores **/
+            sortScoreList();
+        }
+
+        if (mSortedScoreList.get(0) == player.getmScore()) {
+            return WINNING;
+        } else if (mSortedScoreList.get(mSortedScoreList.size() - 1) == player.getmScore()) {
+            return LOSING;
+        } else {
+            return 0;
+        }
     }
 
     public int largestScoreIndex(List<Integer> mScoreList) {

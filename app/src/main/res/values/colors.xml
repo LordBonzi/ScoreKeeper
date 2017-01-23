@@ -68,12 +68,12 @@
     <color name="primaryBlueDark">#0D47A1</color>
 
 
-    <color name="winning">#4CAF50</color>
+    <color name="first_place">#4CAF50</color>
     <color name="second_place">#81c784</color>
     <color name="third_place">#a5d6a7</color>
 
     <color name="third_to_last">#ef9a9a</color>
     <color name="second_to_last">#ef5350</color>
-    <color name="last">#e53935</color>
+    <color name="last_place">#e53935</color>
 
 </resources>

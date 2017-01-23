@@ -166,8 +166,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
-
-
     private void loadGame() {
 
         int mScoreDiffToWin = mGame.getInt(OptionID.SCORE_DIFF_TO_WIN);
@@ -249,6 +247,9 @@ public class GameActivity extends ScoreKeeperTabActivity
         mPlayerRecyclerView.setLayoutManager(mLayoutManager);
         RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, enabled, this);
         mPlayerRecyclerView.setAdapter(bigGameAdapter);
+
+        mGame.updatePlayerColors();
+
     }
 
     @Override
@@ -359,7 +360,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     updateGameInDatabase();
 
-                    if (mGame.size() > 2) {
+                    if (!TWO_PLAYER_GAME()) {
 
                         displayRecyclerView(true);
 
@@ -759,8 +760,12 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void reloadPlayerButtons() {
-        for (int i = 0; i < mGame.size(); i++) {
-            mButtonsPlayerList.get(i).reload(mGame.getPlayer(i));
+        if (mButtonsPlayerList.size() == 0) {
+            createButtonsPlayerList();
+        } else {
+            for (int i = 0; i < mGame.size(); i++) {
+                mButtonsPlayerList.get(i).reload(mGame.getPlayer(i));
+            }
         }
     }
 
@@ -778,7 +783,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         mWon = true;
         displayRecyclerView(false);
 
-
         winnerDialog(winner);
 
     }
@@ -788,7 +792,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         super.deletePlayer(position);
 
-        if (mGame.size() == 2) {
+        if (TWO_PLAYER_GAME()) {
             reloadPlayerButtons();
         }
 
@@ -798,17 +802,13 @@ public class GameActivity extends ScoreKeeperTabActivity
     @Override
     public void onScoreClick(int playerIndex) {
         mGame.onPlayerClick(playerIndex);
-        mGame.setGameListener(this);
         mGame.isGameWon();
-        updateGameInDatabase();
     }
 
     @Override
     public void onScoreLongClick(int playerIndex) {
         mGame.onPlayerLongClick(playerIndex);
-        mGame.setGameListener(this);
         mGame.isGameWon();
-        updateGameInDatabase();
     }
 
     @Override
@@ -891,15 +891,10 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         } else {
 
-            showStopwatch(INVISIBLE);
-
-            if (!TWO_PLAYER_GAME()) {
-                mPlayerRecyclerView.setLayoutParams(
-                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT
-                                , RelativeLayout.LayoutParams.MATCH_PARENT));
-            }
+            showStopwatch(GONE);
 
         }
+
     }
 
     private void setButtonParams() {
@@ -949,7 +944,6 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
     }
-
 
     @Override
     public void playerDialog(Player player, int position, Dialog type, int setPosition) {

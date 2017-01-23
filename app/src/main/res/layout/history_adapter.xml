@@ -46,15 +46,24 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </HorizontalScrollView>
 
-        <TextView
-            android:id="@+id/textViewHistoryScore"
+        <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/textViewHistoryType"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="ERROR DISPLAYING THIS GAME"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/textViewHistoryScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="ERROR DISPLAYING THIS GAME"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/textViewHistoryType"

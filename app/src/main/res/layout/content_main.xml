@@ -6,6 +6,7 @@
     android:id="@+id/relativeLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:mContext="io.github.sdsstudios.ScoreKeeper.GameActivity">
 
@@ -18,7 +19,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/linearLayout1"
@@ -73,7 +74,6 @@
                 android:id="@+id/textViewP2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_weight="0.5"
                 android:clickable="true"
                 android:gravity="center"

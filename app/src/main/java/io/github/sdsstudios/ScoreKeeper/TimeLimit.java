@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -161,8 +160,6 @@ public class TimeLimit {
                 timeLimitString += minute + ":";
                 timeLimitString += seconds + ":";
                 timeLimitString += "0";
-
-                Log.e(TAG, timeLimitString);
 
                 return timeLimitString;
 

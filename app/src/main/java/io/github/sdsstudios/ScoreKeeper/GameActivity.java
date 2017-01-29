@@ -70,7 +70,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     private long mTimeWhenStopped = 0L;
     private boolean mPaused = false;
     private MenuItem mMenuItemDiceNum;
-    private RelativeLayout mBaseLayout;
+    private RelativeLayout mMainContent;
     private View mNormalLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private ViewGroup.LayoutParams mParams;
@@ -145,6 +145,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                 showStopwatch(INVISIBLE);
             }
+
             mSetGridView.setVisibility(View.VISIBLE);
         }
 
@@ -187,7 +188,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         mHomeIntent = new Intent(this, Home.class);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-        mBaseLayout = (RelativeLayout) findViewById(R.id.content);
+        mMainContent = (RelativeLayout) findViewById(R.id.activity_main_content);
 
         createButtonsPlayerList();
 
@@ -461,10 +462,10 @@ public class GameActivity extends ScoreKeeperTabActivity
         return !getSupportActionBar().isShowing();
     }
 
-    public void setFullScreen(boolean fullscreen) {
+    private void setFullScreen(boolean fullscreen) {
 
         if (fullscreen) {
-            mParams = mBaseLayout.getLayoutParams();
+            mParams = mMainContent.getLayoutParams();
             getSupportActionBar().hide();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -473,8 +474,8 @@ public class GameActivity extends ScoreKeeperTabActivity
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION /** hide nav bar **/
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN /** show navbar and status bar **/
                                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
                 mCoordinatorLayout.setFitsSystemWindows(false);
@@ -487,13 +488,14 @@ public class GameActivity extends ScoreKeeperTabActivity
             );
 
             params.setMargins(0, mTabLayout.getHeight(), 0, 0);
-            mBaseLayout.setLayoutParams(params);
+            mMainContent.setLayoutParams(params);
 
         } else {
+
             getSupportActionBar().show();
 
             boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
-            int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+            int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
             if (colorNavBar) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -511,7 +513,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
 
             if (mParams != null) {
-                mBaseLayout.setLayoutParams(mParams);
+                mMainContent.setLayoutParams(mParams);
             }
 
             mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -801,7 +803,14 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void showStopwatch(int visible) {
-        mCardViewStopwatch.setVisibility(visible);
+        if (visible == VISIBLE) {
+            if (mGame.isChecked(OptionID.STOPWATCH)) {
+                mCardViewStopwatch.setVisibility(visible);
+            }
+        } else {
+            mCardViewStopwatch.setVisibility(visible);
+        }
+
     }
 
     private void showPlayerLayout(int visible) {
@@ -825,7 +834,6 @@ public class GameActivity extends ScoreKeeperTabActivity
             mPlayerRecyclerView.setVisibility(GONE);
 
             setButtonParams();
-
             reloadPlayerButtons();
 
         }

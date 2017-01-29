@@ -59,7 +59,7 @@ public class Settings extends PreferenceActivity{
         int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 

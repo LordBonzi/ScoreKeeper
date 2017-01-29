@@ -33,7 +33,7 @@ public class Themes extends PreferenceActivity{
     public static int ACCENT_COLOR = 1;
     public static int PRIMARY_COLOR = 2;
     public static int DEFAULT_ACCENT_COLOR = R.style.DarkTheme_Red;
-    SharedPreferences.OnSharedPreferenceChangeListener mSharedPreferenceChangeListener;
+
     private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
     private SharedPreferences mSharedPreferences;
@@ -144,7 +144,7 @@ public class Themes extends PreferenceActivity{
 
         mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", true);
 
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", true);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(this));
         mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
@@ -414,12 +414,6 @@ public class Themes extends PreferenceActivity{
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         getDelegate().onPostResume();
@@ -429,15 +423,6 @@ public class Themes extends PreferenceActivity{
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
 
     }
 
@@ -445,8 +430,6 @@ public class Themes extends PreferenceActivity{
     protected void onDestroy() {
         super.onDestroy();
         getDelegate().onDestroy();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(mSharedPreferenceChangeListener);
     }
 
 

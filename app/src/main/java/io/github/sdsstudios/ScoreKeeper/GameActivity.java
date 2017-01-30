@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -455,7 +456,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                 break;
 
         }
-
     }
 
     public boolean isFullScreen() {
@@ -463,9 +463,23 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void setFullScreen(boolean fullscreen) {
+        View fullScreenTabs = null;
+        int oldSelectedTab = mTabLayout.getSelectedTabPosition();
+
+        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+            fullScreenTabs = findViewById(R.id.tabs_fullscreen);
+        }
 
         if (fullscreen) {
             mParams = mMainContent.getLayoutParams();
+
+            /** use tabs which arent nested in toolbar. the toolbar will be hidden **/
+            if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                fullScreenTabs.setVisibility(VISIBLE);
+                mTabLayout = (TabLayout) fullScreenTabs;
+                loadTabs();
+            }
+
             getSupportActionBar().hide();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -491,6 +505,12 @@ public class GameActivity extends ScoreKeeperTabActivity
             mMainContent.setLayoutParams(params);
 
         } else {
+
+            if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                fullScreenTabs.setVisibility(GONE);
+                mTabLayout = (TabLayout) findViewById(R.id.tabs);
+                loadTabs();
+            }
 
             getSupportActionBar().show();
 
@@ -519,8 +539,10 @@ public class GameActivity extends ScoreKeeperTabActivity
             mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
 
         }
-    }
 
+        /** choose correct tab after changing TabLayout **/
+        chooseTab(oldSelectedTab);
+    }
 
     @Override
     public void onBackPressed() {

@@ -30,7 +30,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include
-        android:id="@+id/content"
+        android:id="@+id/activity_main_content"
         layout="@layout/content_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

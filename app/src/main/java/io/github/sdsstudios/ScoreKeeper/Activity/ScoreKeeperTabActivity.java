@@ -46,6 +46,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
         super.onCreate(savedInstanceState);
 
         mSetGridView = (GridView) findViewById(R.id.setGridView);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
         loadTabs();
     }
 
@@ -61,7 +62,6 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
         ViewPager mViewPager = (ViewPager) findViewById(R.id.option_tab_container);
         mViewPager.setAdapter(mTabPager);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
         for (int i = 0; i < mTabLayout.getChildCount(); i++) {

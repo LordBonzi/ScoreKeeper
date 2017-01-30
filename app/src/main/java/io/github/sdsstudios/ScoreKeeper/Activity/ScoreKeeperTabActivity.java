@@ -171,6 +171,8 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 }
 
                 dialog.dismiss();
+                onDialogClose();
+
             }
         });
 
@@ -265,6 +267,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                             mGame.isGameWon();
                             populateSetGridView();
                             goToCurrentSelectedTab();
+                            onDialogClose();
 
                         }
 
@@ -275,6 +278,10 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
         });
         mAlertDialog.show();
+
+    }
+
+    public void onDialogClose() {
 
     }
 

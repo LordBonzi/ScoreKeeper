@@ -463,85 +463,83 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void setFullScreen(boolean fullscreen) {
-        View fullScreenTabs = null;
-        int oldSelectedTab = mTabLayout.getSelectedTabPosition();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
-        if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
-            fullScreenTabs = findViewById(R.id.tabs_fullscreen);
-        }
+            View fullScreenTabs = null;
+            int oldSelectedTab = mTabLayout.getSelectedTabPosition();
 
-        if (fullscreen) {
-            mParams = mMainContent.getLayoutParams();
-
-            /** use tabs which arent nested in toolbar. the toolbar will be hidden **/
             if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
-                fullScreenTabs.setVisibility(VISIBLE);
-                mTabLayout = (TabLayout) fullScreenTabs;
-                loadTabs();
+                fullScreenTabs = findViewById(R.id.tabs_fullscreen);
             }
 
-            getSupportActionBar().hide();
+            if (fullscreen) {
+                mParams = mMainContent.getLayoutParams();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                /** use tabs which arent nested in toolbar. the toolbar will be hidden **/
+                if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                    fullScreenTabs.setVisibility(VISIBLE);
+                    mTabLayout = (TabLayout) fullScreenTabs;
+                    loadTabs();
+                }
 
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION /** hide nav bar **/
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN /** show navbar and status bar **/
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                getSupportActionBar().hide();
+
+                hideSystemWindows();
 
                 mCoordinatorLayout.setFitsSystemWindows(false);
 
-            }
 
-            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT
-            );
+                CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                );
 
-            params.setMargins(0, mTabLayout.getHeight(), 0, 0);
-            mMainContent.setLayoutParams(params);
+                params.setMargins(0, mTabLayout.getHeight(), 0, 0);
+                mMainContent.setLayoutParams(params);
 
-        } else {
+            } else {
 
-            if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
-                fullScreenTabs.setVisibility(GONE);
-                mTabLayout = (TabLayout) findViewById(R.id.tabs);
-                loadTabs();
-            }
-
-            getSupportActionBar().show();
-
-            boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", false);
-            int primaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor", Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
-
-            if (colorNavBar) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setNavigationBarColor(primaryDarkColor);
+                if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+                    fullScreenTabs.setVisibility(GONE);
+                    mTabLayout = (TabLayout) findViewById(R.id.tabs);
+                    loadTabs();
                 }
-            }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mCoordinatorLayout.setFitsSystemWindows(true);
+
                 getWindow().getDecorView().setSystemUiVisibility(
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-                mCoordinatorLayout.setFitsSystemWindows(true);
+
+                if (mParams != null) {
+                    mMainContent.setLayoutParams(mParams);
+                }
+
+                getSupportActionBar().show();
+
+                mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+
             }
 
-            if (mParams != null) {
-                mMainContent.setLayoutParams(mParams);
-            }
+            /** choose correct tab after changing TabLayout **/
+            chooseTab(oldSelectedTab);
 
-            mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+        } else {
 
         }
+    }
 
-        /** choose correct tab after changing TabLayout **/
-        chooseTab(oldSelectedTab);
+    private void hideSystemWindows() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION /** hide nav bar **/
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN /** show navbar and status bar **/
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
     }
 
     @Override
@@ -957,6 +955,11 @@ public class GameActivity extends ScoreKeeperTabActivity
                 removeOnGlobalLayoutListener(mStopwatch, this);
             }
         });
+    }
+
+    @Override
+    public void onDialogClose() {
+        hideSystemWindows();
     }
 
     @Override

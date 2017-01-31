@@ -962,7 +962,9 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public void onDialogClose() {
-        hideSystemWindows();
+        if (isFullScreen()) {
+            hideSystemWindows();
+        }
     }
 
     @Override

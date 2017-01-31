@@ -262,7 +262,11 @@ public class GameActivity extends ScoreKeeperTabActivity
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_reset).setVisible(true);
-        menu.findItem(R.id.action_fullscreen).setVisible(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            menu.findItem(R.id.action_fullscreen).setVisible(true);
+        }
+
         menu.findItem(R.id.action_dice).setVisible(true);
         menu.findItem(R.id.action_add).setVisible(true);
         mMenuItemDiceNum = menu.findItem(R.id.action_dice_num);
@@ -795,7 +799,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public void deletePlayer(int position) {
-
         super.deletePlayer(position);
 
         if (TWO_PLAYER_GAME()) {

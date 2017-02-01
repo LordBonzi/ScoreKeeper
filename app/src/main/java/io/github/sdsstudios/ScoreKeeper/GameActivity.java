@@ -456,6 +456,8 @@ public class GameActivity extends ScoreKeeperTabActivity
                 if (!mFinished) {
                     mPaused = !mPaused;
                     chronometerClick();
+                } else {
+                    Toast.makeText(this, "The game has ended", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -479,6 +481,19 @@ public class GameActivity extends ScoreKeeperTabActivity
             if (fullscreen) {
                 mParams = mMainContent.getLayoutParams();
 
+                CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
+                );
+
+                params.setMargins(0, mTabLayout.getHeight(), 0, 0);
+
+                mCoordinatorLayout.setFitsSystemWindows(false);
+
+                hideSystemWindows();
+
+                getSupportActionBar().hide();
+
                 /** use tabs which arent nested in toolbar when full screen. the toolbar will be hidden **/
                 if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                     fullScreenTabs.setVisibility(VISIBLE);
@@ -486,18 +501,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                     loadTabs();
                 }
 
-                getSupportActionBar().hide();
-
-                hideSystemWindows();
-
-                mCoordinatorLayout.setFitsSystemWindows(false);
-
-                CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
-                        CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                        CoordinatorLayout.LayoutParams.WRAP_CONTENT
-                );
-
-                params.setMargins(0, mTabLayout.getHeight(), 0, 0);
                 mMainContent.setLayoutParams(params);
 
             } else {
@@ -522,7 +525,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
             }
 
-            /** choose correct tab after changing TabLayout **/
+            /** choose correct tab after changing which view is mTabLayout **/
             chooseTab(oldSelectedTab);
         }
     }
@@ -539,11 +542,12 @@ public class GameActivity extends ScoreKeeperTabActivity
     private void hideSystemWindows() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION /** hide nav bar **/
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN /** show navbar and status bar **/
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN /** hide status bar **/
+        );
 
     }
 
@@ -693,6 +697,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
 
         enablePlayerButtons(false);
+        displayRecyclerView(false);
 
         dialog = builder.create();
 

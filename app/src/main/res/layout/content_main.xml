@@ -47,7 +47,6 @@
                 android:gravity="center"
                 android:text="3"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -79,7 +78,6 @@
                 android:maxLines="1"
                 android:text="Tim"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
 
         </LinearLayout>
 

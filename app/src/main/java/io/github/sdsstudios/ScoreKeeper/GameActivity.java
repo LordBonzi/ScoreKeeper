@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -509,11 +510,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                 mCoordinatorLayout.setFitsSystemWindows(true);
 
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+                showSystemWindows();
 
                 if (mParams != null) {
                     mMainContent.setLayoutParams(mParams);
@@ -530,6 +527,15 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void showSystemWindows() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void hideSystemWindows() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -958,7 +964,9 @@ public class GameActivity extends ScoreKeeperTabActivity
     @Override
     public void onDialogClose() {
         if (isFullScreen()) {
-            hideSystemWindows();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                hideSystemWindows();
+            }
         }
     }
 

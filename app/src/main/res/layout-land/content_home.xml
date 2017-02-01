@@ -45,6 +45,7 @@
         android:id="@+id/homeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/adViewHome"
         android:layout_below="@+id/layoutRecentGames"
         android:layout_toEndOf="@+id/relativeLayout"
         android:layout_toRightOf="@+id/relativeLayout" />

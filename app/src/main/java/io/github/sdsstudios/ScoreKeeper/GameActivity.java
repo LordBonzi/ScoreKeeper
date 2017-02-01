@@ -242,7 +242,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         chronometerClick();
 
         saveStopwatchTime();
-
         updateGameInDatabase();
     }
 
@@ -479,7 +478,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             if (fullscreen) {
                 mParams = mMainContent.getLayoutParams();
 
-                /** use tabs which arent nested in toolbar. the toolbar will be hidden **/
+                /** use tabs which arent nested in toolbar when full screen. the toolbar will be hidden **/
                 if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                     fullScreenTabs.setVisibility(VISIBLE);
                     mTabLayout = (TabLayout) fullScreenTabs;
@@ -491,7 +490,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                 hideSystemWindows();
 
                 mCoordinatorLayout.setFitsSystemWindows(false);
-
 
                 CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT,
@@ -529,9 +527,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
             /** choose correct tab after changing TabLayout **/
             chooseTab(oldSelectedTab);
-
-        } else {
-
         }
     }
 

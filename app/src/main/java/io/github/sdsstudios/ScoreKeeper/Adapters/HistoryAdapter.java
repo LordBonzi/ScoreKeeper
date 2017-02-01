@@ -33,7 +33,7 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     private Activity mActivity;
 
     public HistoryAdapter(List<HistoryModel> mItemArray, Context context, ViewHolder.ClickListener clickListener, Activity activity) {
-        this.mItemArray = mItemArray;
+        HistoryAdapter.mItemArray = mItemArray;
         this.mCtx = context;
         this.mViewClickListener = clickListener;
         this.mActivity = activity;
@@ -81,23 +81,23 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                     TypedValue outValue = new TypedValue();
 
-                    holder.textViewHistoryInfo.setText(item.getmInfo());
+                    holder.mTextViewHistoryInfo.setText(item.getmInfo());
 
-                    holder.textViewHistoryInProgress.setText(item.getmIsUnfinished());
-                    holder.textViewHistoryInProgress.setAllCaps(true);
+                    holder.mTextViewHistoryInProgress.setText(item.getmIsUnfinished());
+                    holder.mTextViewHistoryInProgress.setAllCaps(true);
 
                     if (isSelected(item.getmID()) ) {
                         mCtx.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
-                        holder.relativeLayout.setBackgroundResource(outValue.resourceId);
+                        holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
                     } else if (!isSelected(item.getmID()) || ACTION_MODE_DISABLED){
                         mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-                        holder.relativeLayout.setBackgroundResource(outValue.resourceId);
+                        holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
                     }
                 }
 
-                holder.textViewHistoryTitle.setText(item.getmTitle());
-                holder.textViewHistoryPlayers.setText(item.getmPlayers());
-                holder.textViewHistoryDate.setText(TimeHelper.gameDate(item.getmDate()));
+                holder.mTextViewHistoryTitle.setText(item.getmTitle());
+                holder.mTextViewHistoryPlayers.setText(item.getmPlayers());
+                holder.mTextViewHistoryDate.setText(TimeHelper.gameDate(item.getmDate()));
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -116,28 +116,24 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public TextView textViewHistoryTitle;
-        public TextView textViewHistoryPlayers;
-        public TextView textViewHistoryDate;
-        public TextView textViewHistoryInfo;
-        public TextView textViewHistoryInProgress;
-        public RelativeLayout relativeLayout;
-        public int color;
-        public String inProgress;
+        TextView mTextViewHistoryTitle;
+        TextView mTextViewHistoryPlayers;
+        TextView mTextViewHistoryDate;
+        TextView mTextViewHistoryInfo;
+        TextView mTextViewHistoryInProgress;
+        RelativeLayout mRelativeLayout;
 
         private ClickListener listener;
 
         public ViewHolder(View v, ClickListener listener) {
             super(v);
 
-            textViewHistoryTitle = (TextView)v.findViewById(R.id.textViewHistoryPlayers);
-            textViewHistoryDate = (TextView)v.findViewById(R.id.textViewHistoryDate);
-            textViewHistoryPlayers = (TextView)v.findViewById(R.id.textViewHistoryScore);
-            textViewHistoryInfo = (TextView)v.findViewById(R.id.textViewHistoryType);
-            textViewHistoryInProgress = (TextView)v.findViewById(R.id.textViewHistoryInProgress);
-            relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayoutHistoryAdapter);
-            color = v.getResources().getColor(R.color.colorAccent);
-            inProgress = v.getResources().getString(R.string.unfinished);
+            mTextViewHistoryTitle = (TextView) v.findViewById(R.id.textViewHistoryPlayers);
+            mTextViewHistoryDate = (TextView) v.findViewById(R.id.textViewHistoryDate);
+            mTextViewHistoryPlayers = (TextView) v.findViewById(R.id.textViewHistoryScore);
+            mTextViewHistoryInfo = (TextView) v.findViewById(R.id.textViewHistoryType);
+            mTextViewHistoryInProgress = (TextView) v.findViewById(R.id.textViewHistoryInProgress);
+            mRelativeLayout = (RelativeLayout) v.findViewById(R.id.relativeLayoutHistoryAdapter);
 
             this.listener = listener;
 

@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryIndigo</item>
-        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryDark">@color/primaryBlueDark</item>
+        <item name="colorAccent">@color/accentRed</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
@@ -18,9 +18,9 @@
 
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryIndigo</item>
-        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryDark">@color/primaryBlueDark</item>
+        <item name="colorAccent">@color/accentRed</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
         <item name="dividerColor">@color/dividerDark</item>

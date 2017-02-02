@@ -219,6 +219,7 @@ public class Themes extends PreferenceActivity{
                 editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
                 editor.putInt("prefAccentColor", mAccentColor);
                 editor.putInt("prefPrimaryColor", mPrimaryColor);
+                editor.putBoolean("prefDarkTheme", true);
                 editor.apply();
 
                 reloadActivity();
@@ -380,13 +381,12 @@ public class Themes extends PreferenceActivity{
         for (int i = 0; i < accentThemes().length; i++){
             if (mAccentColor == accentThemes()[i]){
                 index = i;
+                break;
             }
         }
 
         return index;
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

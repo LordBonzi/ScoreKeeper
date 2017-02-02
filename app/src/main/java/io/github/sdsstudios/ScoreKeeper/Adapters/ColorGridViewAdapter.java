@@ -16,13 +16,14 @@ import io.github.sdsstudios.ScoreKeeper.Themes;
  * Created by seth on 16/07/16.
  */
 
-public class GridViewAdapter extends BaseAdapter {
+public class ColorGridViewAdapter extends BaseAdapter {
+
     private final int[] mColors, mRawColors;
     private Context mCtx;
     private int mSelected;
     private int mType;
 
-    public GridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, int mType){
+    public ColorGridViewAdapter(Context mCtx, int mSelected, int[] colors, int[] rawColors, int mType) {
         this.mCtx = mCtx;
         this.mSelected = mSelected;
         this.mColors = colors;
@@ -72,11 +73,11 @@ public class GridViewAdapter extends BaseAdapter {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mCtx);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                if (mType == Themes.ACCENT_COLOR) {
+                if (mType == Themes.ACCENT_COLORS) {
                     editor.putInt("prefAccentColor", mColors[mSelected]);
                 }else{
-                    editor.putInt("prefPrimaryColor", mColors[mSelected]);
-                    editor.putInt("prefPrimaryDarkColor", mRawColors[mSelected]);
+                    editor.putInt("prefPrimaryColor", mRawColors[mSelected]);
+                    editor.putInt("prefPrimaryDarkColor", mColors[mSelected]);
                 }
 
                 editor.apply();

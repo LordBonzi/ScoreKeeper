@@ -26,12 +26,13 @@ import android.widget.GridView;
 
 import com.google.android.gms.ads.AdView;
 
-import io.github.sdsstudios.ScoreKeeper.Adapters.GridViewAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.ColorGridViewAdapter;
 
 public class Themes extends PreferenceActivity{
 
-    public static int ACCENT_COLOR = 1;
-    public static int PRIMARY_COLOR = 2;
+    public static int ACCENT_COLORS = 1;
+    public static int PRIMARY_COLORS = 2;
+
     public static int DEFAULT_ACCENT_COLOR = R.style.DarkTheme_Red;
 
     private Intent mSettingsIntent;
@@ -250,7 +251,7 @@ public class Themes extends PreferenceActivity{
         accentPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                colorDialog(ACCENT_COLOR);
+                colorDialog(ACCENT_COLORS);
                 return true;
             }
         });
@@ -258,7 +259,7 @@ public class Themes extends PreferenceActivity{
         primaryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                colorDialog(PRIMARY_COLOR);
+                colorDialog(PRIMARY_COLORS);
                 return true;
             }
         });
@@ -306,20 +307,20 @@ public class Themes extends PreferenceActivity{
 
         final GridView gridView = (GridView)dialogView.findViewById(R.id.gridView);
 
-        final GridViewAdapter gridViewAdapter = new GridViewAdapter(this
-                , type == ACCENT_COLOR ? accentColorIndex() : primaryColorIndex()
-                , type == ACCENT_COLOR ? accentThemes() : PRIMARY_COLORS(Themes.this)
-                , type == ACCENT_COLOR ? RAW_ACCENT_COLORS(Themes.this) : PRIMARY_DARK_COLORS(Themes.this)
+        final ColorGridViewAdapter colorGridViewAdapter = new ColorGridViewAdapter(this
+                , type == ACCENT_COLORS ? accentColorIndex() : primaryColorIndex()
+                , type == ACCENT_COLORS ? accentThemes() : PRIMARY_DARK_COLORS(Themes.this)
+                , type == ACCENT_COLORS ? RAW_ACCENT_COLORS(Themes.this) : PRIMARY_COLORS(Themes.this)
                 , type);
 
-        gridView.setAdapter(gridViewAdapter);
+        gridView.setAdapter(colorGridViewAdapter);
 
         dialogBuilder.setNeutralButton(R.string._default, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 SharedPreferences.Editor editor = mSharedPreferences.edit();
 
-                if (type == ACCENT_COLOR) {
+                if (type == ACCENT_COLORS) {
                     mAccentColor = DEFAULT_ACCENT_COLOR;
                     editor.putInt("prefAccentColor", mAccentColor);
                 }else{
@@ -359,14 +360,8 @@ public class Themes extends PreferenceActivity{
         startActivity(intent);
     }
 
-
-
     private void setSupportActionBar(@Nullable Toolbar toolbar) {
         getDelegate().setSupportActionBar(toolbar);
-    }
-
-    private void getSupportActionBar() {
-        getDelegate().getSupportActionBar();
     }
 
     private int primaryColorIndex(){
@@ -395,16 +390,12 @@ public class Themes extends PreferenceActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home){
             onBackPressed();

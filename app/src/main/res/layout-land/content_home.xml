@@ -48,7 +48,8 @@
         android:layout_above="@+id/adViewHome"
         android:layout_below="@+id/layoutRecentGames"
         android:layout_toEndOf="@+id/relativeLayout"
-        android:layout_toRightOf="@+id/relativeLayout" />
+        android:layout_toRightOf="@+id/relativeLayout"
+        android:visibility="visible" />
 
     <Button
         android:id="@+id/buttonContinueLastGame"
@@ -71,7 +72,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/relativeLayout"
-        android:layout_toRightOf="@+id/relativeLayout">
+        android:layout_toRightOf="@+id/relativeLayout"
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
@@ -93,6 +95,19 @@
             android:textStyle="bold" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textViewNoUnfinishedGames"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/adViewHome"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
+        android:gravity="center"
+        android:text="@string/you_have_no_unfinished_games"
+        android:visibility="gone" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewHome"

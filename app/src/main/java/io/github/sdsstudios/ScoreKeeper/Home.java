@@ -113,11 +113,13 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
         }else if (!anyUnfinishedGames()){
 
+            findViewById(R.id.textViewNoUnfinishedGames).setVisibility(View.VISIBLE);
             relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else{
 
+            findViewById(R.id.textViewNoUnfinishedGames).setVisibility(View.GONE);
             displayRecyclerView();
 
         }
@@ -155,6 +157,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             for (int i = 1; i <= mNumRows; i++) {
                 if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
                     unfinishedGames = true;
+                    break;
                 }
             }
 

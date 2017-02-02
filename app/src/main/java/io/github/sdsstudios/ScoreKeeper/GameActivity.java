@@ -129,6 +129,8 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         };
 
+        mParams = mMainContent.getLayoutParams();
+
     }
 
     @Override
@@ -284,10 +286,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         enablePlayerButtons(false);
         displayRecyclerView(false);
 
-        if (!mPaused) {
-            mPaused = true;
-            chronometerClick();
-        }
+        pauseStopwatch();
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -357,8 +356,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
 
         if (id == R.id.action_reset) {
-            mPaused = true;
-            chronometerClick();
+            pauseStopwatch();
 
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -425,10 +423,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     protected void onPause() {
         super.onPause();
 
-        mPaused = true;
-        chronometerClick();
-
-        saveStopwatchTime();
+        pauseStopwatch();
 
         updateGameInDatabase();
     }
@@ -479,7 +474,6 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
 
             if (fullscreen) {
-                mParams = mMainContent.getLayoutParams();
 
                 CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT,
@@ -542,7 +536,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     private void hideSystemWindows() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION /** hide nav bar **/
@@ -556,8 +550,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         if (!mFinished && !isFullScreen()) {
             if (!mPaused) {
-                mPaused = true;
-                chronometerClick();
+                pauseStopwatch();
             }
             AlertDialog dialog;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -624,6 +617,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (mGame.numSetsPlayed() == mGame.numSets()) {
 
             builder.setTitle(winner + " " + getString(R.string.has_won) + " overall");
+
         } else {
 
             builder.setTitle(winner + " " + getString(R.string.has_won));
@@ -710,9 +704,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         dialog.show();
 
         mFinished = true;
-        mPaused = true;
-        chronometerClick();
-
         mWon = true;
 
     }
@@ -800,8 +791,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
 
         mFinished = true;
-        mPaused = true;
-        chronometerClick();
+        pauseStopwatch();
         mWon = true;
         displayRecyclerView(false);
 
@@ -981,13 +971,19 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
+    private void pauseStopwatch() {
+        if (!mPaused) {
+            mPaused = true;
+            chronometerClick();
+            saveStopwatchTime();
+        }
+    }
+
     @Override
     public void playerDialog(Player player, int position, Dialog type, int setPosition) {
 
         /** pauses stopwatch before opening dialog **/
-        mPaused = true;
-        chronometerClick();
-        saveStopwatchTime();
+        pauseStopwatch();
 
         super.playerDialog(player, position, type, setPosition);
 

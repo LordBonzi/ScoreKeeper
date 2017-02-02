@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class EditGame extends ScoreKeeperTabActivity {
                 helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
             }
         });
+
+        new AdCreator((AdView) findViewById(R.id.adViewHome2), this).createAd();
 
         buttonHelpLength.setOnClickListener(new View.OnClickListener() {
             @Override

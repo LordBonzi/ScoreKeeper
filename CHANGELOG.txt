@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 5 01/02/17
+### Added
+ - delete players from dialog when changing set scores
+ - Add Player button in Game Info is always visible
+ - email developer from navigation drawer
+ - resetting games works properly
+ - horizontally scroll through players and Game title in History
+ - added tabs when in full screen landscape mode
+ - disable full screen option on android versions lower than 4.4
+ - full screen is working properly
+
+### Bug Fixes
+ - padding above 2nd player name in Game activity
+ - navigation bar wasnt colored by default in Settings
+ - stopwatch was appearing when changing tab in landscape mode even
+   if the game didnt have the stopwatch enabled
+ - when full screen, and after closing a dialog, system bars were still showing
+ - no padding on history items on Android Jelly Bean devices
+ 
 ## 1.1 Beta 4 19/01/17
 ### Added
  - tabs to Game Info

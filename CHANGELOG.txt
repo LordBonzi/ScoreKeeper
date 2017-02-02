@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 6 02/02/17
+### Added
+ - tell the user why there are no games visible on the home screen
+ - disable Color Navigation Bar option on devices with no software keys
+ 
+### Bug Fixes
+ - system bars weren't hiding after closing dialog in full screen mode
+ - colors in the dialog where you select the primary color, were the wrong colors
+ - dark theme wasnt switched on after selecting default theme
+ 
 ## 1.1 Beta 5 01/02/17
 ### Added
  - delete players from dialog when changing set scores

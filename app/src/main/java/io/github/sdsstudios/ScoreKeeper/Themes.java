@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -190,6 +191,8 @@ public class Themes extends PreferenceActivity{
         Preference defaultThemePreference = findPreference("prefDefaultTheme");
         Preference colorNavBarPreference = findPreference("prefColorNavBar");
 
+        colorNavBarPreference.setEnabled(deviceHasSoftwareKeys(getResources()));
+
         mSettingsIntent = new Intent(this, Settings.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -293,6 +296,11 @@ public class Themes extends PreferenceActivity{
 
             };
         }
+    }
+
+    public boolean deviceHasSoftwareKeys(Resources resources) {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return id > 0 && resources.getBoolean(id);
     }
 
     private void colorDialog(final int type){

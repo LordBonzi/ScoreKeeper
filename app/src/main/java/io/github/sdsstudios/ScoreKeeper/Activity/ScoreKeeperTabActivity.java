@@ -171,8 +171,14 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 }
 
                 dialog.dismiss();
-                onDialogClose();
 
+            }
+        });
+
+        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onDialogClose();
             }
         });
 
@@ -267,7 +273,6 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                             mGame.isGameWon();
                             populateSetGridView();
                             goToCurrentSelectedTab();
-                            onDialogClose();
 
                         }
 

@@ -618,8 +618,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void winnerDialog(String winner) {
 
-        setFullScreen(false);
-
         AlertDialog dialog;
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -631,6 +629,14 @@ public class GameActivity extends ScoreKeeperTabActivity
             builder.setTitle(winner + " " + getString(R.string.has_won));
 
         }
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onDialogClose();
+
+            }
+        });
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 

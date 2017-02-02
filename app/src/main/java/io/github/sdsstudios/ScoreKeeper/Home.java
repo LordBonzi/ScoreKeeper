@@ -80,7 +80,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
         mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
 
-        RelativeLayout mRelativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
+        RelativeLayout relativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
 
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
 
@@ -108,12 +108,12 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         });
 
         if (mNumRows == 0){
-            mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
+            relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else if (!anyUnfinishedGames()){
 
-            mRelativeLayoutRecents.setVisibility(View.INVISIBLE);
+            relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else{
@@ -132,8 +132,8 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             File sdcard = Environment.getExternalStorageDirectory();
             File file = new File(sdcard, "/ScoreKeeper");
             file.mkdirs();
-            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
+            String changelog_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
+            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(changelog_url);
 
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);

@@ -45,13 +45,13 @@
 
     <TextView
         android:id="@+id/textViewNoUnfinishedGames"
-        style="@style/TextAppearance.AppCompat.Caption"
+        style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/adViewHome"
         android:layout_below="@+id/buttonContinueLastGame"
         android:gravity="center"
-        android:text="You have no unfinished games!"
+        android:text="@string/you_have_no_unfinished_games"
         android:visibility="gone" />
 
 

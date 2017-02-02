@@ -81,8 +81,8 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
 
         RelativeLayout relativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
-
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
+        TextView textViewNoUnfinishedGames = (TextView) findViewById(R.id.textViewNoUnfinishedGames);
 
         mRecyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
@@ -108,18 +108,22 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         });
 
         if (mNumRows == 0){
+            textViewNoUnfinishedGames.setVisibility(View.VISIBLE);
+            textViewNoUnfinishedGames.setText(getString(R.string.you_have_played_no_games));
+
             relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else if (!anyUnfinishedGames()){
+            textViewNoUnfinishedGames.setText(getString(R.string.you_have_no_unfinished_games));
+            textViewNoUnfinishedGames.setVisibility(View.VISIBLE);
 
-            findViewById(R.id.textViewNoUnfinishedGames).setVisibility(View.VISIBLE);
             relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
         }else{
 
-            findViewById(R.id.textViewNoUnfinishedGames).setVisibility(View.GONE);
+            textViewNoUnfinishedGames.setVisibility(View.GONE);
             displayRecyclerView();
 
         }

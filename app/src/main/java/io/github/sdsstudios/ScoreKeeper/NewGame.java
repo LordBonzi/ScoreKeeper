@@ -739,7 +739,7 @@ public class NewGame extends OptionActivity
 
                 if (startGame) {
 
-                    int startingScore = mGame.getInt(Option.OptionID.STARTING_SCORE);
+                    int startingScore = mGame.getInt(Option.STARTING_SCORE);
 
                     for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);

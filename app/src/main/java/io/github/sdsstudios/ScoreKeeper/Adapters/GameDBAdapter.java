@@ -33,7 +33,7 @@ public class GameDBAdapter {
     private static final String SQLITE_TABLE = "score";
     private static final String TAG = "GameDBAdapter";
     private static final String DATABASE_NAME = "ScoreKeeper";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
                     KEY_ROWID + " ," +
@@ -259,7 +259,7 @@ public class GameDBAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-            if (oldVersion < 5){
+            if (oldVersion < 6) {
                 File sd = Environment.getExternalStorageDirectory();
                 String DB_PATH;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

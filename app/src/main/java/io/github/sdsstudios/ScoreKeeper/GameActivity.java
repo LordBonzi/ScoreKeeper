@@ -45,7 +45,7 @@ import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
 import io.github.sdsstudios.ScoreKeeper.Adapters.BigGameAdapter;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
-import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -175,11 +175,11 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void loadGame() {
 
-        int mScoreDiffToWin = mGame.getInt(OptionID.SCORE_DIFF_TO_WIN);
-        mScoreInterval = mGame.getInt(OptionID.SCORE_INTERVAL);
-        mStartingScore = mGame.getInt(OptionID.STARTING_SCORE);
-        mMaxNumDice = mGame.getInt(OptionID.DICE_MAX);
-        mMinNumDice = mGame.getInt(OptionID.DICE_MIN);
+        int mScoreDiffToWin = mGame.getInt(Option.SCORE_DIFF_TO_WIN);
+        mScoreInterval = mGame.getInt(Option.SCORE_INTERVAL);
+        mStartingScore = mGame.getInt(Option.STARTING_SCORE);
+        mMaxNumDice = mGame.getInt(Option.DICE_MAX);
+        mMinNumDice = mGame.getInt(Option.DICE_MIN);
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -429,7 +429,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void chronometerClick() {
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
+        if (mGame.isChecked(Option.STOPWATCH)) {
             if (!mPaused) {
                 mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
                 mStopwatch.start();
@@ -709,7 +709,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void saveStopwatchTime() {
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
+        if (mGame.isChecked(Option.STOPWATCH)) {
             mGame.setmLength(mStopwatch.getText().toString());
         }
     }
@@ -829,7 +829,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void showStopwatch(int visible) {
         if (visible == VISIBLE) {
-            if (mGame.isChecked(OptionID.STOPWATCH)) {
+            if (mGame.isChecked(Option.STOPWATCH)) {
                 mCardViewStopwatch.setVisibility(visible);
             }
         } else {
@@ -871,7 +871,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         mCardViewStopwatch.setOnClickListener(this);
 
-        if (mGame.isChecked(OptionID.STOPWATCH)) {
+        if (mGame.isChecked(Option.STOPWATCH)) {
 
             try {
 
@@ -879,7 +879,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     mTimeLimit = mGame.getmTimeLimit().getmTime();
                 }
 
-                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(OptionID.STOPWATCH)) {
+                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(Option.STOPWATCH)) {
                     mGame.setmLength("00:00:00:0");
 
                 } else if (mTimeWhenStopped != 0L) {

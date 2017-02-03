@@ -8,7 +8,7 @@ public class EditTextOption extends Option{
 
     private int mEditTextID;
 
-    public EditTextOption(int editTextID, OptionID id, Object data, String mHint) {
+    public EditTextOption(int editTextID, String id, Object data, String mHint) {
         super(id, data, mHint);
         mEditTextID = editTextID;
     }

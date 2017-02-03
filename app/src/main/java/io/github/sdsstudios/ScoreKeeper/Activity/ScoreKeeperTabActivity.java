@@ -323,7 +323,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
     }
 
     public void addPlayerDialog() {
-        playerDialog(new Player("", mGame.getInt(Option.OptionID.STARTING_SCORE)), mGame.size(), Dialog.ADD_PLAYER, 0);
+        playerDialog(new Player("", mGame.getInt(Option.STARTING_SCORE)), mGame.size(), Dialog.ADD_PLAYER, 0);
 
     }
 

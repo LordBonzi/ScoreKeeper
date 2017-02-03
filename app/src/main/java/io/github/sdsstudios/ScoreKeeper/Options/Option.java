@@ -9,14 +9,30 @@ import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
 
 public class Option {
 
-    private OptionID mID;
+    /**
+     * DO NOT CHANGE!!! WILL CRASH APP
+     **/
+    public static final String WINNING_SCORE = "winning_score";
+    public static final String SCORE_INTERVAL = "score_interval";
+    public static final String SCORE_DIFF_TO_WIN = "score_diff_to_win";
+    public static final String NUMBER_SETS = "number_sets";
+    public static final String STARTING_SCORE = "starting_score";
+    public static final String DICE_MIN = "dice_min";
+    public static final String DICE_MAX = "dice_max";
+    public static final String LENGTH = "length";
+    public static final String DATE = "date";
+    public static final String TITLE = "title";
+    public static final String REVERSE_SCORING = "reverse_scoring";
+    public static final String STOPWATCH = "stopwatch";
+
+    private String mID;
     private boolean mBooleanData;
     private String mStringData;
     private Integer mIntData;
 
     private String mHint;
 
-    public Option(OptionID id, Object data, String mHint) {
+    public Option(String id, Object data, String mHint) {
         this.mID = id;
         this.mHint = mHint;
 
@@ -31,7 +47,7 @@ public class Option {
         this.mHint = mHint;
     }
 
-    public OptionID getmID() {
+    public final String getmID() {
         return mID;
     }
 
@@ -61,10 +77,6 @@ public class Option {
         return mBooleanData;
     }
 
-    public enum OptionID {
-        WINNING_SCORE, SCORE_INTERVAL, SCORE_DIFF_TO_WIN, NUMBER_SETS, STARTING_SCORE,
-        DICE_MIN, DICE_MAX, LENGTH, DATE, TITLE, STOPWATCH, REVERSE_SCORING, PLAYER_LIST
-    }
 
     public interface OptionListener {
         void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter);

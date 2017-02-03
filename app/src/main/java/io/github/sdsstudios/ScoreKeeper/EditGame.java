@@ -208,7 +208,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         final boolean booleanLength;
 
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
-            mGame.setChecked(Option.OptionID.STOPWATCH, true);
+            mGame.setChecked(Option.STOPWATCH, true);
             booleanLength = true;
 
         }else if (newLength.length() == 0|| newLength.equals("")){

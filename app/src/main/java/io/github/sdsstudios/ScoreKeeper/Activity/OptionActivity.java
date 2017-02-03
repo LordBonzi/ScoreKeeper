@@ -32,6 +32,18 @@ import io.github.sdsstudios.ScoreKeeper.Themes;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.GAME_ACTIVITY;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.DATE;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MAX;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MIN;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.LENGTH;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.NUMBER_SETS;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.REVERSE_SCORING;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.SCORE_DIFF_TO_WIN;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.SCORE_INTERVAL;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.STARTING_SCORE;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.STOPWATCH;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.TITLE;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.WINNING_SCORE;
 
 /**
  * Created by seth on 11/12/16.

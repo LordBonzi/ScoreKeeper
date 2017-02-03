@@ -8,7 +8,7 @@ import java.util.List;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
-import io.github.sdsstudios.ScoreKeeper.Options.Option.OptionID;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 /**
@@ -59,19 +59,19 @@ public class Game {
     }
 
     public String getmTime() {
-        return getString(OptionID.DATE);
+        return getString(Option.DATE);
     }
 
     public void setmTime(String mTime) {
-        setString(OptionID.DATE, mTime);
+        setString(Option.DATE, mTime);
     }
 
     public String getmLength() {
-        return getString(OptionID.LENGTH);
+        return getString(Option.LENGTH);
     }
 
     public void setmLength(String mLength) {
-        setString(OptionID.LENGTH, mLength);
+        setString(Option.LENGTH, mLength);
     }
 
     public int getmID() {
@@ -100,11 +100,11 @@ public class Game {
     }
 
     public String getmTitle() {
-        return getString(OptionID.TITLE);
+        return getString(Option.TITLE);
     }
 
     public void setmTitle(String mTitle) {
-        setString(OptionID.TITLE, mTitle);
+        setString(Option.TITLE, mTitle);
     }
 
     public void setPlayer(Player player, int index){
@@ -125,7 +125,7 @@ public class Game {
 
     public void startNewSet() {
         for (Player p : getmPlayerArray()) {
-            p.addSet(getInt(OptionID.STARTING_SCORE));
+            p.addSet(getInt(Option.STARTING_SCORE));
         }
 
         mNumSetsPlayed += 1;
@@ -140,16 +140,16 @@ public class Game {
 
     }
 
-    public int getInt(OptionID id) {
+    public int getInt(String id) {
         int data = 1;
 
         for (int i = 0; i < mIntEditTextOptions.size(); i++) {
             IntEditTextOption e = mIntEditTextOptions.get(i);
 
-            if (e.getmID() == id){
+            if (e.getmID().equals(id)) {
                 data = Integer.valueOf(String.valueOf(e.getInt()));
                 break;
-            } else if (e.getmID() == OptionID.SCORE_INTERVAL) {
+            } else if (e.getmID() == Option.SCORE_INTERVAL) {
                 /** update score interval to quickly get scoreinterval when changing score **/
                 mScoreIntervalIndex = i;
             }
@@ -176,7 +176,7 @@ public class Game {
         Player player = getPlayer(playerIndex);
 
         player.playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
-                , isChecked(OptionID.REVERSE_SCORING));
+                , isChecked(Option.REVERSE_SCORING));
 
 
     }
@@ -186,15 +186,15 @@ public class Game {
         Player player = getPlayer(playerIndex);
 
         player.playerLongClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
-                , isChecked(OptionID.REVERSE_SCORING));
+                , isChecked(Option.REVERSE_SCORING));
 
     }
 
-    public String getString(OptionID id) {
+    public String getString(String id) {
         String data = "";
 
         for (StringEditTextOption e: mStringEditTextOptions){
-            if (e.getmID() == id ){
+            if (e.getmID().equals(id)) {
                 data = e.getString();
                 break;
             }
@@ -212,13 +212,13 @@ public class Game {
     }
 
     public int numSets(){
-        return getInt(OptionID.NUMBER_SETS);
+        return getInt(Option.NUMBER_SETS);
     }
 
-    public boolean isChecked(OptionID id) {
+    public boolean isChecked(String id) {
         boolean isChecked = false;
         for (CheckBoxOption c : mCheckBoxOptions) {
-            if (c.getmID() == id) {
+            if (c.getmID().equals(id)) {
                 isChecked = c.isChecked();
                 break;
             }
@@ -227,9 +227,9 @@ public class Game {
         return isChecked;
     }
 
-    public void setChecked(OptionID id, boolean data) {
+    public void setChecked(String id, boolean data) {
         for (CheckBoxOption s : mCheckBoxOptions) {
-            if (s.getmID() == id) {
+            if (s.getmID().equals(id)) {
                 s.setData(data);
             }
         }
@@ -251,9 +251,9 @@ public class Game {
         this.mStringEditTextOptions = mStringEditTextOptions;
     }
 
-    public void setString(OptionID id, String data) {
+    public void setString(String id, String data) {
         for (StringEditTextOption s : mStringEditTextOptions) {
-            if (s.getmID() == id) {
+            if (s.getmID().equals(id)) {
                 s.setData(data);
             }
         }
@@ -306,7 +306,7 @@ public class Game {
 
     public boolean isGameWon() {
 
-        int maxScore = getInt(OptionID.WINNING_SCORE);
+        int maxScore = getInt(Option.WINNING_SCORE);
 
         boolean isWon = false;
 
@@ -347,7 +347,7 @@ public class Game {
         Collections.sort(mSortedScoreList, new Comparator<Integer>() {
             @Override
             public int compare(Integer score1, Integer score2) {
-                if (isChecked(OptionID.REVERSE_SCORING)) {
+                if (isChecked(Option.REVERSE_SCORING)) {
                     return score1 - score2;
                 } else {
                     return score2 - score1;
@@ -389,7 +389,7 @@ public class Game {
 
     private boolean scoreDifference() {
         boolean b = false;
-        int maxScore = getInt(OptionID.WINNING_SCORE);
+        int maxScore = getInt(Option.WINNING_SCORE);
 
         if (maxScore != 0) {
             List<Integer> scoreListWithoutLargestScore = getListOfScores();
@@ -401,7 +401,7 @@ public class Game {
             int secondLargestScore = (maxScore > 0) ? Collections.max(scoreListWithoutLargestScore)
                     : Collections.min(scoreListWithoutLargestScore);
 
-            if (largestScore - secondLargestScore >= getInt(OptionID.SCORE_DIFF_TO_WIN)) {
+            if (largestScore - secondLargestScore >= getInt(Option.SCORE_DIFF_TO_WIN)) {
                 b = true;
             }
         }

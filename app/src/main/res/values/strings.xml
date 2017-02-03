@@ -196,6 +196,7 @@
         in the ScoreKeeper folder on your phone. I am extremely sorry for any inconvenience this may have caused."</string>
     <string name="you_have_no_unfinished_games">You have completed all your games!</string>
     <string name="you_have_played_no_games">You have played no games!</string>
+    <string name="player_button_tutorial">Long press to deduct points</string>
 
 </resources>
 

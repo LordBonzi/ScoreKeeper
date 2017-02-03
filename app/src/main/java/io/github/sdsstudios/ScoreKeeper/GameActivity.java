@@ -46,6 +46,7 @@ import io.github.sdsstudios.ScoreKeeper.Adapters.BigGameAdapter;
 import io.github.sdsstudios.ScoreKeeper.Listeners.ButtonPlayerListener;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -209,12 +210,25 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         mStopwatch.setOnChronometerTickListener(this);
 
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt("lastplayedgame", GAME_ID);
-        editor.apply();
-
         mGame.setGameListener(this);
         mGame.isGameWon();
+
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+
+        if (!mSharedPreferences.getBoolean("completed_tutorial", false)) {
+            new MaterialShowcaseView.Builder(this)
+                    .setTarget(findViewById(R.id.buttonP1))
+                    .setDismissText("GOT IT")
+                    .setContentText(getString(R.string.player_button_tutorial))
+                    .singleUse("buttonP1")
+                    .show();
+
+            editor.putBoolean("completed_tutorial", true);
+
+        }
+
+        editor.putInt("lastplayedgame", GAME_ID);
+        editor.apply();
 
     }
 

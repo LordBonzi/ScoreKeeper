@@ -8,6 +8,8 @@
     <color name="secondary_text">#8a000000</color>
     <color name="black">#000000</color>
 
+    <color name="transparent">#00FFFFFF</color>
+
     <color name="recyerViewBackground">#E0E0E0</color>
     <color name="divider">#E0E0E0</color>
     <color name="dividerDark">#424242</color>
@@ -42,7 +44,6 @@
     <color name="primaryRed">#F44336</color>
     <color name="primaryRedDark">#D32F2F</color>
 
-
     <color name="primaryPurple">#7B1FA2</color>
     <color name="primaryPurpleDark">#4A148C</color>
 
@@ -65,5 +66,14 @@
 
     <color name="primaryBlue">#1976D2</color>
     <color name="primaryBlueDark">#0D47A1</color>
+
+
+    <color name="first_place">#4CAF50</color>
+    <color name="second_place">#81c784</color>
+    <color name="third_place">#a5d6a7</color>
+
+    <color name="third_to_last">#ef9a9a</color>
+    <color name="second_to_last">#ef5350</color>
+    <color name="last_place">#e53935</color>
 
 </resources>

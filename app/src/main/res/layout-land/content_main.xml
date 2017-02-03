@@ -1,224 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:id="@+id/relativeLayoutMain"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.github.sdsstudios.ScoreKeeper.MainActivity">
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.GameActivity">
 
-    <RelativeLayout
-        android:id="@+id/layoutBig"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingRight="8dp"
-        android:visibility="visible"
-        >
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adViewHome2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
+        android:layout_above="@+id/adViewHome"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/layoutNormal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:baselineAligned="false"
+            android:visibility="visible"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/textViewP1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="0.5"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Michael"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/textViewP2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="0.5"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Tim"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/buttonP1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="0.5"
+                    android:background="?attr/buttonBackground"
+                    android:gravity="center"
+                    android:text="100"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+
+                <Button
+                    android:id="@+id/buttonP2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="0.5"
+                    android:background="?attr/buttonBackground"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/bigGameList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/adViewHome2"
-            android:layout_toLeftOf="@+id/stopWatchLayout"
-            android:layout_toStartOf="@+id/stopWatchLayout" />
-
-        <RelativeLayout
-            android:layout_width="270dp"
-            android:layout_marginBottom="8dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/stopWatchLayout"
-            android:layout_above="@id/adViewHome2"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:layout_marginLeft="4dp"
-                android:focusableInTouchMode="true"
-                android:id="@+id/buttonChronometerBig"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="8dp"
-                android:layout_above="@+id/fabChronometerBig">
-                <io.github.sdsstudios.ScoreKeeper.Stopwatch
-                    android:id="@+id/chronometerBig"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:layout_below="@+id/buttonChronometerBig"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:fabSize="normal"
-                android:id="@+id/fabChronometerBig"
-                android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/buttonChronometerBig"
-                android:layout_alignStart="@+id/buttonChronometerBig"
-                android:layout_marginLeft="98dp"
-                android:layout_marginStart="98dp" />
-
-
-        </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layoutNormal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_above="@+id/adViewHome"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:id="@+id/textViewP2"
-            android:layout_width="150dp"
-            android:layout_marginTop="4dp"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/buttonP2"
-            android:layout_alignStart="@+id/buttonP2"
-            android:layout_below="@+id/buttonP2"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="Seth"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_alignRight="@+id/buttonChronometer"
-            android:layout_alignEnd="@+id/buttonChronometer" />
-
-        <TextView
-            android:id="@+id/textViewP1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/buttonP1"
-            android:gravity="center"
-            android:layout_marginTop="4dp"
-            android:maxLines="1"
-            android:text="Alfie"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_toStartOf="@+id/buttonEditP1"
-            android:layout_toLeftOf="@+id/buttonEditP1" />
-        <ImageButton
-            android:id="@+id/buttonEditP1"
-            android:layout_width="30dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_height="30dp"
-            android:layout_marginTop="8dp"
-            android:text="100"
-            android:clickable="true"
-            android:src="@mipmap/ic_create_black_24dp"
-            android:tint="@color/textColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:layout_below="@+id/buttonP1"
-            android:layout_alignRight="@+id/buttonP1"
-            />
-
-        <ImageButton
-            android:id="@+id/buttonEditP2"
-            android:layout_width="30dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_height="30dp"
-            android:layout_marginTop="8dp"
-            android:text="100"
-            android:clickable="true"
-            android:src="@mipmap/ic_create_black_24dp"
-            android:tint="@color/textColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:layout_below="@+id/buttonP2"
-            android:layout_alignRight="@+id/buttonP2"
-            />
-        <Button
-            android:id="@+id/buttonP2"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="?attr/buttonBackground"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
-            android:text="3"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
-
-        <Button
-            android:id="@+id/buttonP1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="?attr/buttonBackground"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
-            android:text="100"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
-
+            android:id="@+id/playerRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:paddingTop="8dp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.CardView
-            android:layout_width="300dp"
-            android:layout_height="80dp"
+            android:id="@+id/stopwatchCardview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:layout_weight="0.5"
             android:clickable="true"
-            android:focusableInTouchMode="true"
-            android:id="@+id/buttonChronometer"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-            android:layout_above="@+id/fabChronometer"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true" >
+            android:padding="12dp"
+            android:visibility="visible">
 
             <io.github.sdsstudios.ScoreKeeper.Stopwatch
-                android:id="@+id/chronometer"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:id="@+id/stopwatch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackground"
                 android:gravity="center"
-                android:layout_below="@+id/fabChronometer"
-                android:layout_centerHorizontal="true" />
+                android:padding="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
         </android.support.v7.widget.CardView>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="normal"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/fabChronometer"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" />
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adViewHome"
@@ -229,7 +140,13 @@
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
 
+    <GridView
+        android:id="@+id/setGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/adViewHome"
+        android:visibility="gone" />
 
 </RelativeLayout>
 
-</RelativeLayout>
+

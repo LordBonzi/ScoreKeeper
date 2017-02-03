@@ -10,12 +10,12 @@
         android:id="@+id/relativeLayoutPlayerAdapter"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/buttonDelete"
-        android:layout_toStartOf="@+id/buttonDelete">
+        android:layout_toStartOf="@+id/buttonDelete"
+        android:visibility="gone">
 
     <EditText
         android:id="@+id/editTextPlayer"
@@ -24,26 +24,26 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:text="Seth"
-        android:enabled="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_toLeftOf="@+id/buttonEdit"
         android:layout_toStartOf="@+id/buttonEdit"
-        android:layout_toLeftOf="@+id/buttonEdit" />
+        android:enabled="false"
+        android:text="Seth"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <ImageButton
             android:id="@+id/buttonEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
             android:background="#00ffffff"
-            android:tint="#757575"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="12dp"
-            android:layout_marginEnd="12dp"
             android:src="@mipmap/ic_create_black_24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:tint="#757575" />
 
 
     </RelativeLayout>
@@ -52,48 +52,48 @@
         android:id="@+id/buttonDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#00ffffff"
-        android:tint="#757575"
-        android:src="@mipmap/ic_clear_black_24dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginEnd="13dp"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:background="#00ffffff"
+        android:src="@mipmap/ic_clear_black_24dp"
+        android:tint="#757575" />
 
     <RelativeLayout
         android:id="@+id/playerAdapterExtended"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:visibility="gone"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/buttonDelete"
-        android:layout_toStartOf="@+id/buttonDelete">
+        android:layout_toStartOf="@+id/buttonDelete"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/editTextScoreExt"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:inputType="number" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:enabled="false"
+            android:inputType="number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
             android:id="@+id/editTextPlayerExt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/editTextScoreExt"
-            android:layout_toStartOf="@+id/editTextScoreExt" />
+            android:layout_toStartOf="@+id/editTextScoreExt"
+            android:enabled="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 
     </RelativeLayout>

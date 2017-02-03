@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@mipmap/ic_watch_later_white_24dp"
+            android:title="@string/action_history" />
+
+        <item
+            android:id="@+id/nav_players"
+            android:icon="@mipmap/ic_person_white_24dp"
+            android:title="@string/players"
+            android:visible="false" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@mipmap/ic_info_white_24dp"
+            android:title="@string/About" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@mipmap/ic_settings_white_24dp"
+            android:title="@string/action_settings" />
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_rate_review"
+                android:icon="@mipmap/ic_star_white_24dp"
+                android:title="@string/rate_the_app" />
+
+            <item
+                android:id="@+id/nav_email_dev"
+                android:icon="@mipmap/ic_email_white_24dp"
+                android:title="Email Developer" />
+
+        </menu>
+    </item>
+
+</menu>

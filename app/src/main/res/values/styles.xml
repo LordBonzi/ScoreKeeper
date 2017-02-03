@@ -3,13 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryIndigo</item>
-        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryDark">@color/primaryBlueDark</item>
+        <item name="colorAccent">@color/accentRed</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
-
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="textColor">@color/textColor</item>
         <item name="dividerColor">@color/divider</item>
         <item name="itemBackgroundColor">@color/light_item_background</item>
@@ -19,12 +18,13 @@
 
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryIndigo</item>
-        <item name="colorPrimaryDark">@color/primaryIndigoDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primaryBlue</item>
+        <item name="colorPrimaryDark">@color/primaryBlueDark</item>
+        <item name="colorAccent">@color/accentRed</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeStyle">@style/Widget.ActionMode</item>
         <item name="dividerColor">@color/dividerDark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="itemBackgroundColor">@color/dark_item_background</item>
         <item name="multiSelectBackground">@color/darkmultiselect</item>
         <item name="textColor">@color/darkTextColor</item>
@@ -66,6 +66,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#212121</item>
         <item name="colorPrimaryDark">#000</item>
+
     </style>
 
     <style name="Primary_White" parent="DarkTheme">
@@ -81,12 +82,6 @@
     </style>
 
 
-
-
-
-
-
-
     <style name="DarkTheme_Grey" parent="DarkTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentGrey</item>
@@ -96,6 +91,7 @@
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentPink</item>
     </style>
+
     <style name="DarkTheme_Yellow" parent="DarkTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentYellow</item>
@@ -127,11 +123,6 @@
     </style>
 
 
-
-
-
-
-
     <style name="AppTheme_Grey" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentGrey</item>
@@ -141,6 +132,7 @@
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentPink</item>
     </style>
+
     <style name="AppTheme_Yellow" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accentYellow</item>
@@ -172,7 +164,8 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/material_dark
+        </item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/material_dark</item>
         <item name="windowActionModeOverlay">false</item>
         <item name="colorPrimaryDark">@color/material_dark</item>
@@ -187,7 +180,7 @@
     </style>
 
     <style name="Widget.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/colorPrimary</item>
+        <item name="background">@color/primaryBlue</item>
 
     </style>
 

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayoutOptionActivity"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:mContext="io.github.sdsstudios.ScoreKeeper.NewGame">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/inputLayoutGameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp">
+
+                    <EditText
+                        android:id="@+id/editTextGameTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:hint="@string/title"
+                        android:text="@string/default_game_title"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="?attr/colorAccent"
+            app:tabMode="fixed" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/new_game_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:fitsSystemWindows="true" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/option_tab_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/adViewHome"
+        android:layout_below="@+id/appbar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/include"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
+
+
+</RelativeLayout>

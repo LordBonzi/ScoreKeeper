@@ -1,17 +1,19 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
+import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
@@ -32,26 +33,31 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
+
 public class About extends PreferenceActivity {
+    private int CHANGELOG = 0;
+    private int LICENSE = 1;
 
     private AppCompatDelegate mDelegate;
-    private SharedPreferences settings;
-    private Intent homeIntent;
-    private Preference changeLogPreference, developersPreference, translatorsPreference, communityPreference, ratePreference, githubPreference, licensePreference;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
-    private boolean darkTheme, classicTheme, colorNavBar;
-    private int accentColor;
+    private Intent mHomeIntent;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        classicTheme = sharedPreferences.getBoolean("prefClassicTheme", false);
-        darkTheme = sharedPreferences.getBoolean("prefDarkTheme", false);
-        colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
+
+        getDelegate().installViewFactory();
+        getDelegate().onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
         setTheme(accentColor);
         getDelegate().installViewFactory();
@@ -59,31 +65,43 @@ public class About extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(primaryColor);
+        getDelegate().setSupportActionBar(toolbar);
+        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            if (colorNavBar) {
+                getWindow().setNavigationBarColor(primaryDarkColor);
+            }
+            getWindow().setStatusBarColor(primaryDarkColor);
+
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            ActivityManager.TaskDescription taskDesc;
+
+            taskDesc = new ActivityManager.TaskDescription(getString(R.string.app_name), bm
+                    , primaryDarkColor);
+
+            setTaskDescription(taskDesc);
+
+        }
+
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-        getDelegate().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
-        }
-        if (colorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-        }
-        addPreferencesFromResource(R.xml.about_settings);
-        changeLogPreference = findPreference("prefChangelog");
-        developersPreference = findPreference("prefDevelopers");
-        translatorsPreference = findPreference("prefTranslators");
-        communityPreference = findPreference("prefCommunity");
-        ratePreference = findPreference("prefRate");
-        githubPreference = findPreference("prefGithub");
-        licensePreference = findPreference("prefLicense");
 
-        homeIntent = new Intent(this, Home.class);
+        addPreferencesFromResource(R.xml.about_settings);
+        Preference changeLogPreference = findPreference("prefChangelog");
+        Preference developersPreference = findPreference("prefDevelopers");
+        Preference translatorsPreference = findPreference("prefTranslators");
+        Preference communityPreference = findPreference("prefCommunity");
+        Preference ratePreference = findPreference("prefRate");
+        Preference githubPreference = findPreference("prefGithub");
+        Preference licensePreference = findPreference("prefLicense");
+
+        mHomeIntent = new Intent(this, Home.class);
 
         translatorsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -115,29 +133,7 @@ public class About extends PreferenceActivity {
         licensePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                final View dialogView;
-
-                LayoutInflater inflter = LayoutInflater.from(getBaseContext());
-                final AlertDialog alertDialog;
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
-                dialogView = inflter.inflate(R.layout.changelog_fragment, null);
-
-                TextView textView = (TextView)dialogView.findViewById(R.id.textViewChangelog);
-                displayOutput(textView, 2);
-
-                dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-
-                });
-
-                dialogBuilder.setView(dialogView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.show();
+                DialogHelper.textViewAlertDialog(About.this, textFromFile(LICENSE));
 
                 return true;
             }
@@ -146,30 +142,7 @@ public class About extends PreferenceActivity {
         changeLogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                final View dialogView;
-
-                LayoutInflater inflter = LayoutInflater.from(getBaseContext());
-                final AlertDialog alertDialog;
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
-                dialogView = inflter.inflate(R.layout.changelog_fragment, null);
-
-                TextView textView = (TextView)dialogView.findViewById(R.id.textViewChangelog);
-                displayOutput(textView, 1);
-
-                dialogBuilder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-
-                });
-
-                dialogBuilder.setView(dialogView);
-                alertDialog = dialogBuilder.create();
-                alertDialog.show();
-
+                DialogHelper.textViewAlertDialog(About.this, textFromFile(CHANGELOG));
                 return true;
             }
         });
@@ -184,26 +157,14 @@ public class About extends PreferenceActivity {
                 final AlertDialog alertDialog;
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(About.this);
                 dialogView = inflter.inflate(R.layout.developers_fragment, null);
-                ImageButton sethGoogle = (ImageButton)dialogView.findViewById(R.id.sethGoogleButton);
-                ImageButton alfieGoogle = (ImageButton)dialogView.findViewById(R.id.alfieGoogleButton);
+                ImageButton sethGoogle = (ImageButton) dialogView.findViewById(R.id.sethGoogleButton);
                 Button sethGithub = (Button) dialogView.findViewById(R.id.sethGithubButton);
-                Button alfieGithub = (Button) dialogView.findViewById(R.id.alfieGithubButton);
                 Button sethEmail = (Button) dialogView.findViewById(R.id.sethEmailButton);
-                Button alfieEmail = (Button) dialogView.findViewById(R.id.alfieEmailButton);
-                Button alfieWebsite = (Button) dialogView.findViewById(R.id.alfieWebsiteButton);
 
                 sethGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/118423554132509773191"));
-                        startActivity(browserIntent);
-                    }
-                });
-
-                alfieGoogle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/109721482231084676815"));
                         startActivity(browserIntent);
                     }
                 });
@@ -216,42 +177,11 @@ public class About extends PreferenceActivity {
                     }
                 });
 
-                alfieGithub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/alfster2012"));
-                        startActivity(browserIntent);
-                    }
-                });
-
-                alfieWebsite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://alfster2012.me/"));
-                        startActivity(browserIntent);
-                    }
-                });
-
                 sethEmail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent send = new Intent(Intent.ACTION_SENDTO);
                         String uriText = "mailto:" + Uri.encode("seth.d.schroeder@gmail.com") +
-                                "?subject=" + Uri.encode("Feedback for Score Keeper app") +
-                                "&body=" + Uri.encode("");
-                        Uri uri = Uri.parse(uriText);
-
-                        send.setData(uri);
-                        startActivity(Intent.createChooser(send, "Send mail..."));
-                        startActivity(send);
-                    }
-                });
-
-                alfieEmail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent send = new Intent(Intent.ACTION_SENDTO);
-                        String uriText = "mailto:" + Uri.encode("admin@alfster2012.me") +
                                 "?subject=" + Uri.encode("Feedback for Score Keeper app") +
                                 "&body=" + Uri.encode("");
                         Uri uri = Uri.parse(uriText);
@@ -291,22 +221,17 @@ public class About extends PreferenceActivity {
 
     }
 
+    public String textFromFile(int type) {
 
-    public void displayOutput(TextView textView, int type)
-    {
         File sdcard = Environment.getExternalStorageDirectory();
         File file = null;
-        if (type == 1) {
-            file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
+        if (type == CHANGELOG) {
             file = new File(sdcard, "/ScoreKeeper/changelog_scorekeeper.txt");
 
-        }else if(type == 2){
-            file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
+        } else if (type == LICENSE) {
             file = new File(sdcard, "/ScoreKeeper/license_scorekeeper.txt");
-
         }
+
         StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -316,22 +241,15 @@ public class About extends PreferenceActivity {
                 text.append('\n');
             }
         } catch (FileNotFoundException e) {
-            Toast.makeText(getApplicationContext(),"File not found!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "File not found!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(),"Error reading file!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-        // Assuming that 'output' is the id of your TextView
-        textView.setText(text);
-    }
 
-    private void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
+        return text.toString();
 
-    private void getSupportActionBar() {
-        getDelegate().getSupportActionBar();
     }
 
     @Override
@@ -347,17 +265,11 @@ public class About extends PreferenceActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -370,15 +282,6 @@ public class About extends PreferenceActivity {
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
 
     }
 
@@ -386,8 +289,7 @@ public class About extends PreferenceActivity {
     protected void onDestroy() {
         super.onDestroy();
         getDelegate().onDestroy();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(listener);
+
     }
 
 
@@ -406,7 +308,7 @@ public class About extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(homeIntent);
+        startActivity(mHomeIntent);
     }
 
 }

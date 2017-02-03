@@ -1,88 +1,56 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
+import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
+import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
+import io.github.sdsstudios.ScoreKeeper.Adapters.HistoryAdapter;
+import io.github.sdsstudios.ScoreKeeper.Listeners.UpdateTabsListener;
 
-public class History extends AppCompatActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener{
+public class History extends ScoreKeeperActivity implements UpdateTabsListener, HistoryAdapter.ViewHolder.ClickListener {
 
-    private Intent newGameIntent;
-    private Intent settingsIntent;
-    private Intent aboutIntent;
-    private RecyclerView.Adapter adapter;
-    private ScoreDBAdapter dbHelper;
-    private RelativeLayout relativeLayout;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private RecyclerView recyclerView;
-    private DataHelper dataHelper;
-    private MenuItem settingsMenuItem, menuItemCompleted, menuItemUnfinished;
-    private HistoryAdapter historyAdapter;
-    private static ArrayList<GameModel> gameModel;
-    private ActionMode actionMode = null;
-    private int primaryDarkColor;
-    private SharedPreferences sharedPreferences;
+    private RecyclerView mRecyclerView;
+    private MenuItem menuItemCompleted;
+    private MenuItem menuItemUnfinished;
+    private HistoryAdapter mHistoryAdapter;
+    private ActionMode mHistoryActionMode = null;
+    private int mPrimaryDarkColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("scorekeeper", Context.MODE_PRIVATE);
-        int accentColor = sharedPreferences.getInt("prefAccent", R.style.AppTheme);
-        int primaryColor = sharedPreferences.getInt("prefPrimaryColor", getResources().getColor(R.color.primaryIndigo));
-        primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor", getResources().getColor(R.color.primaryIndigoDark));
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
-        if (colorNavBar){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(primaryDarkColor);
-            }
-        }
-        setTheme(accentColor);
-        setContentView(R.layout.activity_history);
+
+        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+                , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
+
+        Themes.themeActivity(this, R.layout.activity_recyclerview, true);
+
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
         AdCreator adCreator = new AdCreator(mAdView, this);
         adCreator.createAd();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
-        }
-        getSupportActionBar();
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setBackgroundColor(primaryColor);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        dbHelper = new ScoreDBAdapter(this).open();
-        dataHelper = new DataHelper();
-        newGameIntent = new Intent(this, NewGame.class);
-        aboutIntent = new Intent(this, About.class);
-        settingsIntent = new Intent(this, Settings.class);
-        relativeLayout = (RelativeLayout) findViewById(R.id.historyLayout);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        recyclerView = (RecyclerView)findViewById(R.id.historyRecyclerView);
+    }
 
-
-        dbHelper.close();
-
+    @Override
+    public Activity getActivity() {
+        return Activity.HISTORY;
     }
 
     @Override
@@ -101,7 +69,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         menuItemCompleted.setChecked(true);
 
 
-        settingsMenuItem = menu.findItem(R.id.action_settings);
+        MenuItem settingsMenuItem = menu.findItem(R.id.action_settings);
         settingsMenuItem.setVisible(false);
 
         displayRecyclerView();
@@ -113,14 +81,14 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     protected void onResume() {
         super.onResume();
-        dbHelper.open();
+        mDbHelper.open();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        dbHelper.close();
+        mDbHelper.close();
     }
 
     @Override
@@ -132,24 +100,27 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(settingsIntent);
+            startActivity(mSettingsIntent);
             return true;
-        }if (id == R.id.action_about) {
-            startActivity(aboutIntent);
+        }
+        if (id == R.id.action_about) {
+            startActivity(mAboutIntent);
             return true;
-        }if (id == R.id.action_unfinished){
-            if (!menuItemCompleted.isChecked()){
+        }
+        if (id == R.id.action_unfinished) {
+            if (!menuItemCompleted.isChecked()) {
                 Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 menuItemUnfinished.setChecked(!menuItemUnfinished.isChecked());
                 displayRecyclerView();
             }
 
-        }if (id == R.id.action_completed){
+        }
+        if (id == R.id.action_completed) {
 
-            if (!menuItemUnfinished.isChecked()){
+            if (!menuItemUnfinished.isChecked()) {
                 Toast.makeText(this, "One must be checked at all times", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 menuItemCompleted.setChecked(!menuItemCompleted.isChecked());
 
                 displayRecyclerView();
@@ -163,41 +134,49 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
-    public void displayRecyclerView(){
-        dbHelper.open();
+    public synchronized void displayRecyclerView() {
+        mDbHelper.open();
+
         try {
-            if (dbHelper.numRows() != 0) {
-                int type = 3;
+            if (mDbHelper.numRows() != 0) {
+                int gamesToShow = HistoryAdapter.BOTH;
 
                 if (menuItemCompleted.isChecked()) {
-                    type = 2;
+                    gamesToShow = HistoryAdapter.COMPLETED;
                 }
+
                 if (menuItemUnfinished.isChecked()) {
-                    type = 1;
+                    gamesToShow = HistoryAdapter.UNFINISHED;
                 }
 
                 if (menuItemCompleted.isChecked() && menuItemUnfinished.isChecked()) {
-                    type = 3;
+                    gamesToShow = HistoryAdapter.BOTH;
                 }
 
                 RecyclerView.LayoutManager mLayoutManager;
                 mLayoutManager = new LinearLayoutManager(this);
-                recyclerView.setLayoutManager(mLayoutManager);
-                GameModel gModel = new GameModel();
-                gameModel = gModel.createGameModel(dbHelper.numRows(), type, this, dbHelper);
-                historyAdapter = new HistoryAdapter(gameModel, this, this, false);
-                recyclerView.setAdapter(historyAdapter);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+
+                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Activity.HISTORY, gamesToShow)
+                        , this, this, Activity.HISTORY);
+
+                mRecyclerView.setAdapter(mHistoryAdapter);
             } else {
-                recyclerView.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
             }
-        }catch (Exception ignore){
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+            Toast.makeText(this, "Error opening History", Toast.LENGTH_SHORT).show();
 
         }
-        dbHelper.close();
+
+        mDbHelper.close();
     }
+
 
     @Override
     public void gamesDeleted() {
@@ -208,37 +187,38 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void multiSelectEnabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primaryBlueDark));
         }
 
     }
 
     private void toggleSelection(int position, int gameID) {
-        historyAdapter.toggleSelection(position, gameID);
-        int count = historyAdapter.getSelectedItemCount();
+        mHistoryAdapter.toggleSelection(position, gameID);
+        int count = mHistoryAdapter.getSelectedItemCount();
 
         if (count == 0) {
-            actionMode.finish();
+            mHistoryActionMode.finish();
         } else {
 
             try {
-                actionMode.invalidate();
-                actionMode.setTitle(count + " items selected");
-            }catch (Exception e){
+                mHistoryActionMode.invalidate();
+                mHistoryActionMode.setTitle(count + " items selected");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
     }
 
     @Override
     public void multiSelectDisabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(primaryDarkColor);
+            getWindow().setStatusBarColor(mPrimaryDarkColor);
         }
 
         displayRecyclerView();
-        if (dbHelper.open().numRows() == 0){
-            dbHelper.close();
+        if (mDbHelper.open().numRows() == 0) {
+            mDbHelper.close();
             Intent home = new Intent(this, Home.class);
             startActivity(home);
         }
@@ -247,11 +227,11 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
     @Override
     public void onItemClicked(int position, final int gameID) {
 
-        if (actionMode != null) {
+        if (mHistoryActionMode != null) {
             toggleSelection(position, gameID);
-        }else{
+        } else {
 
-            if (dataHelper.getCompletedById(gameID, dbHelper) == 0) {
+            if (!mDataHelper.getGame(gameID, mDbHelper).ismCompleted()) {
 
                 AlertDialog dialog;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -263,7 +243,7 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(History.this, EditGame.class);
-                        intent.putExtra("gameID", gameID);
+                        intent.putExtra("GAME_ID", gameID);
                         startActivity(intent);
                     }
                 });
@@ -271,8 +251,8 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
                 builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        Intent intent = new Intent(History.this, MainActivity.class);
-                        intent.putExtra("gameID", gameID);
+                        Intent intent = new Intent(History.this, GameActivity.class);
+                        intent.putExtra("GAME_ID", gameID);
                         startActivity(intent);
                     }
 
@@ -287,9 +267,10 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
                 dialog = builder.create();
                 dialog.show();
-            }else{
+
+            } else {
                 Intent intent = new Intent(this, EditGame.class);
-                intent.putExtra("gameID", gameID);
+                intent.putExtra("GAME_ID", gameID);
                 startActivity(intent);
             }
 
@@ -298,12 +279,12 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
 
     @Override
     public boolean onItemLongClicked(int position, int gameID) {
-        if (actionMode == null) {
-            actionMode = startSupportActionMode(new History.ActionBarCallback());
+        if (mHistoryActionMode == null) {
+            mHistoryActionMode = startSupportActionMode(new ActionBarCallback());
         }
 
-        if (actionMode != null) {
-            actionMode.setTitle(1 + " items selected");
+        if (mHistoryActionMode != null) {
+            mHistoryActionMode.setTitle(1 + " items selected");
         }
 
         multiSelectEnabled();
@@ -312,10 +293,17 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         return true;
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
 
     public class ActionBarCallback implements ActionMode.Callback {
         @Override
@@ -334,30 +322,46 @@ public class History extends AppCompatActivity implements UpdateTabsListener, Hi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    dbHelper.open();
-                    historyAdapter.deleteSelectedGames(dbHelper);
-                    dbHelper.close();
+
+                    mDbHelper.open();
+                    mHistoryAdapter.deleteSelectedGames(mDbHelper);
+                    mDbHelper.close();
 
                     gamesDeleted();
                     mode.finish();
+                    break;
 
-                    return true;
+                case R.id.action_delete_all:
+                    mDbHelper.open();
+                    mDbHelper.deleteAllGames();
+                    mDbHelper.close();
 
-                default:
+                    startActivity(new Intent(getBaseContext(), Home.class));
 
-                    return false;
+                    mode.finish();
+                    break;
+
+                case R.id.action_select_all:
+
+                    mHistoryAdapter.clearSelection();
+                    mHistoryAdapter.selectAllItems();
+
+                    break;
+
             }
+
+            return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            historyAdapter.clearSelection();
+            mHistoryAdapter.clearSelection();
             multiSelectDisabled();
-            HistoryAdapter.actionModeDisabled = true;
-            historyAdapter.notifyDataSetChanged();
+            HistoryAdapter.ACTION_MODE_DISABLED = true;
+            mHistoryAdapter.notifyDataSetChanged();
             gamesDeleted();
 
-            actionMode = null;
+            mHistoryActionMode = null;
         }
     }
 

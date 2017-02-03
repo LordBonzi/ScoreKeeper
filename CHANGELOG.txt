@@ -2,6 +2,104 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1 Beta 6 02/02/17
+### Added
+ - tell the user why there are no games visible on the home screen
+ - disable Color Navigation Bar option on devices with no software keys
+ 
+### Bug Fixes
+ - system bars weren't hiding after closing dialog in full screen mode
+ - colors in the dialog where you select the primary color, were the wrong colors
+ - dark theme wasnt switched on after selecting default theme
+ 
+## 1.1 Beta 5 01/02/17
+### Added
+ - delete players from dialog when changing set scores
+ - Add Player button in Game Info is always visible
+ - email developer from navigation drawer
+ - resetting games works properly
+ - horizontally scroll through players and Game title in History
+ - added tabs when in full screen landscape mode
+ - disable full screen option on android versions lower than 4.4
+ - full screen is working properly
+
+### Bug Fixes
+ - padding above 2nd player name in Game activity
+ - navigation bar wasnt colored by default in Settings
+ - stopwatch was appearing when changing tab in landscape mode even
+   if the game didnt have the stopwatch enabled
+ - when full screen, and after closing a dialog, system bars were still showing
+ - no padding on history items on Android Jelly Bean devices
+ 
+## 1.1 Beta 4 19/01/17
+### Added
+ - tabs to Game Info
+ - list of all scores and sets to Game Info
+ 
+### Removed
+ - player list from Game Info
+ - expanding and collapsing cardviews in Game Info and New Game
+ 
+## 1.1 Beta 3 14/01/17
+### Added
+ - change the score of any set for any player
+ - moved delete button to first position in History to avoid confusion with other icons
+ - tabs are inside the toolbar when in landscape to conserve space
+ - changed the GameActivity design so it should work better on all displays
+ 
+### Removed 
+ - Timeline tab because it will not be implemented in Version 1.1
+ - classic theme for now
+ 
+### Bug Fixes
+ - game was not playing for the wrong number of sets
+ - game was ending even though it didn't meet specified score difference
+ - Set Gridview wasnt updating when New Set was clicked
+ - padding around top two rows of the Set GridView
+ 
+## 1.1 Beta 2 01/01/17
+### Added
+ - navigation drawer to navigate through the app
+ - general code improvements
+ - performance improvements
+ - new default colors
+ - moved max and min dice numbers to New Game so each game can have a unique set of numbers
+ 
+### Removed
+ - More games button on home screen
+ 
+### Bug Fixes
+ - padding issues on cardviews on larger screens
+ - presets were not being created
+ - wrong color was checked in accent color dialog in Theme Settings
+
+## 1.1 Beta 1 07/12/16
+### Added
+ - sets
+ - updated text shown in "Are you sure you want to quit" dialog to work with the new History activity introduced in 0.9.0alpha
+ - ask for review after 1 game and not 3
+ - update review dialog message
+ - expand all cards in New Game and Edit Game
+ - delete all presets from Settings
+ - give each game a unique title
+ - divider inbetween list items in History to easier distinguish them from each other
+ - update Google+ icon in About
+ - show the title of the game in the toolbar while playing it
+ - the title of each Text Field in New Game and Edit Game moves above it. Before, it was hidden if it wasnt hidden, which meant the user didnt know what it does.
+ - receive notifications from the developer. will be used very rarely. Mainly to warn all users if something will happen to the app.
+ - starting score option
+
+### Bugs Fixed from Version 1.0.6
+ - deletes other duplicate player if trying to add a duplicate player in New Game
+ - buttons in 2 player games will be clickable after closing the ""[insert player] has won" dialog shown when entering a game which has already been won.
+ - renamed boolean reverseScrolling to reverseScoring.
+ - editTextPlayer in NewGame didnt delete text when loading preset
+ - removed acronym 'diff' from 'Score Diff. to win' to difference
+ - go back to History when deleting game from Game Info instead of homescreen
+ - optimised code
+ - dont show dialog when exiting full screen
+ - score interval sets itself to 0 if empty in New Game
+
 ## 1.0.6 10/08/16
 ### Added
  - continue and complete games in EditGame
@@ -39,7 +137,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - stopwatch doesnt start at the same time for all timezones
  - navigation bar not changing color when starting a game
  - max number on dice not changing
- - the tick on selected color in theme settings wasn't centered
+ - the tick on mSelected color in theme settings wasn't centered
  - app crashes when continuing  a game with more than 2 players with classic theme enabled
 
 ## 1.0 Beta 8 28/07/16
@@ -89,7 +187,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  - Create a maximum score to win the game
  - Reverse Scrolling
  - Added score interval
- - Have a score difference to win a game
+ - Require a score difference to win the game
  - Only allow 2 players with the classic theme
  - When starting a game, check if it has already been won.
  - Automatically close the timelimit and options cards when creating a new game
@@ -101,7 +199,7 @@ This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/
  
 ## 0.9.2 17/07/16
 ### Added
-- Themeing (Dark and Light theme, Custom accent and primary colors)
-- An other scoreboard (Basketball style)
+- Theming (Dark and Light theme, Custom accent and primary colors)
+- Optional scoreboard style(Basketball style)
 
 

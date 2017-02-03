@@ -1,7 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.github.sdsstudios.ScoreKeeper">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -13,9 +15,12 @@
         android:theme="@style/AppTheme"
         android:versionCode="@string/versionCode"
         android:versionName="@string/app_version">
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
         <activity
@@ -27,17 +32,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".NewGame"
             android:label="@string/new_game"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".Home"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MainActivity"
+            android:name=".GameActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -50,23 +57,56 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme" />
-
         <activity
-            android:name=".ThemeSettings"
+            android:name=".Themes"
             android:label="@string/themes"
             android:parentActivityName=".Settings"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".History"
             android:label="@string/action_history"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".PlayersActivity"
+            android:label="@string/players"
+            android:parentActivityName=".Home"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".EditGame"
             android:label="@string/game_info"
             android:parentActivityName=".History"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <service android:name=".FirebaseMessaging.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".FirebaseMessaging.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
+        <!--
+             Set mAccentColor used with incoming notification messages. This is used when no mAccentColor is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/accentBlue" />
 
     </application>
 

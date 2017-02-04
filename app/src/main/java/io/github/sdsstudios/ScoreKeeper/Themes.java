@@ -34,7 +34,7 @@ public class Themes extends PreferenceActivity{
     public static int ACCENT_COLORS = 1;
     public static int PRIMARY_COLORS = 2;
 
-    public static int DEFAULT_ACCENT_COLOR = R.style.DarkTheme_Red;
+    public static int DEFAULT_ACCENT_COLOR = R.style.AppTheme_Red;
 
     private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
@@ -144,7 +144,7 @@ public class Themes extends PreferenceActivity{
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", true);
+        mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", false);
 
         boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", true);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
@@ -222,7 +222,7 @@ public class Themes extends PreferenceActivity{
                 editor.putInt("prefPrimaryDarkColor", mPrimaryDarkColor);
                 editor.putInt("prefAccentColor", mAccentColor);
                 editor.putInt("prefPrimaryColor", mPrimaryColor);
-                editor.putBoolean("prefDarkTheme", true);
+                editor.putBoolean("prefDarkTheme", false);
                 editor.apply();
 
                 reloadActivity();

@@ -288,12 +288,12 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         mPlayerRecyclerView.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(this);
         mPlayerRecyclerView.setLayoutManager(mLayoutManager);
-        mPlayerListAdapter = new PlayerListAdapter(CURRENT_ACTIVITY, editable, mRelativeLayout, this);
+        mPlayerListAdapter = new PlayerListAdapter(editable, mRelativeLayout, this);
         mPlayerRecyclerView.setAdapter(mPlayerListAdapter);
     }
 
     public void setGameTime() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         mGame.setmTime(sdfDate.format(now));
     }

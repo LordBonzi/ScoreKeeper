@@ -78,14 +78,14 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_array_adapter, parent, false);
 
-        // set the view's size, margins, paddings and layout parameters
+        // set the view's size, margins, paddings and mRelativeLayout parameters
 
         ViewHolder vh = new ViewHolder(view, mClickListener);
 
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    // Replace the contents of a view (invoked by the mRelativeLayout manager)
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {

@@ -686,7 +686,7 @@ public class NewGame extends OptionActivity
                 if (startGame) {
 
                     int startingScore = game.getInt(Option.STARTING_SCORE);
-                    game.setString(NOTES, ((EditText) findViewById(R.id.editTextNotes)).getText().toString());
+                    game.setString(NOTES, ((EditText) findViewById(R.id.editText)).getText().toString());
 
                     for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);

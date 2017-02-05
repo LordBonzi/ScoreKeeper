@@ -272,8 +272,8 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                     return ((EditText) findViewById(R.id.editTextDiceMin));
 
                 case NOTES:
-                    editTextOption.setmEditTextID(R.id.editTextNotes);
-                    return ((EditText) findViewById(R.id.editTextNotes));
+                    editTextOption.setmEditTextID(R.id.editText);
+                    return ((EditText) findViewById(R.id.editText));
 
                 default:
                     return null;

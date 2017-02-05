@@ -34,7 +34,7 @@ public class StringEditTextOption extends EditTextOption{
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextTitle
                 , Option.TITLE, "The Game With No Name", a.getString(R.string.title)));
 
-        mEditTextOptions.add(new StringEditTextOption(R.id.editTextNotes
+        mEditTextOptions.add(new StringEditTextOption(R.id.editText
                 , Option.NOTES, "", a.getString(R.string.notes)));
 
         return mEditTextOptions;

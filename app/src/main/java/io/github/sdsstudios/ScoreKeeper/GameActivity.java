@@ -17,6 +17,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class GameActivity extends ScoreKeeperTabActivity
         implements View.OnClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
@@ -298,6 +301,40 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
+    private void notesDialog() {
+        pauseStopwatch();
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        mDialogView = inflater.inflate(R.layout.edit_text_fragment, null);
+
+        final EditText editText = (EditText) mDialogView.findViewById(R.id.editText);
+        editText.setText(game.getString(NOTES));
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                game.setString(NOTES, s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        dialogBuilder.setTitle(R.string.notes);
+        dialogBuilder.setPositiveButton(R.string.done, null);
+
+        dialogBuilder.setView(mDialogView);
+        alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
+
     private void timeLimitDialog() {
 
         enablePlayerButtons(false);
@@ -359,9 +396,8 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -410,7 +446,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 break;
 
             case R.id.action_notes:
-
+                notesDialog();
                 break;
         }
 

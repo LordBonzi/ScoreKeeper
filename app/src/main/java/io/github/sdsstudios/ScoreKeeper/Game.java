@@ -19,6 +19,7 @@ public class Game {
 
     public static final int WINNING = 154;
     public static final int LOSING = 45;
+
     private static String TAG = "Game";
     private List<Integer> mSortedScoreList;
 

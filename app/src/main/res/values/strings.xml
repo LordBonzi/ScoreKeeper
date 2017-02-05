@@ -2,7 +2,7 @@
     <string name="app_name">Score Keeper</string>
     <string name="app_version">v1.1.1 Debug</string>
     <string name="versionCode">117</string>
-    <string name="title">Title:</string>
+    <string name="title">Title</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
@@ -47,7 +47,7 @@
     <string name="title_activity_home">Home</string>
     <string name="About">About</string>
     <string name="game_info">Game Info</string>
-    <string name="time_limit">Time Limit:</string>
+    <string name="time_limit">Time Limit</string>
     <string name="change_player">Change Player</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_edit_game">Change Game</string>
@@ -104,7 +104,7 @@
     <string name="seconds">Seconds:</string>
 
     <string name="quit_setup">Quit Setup</string>
-    <string name="players_and_scores">Players and Scores:</string>
+    <string name="players_and_scores">Players and Scores</string>
     <string name="length">Length:</string>
 
     <string name="title_activity_time_limit">TimeLimit</string>
@@ -126,7 +126,7 @@
     <string name="pref_update_setting">Update Settings</string>
     <string name="no_time_limit">Time Limit</string>
     <string name="fullscreen">Fullscreen</string>
-    <string name="preset_title">Preset:</string>
+    <string name="preset_title">Preset</string>
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
     <string name="edit_player">Edit Player</string>
@@ -197,6 +197,8 @@
     <string name="you_have_no_unfinished_games">You have completed all your games!</string>
     <string name="you_have_played_no_games">You have played no games!</string>
     <string name="player_button_tutorial">Long press to deduct points</string>
+    <string name="notes">Notes</string>
+    <string name="create_time_limit">Create Time Limit</string>
 
 </resources>
 

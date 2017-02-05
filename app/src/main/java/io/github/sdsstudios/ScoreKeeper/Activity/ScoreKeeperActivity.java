@@ -1,6 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper.Activity;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -49,6 +50,13 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     public SharedPreferences mSharedPreferences;
 
     public Intent mNewGameIntent, mSettingsIntent, mAboutIntent, mHistoryIntent, mPlayersIntent, mHomeIntent;
+
+    public DialogInterface.OnClickListener mDismissDialogListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

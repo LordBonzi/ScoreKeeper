@@ -263,11 +263,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
                 });
 
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
+                builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
                 dialog = builder.create();
                 dialog.show();

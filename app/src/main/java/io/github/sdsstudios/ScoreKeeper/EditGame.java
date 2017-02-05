@@ -169,11 +169,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
         builder.setMessage(message);
 
-        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(R.string.okay, mDismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -278,11 +274,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -349,11 +341,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         dialog = builder.create();
         dialog.show();

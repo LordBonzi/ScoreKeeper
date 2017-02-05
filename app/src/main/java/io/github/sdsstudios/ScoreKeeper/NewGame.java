@@ -19,7 +19,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -218,17 +217,19 @@ public class NewGame extends OptionActivity
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogView = mInflater.inflate(R.layout.create_time_limit, null);
+
         EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
         EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
         EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+
         RelativeLayout relativeLayout = (RelativeLayout) dialogView.findViewById(R.id.relativeLayout2);
         relativeLayout.setVisibility(View.VISIBLE);
-        final CheckBox checkBoxExtend = (CheckBox) dialogView.findViewById(R.id.checkBoxExtend);
-        checkBoxExtend.setVisibility(View.INVISIBLE);
 
         editTextHour.setText("0");
         editTextMinute.setText("0");
         editTextSecond.setText("0");
+
+        dialogBuilder.setTitle(getString(R.string.create_time_limit));
 
         dialogBuilder.setPositiveButton(R.string.create, null);
 
@@ -501,11 +502,7 @@ public class NewGame extends OptionActivity
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -639,13 +636,7 @@ public class NewGame extends OptionActivity
         dialogBuilder.setMessage(getResources().getString(R.string.create_preset_message));
         dialogBuilder.setNeutralButton(R.string.default_title, null);
 
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         dialogBuilder.setView(dialogView);
 

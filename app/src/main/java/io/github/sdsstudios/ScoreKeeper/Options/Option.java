@@ -24,6 +24,7 @@ public class Option {
     public static final String TITLE = "title";
     public static final String REVERSE_SCORING = "reverse_scoring";
     public static final String STOPWATCH = "stopwatch";
+    public static final String NOTES = "notes";
 
     private String mID;
     private boolean mBooleanData;

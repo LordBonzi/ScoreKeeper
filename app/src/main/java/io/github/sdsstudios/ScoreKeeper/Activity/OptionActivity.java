@@ -36,6 +36,7 @@ import static io.github.sdsstudios.ScoreKeeper.Options.Option.DATE;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MAX;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MIN;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.LENGTH;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.NUMBER_SETS;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.REVERSE_SCORING;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.SCORE_DIFF_TO_WIN;
@@ -276,6 +277,10 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 case DICE_MIN:
                     editTextOption.setmEditTextID(R.id.editTextDiceMin);
                     return ((EditText) findViewById(R.id.editTextDiceMin));
+
+                case NOTES:
+                    editTextOption.setmEditTextID(R.id.editTextNotes);
+                    return ((EditText) findViewById(R.id.editTextNotes));
 
                 default:
                     return null;

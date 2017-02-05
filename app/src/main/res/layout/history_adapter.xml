@@ -20,8 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="12:13" />
+            android:layout_alignParentTop="true" />
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
@@ -40,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="The Game With No Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </HorizontalScrollView>
 
@@ -59,7 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="ERROR DISPLAYING THIS GAME"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
         </HorizontalScrollView>
 
@@ -70,7 +67,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:text="0 Players, 0 Sets"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -82,7 +78,6 @@
             android:layout_toRightOf="@+id/textViewHistoryType"
             android:paddingLeft="4dp"
             android:paddingStart="4dp"
-            android:text="UNFINISHED"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     </RelativeLayout>

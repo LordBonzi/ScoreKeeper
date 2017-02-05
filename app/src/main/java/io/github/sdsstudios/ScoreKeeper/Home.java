@@ -152,7 +152,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         return io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME;
     }
 
-    public boolean anyUnfinishedGames() {
+    private boolean anyUnfinishedGames() {
 
         boolean unfinishedGames = false;
 
@@ -254,7 +254,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         dialog.show();
     }
 
-    public synchronized void displayRecyclerView(){
+    private synchronized void displayRecyclerView() {
 
         mDbHelper.open();
 
@@ -267,7 +267,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
                 HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
-                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HISTORY);
+                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME);
 
                 mRecyclerView.setAdapter(historyAdapter);
 

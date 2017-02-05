@@ -27,8 +27,6 @@ import io.github.sdsstudios.ScoreKeeper.PlayersActivity;
 import io.github.sdsstudios.ScoreKeeper.Settings;
 import io.github.sdsstudios.ScoreKeeper.Themes;
 
-import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
-
 /**
  * Created by seth on 11/01/17.
  */
@@ -99,10 +97,9 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     }
 
     public void saveGameToDatabase() {
-        if (CURRENT_ACTIVITY != EDIT_GAME) {
-            gameDBAdapter.open().updateGame(game);
-            gameDBAdapter.close();
-        }
+        gameDBAdapter.open().updateGame(game);
+        gameDBAdapter.close();
+
     }
 
     public int getOrientation() {

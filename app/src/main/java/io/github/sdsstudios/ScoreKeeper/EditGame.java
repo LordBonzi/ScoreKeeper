@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,7 +108,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         return true;
     }
 
-    public Intent shareIntent(){
+    private Intent shareIntent() {
 
         Intent intent;
         intent = new Intent();
@@ -117,7 +119,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         return intent;
     }
 
-    public void completeGame(){
+    private void completeGame() {
 
         game.setmCompleted(!game.ismCompleted());
         updateCompleteMenuItem();
@@ -133,7 +135,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         switch (id){
 
             case R.id.action_delete:
-                delete();
+                deleteGameDialog();
                 break;
 
             case R.id.action_edit:
@@ -161,7 +163,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void helpDialog(String title, String message){
+    private void helpDialog(String title, String message) {
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -175,7 +177,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         dialog.show();
     }
 
-    public void onMenuEditClick() {
+    private void onMenuEditClick() {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -191,13 +193,9 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    public void onMenuDoneClick() {
+    private void onMenuDoneClick() {
 
         deleteEmptyPlayers();
-
-        for (final StringEditTextOption e : StringEditTextOptions()) {
-            e.setData(getEditText(e).getText().toString());
-        }
 
         final String newLength = game.getmLength();
 
@@ -236,23 +234,23 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 if (bCheckEmpty) {
 
-                    invalidSnackbar("You can't have empty names!");
+                    createSnackbar(relativeLayout, "You can't have empty names!");
 
                 }else if (!bDateAndTime) {
 
-                    invalidSnackbar(getString(R.string.invalid_date_and_time));
+                    createSnackbar(relativeLayout, getString(R.string.invalid_date_and_time));
 
                 }else if (booleanLength) {
 
-                    invalidSnackbar(getString(R.string.invalid_length));
+                    createSnackbar(relativeLayout, getString(R.string.invalid_length));
 
                 } else if (bCheckDuplicates) {
 
-                    invalidSnackbar("You can't have duplicate players!");
+                    createSnackbar(relativeLayout, "You can't have duplicate players!");
 
                 } else if (!bNumPlayers) {
 
-                    invalidSnackbar("Must have 2 or more players");
+                    createSnackbar(relativeLayout, "Must have 2 or more players");
 
                 }else{
 
@@ -281,7 +279,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    public boolean checkValidity(String string, SimpleDateFormat simpleDateFormat, int length) {
+    private boolean checkValidity(String string, SimpleDateFormat simpleDateFormat, int length) {
         boolean validity = false;
 
         try {
@@ -299,7 +297,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         return validity;
     }
 
-    public void onMenuCancelClick(){
+    private void onMenuCancelClick() {
 
         mMenuItemDelete.setVisible(true);
         mMenuItemDone.setVisible(false);
@@ -317,7 +315,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    public void delete(){
+    private void deleteGameDialog() {
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -363,6 +361,29 @@ public class EditGame extends ScoreKeeperTabActivity {
             mEditGameContent.setVisibility(INVISIBLE);
             setGridView.setVisibility(View.VISIBLE);
 
+        }
+    }
+
+    @Override
+    public void setOptionChangeListeners() {
+        super.setOptionChangeListeners();
+        for (final StringEditTextOption e : StringEditTextOptions()) {
+            getEditText(e).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    e.setData(charSequence.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
         }
     }
 

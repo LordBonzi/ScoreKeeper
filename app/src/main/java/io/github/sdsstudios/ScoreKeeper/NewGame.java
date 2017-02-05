@@ -37,6 +37,7 @@ import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.NEW_GAME;
+import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class NewGame extends OptionActivity
         implements View.OnClickListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener {
@@ -685,6 +686,7 @@ public class NewGame extends OptionActivity
                 if (startGame) {
 
                     int startingScore = game.getInt(Option.STARTING_SCORE);
+                    game.setString(NOTES, ((EditText) findViewById(R.id.editTextNotes)).getText().toString());
 
                     for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);

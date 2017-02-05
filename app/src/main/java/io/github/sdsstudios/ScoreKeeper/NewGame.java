@@ -288,6 +288,7 @@ public class NewGame extends OptionActivity
                                         mAlertDialog.dismiss();
                                         TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
                                         displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
+                                        mSpinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
 
                                     }
 
@@ -404,7 +405,7 @@ public class NewGame extends OptionActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void reset() {
+    private void reset() {
         game.setmTitle("The Game With No Name");
         mEditTextGameTitle.setText(game.getmTitle());
         getPlayerArray().clear();
@@ -474,7 +475,7 @@ public class NewGame extends OptionActivity
         dialog.show();
     }
 
-    public void deleteDialog(List<String> array, final Dialog type) {
+    private void deleteDialog(List<String> array, final Dialog type) {
 
         final View dialogView;
 
@@ -586,7 +587,7 @@ public class NewGame extends OptionActivity
         }
     }
 
-    public void createPresetDialog() {
+    private void createPresetDialog() {
         final String[] presetName = {game.getmTitle()};
 
         final View dialogView;
@@ -665,7 +666,7 @@ public class NewGame extends OptionActivity
 
     }
 
-    public void createNewGame(boolean startGame) {
+    private void createNewGame(boolean startGame) {
         Intent mainActivityIntent = new Intent(this, GameActivity.class);
         mStop = false;
 
@@ -706,7 +707,7 @@ public class NewGame extends OptionActivity
 
     }
 
-    public void createPreset() {
+    private void createPreset() {
 
         mPresetDBAdapter = new PresetDBAdapter(this);
         mPresetDBAdapter.open();
@@ -715,7 +716,7 @@ public class NewGame extends OptionActivity
 
     }
 
-    public void loadPreset(int position) {
+    private void loadPreset(int position) {
 
         mPresetDBAdapter.open();
         game = dataHelper.getPreset(position, mPresetDBAdapter);

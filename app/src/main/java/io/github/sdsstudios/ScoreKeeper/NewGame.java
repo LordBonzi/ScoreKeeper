@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,9 +62,9 @@ public class NewGame extends OptionActivity
         // Save the user's current game state
 
         mStop = false;
-        updateGameInDatabase();
+        saveGameToDatabase();
 
-        savedInstanceState.putInt(STATE_GAMEID, mGameID);
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -108,39 +107,39 @@ public class NewGame extends OptionActivity
 
             @Override
             public void afterTextChanged(Editable s) {
-                mGame.setmTitle(s.toString().trim());
-                updateGameInDatabase();
+                game.setmTitle(s.toString().trim());
+                saveGameToDatabase();
             }
         });
 
         if (savedInstanceState != null) {
 
-            mDbHelper.open();
-            mGameID = savedInstanceState.getInt(STATE_GAMEID);
+            gameDBAdapter.open();
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
 
-            mGame = mDataHelper.getGame(mGameID, mDbHelper);
+            game = dataHelper.getGame(gameID, gameDBAdapter);
 
-            updateGameInDatabase();
+            saveGameToDatabase();
 
-            mDbHelper.close();
+            gameDBAdapter.close();
 
         } else {
 
-            mGame = new Game(new ArrayList<Player>(), null, false, 0
+            game = new Game(new ArrayList<Player>(), null, false, 0
                     , IntEditTextOption.loadEditTextOptions(this)
                     , CheckBoxOption.loadCheckBoxOptions(this)
                     , StringEditTextOption.loadEditTextOptions(this), null);
 
-            mDbHelper.open().createGame(mGame);
+            gameDBAdapter.open().createGame(game);
 
-            mGame.setmLength("00:00:00:0");
-            mGame.setmTitle(mEditTextGameTitle.getText().toString().trim());
+            game.setmLength("00:00:00:0");
+            game.setmTitle(mEditTextGameTitle.getText().toString().trim());
 
-            mGameID = mDbHelper.getNewestGame();
-            mGame.setmID(mGameID);
+            gameID = gameDBAdapter.getNewestGame();
+            game.setmID(gameID);
 
-            updateGameInDatabase();
-            mDbHelper.close();
+            saveGameToDatabase();
+            gameDBAdapter.close();
         }
 
         mButtonNewGame = (Button) findViewById(R.id.buttonNewGame);
@@ -159,7 +158,7 @@ public class NewGame extends OptionActivity
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addPlayers();
+                    addPlayer();
                     return true;
                 }
                 return false;
@@ -171,11 +170,11 @@ public class NewGame extends OptionActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (i == 0) {
-                    mGame.setmTimeLimit(null);
+                    game.setmTimeLimit(null);
                 } else if (i == 1) {
                     timeLimitDialog();
                 } else {
-                    mGame.setmTimeLimit(mTimeLimitArray.get(i - 2));
+                    game.setmTimeLimit(mTimeLimitArray.get(i - 2));
                 }
             }
 
@@ -205,7 +204,7 @@ public class NewGame extends OptionActivity
         displayRecyclerView(false);
         setOptionChangeListeners();
 
-        updateGameInDatabase();
+        saveGameToDatabase();
 
     }
 
@@ -240,7 +239,7 @@ public class NewGame extends OptionActivity
 
                 dialog.dismiss();
                 mSpinnerTimeLimit.setSelection(0);
-                mGame.setmTimeLimit(null);
+                game.setmTimeLimit(null);
             }
         });
 
@@ -265,7 +264,7 @@ public class NewGame extends OptionActivity
                             if (timeLimitString != null) {
 
                                 if (!timeLimitString.equals("00:00:00:0")) {
-                                    TimeLimit timeLimit = new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
+                                    TimeLimit timeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
 
                                     if (mTimeLimitArray != null) {
                                         mTimeLimitArray.add(timeLimit);
@@ -273,7 +272,7 @@ public class NewGame extends OptionActivity
                                         mTimeLimitArray = new ArrayList<>();
                                     }
 
-                                    if (mDataHelper.checkDuplicates(timeLimitStringArray())) {
+                                    if (dataHelper.checkDuplicates(timeLimitStringArray())) {
 
                                         mTimeLimitArray.remove(mTimeLimitArray.size() - 1);
                                         TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
@@ -283,8 +282,8 @@ public class NewGame extends OptionActivity
 
                                     } else {
 
-                                        mGame.setmTimeLimit(timeLimit);
-                                        updateGameInDatabase();
+                                        game.setmTimeLimit(timeLimit);
+                                        saveGameToDatabase();
                                         mAlertDialog.dismiss();
                                         TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
                                         displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
@@ -295,7 +294,7 @@ public class NewGame extends OptionActivity
 
                                     mAlertDialog.dismiss();
                                     mSpinnerTimeLimit.setSelection(0);
-                                    mGame.setmTimeLimit(null);
+                                    game.setmTimeLimit(null);
 
                                 }
                             }
@@ -340,7 +339,7 @@ public class NewGame extends OptionActivity
 
         for (int i = 1; i <= mPresetDBAdapter.open().numRows(); i++) {
             mPresetDBAdapter.open();
-            arrayList.add(mDataHelper.getPreset(i, mPresetDBAdapter).getmTitle());
+            arrayList.add(dataHelper.getPreset(i, mPresetDBAdapter).getmTitle());
             mPresetDBAdapter.close();
         }
 
@@ -405,14 +404,14 @@ public class NewGame extends OptionActivity
     }
 
     public void reset() {
-        mGame.setmTitle("The Game With No Name");
-        mEditTextGameTitle.setText(mGame.getmTitle());
+        game.setmTitle("The Game With No Name");
+        mEditTextGameTitle.setText(game.getmTitle());
         getPlayerArray().clear();
         displayRecyclerView(false);
 
-        mGame.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(this));
-        mGame.setmIntEditTextOption(IntEditTextOption.loadEditTextOptions(this));
-        mGame.setmStringEditTextOptions(StringEditTextOption.loadEditTextOptions(this));
+        game.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(this));
+        game.setmIntEditTextOption(IntEditTextOption.loadEditTextOptions(this));
+        game.setmStringEditTextOptions(StringEditTextOption.loadEditTextOptions(this));
 
         for (IntEditTextOption e : IntEditTextOptions()) {
             getEditText(e).setText("");
@@ -427,53 +426,19 @@ public class NewGame extends OptionActivity
 
     }
 
-    public void addPlayers() {
-        String playerName = mEditTextPlayer.getText().toString().trim();
+    private void addPlayer() {
 
-        boolean areDuplicatePlayers;
+        Player newPlayer = new Player(mEditTextPlayer.getText().toString().trim(), 0);
 
-        mGame.addNewPlayer(new Player(playerName, 0));
-        areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(getPlayerArray());
+        game.addNewPlayer(newPlayer);
 
-        if (areDuplicatePlayers) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackBar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(mGame.size() - 1);
-
-            mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackBar.show();
-        }
-
-        if (playerName.equals("") || playerName.equals(" ")) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackBar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(mGame.size() - 1);
-
-            mSnackBar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackBar.show();
-
-        } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
-
+        if (validPlayer(newPlayer)) {
             mEditTextPlayer.setText("");
-
-            updateGameInDatabase();
-
-            mPlayerListAdapter.notifyItemInserted(mGame.size());
-
+            saveGameToDatabase();
+            playerListAdapter.notifyItemInserted(game.size());
+        } else {
+            game.removePlayer(game.size() - 1);
         }
-
     }
 
     @Override
@@ -498,11 +463,11 @@ public class NewGame extends OptionActivity
 
                 mStop = true;
                 deleteGame();
-                startActivity(mHomeIntent);
+                startActivity(homeIntent);
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -584,9 +549,9 @@ public class NewGame extends OptionActivity
         dialogBuilder.setView(dialogView);
 
         alertDialog = dialogBuilder.create();
-        mLayoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
 
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(mRecyclerViewAdapter);
 
@@ -596,7 +561,7 @@ public class NewGame extends OptionActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonAddPlayer: {
-                addPlayers();
+                addPlayer();
                 break;
             }
 
@@ -621,7 +586,7 @@ public class NewGame extends OptionActivity
     }
 
     public void createPresetDialog() {
-        final String[] presetName = {mGame.getmTitle()};
+        final String[] presetName = {game.getmTitle()};
 
         final View dialogView;
 
@@ -636,7 +601,7 @@ public class NewGame extends OptionActivity
         dialogBuilder.setMessage(getResources().getString(R.string.create_preset_message));
         dialogBuilder.setNeutralButton(R.string.default_title, null);
 
-        dialogBuilder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        dialogBuilder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         dialogBuilder.setView(dialogView);
 
@@ -676,7 +641,7 @@ public class NewGame extends OptionActivity
 
                     @Override
                     public void onClick(View view) {
-                        mGame.setmTitle(presetName[0]);
+                        game.setmTitle(presetName[0]);
                         createPreset();
                         alertDialog.dismiss();
                         displaySpinner(mSpinnerPreset, presetStringArray());
@@ -703,42 +668,31 @@ public class NewGame extends OptionActivity
         Intent mainActivityIntent = new Intent(this, GameActivity.class);
         mStop = false;
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSnackBar.dismiss();
-            }
-        };
-
         //snackbar must have 2 or more players
 
-        if (mGame.size() < 2) {
+        if (game.size() < 2) {
 
-            mSnackBar = Snackbar.make(mRelativeLayout, R.string.more_than_two_players, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackBar.show();
+            createSnackbar(relativeLayout, getString(R.string.more_than_two_players));
 
         } else {
 
-            if (mDataHelper.checkPlayerDuplicates(getPlayerArray())) {
+            if (dataHelper.checkPlayerDuplicates(getPlayerArray())) {
 
-                mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                        .setAction("Dismiss", onClickListener);
-                mSnackBar.show();
+                createSnackbar(relativeLayout, getString(R.string.duplicates_message));
 
             } else {
 
                 if (startGame) {
 
-                    int startingScore = mGame.getInt(Option.STARTING_SCORE);
+                    int startingScore = game.getInt(Option.STARTING_SCORE);
 
                     for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);
                     }
 
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
-                    mainActivityIntent.putExtra("GAME_ID", mGameID);
+                    mainActivityIntent.putExtra("GAME_ID", gameID);
                     startActivity(mainActivityIntent);
                     finish();
 
@@ -754,7 +708,7 @@ public class NewGame extends OptionActivity
 
         mPresetDBAdapter = new PresetDBAdapter(this);
         mPresetDBAdapter.open();
-        mPresetDBAdapter.createPreset(mGame);
+        mPresetDBAdapter.createPreset(game);
         mPresetDBAdapter.close();
 
     }
@@ -762,19 +716,19 @@ public class NewGame extends OptionActivity
     public void loadPreset(int position) {
 
         mPresetDBAdapter.open();
-        mGame = mDataHelper.getPreset(position, mPresetDBAdapter);
-        mGame.setmID(mGameID);
+        game = dataHelper.getPreset(position, mPresetDBAdapter);
+        game.setmID(gameID);
         mPresetDBAdapter.close();
 
         mEditTextPlayer.setText("");
-        mEditTextGameTitle.setText(mGame.getmTitle());
+        mEditTextGameTitle.setText(game.getmTitle());
 
         displayRecyclerView(false);
 
         loadOptions();
         setGameTime();
 
-        updateGameInDatabase();
+        saveGameToDatabase();
     }
 
     @Override

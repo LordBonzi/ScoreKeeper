@@ -69,7 +69,7 @@ public class EditGame extends ScoreKeeperTabActivity {
     }
 
     private void updateCompleteMenuItem(){
-        if (!mGame.ismCompleted()){
+        if (!game.ismCompleted()) {
             mMenuItemComplete.setTitle(R.string.complete);
         }else{
             mMenuItemComplete.setTitle(R.string.unfinish);
@@ -119,11 +119,11 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     public void completeGame(){
 
-        mGame.setmCompleted(!mGame.ismCompleted());
+        game.setmCompleted(!game.ismCompleted());
         updateCompleteMenuItem();
 
-        mDbHelper.open().updateGame(mGame);
-        mDbHelper.close();
+        gameDBAdapter.open().updateGame(game);
+        gameDBAdapter.close();
     }
 
     @Override
@@ -169,7 +169,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
         builder.setMessage(message);
 
-        builder.setPositiveButton(R.string.okay, mDismissDialogListener);
+        builder.setPositiveButton(R.string.okay, dismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -199,12 +199,12 @@ public class EditGame extends ScoreKeeperTabActivity {
             e.setData(getEditText(e).getText().toString());
         }
 
-        final String newLength = mGame.getmLength();
+        final String newLength = game.getmLength();
 
         final boolean booleanLength;
 
         if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
-            mGame.setChecked(Option.STOPWATCH, true);
+            game.setChecked(Option.STOPWATCH, true);
             booleanLength = true;
 
         }else if (newLength.length() == 0|| newLength.equals("")){
@@ -216,10 +216,10 @@ public class EditGame extends ScoreKeeperTabActivity {
             booleanLength = false;
         }
 
-        final boolean bDateAndTime = checkValidity(mGame.getmTime(), mDateTimeFormat, 19);
+        final boolean bDateAndTime = checkValidity(game.getmTime(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(getPlayerArray());
-        final boolean bNumPlayers = mGame.size() >= 2;
+        final boolean bCheckDuplicates = dataHelper.checkPlayerDuplicates(getPlayerArray());
+        final boolean bNumPlayers = game.size() >= 2;
 
         AlertDialog dialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -256,7 +256,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 }else{
 
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
                     mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);
@@ -274,7 +274,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -308,7 +308,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
 
-        mGame = mDataHelper.getGame(mGameID, mDbHelper);
+        game = dataHelper.getGame(gameID, gameDBAdapter);
 
         loadOptions();
         populateSetGridView();
@@ -330,18 +330,18 @@ public class EditGame extends ScoreKeeperTabActivity {
             public void onClick(DialogInterface dialog, int id) {
                 deleteGame();
 
-                if (mDbHelper.open().numRows() == 0) {
-                    startActivity(mHomeIntent);
+                if (gameDBAdapter.open().numRows() == 0) {
+                    startActivity(homeIntent);
                 } else {
-                    startActivity(mHistoryIntent);
+                    startActivity(historyIntent);
                 }
 
-                mDbHelper.close();
+                gameDBAdapter.close();
 
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         dialog = builder.create();
         dialog.show();
@@ -356,12 +356,12 @@ public class EditGame extends ScoreKeeperTabActivity {
     public void chooseTab(int layout) {
         if (layout == OPTIONS_LAYOUT) {
             mEditGameContent.setVisibility(VISIBLE);
-            mSetGridView.setVisibility(INVISIBLE);
+            setGridView.setVisibility(INVISIBLE);
 
 
         } else {
             mEditGameContent.setVisibility(INVISIBLE);
-            mSetGridView.setVisibility(View.VISIBLE);
+            setGridView.setVisibility(View.VISIBLE);
 
         }
     }

@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 
 import io.github.sdsstudios.ScoreKeeper.About;
 import io.github.sdsstudios.ScoreKeeper.Adapters.GameDBAdapter;
@@ -37,21 +38,20 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     public static String TAG;
     public static Activity CURRENT_ACTIVITY;
 
-    public Game mGame;
+    public Game game;
 
-    public GameDBAdapter mDbHelper;
-    public DataHelper mDataHelper = new DataHelper();
-    public TimeHelper mTimeHelper = new TimeHelper();
+    public GameDBAdapter gameDBAdapter;
+    public DataHelper dataHelper = new DataHelper();
+    public TimeHelper timeHelper = new TimeHelper();
 
-    public AlertDialog mAlertDialog;
-    public Snackbar mSnackBar;
-    public int mAccentColor, mPrimaryColor;
+    public AlertDialog alertDialog;
+    public int accentColor, primaryColor;
 
-    public SharedPreferences mSharedPreferences;
+    public SharedPreferences sharedPreferences;
 
-    public Intent mNewGameIntent, mSettingsIntent, mAboutIntent, mHistoryIntent, mPlayersIntent, mHomeIntent;
+    public Intent newGameIntent, settingsIntent, aboutIntent, historyIntent, playersIntent, homeIntent;
 
-    public DialogInterface.OnClickListener mDismissDialogListener = new DialogInterface.OnClickListener() {
+    public DialogInterface.OnClickListener dismissDialogListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
@@ -65,19 +65,19 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         CURRENT_ACTIVITY = getActivity();
         TAG = getLocalClassName();
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mAccentColor = mSharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
-        mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
+        accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
+        primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
 
-        mDbHelper = new GameDBAdapter(this);
+        gameDBAdapter = new GameDBAdapter(this);
 
-        mNewGameIntent = new Intent(this, NewGame.class);
-        mHomeIntent = new Intent(this, Home.class);
-        mAboutIntent = new Intent(this, About.class);
-        mSettingsIntent = new Intent(this, Settings.class);
-        mHistoryIntent = new Intent(this, History.class);
-        mPlayersIntent = new Intent(this, PlayersActivity.class);
+        newGameIntent = new Intent(this, NewGame.class);
+        homeIntent = new Intent(this, Home.class);
+        aboutIntent = new Intent(this, About.class);
+        settingsIntent = new Intent(this, Settings.class);
+        historyIntent = new Intent(this, History.class);
+        playersIntent = new Intent(this, PlayersActivity.class);
     }
 
     public void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
@@ -98,15 +98,31 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         v.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
     }
 
-    public void updateGameInDatabase() {
+    public void saveGameToDatabase() {
         if (CURRENT_ACTIVITY != EDIT_GAME) {
-            mDbHelper.open().updateGame(mGame);
-            mDbHelper.close();
+            gameDBAdapter.open().updateGame(game);
+            gameDBAdapter.close();
         }
     }
 
     public int getOrientation() {
         return getResources().getConfiguration().orientation;
+    }
+
+    public View.OnClickListener dismissSnackBarListener(final Snackbar snackbar) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        };
+    }
+
+    public void createSnackbar(RelativeLayout layout, String message) {
+        Snackbar snackbar = Snackbar.make(layout, message, Snackbar.LENGTH_SHORT);
+        snackbar.setAction("Dismiss", dismissSnackBarListener(snackbar));
+        snackbar.show();
+
     }
 
 }

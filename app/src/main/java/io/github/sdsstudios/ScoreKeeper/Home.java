@@ -52,7 +52,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
+        mReviewLaterBool = sharedPreferences.getBoolean("reviewlater", true);
 
         Themes.themeActivity(this, R.layout.activity_home, false);
 
@@ -69,16 +69,16 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         NavigationView navigationView = (NavigationView) findViewById(R.id.home_nav_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (mSharedPreferences.getBoolean("prefReceiveNotifications", true)){
+        if (sharedPreferences.getBoolean("prefReceiveNotifications", true)) {
             FirebaseMessaging.getInstance().subscribeToTopic("news");
         }else{
             FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
         }
 
-        mNumRows = mDbHelper.open().numRows();
-        mDbHelper.close();
+        mNumRows = gameDBAdapter.open().numRows();
+        gameDBAdapter.close();
 
-        mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
+        mLastPlayedGame = sharedPreferences.getInt("lastplayedgame", gameDBAdapter.open().getNewestGame());
 
         RelativeLayout relativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
@@ -87,14 +87,14 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         mRecyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
 
         TextView textViewNumGames = (TextView) findViewById(R.id.textViewNumGamesPlayed);
-        textViewNumGames.setText(String.valueOf(mDbHelper.numRows()));
+        textViewNumGames.setText(String.valueOf(gameDBAdapter.numRows()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(mNewGameIntent);
+                startActivity(newGameIntent);
             }
         });
 
@@ -159,7 +159,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         try {
 
             for (int i = 1; i <= mNumRows; i++) {
-                if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
+                if (!dataHelper.getGame(i, gameDBAdapter.open()).ismCompleted()) {
                     unfinishedGames = true;
                     break;
                 }
@@ -171,7 +171,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             Toast.makeText(this, "Error running anyUnfinishedGames() method", Toast.LENGTH_SHORT).show();
         }
 
-        mDbHelper.close();
+        gameDBAdapter.close();
         return unfinishedGames;
     }
 
@@ -221,7 +221,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
                 startActivity(browserIntent);
                 mReviewLaterBool = false;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
             }
@@ -231,7 +231,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mReviewLaterBool = true;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
                 dialogInterface.dismiss();
@@ -242,7 +242,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
                 mReviewLaterBool = false;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("reviewlater", mReviewLaterBool);
                 editor.apply();
                 dialog.dismiss();
@@ -256,7 +256,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
     private synchronized void displayRecyclerView() {
 
-        mDbHelper.open();
+        gameDBAdapter.open();
 
         try {
 
@@ -266,7 +266,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(gameDBAdapter, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
                         , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME);
 
                 mRecyclerView.setAdapter(historyAdapter);
@@ -274,7 +274,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);
             }
-            mDbHelper.close();
+            gameDBAdapter.close();
 
         }catch (Exception e){
 
@@ -287,13 +287,13 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     @Override
     protected void onResume() {
         super.onResume();
-        mDbHelper.open();
+        gameDBAdapter.open();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
     @Override
@@ -334,8 +334,8 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         switch(id){
             case R.id.nav_history:
 
-                if (mDbHelper.open().numRows() > 0) {
-                    startActivity(mHistoryIntent);
+                if (gameDBAdapter.open().numRows() > 0) {
+                    startActivity(historyIntent);
                 } else {
                     Toast.makeText(this, R.string.no_games, Toast.LENGTH_SHORT).show();
                 }
@@ -347,11 +347,11 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 break;
 
             case R.id.nav_settings:
-                startActivity(mSettingsIntent);
+                startActivity(settingsIntent);
                 break;
 
             case R.id.nav_about:
-                startActivity(mAboutIntent);
+                startActivity(aboutIntent);
                 break;
 
             case R.id.nav_rate_review:

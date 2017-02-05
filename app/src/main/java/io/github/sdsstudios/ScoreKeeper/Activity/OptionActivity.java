@@ -52,13 +52,13 @@ import static io.github.sdsstudios.ScoreKeeper.Options.Option.WINNING_SCORE;
 
 public abstract class OptionActivity extends ScoreKeeperActivity implements PlayerListAdapter.PlayerListAdapterListener {
 
-    public static final String STATE_GAMEID = "mGameID";
+    public static final String STATE_GAMEID = "gameID";
 
-    public PlayerListAdapter mPlayerListAdapter;
-    public RelativeLayout mRelativeLayout;
-    public int mGameID;
-    public RecyclerView mPlayerRecyclerView;
-    public RecyclerView.LayoutManager mLayoutManager;
+    public PlayerListAdapter playerListAdapter;
+    public RelativeLayout relativeLayout;
+    public int gameID;
+    public RecyclerView playerRecyclerView;
+    public RecyclerView.LayoutManager layoutManager;
     private NestedScrollView mScrollView;
 
     @Override
@@ -77,9 +77,9 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             adCreator.createAd();
 
             mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
-            mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
+            playerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
-            mDbHelper.open();
+            gameDBAdapter.open();
 
             if (CURRENT_ACTIVITY == EDIT_GAME) {
 
@@ -87,32 +87,32 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 AdCreator adCreator2 = new AdCreator(mAdView2, this);
                 adCreator2.createAd();
 
-                mRelativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
+                relativeLayout = (RelativeLayout) findViewById(R.id.layoutEditGame);
 
                 Bundle extras = getIntent().getExtras();
 
-                mGameID = extras.getInt("GAME_ID");
+                gameID = extras.getInt("GAME_ID");
 
-                mGame = mDataHelper.getGame(mGameID, mDbHelper);
+                game = dataHelper.getGame(gameID, gameDBAdapter);
 
             } else {
 
-                mRelativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
+                relativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
             }
 
         }
     }
 
     public List<CheckBoxOption> CheckBoxOptions() {
-        return mGame.getmCheckBoxOptions();
+        return game.getmCheckBoxOptions();
     }
 
     public List<IntEditTextOption> IntEditTextOptions() {
-        return mGame.getmIntEditTextOptions();
+        return game.getmIntEditTextOptions();
     }
 
     public List<StringEditTextOption> StringEditTextOptions() {
-        return mGame.getmStringEditTextOptions();
+        return game.getmStringEditTextOptions();
     }
 
 
@@ -139,7 +139,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     c.setData(b);
-                    mDbHelper.open().updateGame(mGame);
+                    saveGameToDatabase();
 
                 }
             });
@@ -174,7 +174,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    mDbHelper.open().updateGame(mGame);
+                    saveGameToDatabase();
 
                 }
             });
@@ -184,26 +184,26 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     public void invalidSnackbar(String message) {
         Snackbar snackbar;
 
-        snackbar = Snackbar.make(mRelativeLayout, message, Snackbar.LENGTH_SHORT);
+        snackbar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mDbHelper.open();
+        gameDBAdapter.open();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
     public CheckBox getCheckBox(CheckBoxOption checkBoxOption) {
@@ -290,21 +290,21 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     }
 
     public void displayRecyclerView(boolean editable) {
-        mPlayerRecyclerView.setVisibility(View.VISIBLE);
-        mLayoutManager = new LinearLayoutManager(this);
-        mPlayerRecyclerView.setLayoutManager(mLayoutManager);
-        mPlayerListAdapter = new PlayerListAdapter(editable, mRelativeLayout, this);
-        mPlayerRecyclerView.setAdapter(mPlayerListAdapter);
+        playerRecyclerView.setVisibility(View.VISIBLE);
+        layoutManager = new LinearLayoutManager(this);
+        playerRecyclerView.setLayoutManager(layoutManager);
+        playerListAdapter = new PlayerListAdapter(editable, relativeLayout, this);
+        playerRecyclerView.setAdapter(playerListAdapter);
     }
 
     public void setGameTime() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
-        mGame.setmTime(sdfDate.format(now));
+        game.setmTime(sdfDate.format(now));
     }
 
     public void deleteEmptyPlayers() {
-        List<Player> playerArray = mGame.getmPlayerArray();
+        List<Player> playerArray = game.getmPlayerArray();
 
         for (int i = 0; i < playerArray.size(); i++) {
             if (playerArray.get(i).getmName().equals("")
@@ -314,7 +314,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             }
         }
 
-        mGame.setmPlayerArray(playerArray);
+        game.setmPlayerArray(playerArray);
 
     }
 
@@ -346,8 +346,9 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
         if (CURRENT_ACTIVITY == EDIT_GAME) {
             for (EditTextOption e : StringEditTextOptions()) {
-                getEditText(e).setHint(e.getString());
-                getEditText(e).setEnabled(false);
+                EditText editText = getEditText(e);
+                editText.setHint(e.getString());
+                editText.setEnabled(false);
             }
         }
     }
@@ -355,68 +356,56 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     /**
      * OnPlayerChangeListener
      **/
+
     @Override
     public void onPlayerChange(Player player, int position) {
-        mGame.setPlayer(player, position);
-        updateGameInDatabase();
+        game.setPlayer(player, position);
+        saveGameToDatabase();
 
     }
 
     public void deleteGame() {
-        mDbHelper.open().deleteGame(mGameID);
-        mDbHelper.close();
+        gameDBAdapter.open().deleteGame(gameID);
+        gameDBAdapter.close();
+    }
+
+    public boolean validPlayer(Player player) {
+        boolean areDuplicatePlayers = dataHelper.checkPlayerDuplicates(game.getmPlayerArray());
+        String playerName = player.getmName();
+
+        if (areDuplicatePlayers) {
+            createSnackbar(relativeLayout, getString(R.string.duplicates_message));
+            return false;
+
+        }
+
+        if (playerName.equals("") || playerName.equals(" ")) {
+            createSnackbar(relativeLayout, getString(R.string.must_have_name));
+            return false;
+
+        } else return !areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ");
     }
 
     @Override
     public void addPlayerToGame(Player player, int position) {
 
-        mGame.addPlayerAtPosition(player, position);
+        game.addPlayerAtPosition(player, position);
 
-        boolean areDuplicatePlayers = mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray());
-        String playerName = player.getmName();
-
-        if (areDuplicatePlayers) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackBar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(position);
-
-            mSnackBar = Snackbar.make(mRelativeLayout, R.string.duplicates_message, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackBar.show();
-        }
-
-        if (playerName.equals("") || playerName.equals(" ")) {
-            View.OnClickListener onClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mSnackBar.dismiss();
-                }
-            };
-
-            mGame.removePlayer(position);
-
-            mSnackBar = Snackbar.make(mRelativeLayout, R.string.must_have_name, Snackbar.LENGTH_SHORT)
-                    .setAction("Dismiss", onClickListener);
-            mSnackBar.show();
-
-        } else if (!areDuplicatePlayers && !playerName.equals("") && !playerName.equals(" ")) {
-            updateGameInDatabase();
+        if (validPlayer(player)) {
+            saveGameToDatabase();
+        } else {
+            game.removePlayer(position);
         }
 
     }
 
     @Override
     public List<Player> getPlayerArray() {
-        return mGame.getmPlayerArray();
+        return game.getmPlayerArray();
     }
 
     @Override
     public void onPlayerRemove(int position) {
-        mGame.removePlayer(position);
+        game.removePlayer(position);
     }
 }

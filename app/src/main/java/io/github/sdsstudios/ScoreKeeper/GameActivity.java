@@ -57,7 +57,8 @@ public class GameActivity extends ScoreKeeperTabActivity
         , GameListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener, ViewPager.OnPageChangeListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
-    public static int GAME_ID;
+    private static int GAME_ID;
+
     private final int PLAYER_1 = 0;
     private final int PLAYER_2 = 1;
     private final int STOPWATCH_DELAY = 300;
@@ -93,8 +94,8 @@ public class GameActivity extends ScoreKeeperTabActivity
         Bundle extras = getIntent().getExtras();
         GAME_ID = extras.getInt("GAME_ID");
 
-        mGame = mDataHelper.getGame(GAME_ID, mDbHelper);
-        mGame.setGameListener(this);
+        game = dataHelper.getGame(GAME_ID, gameDBAdapter);
+        game.setGameListener(this);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
 
@@ -106,13 +107,13 @@ public class GameActivity extends ScoreKeeperTabActivity
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
         Date now = new Date();
         String time = sdfDate.format(now);
-        mGame.setmTime(time);
+        game.setmTime(time);
 
         if (savedInstanceState != null) {
             GAME_ID = savedInstanceState.getInt(STATE_GAMEID);
         }
 
-        updateGameInDatabase();
+        saveGameToDatabase();
         getTheme().resolveAttribute(android.R.attr.textColorSecondary, mTypedValue, true);
 
         mPausedRunnable = new Runnable() {
@@ -143,7 +144,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 showStopwatch(VISIBLE);
             }
 
-            mSetGridView.setVisibility(INVISIBLE);
+            setGridView.setVisibility(INVISIBLE);
         } else {
             showPlayerLayout(INVISIBLE);
 
@@ -151,10 +152,10 @@ public class GameActivity extends ScoreKeeperTabActivity
                 showStopwatch(INVISIBLE);
             }
 
-            mSetGridView.setVisibility(View.VISIBLE);
+            setGridView.setVisibility(View.VISIBLE);
         }
 
-        mTabLayout.getTabAt(layout).select();
+        tabLayout.getTabAt(layout).select();
 
     }
 
@@ -164,23 +165,23 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private boolean TWO_PLAYER_GAME() {
-        return mGame.size() == 2;
+        return game.size() == 2;
     }
 
     private void createButtonsPlayerList() {
         if (TWO_PLAYER_GAME()) {
-            mButtonsPlayerList = ButtonPlayer.createButtonPlayerList(mGame, this, this);
+            mButtonsPlayerList = ButtonPlayer.createButtonPlayerList(game, this, this);
             mButtonsPlayerList.get(0).getmButton().getViewTreeObserver().addOnGlobalLayoutListener(this);
         }
     }
 
     private void loadGame() {
 
-        int mScoreDiffToWin = mGame.getInt(Option.SCORE_DIFF_TO_WIN);
-        mScoreInterval = mGame.getInt(Option.SCORE_INTERVAL);
-        mStartingScore = mGame.getInt(Option.STARTING_SCORE);
-        mMaxNumDice = mGame.getInt(Option.DICE_MAX);
-        mMinNumDice = mGame.getInt(Option.DICE_MIN);
+        int mScoreDiffToWin = game.getInt(Option.SCORE_DIFF_TO_WIN);
+        mScoreInterval = game.getInt(Option.SCORE_INTERVAL);
+        mStartingScore = game.getInt(Option.STARTING_SCORE);
+        mMaxNumDice = game.getInt(Option.DICE_MAX);
+        mMinNumDice = game.getInt(Option.DICE_MIN);
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
@@ -190,7 +191,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             mScoreDiffToWin = 1;
         }
 
-        mHomeIntent = new Intent(this, Home.class);
+        homeIntent = new Intent(this, Home.class);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mMainContent = (RelativeLayout) findViewById(R.id.activity_main_content);
@@ -210,12 +211,12 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         mStopwatch.setOnChronometerTickListener(this);
 
-        mGame.setGameListener(this);
-        mGame.isGameWon();
+        game.setGameListener(this);
+        game.isGameWon();
 
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        if (!mSharedPreferences.getBoolean("completed_tutorial", false)) {
+        if (!sharedPreferences.getBoolean("completed_tutorial", false)) {
             new MaterialShowcaseView.Builder(this)
                     .setTarget(findViewById(R.id.buttonP1))
                     .setDismissText("GOT IT")
@@ -235,7 +236,7 @@ public class GameActivity extends ScoreKeeperTabActivity
     private boolean timeLimitReached() {
         boolean b = false;
 
-        if (mGame.getmTimeLimit() != null) {
+        if (game.getmTimeLimit() != null) {
 
             if (mStopwatch.getText().equals(mTimeLimit)) {
 
@@ -243,7 +244,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     timeLimitDialog();
                 }
 
-                mGame.setmCompleted(true);
+                game.setmCompleted(true);
                 mFinished = true;
                 b = true;
 
@@ -260,16 +261,16 @@ public class GameActivity extends ScoreKeeperTabActivity
         chronometerClick();
 
         saveStopwatchTime();
-        updateGameInDatabase();
+        saveGameToDatabase();
     }
 
     public void displayRecyclerView(boolean enabled) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mPlayerRecyclerView.setLayoutManager(mLayoutManager);
-        RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(mGame, enabled, this);
+        RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(game, enabled, this);
         mPlayerRecyclerView.setAdapter(bigGameAdapter);
 
-        mGame.updatePlayerColors();
+        game.updatePlayerColors();
 
     }
 
@@ -332,23 +333,23 @@ public class GameActivity extends ScoreKeeperTabActivity
         dialogBuilder.setMessage(R.string.time_limit_question);
         dialogBuilder.setPositiveButton(R.string.done, null);
 
-        dialogBuilder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        dialogBuilder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         dialogBuilder.setView(mDialogView);
-        mAlertDialog = dialogBuilder.create();
-        mAlertDialog.setOnShowListener(this);
+        alertDialog = dialogBuilder.create();
+        alertDialog.setOnShowListener(this);
 
-        mAlertDialog.show();
+        alertDialog.show();
     }
 
     private void resetGame() {
-        mGame.reset();
+        game.reset();
 
         /** if the user resets the game after it has completed, unlock the buttons **/
         mFinished = false;
 
         saveStopwatchTime();
-        updateGameInDatabase();
+        saveGameToDatabase();
         chooseTab(GAME_LAYOUT);
 
         mStopwatch.setBase(SystemClock.elapsedRealtime());
@@ -384,7 +385,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
 
-            builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+            builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
             dialog = builder.create();
             dialog.show();
@@ -434,11 +435,11 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         pauseStopwatch();
 
-        updateGameInDatabase();
+        saveGameToDatabase();
     }
 
     private void chronometerClick() {
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (game.isChecked(Option.STOPWATCH)) {
             if (!mPaused) {
                 mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
                 mStopwatch.start();
@@ -476,7 +477,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             View fullScreenTabs = null;
-            int oldSelectedTab = mTabLayout.getSelectedTabPosition();
+            int oldSelectedTab = tabLayout.getSelectedTabPosition();
 
             if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                 fullScreenTabs = findViewById(R.id.tabs_fullscreen);
@@ -489,7 +490,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                         CoordinatorLayout.LayoutParams.WRAP_CONTENT
                 );
 
-                params.setMargins(0, mTabLayout.getHeight(), 0, 0);
+                params.setMargins(0, tabLayout.getHeight(), 0, 0);
 
                 mCoordinatorLayout.setFitsSystemWindows(false);
 
@@ -500,7 +501,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 /** use tabs which arent nested in toolbar when full screen. the toolbar will be hidden **/
                 if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                     fullScreenTabs.setVisibility(VISIBLE);
-                    mTabLayout = (TabLayout) fullScreenTabs;
+                    tabLayout = (TabLayout) fullScreenTabs;
                     loadTabs();
                 }
 
@@ -510,7 +511,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                 if (getOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
                     fullScreenTabs.setVisibility(GONE);
-                    mTabLayout = (TabLayout) findViewById(R.id.tabs);
+                    tabLayout = (TabLayout) findViewById(R.id.tabs);
                     loadTabs();
                 }
 
@@ -524,11 +525,11 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                 getSupportActionBar().show();
 
-                mTabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+                tabLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             }
 
-            /** choose correct tab after changing which view is mTabLayout **/
+            /** choose correct tab after changing which view is tabLayout **/
             chooseTab(oldSelectedTab);
         }
     }
@@ -573,10 +574,10 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     saveStopwatchTime();
 
-                    mGame.setmCompleted(false);
-                    updateGameInDatabase();
+                    game.setmCompleted(false);
+                    saveGameToDatabase();
 
-                    startActivity(mHomeIntent);
+                    startActivity(homeIntent);
 
                 }
             });
@@ -586,15 +587,15 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     saveStopwatchTime();
 
-                    mGame.setmCompleted(true);
+                    game.setmCompleted(true);
 
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
-                    startActivity(mHomeIntent);
+                    startActivity(homeIntent);
                 }
             });
 
-            builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+            builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
             dialog = builder.create();
 
@@ -619,7 +620,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         AlertDialog dialog;
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        if (mGame.numSetsPlayed() == mGame.numSets()) {
+        if (game.numSetsPlayed() == game.numSets()) {
 
             builder.setTitle(winner + " " + getString(R.string.has_won) + " overall");
 
@@ -637,15 +638,15 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
-        if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
+        if (game.numSets() > 1 && game.numSetsPlayed() < game.numSets()) {
 
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int id) {
 
-                    mGame.startNewSet();
+                    game.startNewSet();
 
                     mFinished = false;
                     mPaused = false;
@@ -653,7 +654,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     chronometerClick();
                     enablePlayerButtons(true);
                     mWon = false;
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
                     if (TWO_PLAYER_GAME()) {
 
@@ -675,8 +676,8 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     saveStopwatchTime();
 
-                    updateGameInDatabase();
-                    startActivity(mHomeIntent);
+                    saveGameToDatabase();
+                    startActivity(homeIntent);
                 }
             });
 
@@ -687,11 +688,11 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     saveStopwatchTime();
 
-                    mGame.setmCompleted(true);
+                    game.setmCompleted(true);
 
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
-                    startActivity(mHomeIntent);
+                    startActivity(homeIntent);
                 }
             });
         }
@@ -709,14 +710,14 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void saveStopwatchTime() {
-        if (mGame.isChecked(Option.STOPWATCH)) {
-            mGame.setmLength(mStopwatch.getText().toString());
+        if (game.isChecked(Option.STOPWATCH)) {
+            game.setmLength(mStopwatch.getText().toString());
         }
     }
 
     @Override
     public void onShow(final DialogInterface dialogInterface) {
-        Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         b.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -726,27 +727,27 @@ public class GameActivity extends ScoreKeeperTabActivity
                 if (checkBoxExtend.isChecked()) {
                     try {
 
-                        String timeLimitString = TimeLimit.updateTimeLimit(mDialogView, mGame.getmTimeLimit().getmTime());
+                        String timeLimitString = TimeLimit.updateTimeLimit(mDialogView, game.getmTimeLimit().getmTime());
 
                         if (timeLimitString != null) {
 
                             if (!timeLimitString.equals("00:00:00:0")) {
 
-                                mGame.setmTimeLimit(new TimeLimit(mDataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
-                                updateGameInDatabase();
+                                game.setmTimeLimit(new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
+                                saveGameToDatabase();
 
                                 mTimeLimit = timeLimitString;
 
                                 timeLimitReached();
                                 enablePlayerButtons(true);
                                 displayRecyclerView(true);
-                                mAlertDialog.dismiss();
+                                alertDialog.dismiss();
                                 mCardViewStopwatch.setEnabled(true);
                                 mFinished = false;
 
                             } else {
                                 mFinished = true;
-                                mAlertDialog.dismiss();
+                                alertDialog.dismiss();
                             }
                         }
 
@@ -757,14 +758,14 @@ public class GameActivity extends ScoreKeeperTabActivity
                     }
 
                 } else {
-                    mGame.setmCompleted(true);
-                    startActivity(mHomeIntent);
+                    game.setmCompleted(true);
+                    startActivity(homeIntent);
 
                 }
             }
         });
 
-        updateGameInDatabase();
+        saveGameToDatabase();
     }
 
     @Override
@@ -776,8 +777,8 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (mButtonsPlayerList.size() == 0) {
             createButtonsPlayerList();
         } else {
-            for (int i = 0; i < mGame.size(); i++) {
-                mButtonsPlayerList.get(i).reload(mGame.getPlayer(i));
+            for (int i = 0; i < game.size(); i++) {
+                mButtonsPlayerList.get(i).reload(game.getPlayer(i));
             }
         }
     }
@@ -812,24 +813,24 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public void onScoreClick(int playerIndex) {
-        mGame.onPlayerClick(playerIndex);
-        mGame.isGameWon();
+        game.onPlayerClick(playerIndex);
+        game.isGameWon();
     }
 
     @Override
     public void onScoreLongClick(int playerIndex) {
-        mGame.onPlayerLongClick(playerIndex);
-        mGame.isGameWon();
+        game.onPlayerLongClick(playerIndex);
+        game.isGameWon();
     }
 
     @Override
     public void editPlayer(int position) {
-        playerDialog(mGame.getPlayer(position), position, Dialog.EDIT_PLAYER, 0);
+        playerDialog(game.getPlayer(position), position, Dialog.EDIT_PLAYER, 0);
     }
 
     private void showStopwatch(int visible) {
         if (visible == VISIBLE) {
-            if (mGame.isChecked(Option.STOPWATCH)) {
+            if (game.isChecked(Option.STOPWATCH)) {
                 mCardViewStopwatch.setVisibility(visible);
             }
         } else {
@@ -871,23 +872,23 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         mCardViewStopwatch.setOnClickListener(this);
 
-        if (mGame.isChecked(Option.STOPWATCH)) {
+        if (game.isChecked(Option.STOPWATCH)) {
 
             try {
 
-                if (mGame.getmTimeLimit() != null) {
-                    mTimeLimit = mGame.getmTimeLimit().getmTime();
+                if (game.getmTimeLimit() != null) {
+                    mTimeLimit = game.getmTimeLimit().getmTime();
                 }
 
-                if (mGame.getmLength() == null || mGame.getmLength().equals("") && mGame.isChecked(Option.STOPWATCH)) {
-                    mGame.setmLength("00:00:00:0");
+                if (game.getmLength() == null || game.getmLength().equals("") && game.isChecked(Option.STOPWATCH)) {
+                    game.setmLength("00:00:00:0");
 
                 } else if (mTimeWhenStopped != 0L) {
                     /** when coming back from the app running in the background treat it as unpausing the mStopwatch **/
                     mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
 
                 } else {
-                    mStopwatch.setBase((-(3600000 + mTimeHelper.convertToLong(mGame.getmLength()) - SystemClock.elapsedRealtime())));
+                    mStopwatch.setBase((-(3600000 + timeHelper.convertToLong(game.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
                 timeLimitReached();
@@ -897,7 +898,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     mStopwatch.setTextColor(getResources().getColor(R.color.start));
                 }
 
-                updateGameInDatabase();
+                saveGameToDatabase();
 
             } catch (Exception e) {
                 e.printStackTrace();

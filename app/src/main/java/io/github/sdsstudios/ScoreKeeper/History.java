@@ -35,7 +35,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"
+        mPrimaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));
 
         Themes.themeActivity(this, R.layout.activity_recyclerview, true);
@@ -81,14 +81,14 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
     @Override
     protected void onResume() {
         super.onResume();
-        mDbHelper.open();
+        gameDBAdapter.open();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
     @Override
@@ -100,11 +100,11 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(mSettingsIntent);
+            startActivity(settingsIntent);
             return true;
         }
         if (id == R.id.action_about) {
-            startActivity(mAboutIntent);
+            startActivity(aboutIntent);
             return true;
         }
         if (id == R.id.action_unfinished) {
@@ -137,10 +137,10 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
     }
 
     public synchronized void displayRecyclerView() {
-        mDbHelper.open();
+        gameDBAdapter.open();
 
         try {
-            if (mDbHelper.numRows() != 0) {
+            if (gameDBAdapter.numRows() != 0) {
                 int gamesToShow = HistoryAdapter.BOTH;
 
                 if (menuItemCompleted.isChecked()) {
@@ -159,7 +159,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, Activity.HISTORY, gamesToShow)
+                mHistoryAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(gameDBAdapter, this, Activity.HISTORY, gamesToShow)
                         , this, this, Activity.HISTORY);
 
                 mRecyclerView.setAdapter(mHistoryAdapter);
@@ -174,7 +174,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
         }
 
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
 
@@ -221,8 +221,8 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
         }
 
         displayRecyclerView();
-        if (mDbHelper.open().numRows() == 0) {
-            mDbHelper.close();
+        if (gameDBAdapter.open().numRows() == 0) {
+            gameDBAdapter.close();
             Intent home = new Intent(this, Home.class);
             startActivity(home);
         }
@@ -235,7 +235,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
             toggleSelection(position, gameID);
         } else {
 
-            if (!mDataHelper.getGame(gameID, mDbHelper).ismCompleted()) {
+            if (!dataHelper.getGame(gameID, gameDBAdapter).ismCompleted()) {
 
                 AlertDialog dialog;
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -263,7 +263,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
                 });
 
-                builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
+                builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
                 dialog = builder.create();
                 dialog.show();
@@ -323,18 +323,18 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
             switch (item.getItemId()) {
                 case R.id.action_delete:
 
-                    mDbHelper.open();
-                    mHistoryAdapter.deleteSelectedGames(mDbHelper);
-                    mDbHelper.close();
+                    gameDBAdapter.open();
+                    mHistoryAdapter.deleteSelectedGames(gameDBAdapter);
+                    gameDBAdapter.close();
 
                     gamesDeleted();
                     mode.finish();
                     break;
 
                 case R.id.action_delete_all:
-                    mDbHelper.open();
-                    mDbHelper.deleteAllGames();
-                    mDbHelper.close();
+                    gameDBAdapter.open();
+                    gameDBAdapter.deleteAllGames();
+                    gameDBAdapter.close();
 
                     startActivity(new Intent(getBaseContext(), Home.class));
 

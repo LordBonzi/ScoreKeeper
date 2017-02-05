@@ -192,8 +192,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
     }
 
-    private void toggleSelection(int position, int gameID) {
-        mHistoryAdapter.toggleSelection(position, gameID);
+    private void updateActionModeCount() {
         int count = mHistoryAdapter.getSelectedItemCount();
 
         if (count == 0) {
@@ -208,6 +207,11 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
             }
 
         }
+    }
+
+    private void toggleSelection(int position, int gameID) {
+        mHistoryAdapter.toggleSelection(position, gameID);
+        updateActionModeCount();
     }
 
     @Override
@@ -345,6 +349,7 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
                     mHistoryAdapter.clearSelection();
                     mHistoryAdapter.selectAllItems();
+                    updateActionModeCount();
 
                     break;
 

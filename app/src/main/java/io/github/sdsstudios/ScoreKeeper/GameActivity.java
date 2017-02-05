@@ -243,6 +243,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                     timeLimitDialog();
                 }
 
+                mGame.setmCompleted(true);
                 mFinished = true;
                 b = true;
 
@@ -330,13 +331,8 @@ public class GameActivity extends ScoreKeeperTabActivity
         dialogBuilder.setTitle(R.string.time_limit_reached);
         dialogBuilder.setMessage(R.string.time_limit_question);
         dialogBuilder.setPositiveButton(R.string.done, null);
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         dialogBuilder.setView(mDialogView);
         mAlertDialog = dialogBuilder.create();
@@ -347,6 +343,9 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void resetGame() {
         mGame.reset();
+
+        /** if the user resets the game after it has completed, unlock the buttons **/
+        mFinished = false;
 
         saveStopwatchTime();
         updateGameInDatabase();
@@ -385,11 +384,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
 
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
             dialog = builder.create();
             dialog.show();
@@ -599,11 +594,7 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
 
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
             dialog = builder.create();
 
@@ -646,12 +637,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, mDismissDialogListener);
 
         if (mGame.numSets() > 1 && mGame.numSetsPlayed() < mGame.numSets()) {
 

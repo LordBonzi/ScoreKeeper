@@ -280,6 +280,7 @@ public class GameActivity extends ScoreKeeperTabActivity
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_reset).setVisible(true);
+        menu.findItem(R.id.action_notes).setVisible(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             menu.findItem(R.id.action_fullscreen).setVisible(true);
@@ -358,63 +359,59 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
+        switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
 
-        if (id == R.id.action_reset) {
-            pauseStopwatch();
+            case R.id.action_reset:
+                pauseStopwatch();
 
-            AlertDialog dialog;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setTitle(R.string.reset_game_question);
+                builder.setTitle(R.string.reset_game_question);
 
-            builder.setMessage(R.string.reset_game_message);
+                builder.setMessage(R.string.reset_game_message);
 
-            builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    resetGame();
+                builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        resetGame();
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, dismissDialogListener);
+
+                dialog = builder.create();
+                dialog.show();
+                break;
+
+            case R.id.action_fullscreen:
+                setFullScreen(true);
+                break;
+
+            case R.id.action_dice:
+                if (!mMenuItemDiceNum.isVisible()) {
+                    mMenuItemDiceNum.setVisible(true);
                 }
-            });
 
-            builder.setNegativeButton(R.string.cancel, dismissDialogListener);
+                int randomNum = mRandom.nextInt((mMaxNumDice - mMinNumDice) + 1) + mMinNumDice;
+                mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
+                break;
 
-            dialog = builder.create();
-            dialog.show();
+            case R.id.action_add:
+                if (!mFinished) {
+                    addPlayerDialog();
+                } else {
+                    Toast.makeText(this, "Game has completed, you can't add more players", Toast.LENGTH_SHORT).show();
+                }
+                break;
 
-            return true;
-        }
+            case R.id.action_notes:
 
-        if (id == R.id.action_fullscreen) {
-
-            setFullScreen(true);
-
-        }
-
-        if (id == R.id.action_dice) {
-
-            if (!mMenuItemDiceNum.isVisible()) {
-                mMenuItemDiceNum.setVisible(true);
-            }
-
-            int randomNum = mRandom.nextInt((mMaxNumDice - mMinNumDice) + 1) + mMinNumDice;
-            mMenuItemDiceNum.setTitle(String.valueOf(randomNum));
-        }
-
-        if (id == R.id.action_add) {
-            if (!mFinished) {
-                addPlayerDialog();
-            } else {
-                Toast.makeText(this, "Game has completed, you can't add more players", Toast.LENGTH_SHORT).show();
-            }
+                break;
         }
 
         return super.onOptionsItemSelected(item);

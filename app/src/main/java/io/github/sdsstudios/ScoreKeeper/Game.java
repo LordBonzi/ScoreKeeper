@@ -30,7 +30,6 @@ public class Game {
     private boolean mCompleted;
     private int mID;
     private int mNumSetsPlayed;
-    private int mScoreIntervalIndex;
 
     private List<IntEditTextOption> mIntEditTextOptions;
     private List<StringEditTextOption> mStringEditTextOptions;
@@ -112,6 +111,17 @@ public class Game {
         mPlayerArray.set(index, player);
     }
 
+    public StringEditTextOption getStringEditTextOption(String id) {
+        StringEditTextOption editTextOption = null;
+        for (StringEditTextOption e : mStringEditTextOptions) {
+            if (e.getmID().equals(id)) {
+                editTextOption = e;
+                break;
+            }
+        }
+        return editTextOption;
+    }
+
     public void setPlayerName(String name, int index){
         mPlayerArray.get(index).setmName(name);
     }
@@ -150,9 +160,6 @@ public class Game {
             if (e.getmID().equals(id)) {
                 data = Integer.valueOf(String.valueOf(e.getInt()));
                 break;
-            } else if (e.getmID() == Option.SCORE_INTERVAL) {
-                /** update score interval to quickly get scoreinterval when changing score **/
-                mScoreIntervalIndex = i;
             }
         }
 
@@ -176,7 +183,7 @@ public class Game {
     public void onPlayerClick(int playerIndex) {
         Player player = getPlayer(playerIndex);
 
-        player.playerClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+        player.playerClick(getInt(Option.SCORE_INTERVAL)
                 , isChecked(Option.REVERSE_SCORING));
 
 
@@ -186,7 +193,7 @@ public class Game {
     public void onPlayerLongClick(int playerIndex) {
         Player player = getPlayer(playerIndex);
 
-        player.playerLongClick(mIntEditTextOptions.get(mScoreIntervalIndex).getInt()
+        player.playerLongClick(getInt(Option.SCORE_INTERVAL)
                 , isChecked(Option.REVERSE_SCORING));
 
     }

@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -111,11 +110,10 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 ? player.getmSetScores().get(setPosition)
                 : player.getmScore();
 
-        final View dialogView;
 
-        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog alertDialog;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.edit_player_fragment, null);
+        final View dialogView = layoutInflater.inflate(R.layout.edit_player_fragment, null);
 
         final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
         final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);

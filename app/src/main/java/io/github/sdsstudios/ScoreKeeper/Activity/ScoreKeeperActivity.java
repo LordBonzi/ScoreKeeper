@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
@@ -42,7 +43,8 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
     public DataHelper dataHelper = new DataHelper();
     public TimeHelper timeHelper = new TimeHelper();
 
-    public AlertDialog alertDialog;
+    public LayoutInflater layoutInflater;
+
     public int accentColor, primaryColor;
 
     public SharedPreferences sharedPreferences;
@@ -76,6 +78,8 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         settingsIntent = new Intent(this, Settings.class);
         historyIntent = new Intent(this, History.class);
         playersIntent = new Intent(this, PlayersActivity.class);
+
+        layoutInflater = getLayoutInflater();
     }
 
     public void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener victim) {
@@ -100,6 +104,74 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         gameDBAdapter.open().updateGame(game);
         gameDBAdapter.close();
 
+    }
+
+    public AlertDialog showCustomAlertDialog(String title, String message,
+                                             String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
+                                             String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener, View layout) {
+
+        return createDialogBuilder(title, message, positiveButtonText, positiveButtonClickListener, negativeButtonText, negativeButtonClickListener)
+                .setView(layout).show();
+
+    }
+
+    public AlertDialog showCustomAlertDialog(String title, String message,
+                                             String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
+                                             String neutralButtonText, DialogInterface.OnClickListener neutralButtonClickListener,
+                                             String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener, View layout) {
+
+        return createDialogBuilder(title, message, positiveButtonText, positiveButtonClickListener, negativeButtonText, negativeButtonClickListener)
+                .setNeutralButton(neutralButtonText, neutralButtonClickListener).setView(layout).show();
+    }
+
+    public AlertDialog showAlertDialog(String title, String message,
+                                       String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
+                                       String neutralButtonText, DialogInterface.OnClickListener neutralButtonClickListener,
+                                       String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener) {
+
+        return createDialogBuilder(title, message, positiveButtonText, positiveButtonClickListener, negativeButtonText, negativeButtonClickListener)
+                .setNeutralButton(neutralButtonText, neutralButtonClickListener).show();
+    }
+
+    public AlertDialog showAlertDialog(String title, String message,
+                                       String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
+                                       String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener) {
+
+        return createDialogBuilder(title, message, positiveButtonText, positiveButtonClickListener, negativeButtonText, negativeButtonClickListener).show();
+    }
+
+    public AlertDialog.Builder createDialogBuilder(String title, String message,
+                                                   String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
+                                                   String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener) {
+
+        AlertDialog.Builder builder = createDialogBuilder(title, message);
+
+        if (positiveButtonText != null) {
+            builder.setPositiveButton(positiveButtonText, positiveButtonClickListener);
+        }
+        if (negativeButtonText != null) {
+            builder.setNegativeButton(negativeButtonText, negativeButtonClickListener);
+        }
+
+        return builder;
+    }
+
+    public AlertDialog.Builder createDialogBuilder(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        if (title != null) {
+            builder.setTitle(title);
+        }
+
+        if (message != null) {
+            builder.setMessage(message);
+        }
+
+        return builder;
+    }
+
+    public void showTextDialog(String title, String message, String positiveButtonText) {
+        createDialogBuilder(title, message).setPositiveButton(positiveButtonText, dismissDialogListener).create().show();
     }
 
     public int getOrientation() {

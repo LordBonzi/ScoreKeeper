@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -237,36 +236,24 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
 
             if (!dataHelper.getGame(gameID, gameDBAdapter).ismCompleted()) {
 
-                AlertDialog dialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                showAlertDialog(getString(R.string.carry_on), getString(R.string.continue_game_message), getString(R.string.carry_on), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                builder.setTitle(R.string.carry_on);
-
-                builder.setMessage(R.string.continue_game_message);
-
-                builder.setNeutralButton(R.string.edit, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(History.this, EditGame.class);
-                        intent.putExtra("GAME_ID", gameID);
-                        startActivity(intent);
-                    }
-                });
-
-                builder.setPositiveButton(R.string.carry_on, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        Intent intent = new Intent(History.this, GameActivity.class);
-                        intent.putExtra("GAME_ID", gameID);
-                        startActivity(intent);
-                    }
+                                Intent intent = new Intent(History.this, GameActivity.class);
+                                intent.putExtra("GAME_ID", gameID);
+                                startActivity(intent);
+                            }
 
 
-                });
+                        }, getString(R.string.edit)
+                        , new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(History.this, EditGame.class);
+                                intent.putExtra("GAME_ID", gameID);
+                                startActivity(intent);
+                            }
+                        }, getString(R.string.cancel), dismissDialogListener);
 
-                builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-                dialog = builder.create();
-                dialog.show();
 
             } else {
                 Intent intent = new Intent(this, EditGame.class);

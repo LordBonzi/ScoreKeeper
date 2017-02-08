@@ -56,7 +56,7 @@ import static android.view.View.VISIBLE;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class GameActivity extends ScoreKeeperTabActivity
-        implements View.OnClickListener, DialogInterface.OnShowListener, Stopwatch.OnChronometerTickListener
+        implements View.OnClickListener, Stopwatch.OnChronometerTickListener
         , GameListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener, ViewPager.OnPageChangeListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
@@ -121,6 +121,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         mPausedRunnable = new Runnable() {
             boolean red = false;
+
             @Override
             public void run() {
                 if (red) {
@@ -304,11 +305,10 @@ public class GameActivity extends ScoreKeeperTabActivity
     private void notesDialog() {
         pauseStopwatch();
 
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        mDialogView = inflater.inflate(R.layout.edit_text_fragment, null);
+        mDialogView = layoutInflater.inflate(R.layout.edit_text_fragment, null);
 
         final EditText editText = (EditText) mDialogView.findViewById(R.id.editText);
+
         editText.setText(game.getString(NOTES));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -327,12 +327,8 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
 
-        dialogBuilder.setTitle(R.string.notes);
-        dialogBuilder.setPositiveButton(R.string.done, null);
+        showCustomAlertDialog(getString(R.string.notes), null, getString(R.string.done), null, null, null, mDialogView);
 
-        dialogBuilder.setView(mDialogView);
-        alertDialog = dialogBuilder.create();
-        alertDialog.show();
     }
 
     private void timeLimitDialog() {
@@ -342,7 +338,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         pauseStopwatch();
 
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         mDialogView = inflater.inflate(R.layout.create_time_limit, null);
 
@@ -367,17 +362,57 @@ public class GameActivity extends ScoreKeeperTabActivity
             }
         });
 
-        dialogBuilder.setTitle(R.string.time_limit_reached);
-        dialogBuilder.setMessage(R.string.time_limit_question);
-        dialogBuilder.setPositiveButton(R.string.done, null);
+        DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final CheckBox checkBoxExtend = (CheckBox) mDialogView.findViewById(R.id.checkBoxExtend);
 
-        dialogBuilder.setNegativeButton(R.string.cancel, dismissDialogListener);
+                if (checkBoxExtend.isChecked()) {
+                    try {
 
-        dialogBuilder.setView(mDialogView);
-        alertDialog = dialogBuilder.create();
-        alertDialog.setOnShowListener(this);
+                        String timeLimitString = TimeLimit.updateTimeLimit(mDialogView, game.getmTimeLimit().getmTime());
 
-        alertDialog.show();
+                        if (timeLimitString != null) {
+
+                            if (!timeLimitString.equals("00:00:00:0")) {
+
+                                game.setmTimeLimit(new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
+                                saveGameToDatabase();
+
+                                mTimeLimit = timeLimitString;
+
+                                timeLimitReached();
+                                enablePlayerButtons(true);
+                                displayRecyclerView(true);
+                                dialog.dismiss();
+                                mCardViewStopwatch.setEnabled(true);
+                                mFinished = false;
+
+                            } else {
+                                mFinished = true;
+                                dialog.dismiss();
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_length, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                } else {
+                    game.setmCompleted(true);
+                    startActivity(homeIntent);
+
+                }
+            }
+        };
+
+        showCustomAlertDialog(getString(R.string.time_limit_reached), getString(R.string.time_limit_question)
+                , getString(R.string.done), positiveClickListener, getString(R.string.cancel), dismissDialogListener, mDialogView);
+
+        saveGameToDatabase();
+
     }
 
     private void resetGame() {
@@ -405,23 +440,13 @@ public class GameActivity extends ScoreKeeperTabActivity
             case R.id.action_reset:
                 pauseStopwatch();
 
-                AlertDialog dialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                showAlertDialog(getString(R.string.reset_game_question), getString(R.string.reset_game_message), getString(R.string.reset),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                resetGame();
+                            }
+                        }, getString(R.string.cancel), dismissDialogListener);
 
-                builder.setTitle(R.string.reset_game_question);
-
-                builder.setMessage(R.string.reset_game_message);
-
-                builder.setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        resetGame();
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-                dialog = builder.create();
-                dialog.show();
                 break;
 
             case R.id.action_fullscreen:
@@ -595,44 +620,32 @@ public class GameActivity extends ScoreKeeperTabActivity
             if (!mPaused) {
                 pauseStopwatch();
             }
-            AlertDialog dialog;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setTitle(R.string.quit_game);
+            showAlertDialog(getString(R.string.quit_game), getString(R.string.quit_game_message)
+                    , getString(R.string.complete_game), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-            builder.setMessage(R.string.quit_game_message);
+                            saveStopwatchTime();
 
-            builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+                            game.setmCompleted(true);
 
-                    saveStopwatchTime();
+                            saveGameToDatabase();
 
-                    game.setmCompleted(false);
-                    saveGameToDatabase();
+                            startActivity(homeIntent);
+                        }
+                    }, getString(R.string.complete_later), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                    startActivity(homeIntent);
+                            saveStopwatchTime();
 
-                }
-            });
+                            game.setmCompleted(false);
+                            saveGameToDatabase();
 
-            builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
+                            startActivity(homeIntent);
 
-                    saveStopwatchTime();
+                        }
+                    }, getString(R.string.cancel), dismissDialogListener);
 
-                    game.setmCompleted(true);
-
-                    saveGameToDatabase();
-
-                    startActivity(homeIntent);
-                }
-            });
-
-            builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-            dialog = builder.create();
-
-            dialog.show();
 
         } else if (mWon && !isFullScreen()) {
 
@@ -746,59 +759,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (game.isChecked(Option.STOPWATCH)) {
             game.setmLength(mStopwatch.getText().toString());
         }
-    }
-
-    @Override
-    public void onShow(final DialogInterface dialogInterface) {
-        Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        b.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                final CheckBox checkBoxExtend = (CheckBox) mDialogView.findViewById(R.id.checkBoxExtend);
-
-                if (checkBoxExtend.isChecked()) {
-                    try {
-
-                        String timeLimitString = TimeLimit.updateTimeLimit(mDialogView, game.getmTimeLimit().getmTime());
-
-                        if (timeLimitString != null) {
-
-                            if (!timeLimitString.equals("00:00:00:0")) {
-
-                                game.setmTimeLimit(new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
-                                saveGameToDatabase();
-
-                                mTimeLimit = timeLimitString;
-
-                                timeLimitReached();
-                                enablePlayerButtons(true);
-                                displayRecyclerView(true);
-                                alertDialog.dismiss();
-                                mCardViewStopwatch.setEnabled(true);
-                                mFinished = false;
-
-                            } else {
-                                mFinished = true;
-                                alertDialog.dismiss();
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast toast = Toast.makeText(getBaseContext(), R.string.invalid_length, Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-
-                } else {
-                    game.setmCompleted(true);
-                    startActivity(homeIntent);
-
-                }
-            }
-        });
-
-        saveGameToDatabase();
     }
 
     @Override

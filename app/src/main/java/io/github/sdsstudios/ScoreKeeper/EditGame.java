@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,8 +34,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
-    private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
-            , mMenuItemShare, mMenuItemComplete;
+    private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd, mMenuItemShare, mMenuItemComplete;
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
     private View mEditGameContent;
@@ -70,10 +68,10 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    private void updateCompleteMenuItem(){
+    private void updateCompleteMenuItem() {
         if (!game.ismCompleted()) {
             mMenuItemComplete.setTitle(R.string.complete);
-        }else{
+        } else {
             mMenuItemComplete.setTitle(R.string.unfinish);
         }
     }
@@ -101,7 +99,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
             mShareActionProvider.setShareIntent(shareIntent());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
@@ -132,7 +130,7 @@ public class EditGame extends ScoreKeeperTabActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
 
             case R.id.action_delete:
                 deleteGameDialog();
@@ -164,17 +162,7 @@ public class EditGame extends ScoreKeeperTabActivity {
     }
 
     private void helpDialog(String title, String message) {
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(title);
-
-        builder.setMessage(message);
-
-        builder.setPositiveButton(R.string.okay, dismissDialogListener);
-
-        dialog = builder.create();
-        dialog.show();
+        showTextDialog(title, message, getString(R.string.okay));
     }
 
     private void onMenuEditClick() {
@@ -201,16 +189,16 @@ public class EditGame extends ScoreKeeperTabActivity {
 
         final boolean booleanLength;
 
-        if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
+        if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0) {
             game.setChecked(Option.STOPWATCH, true);
             booleanLength = true;
 
-        }else if (newLength.length() == 0|| newLength.equals("")){
+        } else if (newLength.length() == 0 || newLength.equals("")) {
             booleanLength = false;
 
-        }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
+        } else if (checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0) {
             booleanLength = false;
-        }else{
+        } else {
             booleanLength = false;
         }
 
@@ -219,14 +207,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         final boolean bCheckDuplicates = dataHelper.checkPlayerDuplicates(getPlayerArray());
         final boolean bNumPlayers = game.size() >= 2;
 
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.edit_game_question);
-
-        builder.setMessage(R.string.are_you_sure_edit_game);
-
-        builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int id) {
 
@@ -236,11 +217,11 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                     createSnackbar(relativeLayout, "You can't have empty names!");
 
-                }else if (!bDateAndTime) {
+                } else if (!bDateAndTime) {
 
                     createSnackbar(relativeLayout, getString(R.string.invalid_date_and_time));
 
-                }else if (booleanLength) {
+                } else if (booleanLength) {
 
                     createSnackbar(relativeLayout, getString(R.string.invalid_length));
 
@@ -252,7 +233,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                     createSnackbar(relativeLayout, "Must have 2 or more players");
 
-                }else{
+                } else {
 
                     saveGameToDatabase();
 
@@ -270,12 +251,10 @@ public class EditGame extends ScoreKeeperTabActivity {
                 }
 
             }
-        });
+        };
+        showAlertDialog(getString(R.string.edit_game_question), getString(R.string.are_you_sure_edit_game), getString(R.string.title_activity_edit_game),
+                positiveClickListener, getString(R.string.cancel), dismissDialogListener);
 
-        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-        dialog = builder.create();
-        dialog.show();
 
     }
 
@@ -285,7 +264,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         try {
             Date dateDate = simpleDateFormat.parse(string);
 
-            if(string.length() == length) {
+            if (string.length() == length) {
                 validity = true;
             }
 
@@ -317,32 +296,22 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     private void deleteGameDialog() {
 
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        showAlertDialog(getString(R.string.delete_game), getString(R.string.delete_game_message), getString(R.string.delete)
+                , new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteGame();
 
-        builder.setTitle(R.string.delete_game);
+                        if (gameDBAdapter.open().numRows() == 0) {
+                            startActivity(homeIntent);
+                        } else {
+                            startActivity(historyIntent);
+                        }
 
-        builder.setMessage(R.string.delete_game_message);
+                        gameDBAdapter.close();
 
-        builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                deleteGame();
+                    }
+                }, getString(R.string.cancel), dismissDialogListener);
 
-                if (gameDBAdapter.open().numRows() == 0) {
-                    startActivity(homeIntent);
-                } else {
-                    startActivity(historyIntent);
-                }
-
-                gameDBAdapter.close();
-
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-        dialog = builder.create();
-        dialog.show();
     }
 
     @Override

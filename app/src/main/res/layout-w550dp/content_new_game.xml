@@ -93,7 +93,7 @@
                                 android:layout_centerVertical="true"
                                 android:paddingLeft="16dp"
                                 android:paddingStart="16dp"
-                                android:text="@string/preset_title"
+                                android:text="@string/load_preset"
                                 android:textStyle="bold" />
 
                         </RelativeLayout>

@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,7 @@ import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.NEW_GAME;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class NewGame extends OptionActivity
-        implements View.OnClickListener, RecyclerViewArrayAdapter.ViewHolder.ClickListener {
+        implements View.OnClickListener, RecyclerViewArrayAdapter.ClickListener {
 
     private PresetDBAdapter mPresetDBAdapter;
     private EditText mEditTextPlayer, mEditTextGameTitle;
@@ -211,12 +210,9 @@ public class NewGame extends OptionActivity
 
     private void timeLimitDialog() {
 
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        final AlertDialog mAlertDialog;
         final View dialogView;
 
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = mInflater.inflate(R.layout.create_time_limit, null);
+        dialogView = layoutInflater.inflate(R.layout.create_time_limit, null);
 
         EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
         EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
@@ -229,95 +225,73 @@ public class NewGame extends OptionActivity
         editTextMinute.setText("0");
         editTextSecond.setText("0");
 
-        dialogBuilder.setTitle(getString(R.string.create_time_limit));
-
-        dialogBuilder.setPositiveButton(R.string.create, null);
-
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
+        DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                try {
 
-                dialog.dismiss();
-                mSpinnerTimeLimit.setSelection(0);
-                game.setmTimeLimit(null);
-            }
-        });
+                    String timeLimitString = TimeLimit.updateTimeLimit(dialogView, null);
 
-        dialogBuilder.setView(dialogView);
+                    if (timeLimitString != null) {
 
-        mAlertDialog = dialogBuilder.create();
+                        if (!timeLimitString.equals("00:00:00:0")) {
+                            TimeLimit timeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
 
-        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-
-                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-
-                        try {
-
-                            String timeLimitString = TimeLimit.updateTimeLimit(dialogView, null);
-
-                            if (timeLimitString != null) {
-
-                                if (!timeLimitString.equals("00:00:00:0")) {
-                                    TimeLimit timeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
-
-                                    if (mTimeLimitArray != null) {
-                                        mTimeLimitArray.add(timeLimit);
-                                    } else {
-                                        mTimeLimitArray = new ArrayList<>();
-                                    }
-
-                                    if (dataHelper.checkDuplicates(timeLimitStringArray())) {
-
-                                        mTimeLimitArray.remove(mTimeLimitArray.size() - 1);
-                                        TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
-                                        displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
-                                        mSpinnerPreset.setSelection(0);
-                                        Toast.makeText(NewGame.this, "Already exists", Toast.LENGTH_SHORT).show();
-
-                                    } else {
-
-                                        game.setmTimeLimit(timeLimit);
-                                        saveGameToDatabase();
-                                        mAlertDialog.dismiss();
-                                        TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
-                                        displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
-                                        mSpinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
-
-                                    }
-
-                                } else {
-
-                                    mAlertDialog.dismiss();
-                                    mSpinnerTimeLimit.setSelection(0);
-                                    game.setmTimeLimit(null);
-
-                                }
+                            if (mTimeLimitArray != null) {
+                                mTimeLimitArray.add(timeLimit);
+                            } else {
+                                mTimeLimitArray = new ArrayList<>();
                             }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Log.e(TAG, e.toString());
-                            Toast toast = Toast.makeText(NewGame.this, R.string.invalid_length, Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
+                            if (dataHelper.checkDuplicates(timeLimitStringArray())) {
 
+                                mTimeLimitArray.remove(mTimeLimitArray.size() - 1);
+                                TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
+                                displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
+                                mSpinnerPreset.setSelection(0);
+                                Toast.makeText(NewGame.this, "Time limit already exists", Toast.LENGTH_SHORT).show();
+
+                            } else {
+
+                                game.setmTimeLimit(timeLimit);
+                                saveGameToDatabase();
+                                dialog.dismiss();
+                                TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
+                                displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
+                                mSpinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
+
+                            }
+
+                        } else {
+
+                            dialog.dismiss();
+                            mSpinnerTimeLimit.setSelection(0);
+                            game.setmTimeLimit(null);
+
+                        }
                     }
 
-                });
-
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    Toast toast = Toast.makeText(NewGame.this, R.string.invalid_length, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
 
             }
+        };
 
-        });
+        showCustomAlertDialog(getString(R.string.create_time_limit), null, getString(R.string.create), positiveClickListener,
+                getString(R.string.cancel), new DialogInterface.OnClickListener() {
 
-        mAlertDialog.show();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                        mSpinnerTimeLimit.setSelection(0);
+                        game.setmTimeLimit(null);
+                    }
+                }, dialogView);
 
     }
 
@@ -359,7 +333,6 @@ public class NewGame extends OptionActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_settings).setVisible(false);
@@ -371,9 +344,6 @@ public class NewGame extends OptionActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id) {
@@ -453,49 +423,31 @@ public class NewGame extends OptionActivity
 
     @Override
     public void onBackPressed() {
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        showAlertDialog(getString(R.string.quit_setup_question), getString(R.string.quit_setup_message), getString(R.string.quit_setup),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
 
-        builder.setTitle(R.string.quit_setup_question);
-
-        builder.setMessage(R.string.quit_setup_message);
-
-        builder.setPositiveButton(R.string.quit_setup, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-                mStop = true;
-                deleteGame();
-                startActivity(homeIntent);
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-        dialog = builder.create();
-        dialog.show();
+                        mStop = true;
+                        deleteGame();
+                        startActivity(homeIntent);
+                    }
+                }, getString(R.string.cancel), dismissDialogListener);
     }
 
     private void deleteDialog(List<String> array, final Dialog type) {
 
-        final View dialogView;
+        mRecyclerViewAdapter = new RecyclerViewArrayAdapter(array, this, this, type);
 
-        mRecyclerViewAdapter = new RecyclerViewArrayAdapter(array, this, this);
-
-        LayoutInflater inflter = LayoutInflater.from(this);
-        final AlertDialog alertDialog;
+        final View dialogView = layoutInflater.inflate(R.layout.recyclerview_fragment, null);
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.recyclerview_fragment, null);
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
 
         if (type == Dialog.PRESETS) {
 
-            dialogBuilder.setTitle(getResources().getString(R.string.delete_presets));
-            dialogBuilder.setMessage(getResources().getString(R.string.delete_presets_message));
+            dialogBuilder.setTitle(R.string.delete_presets_message);
 
         } else {
-
-            dialogBuilder.setTitle(getResources().getString(R.string.delete_time_limits));
-            dialogBuilder.setMessage(getResources().getString(R.string.delete_time_limits_message));
+            dialogBuilder.setTitle(R.string.delete_time_limits_message);
 
         }
 
@@ -524,7 +476,7 @@ public class NewGame extends OptionActivity
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                mRecyclerViewAdapter.deleteSelectedItems(type, NewGame.this);
+                mRecyclerViewAdapter.deleteSelectedItems();
 
                 if (type == Dialog.PRESETS) {
                     displaySpinner(mSpinnerPreset, presetStringArray());
@@ -548,16 +500,14 @@ public class NewGame extends OptionActivity
             }
         });
 
-        dialogBuilder.setView(dialogView);
-
-        alertDialog = dialogBuilder.create();
         layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(mRecyclerViewAdapter);
 
-        alertDialog.show();
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
     }
 
     public void onClick(View v) {
@@ -590,79 +540,50 @@ public class NewGame extends OptionActivity
     private void createPresetDialog() {
         final String[] presetName = {game.getmTitle()};
 
-        final View dialogView;
-
-        LayoutInflater inflter = LayoutInflater.from(this);
-        final AlertDialog alertDialog;
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.create_preset_fragment, null);
+        final View dialogView = layoutInflater.inflate(R.layout.create_preset_fragment, null);
         final EditText editTextPresetTitle = (EditText) dialogView.findViewById(R.id.editTextPresetTitle);
-        dialogBuilder.setPositiveButton(R.string.create, null);
 
-        dialogBuilder.setTitle(getResources().getString(R.string.create_preset));
-        dialogBuilder.setMessage(getResources().getString(R.string.create_preset_message));
-        dialogBuilder.setNeutralButton(R.string.default_title, null);
+        editTextPresetTitle.setHint(presetName[0]);
 
-        dialogBuilder.setNegativeButton(R.string.cancel, dismissDialogListener);
+        mDefaultTitle = editTextPresetTitle.getHint().toString();
 
-        dialogBuilder.setView(dialogView);
-
-        alertDialog = dialogBuilder.create();
-
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        editTextPresetTitle.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onShow(DialogInterface dialogInterface) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                editTextPresetTitle.setHint(presetName[0]);
+            }
 
-                mDefaultTitle = editTextPresetTitle.getHint().toString();
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presetName[0] = charSequence.toString();
+                if (charSequence == "") {
+                    presetName[0] = mDefaultTitle;
+                }
 
-                editTextPresetTitle.addTextChangedListener(new TextWatcher() {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        showCustomAlertDialog(getString(R.string.create_preset), getString(R.string.create_preset_message), getString(R.string.create),
+                new DialogInterface.OnClickListener() {
                     @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        presetName[0] = charSequence.toString();
-                        if (charSequence == "") {
-                            presetName[0] = mDefaultTitle;
-                        }
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-
-                    }
-                });
-
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
+                    public void onClick(DialogInterface dialog, int which) {
                         game.setmTitle(presetName[0]);
                         createPreset();
-                        alertDialog.dismiss();
+                        dialog.dismiss();
                         displaySpinner(mSpinnerPreset, presetStringArray());
                         mSpinnerPreset.setVisibility(View.VISIBLE);
-
                     }
-                });
-
-            }
-        });
-
-        alertDialog.show();
-        Button b1 = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextPresetTitle.setText(mDefaultTitle);
-            }
-        });
+                }, getString(R.string.default_title), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        editTextPresetTitle.setText(mDefaultTitle);
+                    }
+                }, getString(R.string.cancel), dismissDialogListener, dialogView);
 
     }
 

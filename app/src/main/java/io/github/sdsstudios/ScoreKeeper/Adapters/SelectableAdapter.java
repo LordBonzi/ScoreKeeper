@@ -32,8 +32,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
         } else {
             mSelectedItems.add(position);
         }
-
-        notifyItemChanged(position);
     }
 
     public void clearSelection() {

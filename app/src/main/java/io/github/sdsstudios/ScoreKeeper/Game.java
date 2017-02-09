@@ -235,6 +235,18 @@ public class Game {
         return isChecked;
     }
 
+    public CheckBoxOption getCheckBoxOption(String id) {
+        CheckBoxOption checkBoxOption = null;
+
+        for (CheckBoxOption c : mCheckBoxOptions) {
+            if (c.getmID().equals(id)) {
+                checkBoxOption = c;
+            }
+        }
+
+        return checkBoxOption;
+    }
+
     public void setChecked(String id, boolean data) {
         for (CheckBoxOption s : mCheckBoxOptions) {
             if (s.getmID().equals(id)) {

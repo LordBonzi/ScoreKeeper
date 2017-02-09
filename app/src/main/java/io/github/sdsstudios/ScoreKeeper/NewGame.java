@@ -176,6 +176,8 @@ public class NewGame extends OptionActivity
                 } else {
                     game.setmTimeLimit(mTimeLimitArray.get(i - 2));
                 }
+
+                checkStopwatchCheckBox();
             }
 
             @Override
@@ -206,6 +208,10 @@ public class NewGame extends OptionActivity
 
         saveGameToDatabase();
 
+    }
+
+    private void checkStopwatchCheckBox() {
+        getCheckBox(game.getCheckBoxOption(Option.STOPWATCH)).setChecked(true);
     }
 
     private void timeLimitDialog() {
@@ -259,7 +265,7 @@ public class NewGame extends OptionActivity
                                 TimeLimit.saveTimeLimit(mTimeLimitArray, NewGame.this);
                                 displaySpinner(mSpinnerTimeLimit, timeLimitStringArray());
                                 mSpinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
-
+                                checkStopwatchCheckBox();
                             }
 
                         } else {

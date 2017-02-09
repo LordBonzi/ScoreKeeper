@@ -582,7 +582,6 @@ public class NewGame extends OptionActivity
                         createPreset();
                         dialog.dismiss();
                         displaySpinner(mSpinnerPreset, presetStringArray());
-                        mSpinnerPreset.setVisibility(View.VISIBLE);
                     }
                 }, getString(R.string.default_title), new DialogInterface.OnClickListener() {
                     @Override

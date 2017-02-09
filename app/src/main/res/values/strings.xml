@@ -150,7 +150,7 @@
     <string name="rate_the_app">Rate and Review</string>
     <string name="opensourcelicenses">Open Source Licenses</string>
     <string name="max_num_on_dice">Max number on dice</string>
-    <string name="advanced_options">Advanced Options:</string>
+    <string name="advanced_options">Advanced Options</string>
     <string name="max_score">Winning Score (optional)</string>
     <string name="reverse_scoring">Reverse Scoring</string>
     <string name="has_won">has won</string>
@@ -199,6 +199,7 @@
     <string name="player_button_tutorial">Long press to deduct points</string>
     <string name="notes">Notes</string>
     <string name="create_time_limit">Create Time Limit</string>
+    <string name="load_preset">Load Preset</string>
 
 </resources>
 

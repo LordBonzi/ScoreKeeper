@@ -31,10 +31,11 @@ import io.github.sdsstudios.ScoreKeeper.Adapters.ColorGridViewAdapter;
 
 public class Themes extends PreferenceActivity{
 
-    public static int ACCENT_COLORS = 1;
-    public static int PRIMARY_COLORS = 2;
+    public final static int ACCENT_COLORS = 1;
+    public final static int PRIMARY_COLORS = 2;
 
-    public static int DEFAULT_ACCENT_COLOR = R.style.AppTheme_Red;
+    public final static int DEFAULT_ACCENT_COLOR = R.style.AppTheme_Red;
+    public final static boolean DEFAULT_COLOR_NAV_BAR = true;
 
     private Intent mSettingsIntent;
     private AppCompatDelegate mDelegate;
@@ -51,7 +52,7 @@ public class Themes extends PreferenceActivity{
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , DEFAULT_PRIMARY_DARK_COLOR(activity));
 
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", true);
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", DEFAULT_COLOR_NAV_BAR);
 
         activity.setTheme(accentColor);
         activity.setContentView(layout);
@@ -146,7 +147,7 @@ public class Themes extends PreferenceActivity{
 
         mDarkTheme = mSharedPreferences.getBoolean("prefDarkTheme", false);
 
-        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", true);
+        boolean colorNavBar = mSharedPreferences.getBoolean("prefColorNavBar", Themes.DEFAULT_COLOR_NAV_BAR);
         mAccentColor = mSharedPreferences.getInt("prefAccentColor", DEFAULT_ACCENT_COLOR);
         mPrimaryColor = mSharedPreferences.getInt("prefPrimaryColor", DEFAULT_PRIMARY_COLOR(this));
         mPrimaryDarkColor = mSharedPreferences.getInt("prefPrimaryDarkColor"

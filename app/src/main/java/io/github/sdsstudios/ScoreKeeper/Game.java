@@ -241,16 +241,19 @@ public class Game {
         for (CheckBoxOption c : mCheckBoxOptions) {
             if (c.getmID().equals(id)) {
                 checkBoxOption = c;
+                break;
             }
         }
 
         return checkBoxOption;
     }
 
+
     public void setChecked(String id, boolean data) {
         for (CheckBoxOption s : mCheckBoxOptions) {
             if (s.getmID().equals(id)) {
                 s.setData(data);
+                break;
             }
         }
     }

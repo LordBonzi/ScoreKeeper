@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -141,9 +140,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     c.setData(b);
-                    Log.e(TAG, "onCheckedChanged");
                     saveGameToDatabase();
-
                 }
             });
         }
@@ -366,7 +363,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         if (CURRENT_ACTIVITY == NEW_GAME) {
             StringEditTextOption notesOption = game.getStringEditTextOption(Option.NOTES);
             getEditText(notesOption).setText(notesOption.getString());
-            Log.e(TAG, "loadNotes");
         }
 
         if (CURRENT_ACTIVITY == EDIT_GAME) {

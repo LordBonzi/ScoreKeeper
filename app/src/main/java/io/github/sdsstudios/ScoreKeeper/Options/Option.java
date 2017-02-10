@@ -25,6 +25,7 @@ public class Option {
     public static final String REVERSE_SCORING = "reverse_scoring";
     public static final String STOPWATCH = "stopwatch";
     public static final String NOTES = "notes";
+
     private static String TAG = "Option";
     private String mID;
     private boolean mBooleanData;
@@ -64,7 +65,6 @@ public class Option {
             mStringData = (String) mData;
 
         } else if (mData instanceof Boolean) {
-
             mBooleanData = (Boolean) mData;
         }
 
@@ -77,7 +77,6 @@ public class Option {
     public boolean isChecked() {
         return mBooleanData;
     }
-
 
     public interface OptionListener {
         void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter);

@@ -649,6 +649,7 @@ public class NewGame extends OptionActivity
         displayRecyclerView(false);
 
         loadOptions();
+        setOptionChangeListeners();
 
         setGameTime();
 

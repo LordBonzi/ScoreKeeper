@@ -96,7 +96,6 @@ public class Game {
 
     public void setmTimeLimit(TimeLimit mTimeLimit) {
         this.mTimeLimit = mTimeLimit;
-
     }
 
     public String getmTitle() {
@@ -247,7 +246,6 @@ public class Game {
 
         return checkBoxOption;
     }
-
 
     public void setChecked(String id, boolean data) {
         for (CheckBoxOption s : mCheckBoxOptions) {

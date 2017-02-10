@@ -325,7 +325,6 @@ public class EditGame extends ScoreKeeperTabActivity {
             mEditGameContent.setVisibility(VISIBLE);
             setGridView.setVisibility(INVISIBLE);
 
-
         } else {
             mEditGameContent.setVisibility(INVISIBLE);
             setGridView.setVisibility(View.VISIBLE);
@@ -345,12 +344,14 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    e.setData(charSequence.toString());
+                    if (!charSequence.toString().equals("")) {
+                        e.setData(charSequence.toString());
+                    }
                 }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-
+                    saveGameToDatabase();
                 }
             });
         }

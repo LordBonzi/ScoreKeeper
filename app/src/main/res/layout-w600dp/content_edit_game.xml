@@ -27,7 +27,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             card_view:cardCornerRadius="4dp">
 
             <RelativeLayout
@@ -83,7 +83,7 @@
             android:layout_alignBottom="@+id/cardViewOptions"
             android:layout_alignLeft="@+id/cardViewDate"
             android:layout_alignStart="@+id/cardViewDate"
-            android:layout_below="@+id/cardViewDate"
+            android:layout_below="@+id/cardViewTimeLimit"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             card_view:cardCornerRadius="4dp">

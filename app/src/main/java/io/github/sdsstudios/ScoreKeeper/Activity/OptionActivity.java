@@ -133,6 +133,10 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         }
     }
 
+    public void chooseTimeLimitInSpinner() {
+
+    }
+
     public void setOptionChangeListeners() {
 
         for (final CheckBoxOption c : CheckBoxOptions()) {

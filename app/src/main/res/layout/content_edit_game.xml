@@ -92,7 +92,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             card_view:cardCornerRadius="4dp">
 
             <RelativeLayout

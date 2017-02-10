@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,6 +25,7 @@ import io.github.sdsstudios.ScoreKeeper.Adapters.PlayerListAdapter;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.EditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
+import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
@@ -31,6 +33,7 @@ import io.github.sdsstudios.ScoreKeeper.Themes;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.GAME_ACTIVITY;
+import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.NEW_GAME;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.DATE;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MAX;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.DICE_MIN;
@@ -138,6 +141,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     c.setData(b);
+                    Log.e(TAG, "onCheckedChanged");
                     saveGameToDatabase();
 
                 }
@@ -175,6 +179,28 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 public void afterTextChanged(Editable editable) {
                     saveGameToDatabase();
 
+                }
+            });
+        }
+
+        if (CURRENT_ACTIVITY == NEW_GAME) {
+            final StringEditTextOption notesOption = game.getStringEditTextOption(Option.NOTES);
+
+            getEditText(notesOption).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    notesOption.setData(s.toString());
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    saveGameToDatabase();
                 }
             });
         }
@@ -337,6 +363,12 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             }
         }
 
+        if (CURRENT_ACTIVITY == NEW_GAME) {
+            StringEditTextOption notesOption = game.getStringEditTextOption(Option.NOTES);
+            getEditText(notesOption).setText(notesOption.getString());
+            Log.e(TAG, "loadNotes");
+        }
+
         if (CURRENT_ACTIVITY == EDIT_GAME) {
             for (StringEditTextOption e : StringEditTextOptions()) {
                 EditText editText = getEditText(e);
@@ -344,6 +376,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 editText.setEnabled(false);
             }
         }
+
     }
 
     /**

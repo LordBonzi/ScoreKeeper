@@ -36,7 +36,6 @@ import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.NEW_GAME;
-import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class NewGame extends OptionActivity
         implements View.OnClickListener, RecyclerViewArrayAdapter.ClickListener {
@@ -59,14 +58,12 @@ public class NewGame extends OptionActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
 
         mStop = false;
         saveGameToDatabase();
 
         savedInstanceState.putInt(STATE_GAMEID, gameID);
 
-        // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -175,9 +172,9 @@ public class NewGame extends OptionActivity
                     timeLimitDialog();
                 } else {
                     game.setmTimeLimit(mTimeLimitArray.get(i - 2));
+                    checkStopwatchCheckBox();
                 }
 
-                checkStopwatchCheckBox();
             }
 
             @Override
@@ -596,8 +593,6 @@ public class NewGame extends OptionActivity
         Intent mainActivityIntent = new Intent(this, GameActivity.class);
         mStop = false;
 
-        //snackbar must have 2 or more players
-
         if (game.size() < 2) {
 
             createSnackbar(relativeLayout, getString(R.string.more_than_two_players));
@@ -613,7 +608,6 @@ public class NewGame extends OptionActivity
                 if (startGame) {
 
                     int startingScore = game.getInt(Option.STARTING_SCORE);
-                    game.setString(NOTES, ((EditText) findViewById(R.id.editText)).getText().toString());
 
                     for (Player p : getPlayerArray()) {
                         p.setmScore(startingScore);
@@ -655,6 +649,7 @@ public class NewGame extends OptionActivity
         displayRecyclerView(false);
 
         loadOptions();
+
         setGameTime();
 
         saveGameToDatabase();

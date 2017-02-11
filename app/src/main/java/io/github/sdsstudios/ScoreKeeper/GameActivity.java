@@ -67,15 +67,16 @@ public class GameActivity extends ScoreKeeperTabActivity
     private final int STOPWATCH_DELAY = 300;
     private TypedValue mTypedValue = new TypedValue();
 
+    private boolean mFinished = false;
+    private boolean mPaused = false;
     private boolean mWon = false;
+
     private String mWinnerString;
     private RecyclerView mPlayerRecyclerView;
-    private boolean mFinished = false;
     private CardView mCardViewStopwatch;
     private Stopwatch mStopwatch;
     private View mDialogView;
     private long mTimeWhenStopped = 0L;
-    private boolean mPaused = false;
     private MenuItem mMenuItemDiceNum;
     private RelativeLayout mMainContent;
     private View mNormalLayout;
@@ -829,7 +830,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         } else {
             mCardViewStopwatch.setVisibility(visible);
         }
-
     }
 
     private void showPlayerLayout(int visible) {
@@ -840,7 +840,7 @@ public class GameActivity extends ScoreKeeperTabActivity
             mNormalLayout.setVisibility(GONE);
 
             try {
-                displayRecyclerView(true);
+                displayRecyclerView(!mFinished);
 
             } catch (Exception e) {
                 e.printStackTrace();

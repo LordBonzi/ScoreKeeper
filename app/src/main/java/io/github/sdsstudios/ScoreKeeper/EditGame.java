@@ -241,7 +241,6 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                     saveGameToDatabase();
 
-                    mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);
                     mMenuItemDone.setVisible(false);
                     mMenuItemEdit.setVisible(true);

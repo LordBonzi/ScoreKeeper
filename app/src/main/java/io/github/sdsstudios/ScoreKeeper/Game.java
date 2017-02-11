@@ -54,7 +54,7 @@ public class Game {
         return mCompleted;
     }
 
-    public void setmCompleted(boolean mCompleted) {
+    void setmCompleted(boolean mCompleted) {
         this.mCompleted = mCompleted;
     }
 
@@ -66,11 +66,11 @@ public class Game {
         setString(Option.DATE, mTime);
     }
 
-    public String getmLength() {
+    String getmLength() {
         return getString(Option.LENGTH);
     }
 
-    public void setmLength(String mLength) {
+    void setmLength(String mLength) {
         setString(Option.LENGTH, mLength);
     }
 
@@ -82,6 +82,10 @@ public class Game {
         this.mID = mID;
     }
 
+    public void noTimeLimit() {
+        mTimeLimit = TimeLimit.BLANK_TIME_LIMIT;
+    }
+
     public List<Player> getmPlayerArray() {
         return mPlayerArray;
     }
@@ -91,11 +95,19 @@ public class Game {
     }
 
     public TimeLimit getmTimeLimit() {
+        if (mTimeLimit == null) {
+            mTimeLimit = TimeLimit.BLANK_TIME_LIMIT;
+        }
+
         return mTimeLimit;
     }
 
     public void setmTimeLimit(TimeLimit mTimeLimit) {
-        this.mTimeLimit = mTimeLimit;
+        if (mTimeLimit == null) {
+            this.mTimeLimit = TimeLimit.BLANK_TIME_LIMIT;
+        } else {
+            this.mTimeLimit = mTimeLimit;
+        }
     }
 
     public String getmTitle() {
@@ -113,6 +125,18 @@ public class Game {
     public StringEditTextOption getStringEditTextOption(String id) {
         StringEditTextOption editTextOption = null;
         for (StringEditTextOption e : mStringEditTextOptions) {
+            if (e.getmID().equals(id)) {
+                editTextOption = e;
+                break;
+            }
+        }
+        return editTextOption;
+    }
+
+    public IntEditTextOption getIntEditTextOption(String id) {
+        IntEditTextOption editTextOption = null;
+
+        for (IntEditTextOption e : mIntEditTextOptions) {
             if (e.getmID().equals(id)) {
                 editTextOption = e;
                 break;

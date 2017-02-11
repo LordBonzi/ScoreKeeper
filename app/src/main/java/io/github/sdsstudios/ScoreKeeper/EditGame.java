@@ -23,6 +23,8 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
@@ -38,6 +40,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
     private View mEditGameContent;
+    private boolean mEditableMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -246,6 +249,7 @@ public class EditGame extends ScoreKeeperTabActivity {
                     mMenuItemShare.setVisible(true);
                     mMenuItemComplete.setVisible(true);
 
+                    enableOptions(false);
                     loadOptions();
 
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -288,6 +292,7 @@ public class EditGame extends ScoreKeeperTabActivity {
 
         game = dataHelper.getGame(gameID, gameDBAdapter);
 
+        enableOptions(false);
         loadOptions();
         populateSetGridView();
 
@@ -352,11 +357,68 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    saveGameToDatabase();
                 }
             });
         }
     }
+
+    @Override
+    protected boolean inEditableMode() {
+        return mEditableMode;
+    }
+
+    @Override
+    public void loadTimeLimit(final int position) {
+        super.loadTimeLimit(position);
+
+        final TimeLimit chosenTimeLimit = timeLimitArray.get(position);
+        game.setmTimeLimit(chosenTimeLimit);
+
+        try {
+            if (timeHelper.convertToLong(game.getmLength()) > timeHelper.convertToLong(chosenTimeLimit.getmTime())) {
+                DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        game.setmLength("00:00:00:0");
+                        getEditText(game.getStringEditTextOption(Option.LENGTH)).setText(game.getmLength());
+                    }
+                };
+
+                showAlertDialog(getString(R.string.are_you_sure), getString(R.string.time_limit_chosen_is_too_small)
+                        , getString(R.string.reset_time_played), positiveClickListener, getString(R.string.ignore), dismissDialogListener)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                chooseTimeLimitInSpinner();
+                            }
+                        });
+            }
+
+        } catch (ParseException e) {
+            Toast.makeText(this, "error comparing timelimit to game time", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void enableOptions(boolean editable) {
+        mEditableMode = editable;
+
+        for (CheckBoxOption c : CheckBoxOptions()) {
+            getCheckBox(c).setEnabled(mEditableMode);
+        }
+
+        for (IntEditTextOption e : IntEditTextOptions()) {
+            getEditText(e).setEnabled(mEditableMode);
+        }
+
+        for (StringEditTextOption e : StringEditTextOptions()) {
+            getEditText(e).setText(e.getString());
+            getEditText(e).setEnabled(mEditableMode);
+        }
+
+        spinnerTimeLimit.setEnabled(editable);
+    }
+
 
     @Override
     public void onScoreClick(int playerIndex) {

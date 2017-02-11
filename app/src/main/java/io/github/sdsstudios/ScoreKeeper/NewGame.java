@@ -165,6 +165,13 @@ public class NewGame extends OptionActivity
     }
 
     @Override
+    public void loadTimeLimit(int arrayIndex) {
+        game.setmTimeLimit(timeLimitArray.get(arrayIndex));
+        saveGameToDatabase();
+        super.loadTimeLimit(arrayIndex);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_delete).setVisible(false);
@@ -208,7 +215,7 @@ public class NewGame extends OptionActivity
         game.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(this));
         game.setmIntEditTextOption(IntEditTextOption.loadEditTextOptions(this));
         game.setmStringEditTextOptions(StringEditTextOption.loadEditTextOptions(this));
-        game.setmTimeLimit(null);
+        game.noTimeLimit();
 
         for (IntEditTextOption e : IntEditTextOptions()) {
             getEditText(e).setText("");
@@ -245,6 +252,11 @@ public class NewGame extends OptionActivity
         if (mStop) {
             deleteGame();
         }
+    }
+
+    @Override
+    protected boolean inEditableMode() {
+        return true;
     }
 
     @Override

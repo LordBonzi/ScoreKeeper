@@ -3,7 +3,6 @@ package io.github.sdsstudios.ScoreKeeper.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,9 +74,9 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     public RecyclerView playerRecyclerView;
     public RecyclerView.LayoutManager layoutManager;
     public Spinner spinnerPreset, spinnerTimeLimit;
+    public List<TimeLimit> timeLimitArray = new ArrayList<>();
+    public AdapterView.OnItemSelectedListener onTimeLimitSelectedListener;
 
-    private List<TimeLimit> mTimeLimitArray = new ArrayList<>();
-    private NestedScrollView mScrollView;
     private RecyclerViewArrayAdapter mRecyclerViewAdapter;
 
     @Override
@@ -95,17 +94,44 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             AdCreator adCreator = new AdCreator(mAdView, this);
             adCreator.createAd();
 
-            mTimeLimitArray = TimeLimit.getTimeLimitArray(this);
+            timeLimitArray = TimeLimit.getTimeLimitArray(this);
 
-            if (mTimeLimitArray == null) {
-                mTimeLimitArray = new ArrayList<>();
+            if (timeLimitArray == null) {
+                timeLimitArray = new ArrayList<>();
             }
 
-            mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
             playerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
             spinnerTimeLimit = (Spinner) findViewById(R.id.spinnerTimeLimit);
 
             gameDBAdapter.open();
+
+            onTimeLimitSelectedListener = new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    if (i == 0) {
+                        game.noTimeLimit();
+                    } else if (i == 1) {
+                        timeLimitDialog();
+                    } else {
+                        if (CURRENT_ACTIVITY == EDIT_GAME) {
+
+                            if (!game.getmTimeLimit().getmTime().equals(timeLimitArray.get(i - 2).getmTime())) {
+                                loadTimeLimit(i - 2);
+                            }
+
+                        } else {
+                            loadTimeLimit(i - 2);
+                        }
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            };
+
+            spinnerTimeLimit.setOnItemSelectedListener(onTimeLimitSelectedListener);
 
             if (CURRENT_ACTIVITY == EDIT_GAME) {
 
@@ -126,33 +152,12 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 relativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
             }
 
-            spinnerTimeLimit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    if (i == 0) {
-                        game.setmTimeLimit(null);
-                    } else if (i == 1) {
-                        timeLimitDialog();
-                    } else {
-                        game.setmTimeLimit(mTimeLimitArray.get(i - 2));
-                        checkStopwatchCheckBox();
-                    }
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
             displaySpinner(spinnerTimeLimit, timeLimitStringArray());
 
         }
     }
 
-    public void deleteDialog(List<String> array, final Dialog type) {
+    protected void deleteDialog(List<String> array, final Dialog type) {
 
         mRecyclerViewAdapter = new RecyclerViewArrayAdapter(array, this, this, type);
 
@@ -182,7 +187,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 } else {
 
                     TimeLimit.deleteAllTimeLimits(OptionActivity.this);
-                    mTimeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
+                    timeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
                     displaySpinner(spinnerTimeLimit, timeLimitStringArray());
 
                 }
@@ -201,7 +206,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                 } else {
 
-                    mTimeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
+                    timeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
                     displaySpinner(spinnerTimeLimit, timeLimitStringArray());
 
                 }
@@ -259,7 +264,12 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     }
 
     private void checkStopwatchCheckBox() {
-        getCheckBox(game.getCheckBoxOption(Option.STOPWATCH)).setChecked(true);
+        game.setChecked(STOPWATCH, true);
+        loadCheckBox(game.getCheckBoxOption(Option.STOPWATCH));
+    }
+
+    public void loadTimeLimit(int arrayIndex) {
+        checkStopwatchCheckBox();
     }
 
     private void timeLimitDialog() {
@@ -291,36 +301,33 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                         if (!timeLimitString.equals("00:00:00:0")) {
                             TimeLimit timeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
 
-                            if (mTimeLimitArray != null) {
-                                mTimeLimitArray.add(timeLimit);
+                            if (timeLimitArray != null) {
+                                timeLimitArray.add(timeLimit);
                             } else {
-                                mTimeLimitArray = new ArrayList<>();
+                                timeLimitArray = new ArrayList<>();
                             }
 
                             if (dataHelper.checkDuplicates(timeLimitStringArray())) {
 
-                                mTimeLimitArray.remove(mTimeLimitArray.size() - 1);
-                                TimeLimit.saveTimeLimit(mTimeLimitArray, OptionActivity.this);
+                                timeLimitArray.remove(timeLimitArray.size() - 1);
+                                TimeLimit.saveTimeLimit(timeLimitArray, OptionActivity.this);
                                 displaySpinner(spinnerTimeLimit, timeLimitStringArray());
                                 spinnerPreset.setSelection(0);
                                 Toast.makeText(OptionActivity.this, "Time limit already exists", Toast.LENGTH_SHORT).show();
 
                             } else {
-
-                                game.setmTimeLimit(timeLimit);
                                 saveGameToDatabase();
                                 dialog.dismiss();
-                                TimeLimit.saveTimeLimit(mTimeLimitArray, OptionActivity.this);
+                                TimeLimit.saveTimeLimit(timeLimitArray, OptionActivity.this);
                                 displaySpinner(spinnerTimeLimit, timeLimitStringArray());
-                                spinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
-                                checkStopwatchCheckBox();
+                                spinnerTimeLimit.setSelection(timeLimitArray.size() + 1);
                             }
 
                         } else {
 
                             dialog.dismiss();
                             spinnerTimeLimit.setSelection(0);
-                            game.setmTimeLimit(null);
+                            game.noTimeLimit();
 
                         }
                     }
@@ -343,7 +350,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                         dialog.dismiss();
                         spinnerTimeLimit.setSelection(0);
-                        game.setmTimeLimit(null);
+                        game.noTimeLimit();
                     }
                 }, dialogView);
 
@@ -354,8 +361,8 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         arrayList.add("No Time Limit");
         arrayList.add("Create...");
 
-        if (mTimeLimitArray != null) {
-            for (TimeLimit timeLimit : mTimeLimitArray) {
+        if (timeLimitArray != null) {
+            for (TimeLimit timeLimit : timeLimitArray) {
                 arrayList.add(timeLimit.getmTitle());
             }
         }
@@ -384,35 +391,17 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
         return game.getmStringEditTextOptions();
     }
 
-
-    public void enableOptions(boolean enabled) {
-
-        for (CheckBoxOption c : CheckBoxOptions()) {
-            getCheckBox(c).setEnabled(enabled);
-        }
-
-        for (IntEditTextOption e : IntEditTextOptions()) {
-            getEditText(e).setEnabled(enabled);
-        }
-
-        for (StringEditTextOption e : StringEditTextOptions()) {
-            getEditText(e).setText(e.getString());
-            getEditText(e).setEnabled(enabled);
-        }
-
-        spinnerTimeLimit.setEnabled(enabled);
-    }
-
-    private void chooseTimeLimitInSpinner() {
+    public void chooseTimeLimitInSpinner() {
         TimeLimit timeLimit = game.getmTimeLimit();
 
-        for (int i = 0; i < mTimeLimitArray.size(); i++) {
-            if (mTimeLimitArray.get(i).getmTitle().equals(timeLimit.getmTitle())) {
-                spinnerTimeLimit.setSelection(i + 2);
-                break;
+        if (timeLimit != null) {
+            for (int i = 0; i < timeLimitArray.size(); i++) {
+                if (timeLimitArray.get(i).getmTitle().equals(timeLimit.getmTitle())) {
+                    spinnerTimeLimit.setSelection(i + 2);
+                    break;
+                }
             }
         }
-
     }
 
     public void setOptionChangeListeners() {
@@ -456,7 +445,9 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    saveGameToDatabase();
+                    if (CURRENT_ACTIVITY != EDIT_GAME) {
+                        saveGameToDatabase();
+                    }
 
                 }
             });
@@ -616,31 +607,44 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
     }
 
-    public void loadOptions() {
+    protected abstract boolean inEditableMode();
 
+    protected void loadEditText(EditTextOption editTextOption) {
+        EditText editText = getEditText(editTextOption);
 
-        for (IntEditTextOption e : IntEditTextOptions()) {
-            EditText editText = getEditText(e);
-
-            if (e.getmDefaultValue() != e.getInt()) {
-                editText.setText(String.valueOf(e.getInt()));
+        if (editTextOption instanceof IntEditTextOption) {
+            if (((IntEditTextOption) editTextOption).getmDefaultValue() != editTextOption.getInt()) {
+                editText.setText(String.valueOf(editTextOption.getInt()));
             } else {
                 editText.setText("");
             }
+        } else {
+            editText.setHint(editTextOption.getString());
+            editText.setEnabled(inEditableMode());
+        }
 
-            if (CURRENT_ACTIVITY == EDIT_GAME) {
-                editText.setEnabled(false);
-            }
+        if (CURRENT_ACTIVITY == EDIT_GAME) {
+            editText.setEnabled(inEditableMode());
+        }
+    }
+
+    protected void loadCheckBox(CheckBoxOption checkBoxOption) {
+        CheckBox checkBox = getCheckBox(checkBoxOption);
+
+        checkBox.setChecked(checkBoxOption.isChecked());
+
+        if (CURRENT_ACTIVITY == EDIT_GAME) {
+            checkBox.setEnabled(inEditableMode());
+        }
+    }
+
+    protected void loadOptions() {
+        for (IntEditTextOption e : IntEditTextOptions()) {
+            loadEditText(e);
         }
 
         for (CheckBoxOption c : CheckBoxOptions()) {
-            CheckBox checkBox = getCheckBox(c);
-
-            checkBox.setChecked(c.isChecked());
-
-            if (CURRENT_ACTIVITY == EDIT_GAME) {
-                checkBox.setEnabled(false);
-            }
+            loadCheckBox(c);
         }
 
         if (CURRENT_ACTIVITY == NEW_GAME) {
@@ -650,12 +654,10 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
         if (CURRENT_ACTIVITY == EDIT_GAME) {
             for (StringEditTextOption e : StringEditTextOptions()) {
-                EditText editText = getEditText(e);
-                editText.setHint(e.getString());
-                editText.setEnabled(false);
+                loadEditText(e);
             }
 
-            spinnerTimeLimit.setEnabled(false);
+            spinnerTimeLimit.setEnabled(inEditableMode());
         }
 
         chooseTimeLimitInSpinner();

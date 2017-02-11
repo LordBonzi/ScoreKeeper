@@ -126,7 +126,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
 
                 if (game.size() > 2) {
-                    dialogBuilder.setNeutralButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
+                    dialogBuilder.setNeutralButton(getString(R.string.delete_player), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             deletePlayer(position);

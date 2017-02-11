@@ -1,26 +1,38 @@
 package io.github.sdsstudios.ScoreKeeper.Activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.AdCreator;
 import io.github.sdsstudios.ScoreKeeper.Adapters.PlayerListAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.PresetDBAdapter;
+import io.github.sdsstudios.ScoreKeeper.Adapters.RecyclerViewArrayAdapter;
+import io.github.sdsstudios.ScoreKeeper.Dialog;
 import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
 import io.github.sdsstudios.ScoreKeeper.Options.EditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
@@ -29,6 +41,7 @@ import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
 import io.github.sdsstudios.ScoreKeeper.Themes;
+import io.github.sdsstudios.ScoreKeeper.TimeLimit;
 
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.EDIT_GAME;
 import static io.github.sdsstudios.ScoreKeeper.Activity.Activity.GAME_ACTIVITY;
@@ -51,16 +64,21 @@ import static io.github.sdsstudios.ScoreKeeper.Options.Option.WINNING_SCORE;
  * Created by seth on 11/12/16.
  */
 
-public abstract class OptionActivity extends ScoreKeeperActivity implements PlayerListAdapter.PlayerListAdapterListener {
+public abstract class OptionActivity extends ScoreKeeperActivity implements PlayerListAdapter.PlayerListAdapterListener, RecyclerViewArrayAdapter.ClickListener {
 
     public static final String STATE_GAMEID = "gameID";
 
+    public PresetDBAdapter presetDBAdapter;
     public PlayerListAdapter playerListAdapter;
     public RelativeLayout relativeLayout;
     public int gameID;
     public RecyclerView playerRecyclerView;
     public RecyclerView.LayoutManager layoutManager;
+    public Spinner spinnerPreset, spinnerTimeLimit;
+
+    private List<TimeLimit> mTimeLimitArray = new ArrayList<>();
     private NestedScrollView mScrollView;
+    private RecyclerViewArrayAdapter mRecyclerViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,8 +95,15 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             AdCreator adCreator = new AdCreator(mAdView, this);
             adCreator.createAd();
 
+            mTimeLimitArray = TimeLimit.getTimeLimitArray(this);
+
+            if (mTimeLimitArray == null) {
+                mTimeLimitArray = new ArrayList<>();
+            }
+
             mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
             playerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
+            spinnerTimeLimit = (Spinner) findViewById(R.id.spinnerTimeLimit);
 
             gameDBAdapter.open();
 
@@ -101,7 +126,250 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 relativeLayout = (RelativeLayout) findViewById(R.id.newGameLayout);
             }
 
+            spinnerTimeLimit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    if (i == 0) {
+                        game.setmTimeLimit(null);
+                    } else if (i == 1) {
+                        timeLimitDialog();
+                    } else {
+                        game.setmTimeLimit(mTimeLimitArray.get(i - 2));
+                        checkStopwatchCheckBox();
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+            displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+
         }
+    }
+
+    public void deleteDialog(List<String> array, final Dialog type) {
+
+        mRecyclerViewAdapter = new RecyclerViewArrayAdapter(array, this, this, type);
+
+        final View dialogView = layoutInflater.inflate(R.layout.recyclerview_fragment, null);
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
+
+        if (type == Dialog.PRESETS) {
+
+            dialogBuilder.setTitle(R.string.delete_presets_message);
+
+        } else {
+            dialogBuilder.setTitle(R.string.delete_time_limits_message);
+
+        }
+
+        dialogBuilder.setNeutralButton(R.string.delete_all, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (type == Dialog.PRESETS) {
+                    presetDBAdapter.open();
+                    presetDBAdapter.deleteAllPresets();
+                    presetDBAdapter.close();
+                    displaySpinner(spinnerPreset, presetStringArray());
+
+                } else {
+
+                    TimeLimit.deleteAllTimeLimits(OptionActivity.this);
+                    mTimeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
+                    displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+
+                }
+            }
+        });
+
+        dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                mRecyclerViewAdapter.deleteSelectedItems();
+
+                if (type == Dialog.PRESETS) {
+                    displaySpinner(spinnerPreset, presetStringArray());
+
+                } else {
+
+                    mTimeLimitArray = TimeLimit.getTimeLimitArray(OptionActivity.this);
+                    displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+
+                }
+
+            }
+
+        });
+
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        layoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(mRecyclerViewAdapter);
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
+    public List<String> presetStringArray() {
+        List<String> arrayList = new ArrayList<>();
+        arrayList.add("No Preset");
+
+        for (int i = 1; i <= presetDBAdapter.open().numRows(); i++) {
+            presetDBAdapter.open();
+            arrayList.add(dataHelper.getPreset(i, presetDBAdapter).getmTitle());
+            presetDBAdapter.close();
+        }
+
+        return arrayList;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_delete_timelimits:
+                if (timeLimitStringArray().size() > 2) {
+                    deleteDialog(timeLimitStringArray(), Dialog.TIME_LIMIT);
+                } else {
+                    Toast.makeText(this, "No Time Limits Created", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void checkStopwatchCheckBox() {
+        getCheckBox(game.getCheckBoxOption(Option.STOPWATCH)).setChecked(true);
+    }
+
+    private void timeLimitDialog() {
+
+        final View dialogView;
+
+        dialogView = layoutInflater.inflate(R.layout.create_time_limit, null);
+
+        EditText editTextHour = (EditText) dialogView.findViewById(R.id.editTextHour);
+        EditText editTextMinute = (EditText) dialogView.findViewById(R.id.editTextMinute);
+        EditText editTextSecond = (EditText) dialogView.findViewById(R.id.editTextSeconds);
+
+        RelativeLayout relativeLayout = (RelativeLayout) dialogView.findViewById(R.id.relativeLayout2);
+        relativeLayout.setVisibility(View.VISIBLE);
+
+        editTextHour.setText("0");
+        editTextMinute.setText("0");
+        editTextSecond.setText("0");
+
+        DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+
+                    String timeLimitString = TimeLimit.updateTimeLimit(dialogView, null);
+
+                    if (timeLimitString != null) {
+
+                        if (!timeLimitString.equals("00:00:00:0")) {
+                            TimeLimit timeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
+
+                            if (mTimeLimitArray != null) {
+                                mTimeLimitArray.add(timeLimit);
+                            } else {
+                                mTimeLimitArray = new ArrayList<>();
+                            }
+
+                            if (dataHelper.checkDuplicates(timeLimitStringArray())) {
+
+                                mTimeLimitArray.remove(mTimeLimitArray.size() - 1);
+                                TimeLimit.saveTimeLimit(mTimeLimitArray, OptionActivity.this);
+                                displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+                                spinnerPreset.setSelection(0);
+                                Toast.makeText(OptionActivity.this, "Time limit already exists", Toast.LENGTH_SHORT).show();
+
+                            } else {
+
+                                game.setmTimeLimit(timeLimit);
+                                saveGameToDatabase();
+                                dialog.dismiss();
+                                TimeLimit.saveTimeLimit(mTimeLimitArray, OptionActivity.this);
+                                displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+                                spinnerTimeLimit.setSelection(mTimeLimitArray.size() + 1);
+                                checkStopwatchCheckBox();
+                            }
+
+                        } else {
+
+                            dialog.dismiss();
+                            spinnerTimeLimit.setSelection(0);
+                            game.setmTimeLimit(null);
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, e.toString());
+                    Toast toast = Toast.makeText(OptionActivity.this, R.string.invalid_length, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+            }
+        };
+
+        showCustomAlertDialog(getString(R.string.create_time_limit), null, getString(R.string.create), positiveClickListener,
+                getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                        spinnerTimeLimit.setSelection(0);
+                        game.setmTimeLimit(null);
+                    }
+                }, dialogView);
+
+    }
+
+    private List<String> timeLimitStringArray() {
+        List<String> arrayList = new ArrayList<>();
+        arrayList.add("No Time Limit");
+        arrayList.add("Create...");
+
+        if (mTimeLimitArray != null) {
+            for (TimeLimit timeLimit : mTimeLimitArray) {
+                arrayList.add(timeLimit.getmTitle());
+            }
+        }
+
+        return arrayList;
+    }
+
+    public void displaySpinner(final Spinner spinner, List<String> array) {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
     }
 
     public List<CheckBoxOption> CheckBoxOptions() {
@@ -131,9 +399,19 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             getEditText(e).setText(e.getString());
             getEditText(e).setEnabled(enabled);
         }
+
+        spinnerTimeLimit.setEnabled(enabled);
     }
 
-    public void chooseTimeLimitInSpinner() {
+    private void chooseTimeLimitInSpinner() {
+        TimeLimit timeLimit = game.getmTimeLimit();
+
+        for (int i = 0; i < mTimeLimitArray.size(); i++) {
+            if (mTimeLimitArray.get(i).getmTitle().equals(timeLimit.getmTitle())) {
+                spinnerTimeLimit.setSelection(i + 2);
+                break;
+            }
+        }
 
     }
 
@@ -340,6 +618,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
 
     public void loadOptions() {
 
+
         for (IntEditTextOption e : IntEditTextOptions()) {
             EditText editText = getEditText(e);
 
@@ -375,7 +654,11 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 editText.setHint(e.getString());
                 editText.setEnabled(false);
             }
+
+            spinnerTimeLimit.setEnabled(false);
         }
+
+        chooseTimeLimitInSpinner();
 
     }
 
@@ -434,4 +717,11 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     public void onPlayerRemove(int position) {
         game.removePlayer(position);
     }
+
+
+    @Override
+    public void onItemClicked(int position) {
+        mRecyclerViewAdapter.toggleSelection(position);
+    }
+
 }

@@ -87,6 +87,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             mMenuItemList.add(mMenuItemAdd = menu.findItem(R.id.action_add));
             mMenuItemList.add(mMenuItemComplete = menu.findItem(R.id.complete_game));
             mMenuItemList.add(mMenuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true));
+            menu.findItem(R.id.action_delete_timelimits).setVisible(true);
 
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);

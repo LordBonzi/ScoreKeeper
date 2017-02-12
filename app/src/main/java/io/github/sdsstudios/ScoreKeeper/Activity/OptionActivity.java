@@ -380,15 +380,15 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     }
 
     public List<CheckBoxOption> CheckBoxOptions() {
-        return game.getmCheckBoxOptions();
+        return game.getmCheckBoxOptions(this);
     }
 
     public List<IntEditTextOption> IntEditTextOptions() {
-        return game.getmIntEditTextOptions();
+        return game.getmIntEditTextOptions(this);
     }
 
     public List<StringEditTextOption> StringEditTextOptions() {
-        return game.getmStringEditTextOptions();
+        return game.getmStringEditTextOptions(this);
     }
 
     public void chooseTimeLimitInSpinner() {
@@ -496,85 +496,70 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     }
 
     public CheckBox getCheckBox(CheckBoxOption checkBoxOption) {
-        try {
+        switch (checkBoxOption.getmID()) {
+            case REVERSE_SCORING:
+                checkBoxOption.setmCheckBoxID(R.id.checkBoxReverseScoring);
+                return ((CheckBox) findViewById(R.id.checkBoxReverseScoring));
 
-            return ((CheckBox) findViewById(checkBoxOption.getmCheckBoxID()));
+            case STOPWATCH:
+                checkBoxOption.setmCheckBoxID(R.id.checkBoxStopwatch);
+                return ((CheckBox) findViewById(R.id.checkBoxStopwatch));
 
-        } catch (ClassCastException e) {
-
-            switch (checkBoxOption.getmID()) {
-                case REVERSE_SCORING:
-                    checkBoxOption.setmCheckBoxID(R.id.checkBoxReverseScoring);
-                    return ((CheckBox) findViewById(R.id.checkBoxReverseScoring));
-
-                case STOPWATCH:
-                    checkBoxOption.setmCheckBoxID(R.id.checkBoxStopwatch);
-                    return ((CheckBox) findViewById(R.id.checkBoxStopwatch));
-
-                default:
-                    return null;
-
-            }
+            default:
+                return null;
 
         }
     }
 
     public EditText getEditText(EditTextOption editTextOption) {
-        try {
+        switch (editTextOption.getmID()) {
+            case NUMBER_SETS:
+                editTextOption.setmEditTextID(R.id.editTextNumSets);
+                return ((EditText) findViewById(R.id.editTextNumSets));
 
-            return ((EditText) findViewById(editTextOption.getmEditTextID()));
+            case SCORE_DIFF_TO_WIN:
+                editTextOption.setmEditTextID(R.id.editTextDiffToWin);
+                return ((EditText) findViewById(R.id.editTextDiffToWin));
 
-        } catch (ClassCastException e) {
+            case WINNING_SCORE:
+                editTextOption.setmEditTextID(R.id.editTextMaxScore);
+                return ((EditText) findViewById(R.id.editTextMaxScore));
 
-            switch (editTextOption.getmID()) {
-                case NUMBER_SETS:
-                    editTextOption.setmEditTextID(R.id.editTextNumSets);
-                    return ((EditText) findViewById(R.id.editTextNumSets));
+            case STARTING_SCORE:
+                editTextOption.setmEditTextID(R.id.editTextStartingScore);
+                return ((EditText) findViewById(R.id.editTextStartingScore));
 
-                case SCORE_DIFF_TO_WIN:
-                    editTextOption.setmEditTextID(R.id.editTextDiffToWin);
-                    return ((EditText) findViewById(R.id.editTextDiffToWin));
+            case SCORE_INTERVAL:
+                editTextOption.setmEditTextID(R.id.editTextScoreInterval);
+                return ((EditText) findViewById(R.id.editTextScoreInterval));
 
-                case WINNING_SCORE:
-                    editTextOption.setmEditTextID(R.id.editTextMaxScore);
-                    return ((EditText) findViewById(R.id.editTextMaxScore));
+            case LENGTH:
+                editTextOption.setmEditTextID(R.id.editTextLength);
+                return ((EditText) findViewById(R.id.editTextLength));
 
-                case STARTING_SCORE:
-                    editTextOption.setmEditTextID(R.id.editTextStartingScore);
-                    return ((EditText) findViewById(R.id.editTextStartingScore));
+            case TITLE:
+                editTextOption.setmEditTextID(R.id.editTextTitle);
+                return ((EditText) findViewById(R.id.editTextTitle));
 
-                case SCORE_INTERVAL:
-                    editTextOption.setmEditTextID(R.id.editTextScoreInterval);
-                    return ((EditText) findViewById(R.id.editTextScoreInterval));
+            case DATE:
+                editTextOption.setmEditTextID(R.id.editTextDate);
+                return ((EditText) findViewById(R.id.editTextDate));
 
-                case LENGTH:
-                    editTextOption.setmEditTextID(R.id.editTextLength);
-                    return ((EditText) findViewById(R.id.editTextLength));
+            case DICE_MAX:
+                editTextOption.setmEditTextID(R.id.editTextDiceMax);
+                return ((EditText) findViewById(R.id.editTextDiceMax));
 
-                case TITLE:
-                    editTextOption.setmEditTextID(R.id.editTextTitle);
-                    return ((EditText) findViewById(R.id.editTextTitle));
+            case DICE_MIN:
+                editTextOption.setmEditTextID(R.id.editTextDiceMin);
+                return ((EditText) findViewById(R.id.editTextDiceMin));
 
-                case DATE:
-                    editTextOption.setmEditTextID(R.id.editTextDate);
-                    return ((EditText) findViewById(R.id.editTextDate));
+            case NOTES:
+                editTextOption.setmEditTextID(R.id.editText);
+                return ((EditText) findViewById(R.id.editText));
 
-                case DICE_MAX:
-                    editTextOption.setmEditTextID(R.id.editTextDiceMax);
-                    return ((EditText) findViewById(R.id.editTextDiceMax));
+            default:
+                return null;
 
-                case DICE_MIN:
-                    editTextOption.setmEditTextID(R.id.editTextDiceMin);
-                    return ((EditText) findViewById(R.id.editTextDiceMin));
-
-                case NOTES:
-                    editTextOption.setmEditTextID(R.id.editText);
-                    return ((EditText) findViewById(R.id.editText));
-
-                default:
-                    return null;
-
-            }
         }
     }
 

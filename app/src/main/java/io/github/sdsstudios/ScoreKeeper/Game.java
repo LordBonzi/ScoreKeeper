@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,8 +21,10 @@ public class Game {
 
     public static final int WINNING = 154;
     public static final int LOSING = 45;
-
     private static String TAG = "Game";
+    private final String CHECK_BOX_OPTIONS = "check_box_options";
+    private final String INT_EDIT_TEXT_OPTIONS = "int_edit_text_options";
+    private final String STRING_EDIT_TEXT_OPTIONS = "string_edit_text_options";
     private List<Integer> mSortedScoreList;
 
     private GameListener mGameListener;
@@ -67,7 +71,12 @@ public class Game {
     }
 
     String getmLength() {
-        return getString(Option.LENGTH);
+        String length = getString(Option.LENGTH);
+        if (length == null || length.equals("")) {
+            return "00:00:00:0";
+        } else {
+            return getString(Option.LENGTH);
+        }
     }
 
     void setmLength(String mLength) {
@@ -102,7 +111,7 @@ public class Game {
         return mTimeLimit;
     }
 
-    public void setmTimeLimit(TimeLimit mTimeLimit) {
+    void setmTimeLimit(TimeLimit mTimeLimit) {
         if (mTimeLimit == null) {
             this.mTimeLimit = TimeLimit.BLANK_TIME_LIMIT;
         } else {
@@ -153,11 +162,11 @@ public class Game {
         return mPlayerArray.size();
     }
 
-    public int numSetsPlayed(){
+    protected int numSetsPlayed() {
         return mNumSetsPlayed;
     }
 
-    public void startNewSet() {
+    void startNewSet() {
         for (Player p : getmPlayerArray()) {
             p.addSet(getInt(Option.STARTING_SCORE));
         }
@@ -187,16 +196,6 @@ public class Game {
         }
 
         return data;
-    }
-
-    public void updatePlayerColors() {
-        if (size() > 2) {
-            for (Player player : mPlayerArray) {
-                if (player.getmButtonColorListener() != null) {
-                    player.getmButtonColorListener().updateColor(playerPosition(player));
-                }
-            }
-        }
     }
 
     public List<Integer> getmSortedScoreList() {
@@ -234,15 +233,81 @@ public class Game {
         return data;
     }
 
-    public List<CheckBoxOption> getmCheckBoxOptions() {
+
+    private List<String> currentOptionIDs(String whichList) {
+        List<String> list = new ArrayList<>();
+
+        switch (whichList) {
+            case CHECK_BOX_OPTIONS:
+                for (CheckBoxOption option : mCheckBoxOptions) {
+                    list.add(option.getmID());
+                }
+                break;
+
+            case STRING_EDIT_TEXT_OPTIONS:
+                for (StringEditTextOption option : mStringEditTextOptions) {
+                    list.add(option.getmID());
+                }
+                break;
+
+            case INT_EDIT_TEXT_OPTIONS:
+                for (IntEditTextOption option : mIntEditTextOptions) {
+                    list.add(option.getmID());
+                }
+                break;
+
+        }
+        return list;
+    }
+
+    private List<String> newOptionIDs(String whichList, Context ctx) {
+        List<String> list = new ArrayList<>();
+
+        switch (whichList) {
+            case CHECK_BOX_OPTIONS:
+                for (CheckBoxOption option : CheckBoxOption.loadCheckBoxOptions(ctx)) {
+                    list.add(option.getmID());
+                }
+                break;
+
+            case STRING_EDIT_TEXT_OPTIONS:
+                for (StringEditTextOption option : StringEditTextOption.loadEditTextOptions(ctx)) {
+                    list.add(option.getmID());
+                }
+                break;
+
+            case INT_EDIT_TEXT_OPTIONS:
+                for (IntEditTextOption option : IntEditTextOption.loadEditTextOptions(ctx)) {
+                    list.add(option.getmID());
+                }
+                break;
+
+        }
+        return list;
+    }
+
+    public List<CheckBoxOption> getmCheckBoxOptions(Context ctx) {
+
+        if (mCheckBoxOptions.size() != Option.CHECK_BOX_OPTIONS.length) {
+
+            List<String> newOptionIDs = newOptionIDs(CHECK_BOX_OPTIONS, ctx);
+            List<String> currentOptionIDs = currentOptionIDs(CHECK_BOX_OPTIONS);
+
+            for (int i = 0; i < newOptionIDs.size(); i++) {
+                if (!currentOptionIDs.contains(newOptionIDs.get(i))) {
+                    mCheckBoxOptions.add(CheckBoxOption.loadCheckBoxOptions(ctx).get(i));
+                }
+            }
+        }
+
         return mCheckBoxOptions;
     }
 
-    public void setmCheckBoxOptions(List<CheckBoxOption> mCheckBoxOptions) {
+    void setmCheckBoxOptions(List<CheckBoxOption> mCheckBoxOptions) {
         this.mCheckBoxOptions = mCheckBoxOptions;
     }
 
-    public int numSets(){
+    protected int numSets() {
         return getInt(Option.NUMBER_SETS);
     }
 
@@ -280,23 +345,47 @@ public class Game {
         }
     }
 
-    public List<IntEditTextOption> getmIntEditTextOptions() {
+    public List<IntEditTextOption> getmIntEditTextOptions(Context ctx) {
+
+        if (mIntEditTextOptions.size() != Option.INT_EDIT_TEXT_OPTIONS.length) {
+            List<String> newOptionIDs = newOptionIDs(INT_EDIT_TEXT_OPTIONS, ctx);
+            List<String> currentOptionIDs = currentOptionIDs(INT_EDIT_TEXT_OPTIONS);
+
+            for (int i = 0; i < newOptionIDs.size(); i++) {
+                if (!currentOptionIDs.contains(newOptionIDs.get(i))) {
+                    mIntEditTextOptions.add(IntEditTextOption.loadEditTextOptions(ctx).get(i));
+                }
+            }
+        }
+
         return mIntEditTextOptions;
     }
 
-    public void setmIntEditTextOption(List<IntEditTextOption> mIntEditTextOptions) {
+    void setmIntEditTextOptions(List<IntEditTextOption> mIntEditTextOptions) {
         this.mIntEditTextOptions = mIntEditTextOptions;
     }
 
-    public List<StringEditTextOption> getmStringEditTextOptions() {
+    public List<StringEditTextOption> getmStringEditTextOptions(Context ctx) {
+
+        if (mStringEditTextOptions.size() != Option.STRING_EDIT_TEXT_OPTIONS.length) {
+            List<String> newOptionIDs = newOptionIDs(STRING_EDIT_TEXT_OPTIONS, ctx);
+            List<String> currentOptionIDs = currentOptionIDs(STRING_EDIT_TEXT_OPTIONS);
+
+            for (int i = 0; i < newOptionIDs.size(); i++) {
+                if (!currentOptionIDs.contains(newOptionIDs.get(i))) {
+                    mStringEditTextOptions.add(StringEditTextOption.loadEditTextOptions(ctx).get(i));
+                }
+            }
+        }
+
         return mStringEditTextOptions;
     }
 
-    public void setmStringEditTextOptions(List<StringEditTextOption> mStringEditTextOptions) {
+    void setmStringEditTextOptions(List<StringEditTextOption> mStringEditTextOptions) {
         this.mStringEditTextOptions = mStringEditTextOptions;
     }
 
-    public void setString(String id, String data) {
+    void setString(String id, String data) {
         for (StringEditTextOption s : mStringEditTextOptions) {
             if (s.getmID().equals(id)) {
                 s.setData(data);
@@ -331,7 +420,7 @@ public class Game {
         return mPlayerArray.get(position);
     }
 
-    public String getWinnerString(){
+    private String getWinnerString() {
         Player winningPlayer = mPlayerArray.get(0);
 
         for (Player p : mPlayerArray) {
@@ -403,7 +492,7 @@ public class Game {
 
     }
 
-    public int playerPosition(Player player) {
+    private int playerPosition(Player player) {
         if (mSortedScoreList == null) {
             /** creates a list with sorted scores **/
             sortScoreList();
@@ -418,11 +507,11 @@ public class Game {
         }
     }
 
-    public int largestScoreIndex(List<Integer> mScoreList) {
+    private int largestScoreIndex(List<Integer> mScoreList) {
         return mScoreList.indexOf(Collections.max(mScoreList));
     }
 
-    public List<Integer> getListOfScores() {
+    private List<Integer> getListOfScores() {
         List<Integer> scoreList = new ArrayList<>();
         for (int i = 0; i < size(); i++) {
             scoreList.add(mPlayerArray.get(i).getmScore());

@@ -146,6 +146,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
     }
 
+
     @Override
     public io.github.sdsstudios.ScoreKeeper.Activity.Activity getActivity() {
         return io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME;

@@ -1,5 +1,7 @@
 package io.github.sdsstudios.ScoreKeeper.Options;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +20,12 @@ public class CheckBoxOption extends Option{
         this.mCheckBoxID = mCheckBoxID;
     }
 
-    public static List<CheckBoxOption> loadCheckBoxOptions(android.app.Activity activity) {
-        //MUST BE IN ORDER OF THE LIST OF POINTERS ABOVE!!!
+    public static List<CheckBoxOption> loadCheckBoxOptions(Context ctx) {
 
         List<CheckBoxOption> mCheckBoxOptions = new ArrayList<>();
 
-        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch, Option.STOPWATCH, false, activity.getString(R.string.stopwatch)));
-        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring, Option.REVERSE_SCORING, false, activity.getString(R.string.reverse_scoring)));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxStopwatch, Option.STOPWATCH, false, ctx.getString(R.string.stopwatch)));
+        mCheckBoxOptions.add(new CheckBoxOption(R.id.checkBoxReverseScoring, Option.REVERSE_SCORING, false, ctx.getString(R.string.reverse_scoring)));
 
         return mCheckBoxOptions;
     }

@@ -275,8 +275,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         RecyclerView.Adapter bigGameAdapter = new BigGameAdapter(game, enabled, this);
         mPlayerRecyclerView.setAdapter(bigGameAdapter);
 
-        game.updatePlayerColors();
-
     }
 
     @Override
@@ -286,7 +284,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
         menu.findItem(R.id.action_reset).setVisible(true);

@@ -1,10 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-
-import io.github.sdsstudios.ScoreKeeper.Adapters.BigGameAdapter;
 
 /**
  * Created by seth on 21/09/16.
@@ -15,7 +11,6 @@ public class Player {
 
     private String mName;
     private ArrayList<Integer> mSetScores;
-    private BigGameAdapter.ButtonColorListener mButtonColorListener;
     //TODO add image for player
 
     public Player(String mName, int mScore) {
@@ -24,17 +19,6 @@ public class Player {
 
         /**create a blank set. when creating a new Player**/
         mSetScores.add(mScore);
-    }
-
-    public BigGameAdapter.ButtonColorListener getmButtonColorListener() {
-        return mButtonColorListener;
-    }
-
-    public void setmButtonColorListener(BigGameAdapter.ButtonColorListener mButtonColorListener) {
-        if (mButtonColorListener != null) {
-            this.mButtonColorListener = mButtonColorListener;
-            Log.e(TAG, "setbuttonClicklistener");
-        }
     }
 
     public void reset() {

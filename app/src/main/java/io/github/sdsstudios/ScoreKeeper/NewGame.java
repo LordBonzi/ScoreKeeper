@@ -213,7 +213,7 @@ public class NewGame extends OptionActivity
         displayRecyclerView(false);
 
         game.setmCheckBoxOptions(CheckBoxOption.loadCheckBoxOptions(this));
-        game.setmIntEditTextOption(IntEditTextOption.loadEditTextOptions(this));
+        game.setmIntEditTextOptions(IntEditTextOption.loadEditTextOptions(this));
         game.setmStringEditTextOptions(StringEditTextOption.loadEditTextOptions(this));
         game.noTimeLimit();
 

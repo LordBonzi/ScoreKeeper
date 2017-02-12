@@ -2,8 +2,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1.1 12/02/17
+### Added
+ - Light Theme is enabled by default
+ - 'Continue Last Game' button is borderless and has colored text
+ - complete the game when the timelimit has been met
+ - 'Notes' option for every game
+ - after creating a 'Time Limit', select it in the dropdown menu
+ - changed 'Preset' card name to 'Load Preset'
+ - use checkboxes to highlight items when deleting presets and time limits
+ - automatically enable the stopwatch when choosing or creating a 'Time Limit
+ - 'Time Limit' card is added into Game Info
+ - when changing the 'Time Limit', warn the user that it will be shorter than
+ the time already played in the game
+
+### Bug Fixes
+ - couldn't delete players in New Game
+ - when selecting all games in History, the counter didnt update
+ - dont show 'UNFINISHED' in games on the home screen
+ - unable to change the score
+ - if only 1 Preset was created, it wouldnt show in the dropdown menu
+ - if many 'Time Limits' were created, in the 'Delete Time Limits' dialog,
+ the dialog buttons woudln't be visible
+ - padding in 'Create Preset' dialog was too big
+ - 'About' activity didnt color the Navigation Bar by default
+ - after loading a 'Preset' you couldnt change the options
+ - when rotating 'Game Info', the Length, Date and Title are set as empty
+ - when switching tabs, after the game has completed, the buttons would be enabled
+ - 'Add Player' button would be hidden after clicking 'Done' in Game Info
+
 ## 1.1 03/02/17
-OVERHAUL TO THE CODE SO I CAN'T SAY SAY SPECIFIC BUGS WHICH HAVE BEEN FIXED.
+OVERHAUL TO THE CODE SO I CAN'T SAY SPECIFIC BUGS WHICH HAVE BEEN FIXED.
 ### Added
  - tell the user why there are no games visible on the home screen
  - disable Color Navigation Bar option on devices with no software keys

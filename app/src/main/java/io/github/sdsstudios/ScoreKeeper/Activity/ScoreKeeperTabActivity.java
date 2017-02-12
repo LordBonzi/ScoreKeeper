@@ -124,22 +124,23 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
             case CHANGE_SET:
                 editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
-
-                if (game.size() > 2) {
-                    dialogBuilder.setNeutralButton(getString(R.string.delete_player), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deletePlayer(position);
-                        }
-                    });
-                }
-
                 break;
 
             default:
                 editTextScore.setHint(String.valueOf(player.getmScore()));
                 break;
 
+        }
+
+        if (type != Dialog.ADD_PLAYER) {
+            if (game.size() > 2) {
+                dialogBuilder.setNeutralButton(getString(R.string.delete_player), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePlayer(position);
+                    }
+                });
+            }
         }
 
         dialogBuilder.setPositiveButton(R.string.done, null);

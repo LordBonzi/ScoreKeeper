@@ -20,8 +20,8 @@ import java.util.List;
  */
 
 public class TimeLimit {
+    public static TimeLimit BLANK_TIME_LIMIT = new TimeLimit("", "");
     private static String TAG = "TimeLimit";
-
     private String mTitle;
     private String mTime;
 

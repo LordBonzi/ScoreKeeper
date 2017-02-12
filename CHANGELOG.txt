@@ -2,6 +2,73 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [ScoreKeeper](https://sds-studios.github.io/ScoreKeeper/).
 
+## 1.1.1 12/02/17
+### Added
+ - Light Theme is enabled by default
+ - 'Continue Last Game' button is borderless and has colored text
+ - complete the game when the timelimit has been met
+ - 'Notes' option for every game
+ - after creating a 'Time Limit', select it in the dropdown menu
+ - changed 'Preset' card name to 'Load Preset'
+ - use checkboxes to highlight items when deleting presets and time limits
+ - automatically enable the stopwatch when choosing or creating a 'Time Limit
+ - 'Time Limit' card is added into Game Info
+ - when changing the 'Time Limit', warn the user that it will be shorter than
+ the time already played in the game
+
+### Bug Fixes
+ - couldn't delete players in New Game
+ - when selecting all games in History, the counter didnt update
+ - dont show 'UNFINISHED' in games on the home screen
+ - unable to change the score
+ - if only 1 Preset was created, it wouldnt show in the dropdown menu
+ - if many 'Time Limits' were created, in the 'Delete Time Limits' dialog,
+ the dialog buttons woudln't be visible
+ - padding in 'Create Preset' dialog was too big
+ - 'About' activity didnt color the Navigation Bar by default
+ - after loading a 'Preset' you couldnt change the options
+ - when rotating 'Game Info', the Length, Date and Title are set as empty
+ - when switching tabs, after the game has completed, the buttons would be enabled
+ - 'Add Player' button would be hidden after clicking 'Done' in Game Info
+
+## 1.1 03/02/17
+OVERHAUL TO THE CODE SO I CAN'T SAY SPECIFIC BUGS WHICH HAVE BEEN FIXED.
+### Added
+ - tell the user why there are no games visible on the home screen
+ - disable Color Navigation Bar option on devices with no software keys
+ - delete players from dialog when changing set scores
+ - Add Player button in Game Info is always visible
+ - email developer from navigation drawer
+ - resetting games works properly
+ - horizontally scroll through players and Game title in History
+ - added tabs when in full screen landscape mode
+ - disable full screen option on android versions lower than 4.4
+ - full screen is working properly
+ - tabs to Game Info
+ - list of all scores and sets to Game Info
+ - change the score of any set for any player
+ - moved delete button to first position in History to avoid confusion with other icons
+ - tabs are inside the toolbar when in landscape to conserve space
+ - changed the GameActivity design so it should work better on all displays
+ - navigation drawer to navigate through the app
+ - general code improvements
+ - performance improvements
+ - new default colors
+ - moved max and min dice numbers to New Game so each game can have a unique set of numbers
+ - sets
+ - updated text shown in "Are you sure you want to quit" dialog to work with the new History activity introduced in 0.9.0alpha
+ - ask for review after 1 game and not 3
+ - update review dialog message
+ - expand all cards in New Game and Edit Game
+ - delete all presets from Settings
+ - give each game a unique title
+ - divider inbetween list items in History to easier distinguish them from each other
+ - update Google+ icon in About
+ - show the title of the game in the toolbar while playing it
+ - the title of each Text Field in New Game and Edit Game moves above it. Before, it was hidden if it wasnt hidden, which meant the user didnt know what it does.
+ - receive notifications from the developer. will be used very rarely. Mainly to warn all users if something will happen to the app.
+ - starting score option
+
 ## 1.1 Beta 6 02/02/17
 ### Added
  - tell the user why there are no games visible on the home screen

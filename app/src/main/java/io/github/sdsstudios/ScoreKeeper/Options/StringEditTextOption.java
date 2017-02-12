@@ -1,6 +1,6 @@
 package io.github.sdsstudios.ScoreKeeper.Options;
 
-import android.app.Activity;
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +20,21 @@ public class StringEditTextOption extends EditTextOption{
         mDefaultValue = data;
     }
 
-    public static List<StringEditTextOption> loadEditTextOptions(Activity a) {
-        //MUST BE IN ORDER OF THE LIST OF POINTERS ABOVE!!!
+    public static List<StringEditTextOption> loadEditTextOptions(Context ctx) {
 
         List<StringEditTextOption> mEditTextOptions = new ArrayList<>();
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextLength
-                , Option.LENGTH, "00:00:00:0", a.getString(R.string.length)));
+                , Option.LENGTH, "00:00:00:0", ctx.getString(R.string.length)));
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextDate
-                , Option.DATE, "", a.getString(R.string.date)));
+                , Option.DATE, "", ctx.getString(R.string.date)));
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextTitle
-                , Option.TITLE, "The Game With No Name", a.getString(R.string.title)));
+                , Option.TITLE, "The Game With No Name", ctx.getString(R.string.title)));
+
+        mEditTextOptions.add(new StringEditTextOption(R.id.editText
+                , Option.NOTES, "", ctx.getString(R.string.notes)));
 
         return mEditTextOptions;
     }

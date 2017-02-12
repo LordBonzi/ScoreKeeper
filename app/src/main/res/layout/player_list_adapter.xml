@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutPlayerAdapter"
@@ -17,18 +16,18 @@
         android:layout_toStartOf="@+id/buttonDelete"
         android:visibility="gone">
 
-    <EditText
-        android:id="@+id/editTextPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/buttonEdit"
-        android:layout_toStartOf="@+id/buttonEdit"
-        android:enabled="false"
-        android:text="Seth"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        <EditText
+            android:id="@+id/editTextPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/buttonEdit"
+            android:layout_toStartOf="@+id/buttonEdit"
+            android:enabled="false"
+            android:text="Seth"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <ImageButton
             android:id="@+id/buttonEdit"
@@ -61,41 +60,5 @@
         android:src="@mipmap/ic_clear_black_24dp"
         android:tint="#757575" />
 
-    <RelativeLayout
-        android:id="@+id/playerAdapterExtended"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/buttonDelete"
-        android:layout_toStartOf="@+id/buttonDelete"
-        android:visibility="gone">
-
-        <EditText
-            android:id="@+id/editTextScoreExt"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:enabled="false"
-            android:inputType="number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <EditText
-            android:id="@+id/editTextPlayerExt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/editTextScoreExt"
-            android:layout_toStartOf="@+id/editTextScoreExt"
-            android:enabled="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-
-    </RelativeLayout>
 
 </RelativeLayout>

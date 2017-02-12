@@ -43,13 +43,10 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                          int viewType) {
         View view;
-        if (mActivity == Activity.HOME) {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recent_history_adapter, parent, false);
-        }else{
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.history_adapter, parent, false);
-        }
+
+        view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.history_adapter, parent, false);
+
 
         ViewHolder vh = new ViewHolder(view, mViewClickListener);
 
@@ -77,22 +74,24 @@ public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.Vie
 
                 HistoryModel item = mItemArray.get(mItemArray.size() - position - 1);
 
-                if (mActivity == Activity.HISTORY) {
+                TypedValue outValue = new TypedValue();
 
-                    TypedValue outValue = new TypedValue();
+                holder.mTextViewHistoryInfo.setText(item.getmInfo());
 
-                    holder.mTextViewHistoryInfo.setText(item.getmInfo());
-
+                if (mActivity == Activity.HOME) {
+                    holder.mTextViewHistoryInProgress.setText("");
+                } else {
                     holder.mTextViewHistoryInProgress.setText(item.getmIsUnfinished());
                     holder.mTextViewHistoryInProgress.setAllCaps(true);
 
-                    if (isSelected(item.getmID()) ) {
-                        mCtx.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
-                        holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
-                    } else if (!isSelected(item.getmID()) || ACTION_MODE_DISABLED){
-                        mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-                        holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
-                    }
+                }
+
+                if (isSelected(item.getmID())) {
+                    mCtx.getTheme().resolveAttribute(R.attr.multiSelectBackground, outValue, true);
+                    holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
+                } else if (!isSelected(item.getmID()) || ACTION_MODE_DISABLED) {
+                    mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                    holder.mRelativeLayout.setBackgroundResource(outValue.resourceId);
                 }
 
                 holder.mTextViewHistoryTitle.setText(item.getmTitle());

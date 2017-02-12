@@ -4,8 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.Activity;
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperTabActivity;
+import io.github.sdsstudios.ScoreKeeper.Options.CheckBoxOption;
+import io.github.sdsstudios.ScoreKeeper.Options.IntEditTextOption;
 import io.github.sdsstudios.ScoreKeeper.Options.Option;
 import io.github.sdsstudios.ScoreKeeper.Options.StringEditTextOption;
 
@@ -33,11 +36,11 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     private SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private SimpleDateFormat mHourlengthFormat = new SimpleDateFormat("hh:mm:ss:S");
-    private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd
-            , mMenuItemShare, mMenuItemComplete;
+    private MenuItem mMenuItemDelete, mMenuItemEdit, mMenuItemDone, mMenuItemCancel, mMenuItemAdd, mMenuItemShare, mMenuItemComplete;
 
     private List<MenuItem> mMenuItemList = new ArrayList<>();
     private View mEditGameContent;
+    private boolean mEditableMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,10 +71,10 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    private void updateCompleteMenuItem(){
-        if (!mGame.ismCompleted()){
+    private void updateCompleteMenuItem() {
+        if (!game.ismCompleted()) {
             mMenuItemComplete.setTitle(R.string.complete);
-        }else{
+        } else {
             mMenuItemComplete.setTitle(R.string.unfinish);
         }
     }
@@ -87,6 +90,7 @@ public class EditGame extends ScoreKeeperTabActivity {
             mMenuItemList.add(mMenuItemAdd = menu.findItem(R.id.action_add));
             mMenuItemList.add(mMenuItemComplete = menu.findItem(R.id.complete_game));
             mMenuItemList.add(mMenuItemShare = menu.findItem(R.id.menu_item_share).setVisible(true));
+            menu.findItem(R.id.action_delete_timelimits).setVisible(true);
 
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);
@@ -99,14 +103,14 @@ public class EditGame extends ScoreKeeperTabActivity {
             ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mMenuItemShare);
             mShareActionProvider.setShareIntent(shareIntent());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
-    public Intent shareIntent(){
+    private Intent shareIntent() {
 
         Intent intent;
         intent = new Intent();
@@ -117,23 +121,23 @@ public class EditGame extends ScoreKeeperTabActivity {
         return intent;
     }
 
-    public void completeGame(){
+    private void completeGame() {
 
-        mGame.setmCompleted(!mGame.ismCompleted());
+        game.setmCompleted(!game.ismCompleted());
         updateCompleteMenuItem();
 
-        mDbHelper.open().updateGame(mGame);
-        mDbHelper.close();
+        gameDBAdapter.open().updateGame(game);
+        gameDBAdapter.close();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
 
             case R.id.action_delete:
-                delete();
+                deleteGameDialog();
                 break;
 
             case R.id.action_edit:
@@ -161,25 +165,11 @@ public class EditGame extends ScoreKeeperTabActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void helpDialog(String title, String message){
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(title);
-
-        builder.setMessage(message);
-
-        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
+    private void helpDialog(String title, String message) {
+        showTextDialog(title, message, getString(R.string.okay));
     }
 
-    public void onMenuEditClick() {
+    private void onMenuEditClick() {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -195,44 +185,33 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    public void onMenuDoneClick() {
+    private void onMenuDoneClick() {
 
         deleteEmptyPlayers();
 
-        for (final StringEditTextOption e : StringEditTextOptions()) {
-            e.setData(getEditText(e).getText().toString());
-        }
-
-        final String newLength = mGame.getmLength();
+        final String newLength = game.getmLength();
 
         final boolean booleanLength;
 
-        if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
-            mGame.setChecked(Option.STOPWATCH, true);
+        if (!checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0) {
+            game.setChecked(Option.STOPWATCH, true);
             booleanLength = true;
 
-        }else if (newLength.length() == 0|| newLength.equals("")){
+        } else if (newLength.length() == 0 || newLength.equals("")) {
             booleanLength = false;
 
-        }else if(checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0){
+        } else if (checkValidity(newLength, mHourlengthFormat, 10) && newLength.length() != 0) {
             booleanLength = false;
-        }else{
+        } else {
             booleanLength = false;
         }
 
-        final boolean bDateAndTime = checkValidity(mGame.getmTime(), mDateTimeFormat, 19);
+        final boolean bDateAndTime = checkValidity(game.getmTime(), mDateTimeFormat, 19);
         final boolean bCheckEmpty = false;
-        final boolean bCheckDuplicates = mDataHelper.checkPlayerDuplicates(getPlayerArray());
-        final boolean bNumPlayers = mGame.size() >= 2;
+        final boolean bCheckDuplicates = dataHelper.checkPlayerDuplicates(getPlayerArray());
+        final boolean bNumPlayers = game.size() >= 2;
 
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(R.string.edit_game_question);
-
-        builder.setMessage(R.string.are_you_sure_edit_game);
-
-        builder.setPositiveButton(R.string.title_activity_edit_game, new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int id) {
 
@@ -240,29 +219,28 @@ public class EditGame extends ScoreKeeperTabActivity {
 
                 if (bCheckEmpty) {
 
-                    invalidSnackbar("You can't have empty names!");
+                    createSnackbar(relativeLayout, "You can't have empty names!");
 
-                }else if (!bDateAndTime) {
+                } else if (!bDateAndTime) {
 
-                    invalidSnackbar(getString(R.string.invalid_date_and_time));
+                    createSnackbar(relativeLayout, getString(R.string.invalid_date_and_time));
 
-                }else if (booleanLength) {
+                } else if (booleanLength) {
 
-                    invalidSnackbar(getString(R.string.invalid_length));
+                    createSnackbar(relativeLayout, getString(R.string.invalid_length));
 
                 } else if (bCheckDuplicates) {
 
-                    invalidSnackbar("You can't have duplicate players!");
+                    createSnackbar(relativeLayout, "You can't have duplicate players!");
 
                 } else if (!bNumPlayers) {
 
-                    invalidSnackbar("Must have 2 or more players");
+                    createSnackbar(relativeLayout, "Must have 2 or more players");
 
-                }else{
+                } else {
 
-                    updateGameInDatabase();
+                    saveGameToDatabase();
 
-                    mMenuItemAdd.setVisible(false);
                     mMenuItemDelete.setVisible(true);
                     mMenuItemDone.setVisible(false);
                     mMenuItemEdit.setVisible(true);
@@ -270,32 +248,27 @@ public class EditGame extends ScoreKeeperTabActivity {
                     mMenuItemShare.setVisible(true);
                     mMenuItemComplete.setVisible(true);
 
+                    enableOptions(false);
                     loadOptions();
 
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 }
 
             }
-        });
+        };
+        showAlertDialog(getString(R.string.edit_game_question), getString(R.string.are_you_sure_edit_game), getString(R.string.title_activity_edit_game),
+                positiveClickListener, getString(R.string.cancel), dismissDialogListener);
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
 
     }
 
-    public boolean checkValidity(String string, SimpleDateFormat simpleDateFormat, int length) {
+    private boolean checkValidity(String string, SimpleDateFormat simpleDateFormat, int length) {
         boolean validity = false;
 
         try {
             Date dateDate = simpleDateFormat.parse(string);
 
-            if(string.length() == length) {
+            if (string.length() == length) {
                 validity = true;
             }
 
@@ -307,7 +280,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         return validity;
     }
 
-    public void onMenuCancelClick(){
+    private void onMenuCancelClick() {
 
         mMenuItemDelete.setVisible(true);
         mMenuItemDone.setVisible(false);
@@ -316,8 +289,9 @@ public class EditGame extends ScoreKeeperTabActivity {
         mMenuItemShare.setVisible(true);
         mMenuItemComplete.setVisible(true);
 
-        mGame = mDataHelper.getGame(mGameID, mDbHelper);
+        game = dataHelper.getGame(gameID, gameDBAdapter);
 
+        enableOptions(false);
         loadOptions();
         populateSetGridView();
 
@@ -325,38 +299,24 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     }
 
-    public void delete(){
+    private void deleteGameDialog() {
 
-        AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        showAlertDialog(getString(R.string.delete_game), getString(R.string.delete_game_message), getString(R.string.delete)
+                , new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteGame();
 
-        builder.setTitle(R.string.delete_game);
+                        if (gameDBAdapter.open().numRows() == 0) {
+                            startActivity(homeIntent);
+                        } else {
+                            startActivity(historyIntent);
+                        }
 
-        builder.setMessage(R.string.delete_game_message);
+                        gameDBAdapter.close();
 
-        builder.setPositiveButton(R.string.delete_game, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                deleteGame();
+                    }
+                }, getString(R.string.cancel), dismissDialogListener);
 
-                if (mDbHelper.open().numRows() == 0) {
-                    startActivity(mHomeIntent);
-                } else {
-                    startActivity(mHistoryIntent);
-                }
-
-                mDbHelper.close();
-
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
     }
 
     @Override
@@ -368,15 +328,96 @@ public class EditGame extends ScoreKeeperTabActivity {
     public void chooseTab(int layout) {
         if (layout == OPTIONS_LAYOUT) {
             mEditGameContent.setVisibility(VISIBLE);
-            mSetGridView.setVisibility(INVISIBLE);
-
+            setGridView.setVisibility(INVISIBLE);
 
         } else {
             mEditGameContent.setVisibility(INVISIBLE);
-            mSetGridView.setVisibility(View.VISIBLE);
+            setGridView.setVisibility(View.VISIBLE);
 
         }
     }
+
+    @Override
+    public void setOptionChangeListeners() {
+        super.setOptionChangeListeners();
+        for (final StringEditTextOption e : StringEditTextOptions()) {
+            getEditText(e).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!charSequence.toString().equals("")) {
+                        e.setData(charSequence.toString());
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
+        }
+    }
+
+    @Override
+    protected boolean inEditableMode() {
+        return mEditableMode;
+    }
+
+    @Override
+    public void loadTimeLimit(final int position) {
+        super.loadTimeLimit(position);
+
+        final TimeLimit chosenTimeLimit = timeLimitArray.get(position);
+        game.setmTimeLimit(chosenTimeLimit);
+
+        try {
+            if (timeHelper.convertToLong(game.getmLength()) > timeHelper.convertToLong(chosenTimeLimit.getmTime())) {
+                DialogInterface.OnClickListener positiveClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        game.setmLength("00:00:00:0");
+                        getEditText(game.getStringEditTextOption(Option.LENGTH)).setText(game.getmLength());
+                    }
+                };
+
+                showAlertDialog(getString(R.string.are_you_sure), getString(R.string.time_limit_chosen_is_too_small)
+                        , getString(R.string.reset_time_played), positiveClickListener, getString(R.string.ignore), dismissDialogListener)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                chooseTimeLimitInSpinner();
+                            }
+                        });
+            }
+
+        } catch (ParseException e) {
+            Toast.makeText(this, "error comparing timelimit to game time", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void enableOptions(boolean editable) {
+        mEditableMode = editable;
+
+        for (CheckBoxOption c : CheckBoxOptions()) {
+            getCheckBox(c).setEnabled(mEditableMode);
+        }
+
+        for (IntEditTextOption e : IntEditTextOptions()) {
+            getEditText(e).setEnabled(mEditableMode);
+        }
+
+        for (StringEditTextOption e : StringEditTextOptions()) {
+            getEditText(e).setText(e.getString());
+            getEditText(e).setEnabled(mEditableMode);
+        }
+
+        spinnerTimeLimit.setEnabled(editable);
+    }
+
 
     @Override
     public void onScoreClick(int playerIndex) {

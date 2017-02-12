@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.1</string>
-    <string name="versionCode">116</string>
-    <string name="title">Title:</string>
+    <string name="app_version">v1.1.1</string>
+    <string name="versionCode">118</string>
+    <string name="title">Title</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="new_game">New Game</string>
@@ -10,21 +10,21 @@
     <string name="player_s_name">Player\'s name</string>
     <string name="add_player">Add Player</string>
     <string name="_0" translatable="false">0</string>
-    <string name="date">Date:</string>
+    <string name="date">Date</string>
     <string name="dice">Dice</string>
     <string name="no">No</string>
     <string name="change_set_score">Change Set Score</string>
     <string name="new_set">New Set</string>
     <string name="sets">Sets</string>
     <string name="message">Message</string>
-    <string name="num_sets">Number of sets (optional)</string>
+    <string name="num_sets">Number of sets</string>
     <string name="unfinish">Continue</string>
     <string name="complete">Complete</string>
     <string name="no_translaters">No Translators yet. :)</string>
     <string name="remind_me_later">Later</string>
     <string name="report">Report</string>
     <string name="start_game">Start Game</string>
-    <string name="date_and_time">Date and Time:</string>
+    <string name="date_and_time">Date and Time</string>
     <string name="player_1">Player 1</string>
     <string name="player_2">Player 2</string>
     <string name="winner">Winner:</string>
@@ -47,7 +47,7 @@
     <string name="title_activity_home">Home</string>
     <string name="About">About</string>
     <string name="game_info">Game Info</string>
-    <string name="time_limit">Time Limit:</string>
+    <string name="time_limit">Time Limit</string>
     <string name="change_player">Change Player</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_edit_game">Change Game</string>
@@ -104,8 +104,8 @@
     <string name="seconds">Seconds:</string>
 
     <string name="quit_setup">Quit Setup</string>
-    <string name="players_and_scores">Players and Scores:</string>
-    <string name="length">Length:</string>
+    <string name="players_and_scores">Players and Scores</string>
+    <string name="length">Length</string>
 
     <string name="title_activity_time_limit">TimeLimit</string>
 
@@ -126,7 +126,7 @@
     <string name="pref_update_setting">Update Settings</string>
     <string name="no_time_limit">Time Limit</string>
     <string name="fullscreen">Fullscreen</string>
-    <string name="preset_title">Preset:</string>
+    <string name="preset_title">Preset</string>
     <string name="preset">Preset</string>
     <string name="create_preset">Save Preset</string>
     <string name="edit_player">Edit Player</string>
@@ -150,12 +150,12 @@
     <string name="rate_the_app">Rate and Review</string>
     <string name="opensourcelicenses">Open Source Licenses</string>
     <string name="max_num_on_dice">Max number on dice</string>
-    <string name="advanced_options">Advanced Options:</string>
-    <string name="max_score">Winning Score (optional)</string>
+    <string name="advanced_options">Advanced Options (optional)</string>
+    <string name="max_score">Winning Score</string>
     <string name="reverse_scoring">Reverse Scoring</string>
     <string name="has_won">has won</string>
-    <string name="score_interval">Score Interval (optional)</string>
-    <string name="diff_to_win">Score Difference to win (optional)</string>
+    <string name="score_interval">Score Interval</string>
+    <string name="diff_to_win">Score Difference to win</string>
     <string name="must_be_negative">Must be negative</string>
     <string name="add_remove_players">Add/Remove Players</string>
     <string name="stopwatch">Stopwatch</string>
@@ -184,8 +184,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="share">Share</string>
-    <string name="dice_minimum">Min Dice Number (optional)</string>
-    <string name="dice_maximum">Max Dice Number (optional)</string>
+    <string name="dice_minimum">Min Dice Number</string>
+    <string name="dice_maximum">Max Dice Number</string>
     <string name="info">Info</string>
     <string name="options">Options</string>
     <string name="advanced">Advanced</string>
@@ -197,6 +197,14 @@
     <string name="you_have_no_unfinished_games">You have completed all your games!</string>
     <string name="you_have_played_no_games">You have played no games!</string>
     <string name="player_button_tutorial">Long press to deduct points</string>
+    <string name="notes">Notes</string>
+    <string name="create_time_limit">Create Time Limit</string>
+    <string name="load_preset">Load Preset</string>
+    <string name="are_you_sure">Are You Sure?</string>
+    <string name="time_limit_chosen_is_too_small">The Time Limit chosen is shorter than the time already played in the game. You can ignore this or reset the time played to 0 Seconds</string>
+    <string name="ignore">Ignore</string>
+    <string name="reset_time_played">Reset Time</string>
+    <string name="delete_player">Delete Player</string>
 
 </resources>
 

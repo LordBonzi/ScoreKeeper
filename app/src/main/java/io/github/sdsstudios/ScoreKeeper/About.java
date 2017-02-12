@@ -54,7 +54,7 @@ public class About extends PreferenceActivity {
 
         int accentColor = sharedPreferences.getInt("prefAccentColor", Themes.DEFAULT_ACCENT_COLOR);
 
-        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", false);
+        boolean colorNavBar = sharedPreferences.getBoolean("prefColorNavBar", Themes.DEFAULT_COLOR_NAV_BAR);
         int primaryColor = sharedPreferences.getInt("prefPrimaryColor", Themes.DEFAULT_PRIMARY_COLOR(this));
         int primaryDarkColor = sharedPreferences.getInt("prefPrimaryDarkColor"
                 , Themes.DEFAULT_PRIMARY_DARK_COLOR(this));

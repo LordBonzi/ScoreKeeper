@@ -130,12 +130,18 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/action_notes"
+        android:orderInCategory="5"
+        android:title="@string/notes"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_events"
         android:orderInCategory="1"
         android:title="@string/events"
         android:visible="false"
         app:showAsAction="ifRoom"/>
-
 
     <item
         android:id="@+id/menu_item_share"

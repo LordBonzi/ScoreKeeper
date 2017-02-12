@@ -23,7 +23,6 @@ import io.github.sdsstudios.ScoreKeeper.Game;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
-import io.github.sdsstudios.ScoreKeeper.Player;
 import io.github.sdsstudios.ScoreKeeper.R;
 
 public class GameDBAdapter {
@@ -48,7 +47,6 @@ public class GameDBAdapter {
     public GameDBAdapter(Context ctx) {
         this.mCtx = ctx;
     }
-
 
     public GameDBAdapter open() throws SQLException {
         close();
@@ -97,11 +95,6 @@ public class GameDBAdapter {
 
     public long createGame(Game game) {
         game.setGameListener(null);
-        List<Player> playerArrayBackup = game.getmPlayerArray();
-
-        for (Player player : game.getmPlayerArray()) {
-            player.setmButtonColorListener(null);
-        }
 
         ContentValues initialValues = new ContentValues();
 
@@ -112,8 +105,6 @@ public class GameDBAdapter {
         }
 
         initialValues.put(KEY_GAME, convertGameToString(game));
-
-        game.setmPlayerArray(playerArrayBackup);
 
         return DATABASE.insert(SQLITE_TABLE, null, initialValues);
     }
@@ -296,7 +287,6 @@ public class GameDBAdapter {
 
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);
             onCreate(db);
-
 
         }
 

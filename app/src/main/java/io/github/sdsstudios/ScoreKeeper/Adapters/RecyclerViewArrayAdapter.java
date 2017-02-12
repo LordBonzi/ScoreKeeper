@@ -1,13 +1,12 @@
 package io.github.sdsstudios.ScoreKeeper.Adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import java.util.List;
 
@@ -24,29 +23,32 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
     private List<String> mArrayList;
     private Context mCtx;
-    private ViewHolder.ClickListener mClickListener;
+    private ClickListener mClickListener;
+    private Dialog mType;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerViewArrayAdapter(List<String> titleArray, Context context, ViewHolder.ClickListener listener) {
+    public RecyclerViewArrayAdapter(List<String> titleArray, Context context, ClickListener listener, Dialog type) {
         mCtx = context;
+        this.mType = type;
         this.mArrayList = titleArray;
         this.mClickListener = listener;
 
-        /** Remove create... and no timelimit items from array **/
+        /** Remove "create..." and "no timelimit" items from array **/
         mArrayList.remove(0);
-        mArrayList.remove(0);
+
+        if (type == Dialog.TIME_LIMIT) {
+            mArrayList.remove(0);
+        }
 
     }
 
-    public void deleteSelectedItems(Dialog type, Context context) {
+    public void deleteSelectedItems() {
 
-        if (type == Dialog.PRESETS) {
+        if (mType == Dialog.PRESETS) {
 
-            PresetDBAdapter presetDBAdapter = new PresetDBAdapter(context);
+            PresetDBAdapter presetDBAdapter = new PresetDBAdapter(mCtx);
 
             for (int i = 0; i < getmSelectedItems().size(); i++) {
-                int position = getmSelectedItems().get(i);
-                presetDBAdapter.deletePreset(position);
+                presetDBAdapter.deletePreset(getmSelectedItems().get(i) + 1);
             }
 
         }else{
@@ -70,41 +72,18 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent,
                                          int viewType) {
-        // create a new view
 
-
-        View view = null;
-
-        view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_array_adapter, parent, false);
-
-        // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder(view, mClickListener);
 
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        holder.textView.setText(mArrayList.get(position));
-
-        TypedValue outValue = new TypedValue();
-        mCtx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-
-        if (isSelected(position)) {
-            holder.cardView.setCardBackgroundColor(mCtx.getResources().getColor(R.color.stop));
-
-        } else if (!isSelected(position)) {
-
-            holder.cardView.setCardBackgroundColor(outValue.resourceId);
-        }
-
-
+        holder.mCheckBox.setText(mArrayList.get(position));
     }
 
     @Override
@@ -112,33 +91,27 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
         return mArrayList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public interface ClickListener {
+        void onItemClicked(int position);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
         @SuppressWarnings("unused")
 
-        TextView textView;
-        CardView cardView;
-        ClickListener listener;
+        private CheckBox mCheckBox;
+        private ClickListener mListener;
 
-        public ViewHolder(View v, ClickListener listener) {
+        public ViewHolder(View v, ClickListener mListener) {
             super(v);
 
-            this.listener = listener;
-            textView = (TextView) v.findViewById(R.id.textView);
-            cardView = (CardView) v.findViewById(R.id.cardView);
-            itemView.setOnClickListener(this);
+            this.mListener = mListener;
+            mCheckBox = (CheckBox) v.findViewById(R.id.checkBox);
+            mCheckBox.setOnCheckedChangeListener(this);
         }
 
         @Override
-        public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClicked(getAdapterPosition());
-            }
-
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mListener.onItemClicked(getAdapterPosition());
         }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-        }
-
     }
 }

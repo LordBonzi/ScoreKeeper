@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,23 +36,23 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
     public static final int GAME_LAYOUT = 0;
     public static final int OPTIONS_LAYOUT = 0;
 
-    public GridView mSetGridView;
-    public TabLayout mTabLayout;
-    public SetGridViewAdapter mSetGridViewAdapter;
+    public GridView setGridView;
+    public TabLayout tabLayout;
+    public SetGridViewAdapter setGridViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSetGridView = (GridView) findViewById(R.id.setGridView);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        setGridView = (GridView) findViewById(R.id.setGridView);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         loadTabs();
     }
 
     public void populateSetGridView() {
-        mSetGridView.setNumColumns(mGame.size());
-        mSetGridViewAdapter = new SetGridViewAdapter(mGame.getmPlayerArray(), this, this);
-        mSetGridView.setAdapter(mSetGridViewAdapter);
+        setGridView.setNumColumns(game.size());
+        setGridViewAdapter = new SetGridViewAdapter(game.getmPlayerArray(), this, this);
+        setGridView.setAdapter(setGridViewAdapter);
     }
 
     public void loadTabs() {
@@ -62,10 +61,10 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
         ViewPager mViewPager = (ViewPager) findViewById(R.id.option_tab_container);
         mViewPager.setAdapter(mTabPager);
 
-        mTabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(mViewPager);
 
-        for (int i = 0; i < mTabLayout.getChildCount(); i++) {
-            mTabLayout.getChildAt(i).setBackgroundColor(mPrimaryColor);
+        for (int i = 0; i < tabLayout.getChildCount(); i++) {
+            tabLayout.getChildAt(i).setBackgroundColor(primaryColor);
         }
 
         mViewPager.addOnPageChangeListener(this);
@@ -111,11 +110,10 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 ? player.getmSetScores().get(setPosition)
                 : player.getmScore();
 
-        final View dialogView;
 
-        LayoutInflater inflter = LayoutInflater.from(this);
+        final AlertDialog alertDialog;
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogView = inflter.inflate(R.layout.edit_player_fragment, null);
+        final View dialogView = layoutInflater.inflate(R.layout.edit_player_fragment, null);
 
         final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
         final EditText editTextScore = (EditText) dialogView.findViewById(R.id.editTextScore);
@@ -126,22 +124,23 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
             case CHANGE_SET:
                 editTextScore.setHint(String.valueOf(player.getmSetScores().get(setPosition)));
-
-                if (mGame.size() > 2) {
-                    dialogBuilder.setNeutralButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deletePlayer(position);
-                        }
-                    });
-                }
-
                 break;
 
             default:
                 editTextScore.setHint(String.valueOf(player.getmScore()));
                 break;
 
+        }
+
+        if (type != Dialog.ADD_PLAYER) {
+            if (game.size() > 2) {
+                dialogBuilder.setNeutralButton(getString(R.string.delete_player), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePlayer(position);
+                    }
+                });
+            }
         }
 
         dialogBuilder.setPositiveButton(R.string.done, null);
@@ -167,7 +166,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (type != Dialog.ADD_PLAYER) {
-                    mGame.setPlayer(oldPlayer, position);
+                    game.setPlayer(oldPlayer, position);
                 }
 
                 dialog.dismiss();
@@ -184,9 +183,9 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
 
         dialogBuilder.setView(dialogView);
 
-        mAlertDialog = dialogBuilder.create();
+        alertDialog = dialogBuilder.create();
 
-        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override
             public void onShow(DialogInterface dialogInterface) {
@@ -236,41 +235,41 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                     }
                 });
 
-                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 b.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
 
                         if (type == Dialog.ADD_PLAYER) {
-                            mGame.addNewPlayer(player);
+                            game.addNewPlayer(player);
                         } else {
-                            mGame.setPlayer(player, position);
+                            game.setPlayer(player, position);
                         }
 
-                        if (mDataHelper.checkPlayerDuplicates(mGame.getmPlayerArray())) {
+                        if (dataHelper.checkPlayerDuplicates(game.getmPlayerArray())) {
                             if (type == Dialog.ADD_PLAYER) {
-                                mGame.removePlayer(position);
+                                game.removePlayer(position);
                             } else {
-                                mGame.setPlayer(oldPlayer, position);
+                                game.setPlayer(oldPlayer, position);
                             }
                             Toast.makeText(getBaseContext(), R.string.duplicates_message, Toast.LENGTH_SHORT).show();
 
                         } else if (player.getmName().equals("")) {
 
                             if (type == Dialog.ADD_PLAYER) {
-                                mGame.removePlayer(position);
+                                game.removePlayer(position);
                             } else {
-                                mGame.setPlayer(oldPlayer, position);
+                                game.setPlayer(oldPlayer, position);
                             }
 
                             Toast.makeText(getBaseContext(), R.string.must_have_name, Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            mAlertDialog.dismiss();
+                            alertDialog.dismiss();
                             forceUpdateGame();
-                            mGame.isGameWon();
+                            game.isGameWon();
                             populateSetGridView();
                             goToCurrentSelectedTab();
 
@@ -282,7 +281,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
             }
 
         });
-        mAlertDialog.show();
+        alertDialog.show();
 
     }
 
@@ -291,7 +290,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
     }
 
     public void goToCurrentSelectedTab() {
-        switch (mTabLayout.getSelectedTabPosition()) {
+        switch (tabLayout.getSelectedTabPosition()) {
             case GAME_LAYOUT:
                 chooseTab(GAME_LAYOUT);
                 break;
@@ -305,25 +304,25 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
     @Override
     public void deletePlayer(int position) {
 
-        if (mGame.size() > 2) {
-            mGame.removePlayer(position);
+        if (game.size() > 2) {
+            game.removePlayer(position);
 
         } else {
             Toast.makeText(this, R.string.more_than_two_players, Toast.LENGTH_SHORT).show();
         }
 
-        updateGameInDatabase();
+        saveGameToDatabase();
 
         populateSetGridView();
     }
 
     private void forceUpdateGame() {
-        mDbHelper.open().updateGame(mGame);
-        mDbHelper.close();
+        gameDBAdapter.open().updateGame(game);
+        gameDBAdapter.close();
     }
 
     public void addPlayerDialog() {
-        playerDialog(new Player("", mGame.getInt(Option.STARTING_SCORE)), mGame.size(), Dialog.ADD_PLAYER, 0);
+        playerDialog(new Player("", game.getInt(Option.STARTING_SCORE)), game.size(), Dialog.ADD_PLAYER, 0);
 
     }
 

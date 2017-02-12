@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,7 +51,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mReviewLaterBool = mSharedPreferences.getBoolean("reviewlater", true);
+        mReviewLaterBool = sharedPreferences.getBoolean("reviewlater", true);
 
         Themes.themeActivity(this, R.layout.activity_home, false);
 
@@ -69,32 +68,32 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         NavigationView navigationView = (NavigationView) findViewById(R.id.home_nav_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (mSharedPreferences.getBoolean("prefReceiveNotifications", true)){
+        if (sharedPreferences.getBoolean("prefReceiveNotifications", true)) {
             FirebaseMessaging.getInstance().subscribeToTopic("news");
-        }else{
+        } else {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
         }
 
-        mNumRows = mDbHelper.open().numRows();
-        mDbHelper.close();
+        mNumRows = gameDBAdapter.open().numRows();
+        gameDBAdapter.close();
 
-        mLastPlayedGame = mSharedPreferences.getInt("lastplayedgame", mDbHelper.open().getNewestGame());
+        mLastPlayedGame = sharedPreferences.getInt("lastplayedgame", gameDBAdapter.open().getNewestGame());
 
         RelativeLayout relativeLayoutRecents = (RelativeLayout) findViewById(R.id.layoutRecentGames);
         Button buttonLastGame = (Button) findViewById(R.id.buttonContinueLastGame);
         TextView textViewNoUnfinishedGames = (TextView) findViewById(R.id.textViewNoUnfinishedGames);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.homeRecyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.homeRecyclerView);
 
         TextView textViewNumGames = (TextView) findViewById(R.id.textViewNumGamesPlayed);
-        textViewNumGames.setText(String.valueOf(mDbHelper.numRows()));
+        textViewNumGames.setText(String.valueOf(gameDBAdapter.numRows()));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabNewGame);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(mNewGameIntent);
+                startActivity(newGameIntent);
             }
         });
 
@@ -107,28 +106,28 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             }
         });
 
-        if (mNumRows == 0){
+        if (mNumRows == 0) {
             textViewNoUnfinishedGames.setVisibility(View.VISIBLE);
             textViewNoUnfinishedGames.setText(getString(R.string.you_have_played_no_games));
 
             relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
-        }else if (!anyUnfinishedGames()){
+        } else if (!anyUnfinishedGames()) {
             textViewNoUnfinishedGames.setText(getString(R.string.you_have_no_unfinished_games));
             textViewNoUnfinishedGames.setVisibility(View.VISIBLE);
 
             relativeLayoutRecents.setVisibility(View.INVISIBLE);
             buttonLastGame.setVisibility(View.INVISIBLE);
 
-        }else{
+        } else {
 
             textViewNoUnfinishedGames.setVisibility(View.GONE);
             displayRecyclerView();
 
         }
 
-        if (mNumRows == 1 && mReviewLaterBool){
+        if (mNumRows == 1 && mReviewLaterBool) {
             createReviewDialog();
         }
 
@@ -147,31 +146,32 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
     }
 
+
     @Override
     public io.github.sdsstudios.ScoreKeeper.Activity.Activity getActivity() {
         return io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME;
     }
 
-    public boolean anyUnfinishedGames() {
+    private boolean anyUnfinishedGames() {
 
         boolean unfinishedGames = false;
 
         try {
 
             for (int i = 1; i <= mNumRows; i++) {
-                if (!mDataHelper.getGame(i, mDbHelper.open()).ismCompleted()) {
+                if (!dataHelper.getGame(i, gameDBAdapter.open()).ismCompleted()) {
                     unfinishedGames = true;
                     break;
                 }
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.toString());
             Toast.makeText(this, "Error running anyUnfinishedGames() method", Toast.LENGTH_SHORT).show();
         }
 
-        mDbHelper.close();
+        gameDBAdapter.close();
         return unfinishedGames;
     }
 
@@ -193,7 +193,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
             String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
             new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
 
-        }else{
+        } else {
 
             File sdcard = Environment.getExternalStorageDirectory();
             File file = new File(sdcard, "/ScoreKeeper");
@@ -208,55 +208,42 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
 
     }
 
-    private void createReviewDialog(){
-        final AlertDialog dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void createReviewDialog() {
 
-        builder.setTitle(R.string.please_review);
-
-        builder.setMessage(R.string.review_message);
-
-        builder.setPositiveButton(R.string.review, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
-                startActivity(browserIntent);
-                mReviewLaterBool = false;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putBoolean("reviewlater", mReviewLaterBool);
-                editor.apply();
-            }
-        });
-
-        builder.setNeutralButton(R.string.remind_me_later, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mReviewLaterBool = true;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putBoolean("reviewlater", mReviewLaterBool);
-                editor.apply();
-                dialogInterface.dismiss();
-            }
-        });
-
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                mReviewLaterBool = false;
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putBoolean("reviewlater", mReviewLaterBool);
-                editor.apply();
-                dialog.dismiss();
-            }
-        });
-
-        dialog = builder.create();
-
-        dialog.show();
+        showAlertDialog(getString(R.string.please_review), getString(R.string.review_message), getString(R.string.review),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=io.github.sdsstudios.ScoreKeeper"));
+                        startActivity(browserIntent);
+                        mReviewLaterBool = false;
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("reviewlater", mReviewLaterBool);
+                        editor.apply();
+                    }
+                }, getString(R.string.remind_me_later), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mReviewLaterBool = true;
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("reviewlater", mReviewLaterBool);
+                        editor.apply();
+                        dialogInterface.dismiss();
+                    }
+                }, getString(R.string.no), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        mReviewLaterBool = false;
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("reviewlater", mReviewLaterBool);
+                        editor.apply();
+                        dialog.dismiss();
+                    }
+                });
     }
 
-    public synchronized void displayRecyclerView(){
+    private synchronized void displayRecyclerView() {
 
-        mDbHelper.open();
+        gameDBAdapter.open();
 
         try {
 
@@ -266,17 +253,17 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 mLayoutManager = new LinearLayoutManager(this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
 
-                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(mDbHelper, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
-                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HISTORY);
+                HistoryAdapter historyAdapter = new HistoryAdapter(HistoryModel.getHistoryModelList(gameDBAdapter, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME, HistoryAdapter.UNFINISHED)
+                        , this, this, io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME);
 
                 mRecyclerView.setAdapter(historyAdapter);
 
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);
             }
-            mDbHelper.close();
+            gameDBAdapter.close();
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
             e.printStackTrace();
             Log.e(TAG, e.toString());
@@ -287,13 +274,13 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
     @Override
     protected void onResume() {
         super.onResume();
-        mDbHelper.open();
+        gameDBAdapter.open();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mDbHelper.close();
+        gameDBAdapter.close();
     }
 
     @Override
@@ -331,11 +318,11 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch(id){
+        switch (id) {
             case R.id.nav_history:
 
-                if (mDbHelper.open().numRows() > 0) {
-                    startActivity(mHistoryIntent);
+                if (gameDBAdapter.open().numRows() > 0) {
+                    startActivity(historyIntent);
                 } else {
                     Toast.makeText(this, R.string.no_games, Toast.LENGTH_SHORT).show();
                 }
@@ -347,11 +334,11 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                 break;
 
             case R.id.nav_settings:
-                startActivity(mSettingsIntent);
+                startActivity(settingsIntent);
                 break;
 
             case R.id.nav_about:
-                startActivity(mAboutIntent);
+                startActivity(aboutIntent);
                 break;
 
             case R.id.nav_rate_review:

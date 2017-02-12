@@ -12,6 +12,7 @@ public class Option {
     /**
      * DO NOT CHANGE!!! WILL CRASH APP
      **/
+
     public static final String WINNING_SCORE = "winning_score";
     public static final String SCORE_INTERVAL = "score_interval";
     public static final String SCORE_DIFF_TO_WIN = "score_diff_to_win";
@@ -24,7 +25,16 @@ public class Option {
     public static final String TITLE = "title";
     public static final String REVERSE_SCORING = "reverse_scoring";
     public static final String STOPWATCH = "stopwatch";
+    public static final String NOTES = "notes";
 
+    public static final String[] STRING_EDIT_TEXT_OPTIONS = {LENGTH, DATE, TITLE, NOTES};
+
+    public static final String[] INT_EDIT_TEXT_OPTIONS = {WINNING_SCORE, SCORE_INTERVAL, SCORE_DIFF_TO_WIN, NUMBER_SETS, STARTING_SCORE
+            , DICE_MIN, DICE_MAX};
+
+    public static final String[] CHECK_BOX_OPTIONS = {REVERSE_SCORING, STOPWATCH};
+
+    private static String TAG = "Option";
     private String mID;
     private boolean mBooleanData;
     private String mStringData;
@@ -63,7 +73,6 @@ public class Option {
             mStringData = (String) mData;
 
         } else if (mData instanceof Boolean) {
-
             mBooleanData = (Boolean) mData;
         }
 
@@ -76,7 +85,6 @@ public class Option {
     public boolean isChecked() {
         return mBooleanData;
     }
-
 
     public interface OptionListener {
         void onOptionChange(Option option, Activity activity, GameDBAdapter gameDBAdapter);

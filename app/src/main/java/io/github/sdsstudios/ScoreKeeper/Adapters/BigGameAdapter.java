@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import io.github.sdsstudios.ScoreKeeper.Game;
@@ -114,20 +113,6 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                 }
             });
 
-            holder.mButtonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mButtonPlayerListener.deletePlayer(holder.getAdapterPosition());
-                }
-            });
-
-            holder.mButtonEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mButtonPlayerListener.editPlayer(holder.getAdapterPosition());
-                }
-            });
-
             mGame.setPlayer(player, position);
 
         } else {
@@ -150,15 +135,12 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextViewPlayer;
         public Button mButtonScore;
-        public ImageButton mButtonDelete, mButtonEdit;
 
 
         public ViewHolder(View v) {
             super(v);
             mTextViewPlayer = (TextView) v.findViewById(R.id.listTextViewPlayer);
             mButtonScore = (Button) v.findViewById(R.id.listButtonScore);
-            mButtonDelete = (ImageButton) v.findViewById(R.id.buttonDelete);
-            mButtonEdit = (ImageButton) v.findViewById(R.id.buttonEdit);
 
         }
 

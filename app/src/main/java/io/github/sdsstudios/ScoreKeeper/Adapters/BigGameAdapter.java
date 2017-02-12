@@ -80,7 +80,7 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final Player player = mGame.getPlayer(holder.getAdapterPosition());
 
@@ -110,6 +110,13 @@ public class BigGameAdapter extends RecyclerView.Adapter<BigGameAdapter.ViewHold
                     holder.mButtonScore.setText(String.valueOf(player.getmScore()));
 
                     return true;
+                }
+            });
+
+            holder.mTextViewPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mButtonPlayerListener.editPlayer(position);
                 }
             });
 

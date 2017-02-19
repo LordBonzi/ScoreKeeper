@@ -152,6 +152,11 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         return io.github.sdsstudios.ScoreKeeper.Activity.Activity.HOME;
     }
 
+    @Override
+    public void onDialogDismissed() {
+
+    }
+
     private boolean anyUnfinishedGames() {
 
         boolean unfinishedGames = false;

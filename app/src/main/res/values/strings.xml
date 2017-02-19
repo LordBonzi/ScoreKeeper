@@ -205,6 +205,7 @@
     <string name="ignore">Ignore</string>
     <string name="reset_time_played">Reset Time</string>
     <string name="delete_player">Delete Player</string>
+    <string name="game_has_ended">The game has ended</string>
 
 </resources>
 

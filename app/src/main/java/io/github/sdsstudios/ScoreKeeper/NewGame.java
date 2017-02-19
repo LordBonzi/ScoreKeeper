@@ -43,6 +43,11 @@ public class NewGame extends OptionActivity
     }
 
     @Override
+    public void onDialogDismissed() {
+
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         mStop = false;

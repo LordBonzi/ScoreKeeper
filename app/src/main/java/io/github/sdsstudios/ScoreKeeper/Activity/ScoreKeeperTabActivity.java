@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -111,8 +110,7 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
                 : player.getmScore();
 
 
-        final AlertDialog alertDialog;
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder dialogBuilder = createDialogBuilder(null, null);
         final View dialogView = layoutInflater.inflate(R.layout.edit_player_fragment, null);
 
         final EditText editTextPlayer = (EditText) dialogView.findViewById(R.id.editTextPlayer);
@@ -143,7 +141,43 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
             }
         }
 
-        dialogBuilder.setPositiveButton(R.string.done, null);
+        dialogBuilder.setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (type == Dialog.ADD_PLAYER) {
+                    game.addNewPlayer(player);
+                } else {
+                    game.setPlayer(player, position);
+                }
+
+                if (dataHelper.checkPlayerDuplicates(game.getmPlayerArray())) {
+                    if (type == Dialog.ADD_PLAYER) {
+                        game.removePlayer(position);
+                    } else {
+                        game.setPlayer(oldPlayer, position);
+                    }
+                    Toast.makeText(getBaseContext(), R.string.duplicates_message, Toast.LENGTH_SHORT).show();
+
+                } else if (player.getmName().equals("")) {
+
+                    if (type == Dialog.ADD_PLAYER) {
+                        game.removePlayer(position);
+                    } else {
+                        game.setPlayer(oldPlayer, position);
+                    }
+
+                    Toast.makeText(getBaseContext(), R.string.must_have_name, Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    forceUpdateGame();
+                    game.isGameWon();
+                    populateSetGridView();
+                    goToCurrentSelectedTab();
+
+                }
+            }
+        });
 
         switch (type) {
 
@@ -174,119 +208,55 @@ public abstract class ScoreKeeperTabActivity extends OptionActivity implements
             }
         });
 
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        editTextPlayer.addTextChangedListener(new TextWatcher() {
+
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                onDialogClose();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                player.setmName(editable.toString());
+            }
+        });
+
+        editTextScore.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (type == Dialog.CHANGE_SET) {
+                    if (editable.toString().equals("")) {
+                        player.changeSetScore(setPosition, oldScore);
+                    } else {
+                        player.changeSetScore(setPosition, Integer.valueOf(editable.toString()));
+                    }
+                } else {
+                    if (editable.toString().equals("")) {
+                        player.setmScore(oldScore);
+                    } else {
+                        player.setmScore(Integer.valueOf(editable.toString()));
+                    }
+                }
+
             }
         });
 
         dialogBuilder.setView(dialogView);
 
-        alertDialog = dialogBuilder.create();
-
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                editTextPlayer.addTextChangedListener(new TextWatcher() {
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        player.setmName(editable.toString());
-                    }
-                });
-
-                editTextScore.addTextChangedListener(new TextWatcher() {
-
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        if (type == Dialog.CHANGE_SET) {
-                            if (editable.toString().equals("")) {
-                                player.changeSetScore(setPosition, oldScore);
-                            } else {
-                                player.changeSetScore(setPosition, Integer.valueOf(editable.toString()));
-                            }
-                        } else {
-                            if (editable.toString().equals("")) {
-                                player.setmScore(oldScore);
-                            } else {
-                                player.setmScore(Integer.valueOf(editable.toString()));
-                            }
-                        }
-
-                    }
-                });
-
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-
-                        if (type == Dialog.ADD_PLAYER) {
-                            game.addNewPlayer(player);
-                        } else {
-                            game.setPlayer(player, position);
-                        }
-
-                        if (dataHelper.checkPlayerDuplicates(game.getmPlayerArray())) {
-                            if (type == Dialog.ADD_PLAYER) {
-                                game.removePlayer(position);
-                            } else {
-                                game.setPlayer(oldPlayer, position);
-                            }
-                            Toast.makeText(getBaseContext(), R.string.duplicates_message, Toast.LENGTH_SHORT).show();
-
-                        } else if (player.getmName().equals("")) {
-
-                            if (type == Dialog.ADD_PLAYER) {
-                                game.removePlayer(position);
-                            } else {
-                                game.setPlayer(oldPlayer, position);
-                            }
-
-                            Toast.makeText(getBaseContext(), R.string.must_have_name, Toast.LENGTH_SHORT).show();
-
-                        } else {
-
-                            alertDialog.dismiss();
-                            forceUpdateGame();
-                            game.isGameWon();
-                            populateSetGridView();
-                            goToCurrentSelectedTab();
-
-                        }
-
-                    }
-
-                });
-            }
-
-        });
-        alertDialog.show();
-
-    }
-
-    public void onDialogClose() {
-
+        dialogBuilder.create().show();
     }
 
     public void goToCurrentSelectedTab() {

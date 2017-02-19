@@ -53,6 +53,11 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
     }
 
     @Override
+    public void onDialogDismissed() {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);

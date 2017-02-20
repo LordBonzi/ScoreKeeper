@@ -596,33 +596,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         final AlertDialog.Builder builder = createDialogBuilder(null, null);
 
-        builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int id) {
-
-                game.startNewSet();
-
-                setFinished(false);
-
-                enablePlayerButtons(true);
-                mWon = false;
-                saveGameToDatabase();
-
-                if (TWO_PLAYER_GAME()) {
-
-                    for (ButtonPlayer buttonPlayer : mButtonsPlayerList) {
-                        buttonPlayer.startNewSet();
-                    }
-
-                } else {
-                    displayRecyclerView(true);
-                }
-
-                populateSetGridView();
-
-            }
-        });
-
         if (game.numSetsPlayed() == game.numSets()) {
 
             builder.setTitle(winner + " " + getString(R.string.has_won) + " overall");
@@ -635,14 +608,42 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
-        if (game.numSets() > 1 && game.numSetsPlayed() < game.numSets()) {
+        Log.e(TAG, String.valueOf(game.numSetsPlayed()));
 
+        if (game.numSets() > 1 && game.numSetsPlayed() < game.numSets()) {
 
             builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     saveStopwatchTime();
                     saveGameToDatabase();
                     startActivity(homeIntent);
+                }
+            });
+
+            builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int id) {
+
+                    game.startNewSet();
+
+                    setFinished(false);
+
+                    enablePlayerButtons(true);
+                    mWon = false;
+                    saveGameToDatabase();
+
+                    if (TWO_PLAYER_GAME()) {
+
+                        for (ButtonPlayer buttonPlayer : mButtonsPlayerList) {
+                            buttonPlayer.startNewSet();
+                        }
+
+                    } else {
+                        displayRecyclerView(true);
+                    }
+
+                    populateSetGridView();
+
                 }
             });
 
@@ -661,7 +662,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
         }
-
         enablePlayerButtons(false);
         displayRecyclerView(false);
 

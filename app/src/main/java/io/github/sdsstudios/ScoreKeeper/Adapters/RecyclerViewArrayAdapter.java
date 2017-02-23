@@ -61,7 +61,7 @@ public class RecyclerViewArrayAdapter extends SelectableAdapter<RecyclerViewArra
 
             }
 
-            TimeLimit.saveTimeLimit(timeLimitArray, mCtx);
+            TimeLimit.saveTimeLimitArray(timeLimitArray, mCtx);
 
         }
 

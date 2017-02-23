@@ -31,7 +31,7 @@ public class TimeLimit {
     }
 
     public static void deleteAllTimeLimits(Context ctx) {
-        saveTimeLimit(new ArrayList<TimeLimit>(), ctx);
+        saveTimeLimitArray(new ArrayList<TimeLimit>(), ctx);
     }
 
     public static List<TimeLimit> getTimeLimitArray(Context ctx) {
@@ -43,7 +43,7 @@ public class TimeLimit {
         return gson.fromJson(PreferenceManager.getDefaultSharedPreferences(ctx).getString("new_timelimit_array", null), type);
     }
 
-    public static void saveTimeLimit(List<TimeLimit> timeLimitArray, Context context) {
+    public static void saveTimeLimitArray(List<TimeLimit> timeLimitArray, Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPref.edit();
 

@@ -310,7 +310,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                             if (dataHelper.checkDuplicates(timeLimitStringArray())) {
 
                                 timeLimitArray.remove(timeLimitArray.size() - 1);
-                                TimeLimit.saveTimeLimit(timeLimitArray, OptionActivity.this);
+                                TimeLimit.saveTimeLimitArray(timeLimitArray, OptionActivity.this);
                                 displaySpinner(spinnerTimeLimit, timeLimitStringArray());
                                 spinnerPreset.setSelection(0);
                                 Toast.makeText(OptionActivity.this, "Time limit already exists", Toast.LENGTH_SHORT).show();
@@ -318,7 +318,7 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                             } else {
                                 saveGameToDatabase();
                                 dialog.dismiss();
-                                TimeLimit.saveTimeLimit(timeLimitArray, OptionActivity.this);
+                                TimeLimit.saveTimeLimitArray(timeLimitArray, OptionActivity.this);
                                 displaySpinner(spinnerTimeLimit, timeLimitStringArray());
                                 spinnerTimeLimit.setSelection(timeLimitArray.size() + 1);
                             }
@@ -392,16 +392,31 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
     }
 
     public void chooseTimeLimitInSpinner() {
+        boolean contains = false;
         TimeLimit timeLimit = game.getmTimeLimit();
 
         if (timeLimit != null) {
             for (int i = 0; i < timeLimitArray.size(); i++) {
                 if (timeLimitArray.get(i).getmTitle().equals(timeLimit.getmTitle())) {
                     spinnerTimeLimit.setSelection(i + 2);
+                    contains = true;
                     break;
                 }
             }
+
+            if (!contains && !timeLimit.getmTitle().equals("")) {
+                try {
+                    timeLimitArray.add(timeLimit);
+                    TimeLimit.saveTimeLimitArray(timeLimitArray, this);
+                    displaySpinner(spinnerTimeLimit, timeLimitStringArray());
+                    spinnerTimeLimit.setSelection(timeLimitArray.size() + 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
+
     }
 
     public void setOptionChangeListeners() {
@@ -475,7 +490,6 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
             });
         }
     }
-
 
     @Override
     protected void onResume() {

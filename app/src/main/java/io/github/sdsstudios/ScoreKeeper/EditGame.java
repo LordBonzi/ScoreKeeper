@@ -326,7 +326,6 @@ public class EditGame extends ScoreKeeperTabActivity {
 
     @Override
     public void onDialogDismissed() {
-
     }
 
     @Override

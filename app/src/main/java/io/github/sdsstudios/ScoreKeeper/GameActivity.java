@@ -329,8 +329,9 @@ public class GameActivity extends ScoreKeeperTabActivity
                         if (timeLimitString != null) {
 
                             if (!timeLimitString.equals("00:00:00:0")) {
+                                TimeLimit newTimeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
+                                game.setmTimeLimit(newTimeLimit);
 
-                                game.setmTimeLimit(new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
                                 saveGameToDatabase();
 
                                 mStopwatch.setTimeLimit(timeLimitString);
@@ -607,8 +608,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
 
         builder.setNegativeButton(R.string.cancel, dismissDialogListener);
-
-        Log.e(TAG, String.valueOf(game.numSetsPlayed()));
 
         if (game.numSets() > 1 && game.numSetsPlayed() < game.numSets()) {
 

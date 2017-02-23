@@ -53,7 +53,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         buttonHelpDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                helpDialog(getString(R.string.date_and_time_help), getString(R.string.date_and_time_help_message));
+                helpDialog(getString(R.string.help), getString(R.string.last_played_message));
             }
         });
 
@@ -62,7 +62,7 @@ public class EditGame extends ScoreKeeperTabActivity {
         buttonHelpLength.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                helpDialog(getString(R.string.length_help), getString(R.string.length_help_message));
+                helpDialog(getString(R.string.help), getString(R.string.length_help_message));
             }
         });
 

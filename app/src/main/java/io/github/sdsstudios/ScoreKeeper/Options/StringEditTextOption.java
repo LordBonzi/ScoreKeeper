@@ -27,7 +27,7 @@ public class StringEditTextOption extends EditTextOption{
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextLength
                 , Option.LENGTH, "00:00:00:0", ctx.getString(R.string.length)));
 
-        mEditTextOptions.add(new StringEditTextOption(R.id.editTextDate
+        mEditTextOptions.add(new StringEditTextOption(R.id.editTextLastPlayed
                 , Option.DATE, "", ctx.getString(R.string.date)));
 
         mEditTextOptions.add(new StringEditTextOption(R.id.editTextTitle

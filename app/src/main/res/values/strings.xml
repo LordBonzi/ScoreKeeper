@@ -165,9 +165,8 @@
     <string name="import_games_message">The database must be in /ScoreKeeper folder. It will delete all of your games.</string>
     <string name="export_games">Export</string>
     <string name="export_games_message">You can find it in the "ScoreKeeper" folder.</string>
-    <string name="date_and_time_help">Date and Time Help</string>
-    <string name="date_and_time_help_message">E.g. 2016-05-23 16:58:12</string>
-    <string name="length_help">Length Help</string>
+    <string name="last_played_message">E.g. 2016-05-23 16:58:12</string>
+    <string name="help">Help</string>
     <string name="length_help_message">E.g. 12:59:58:3
      hour:minute:second:millisecond</string>
     <string name="turn_off">Turn Off</string>
@@ -207,6 +206,7 @@
     <string name="delete_player">Delete Player</string>
     <string name="game_has_ended">The game has ended</string>
     <string name="whats_new">What\'s New?</string>
+    <string name="last_played">Last Played</string>
 
 </resources>
 

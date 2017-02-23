@@ -556,8 +556,8 @@ public abstract class OptionActivity extends ScoreKeeperActivity implements Play
                 return ((EditText) findViewById(R.id.editTextTitle));
 
             case DATE:
-                editTextOption.setmEditTextID(R.id.editTextDate);
-                return ((EditText) findViewById(R.id.editTextDate));
+                editTextOption.setmEditTextID(R.id.editTextLastPlayed);
+                return ((EditText) findViewById(R.id.editTextLastPlayed));
 
             case DICE_MAX:
                 editTextOption.setmEditTextID(R.id.editTextDiceMax);

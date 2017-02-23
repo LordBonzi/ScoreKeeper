@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/editTextDate"
+            android:layout_below="@+id/editTextLastPlayed"
             android:paddingBottom="12dp"
             android:text="@string/hour"
             android:textAlignment="center"

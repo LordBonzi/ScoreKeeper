@@ -44,7 +44,6 @@
 
         <activity
             android:name=".GameActivity"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".About"

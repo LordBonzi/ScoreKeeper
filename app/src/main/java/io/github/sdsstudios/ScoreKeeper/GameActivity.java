@@ -85,11 +85,11 @@ public class GameActivity extends ScoreKeeperTabActivity
     protected void onCreate(Bundle savedInstanceState) {
         Themes.themeActivity(this, R.layout.activity_main, true);
         super.onCreate(savedInstanceState);
-
         Bundle extras = getIntent().getExtras();
         GAME_ID = extras.getInt("GAME_ID");
 
         game = dataHelper.getGame(GAME_ID, gameDBAdapter);
+        getSupportActionBar().setTitle(game.getmTitle());
         game.setGameListener(this);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);

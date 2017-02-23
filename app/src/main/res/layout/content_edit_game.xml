@@ -92,6 +92,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
             android:visibility="visible"
             card_view:cardCornerRadius="4dp">
 
@@ -119,8 +120,8 @@
                     android:id="@+id/timeLimitHeader"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:clickable="true">
 
@@ -623,6 +624,7 @@
             android:layout_below="@+id/cardViewLength"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             ads:cardCornerRadius="4dp">
 

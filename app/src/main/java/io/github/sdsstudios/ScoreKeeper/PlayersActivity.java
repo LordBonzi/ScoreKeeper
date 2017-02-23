@@ -18,4 +18,9 @@ public class PlayersActivity extends ScoreKeeperActivity {
         return null;
     }
 
+    @Override
+    public void onDialogDismissed() {
+
+    }
+
 }

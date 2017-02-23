@@ -82,7 +82,6 @@ class DownloadFileFromURL extends AsyncTask<String, String, String> {
         return null;
     }
 
-
     /**
      * Checks if the app has permission to write to device storage
      *

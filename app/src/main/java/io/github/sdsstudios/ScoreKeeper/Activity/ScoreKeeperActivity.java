@@ -106,6 +106,10 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
 
     }
 
+    public void onDialogShown() {
+
+    }
+
     public AlertDialog showCustomAlertDialog(String title, String message,
                                              String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
                                              String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener, View layout) {
@@ -140,6 +144,8 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         return createDialogBuilder(title, message, positiveButtonText, positiveButtonClickListener, negativeButtonText, negativeButtonClickListener).show();
     }
 
+    public abstract void onDialogDismissed();
+
     public AlertDialog.Builder createDialogBuilder(String title, String message,
                                                    String positiveButtonText, DialogInterface.OnClickListener positiveButtonClickListener,
                                                    String negativeButtonText, DialogInterface.OnClickListener negativeButtonClickListener) {
@@ -152,6 +158,15 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         if (negativeButtonText != null) {
             builder.setNegativeButton(negativeButtonText, negativeButtonClickListener);
         }
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onDialogDismissed();
+            }
+        });
+
+        onDialogShown();
 
         return builder;
     }
@@ -166,6 +181,15 @@ public abstract class ScoreKeeperActivity extends AppCompatActivity {
         if (message != null) {
             builder.setMessage(message);
         }
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onDialogDismissed();
+            }
+        });
+
+        onDialogShown();
 
         return builder;
     }

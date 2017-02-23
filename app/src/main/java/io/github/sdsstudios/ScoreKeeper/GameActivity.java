@@ -1,12 +1,10 @@
 package io.github.sdsstudios.ScoreKeeper;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
@@ -56,19 +54,17 @@ import static android.view.View.VISIBLE;
 import static io.github.sdsstudios.ScoreKeeper.Options.Option.NOTES;
 
 public class GameActivity extends ScoreKeeperTabActivity
-        implements View.OnClickListener, Stopwatch.OnChronometerTickListener
-        , GameListener, ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener, ViewPager.OnPageChangeListener {
+        implements View.OnClickListener, GameListener
+        , ViewTreeObserver.OnGlobalLayoutListener, ButtonPlayerListener
+        , ViewPager.OnPageChangeListener, Stopwatch.StopwatchListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
     private static int GAME_ID;
-
     private final int PLAYER_1 = 0;
     private final int PLAYER_2 = 1;
-    private final int STOPWATCH_DELAY = 300;
     private TypedValue mTypedValue = new TypedValue();
 
     private boolean mFinished = false;
-    private boolean mPaused = false;
     private boolean mWon = false;
 
     private String mWinnerString;
@@ -76,19 +72,14 @@ public class GameActivity extends ScoreKeeperTabActivity
     private CardView mCardViewStopwatch;
     private Stopwatch mStopwatch;
     private View mDialogView;
-    private long mTimeWhenStopped = 0L;
     private MenuItem mMenuItemDiceNum;
     private RelativeLayout mMainContent;
     private View mNormalLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private ViewGroup.LayoutParams mParams;
     private int mMaxNumDice, mMinNumDice, mStartingScore, mScoreInterval;
-    private String mTimeLimit;
     private Random mRandom = new Random();
     private List<ButtonPlayer> mButtonsPlayerList = new ArrayList<>();
-
-    private Handler mPausedHandler = new Handler();
-    private Runnable mPausedRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,22 +110,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         saveGameToDatabase();
         getTheme().resolveAttribute(android.R.attr.textColorSecondary, mTypedValue, true);
-
-        mPausedRunnable = new Runnable() {
-            boolean red = false;
-
-            @Override
-            public void run() {
-                if (red) {
-                    mStopwatch.setTextColor(getResources().getColor(R.color.transparent));
-                } else {
-                    mStopwatch.setTextColor(getResources().getColor(R.color.stop));
-                }
-
-                red = !red;
-                mPausedHandler.postDelayed(this, STOPWATCH_DELAY);
-            }
-        };
 
         mParams = mMainContent.getLayoutParams();
 
@@ -188,6 +163,9 @@ public class GameActivity extends ScoreKeeperTabActivity
         mMaxNumDice = game.getInt(Option.DICE_MAX);
         mMinNumDice = game.getInt(Option.DICE_MIN);
 
+        mStopwatch = (Stopwatch) findViewById(R.id.stopwatch);
+        mStopwatch.setEnabled(game.isChecked(Option.STOPWATCH));
+
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
         }
@@ -195,8 +173,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (mScoreDiffToWin == 0) {
             mScoreDiffToWin = 1;
         }
-
-        homeIntent = new Intent(this, Home.class);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
         mMainContent = (RelativeLayout) findViewById(R.id.activity_main_content);
@@ -206,15 +182,11 @@ public class GameActivity extends ScoreKeeperTabActivity
         mCardViewStopwatch = (CardView) findViewById(R.id.stopwatchCardview);
         mCardViewStopwatch.setOnClickListener(this);
 
-        mStopwatch = (Stopwatch) findViewById(R.id.stopwatch);
-
         mPlayerRecyclerView = (RecyclerView) findViewById(R.id.playerRecyclerView);
 
         mNormalLayout = findViewById(R.id.layoutNormal);
 
         selectLayout();
-
-        mStopwatch.setOnChronometerTickListener(this);
 
         game.setGameListener(this);
         game.isGameWon();
@@ -236,37 +208,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         editor.putInt("lastplayedgame", GAME_ID);
         editor.apply();
 
-    }
-
-    private boolean timeLimitReached() {
-        boolean b = false;
-
-        if (game.getmTimeLimit() != null) {
-
-            if (mStopwatch.getText().equals(mTimeLimit)) {
-
-                if (!mFinished) {
-                    timeLimitDialog();
-                }
-
-                game.setmCompleted(true);
-                mFinished = true;
-                b = true;
-
-            }
-        }
-
-        return b;
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        chronometerClick();
-
-        saveStopwatchTime();
-        saveGameToDatabase();
     }
 
     public void displayRecyclerView(boolean enabled) {
@@ -306,8 +247,6 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     private void notesDialog() {
-        pauseStopwatch();
-
         mDialogView = layoutInflater.inflate(R.layout.edit_text_fragment, null);
 
         final EditText editText = (EditText) mDialogView.findViewById(R.id.editText);
@@ -334,12 +273,24 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     }
 
+    private void setFinished(boolean finished) {
+        this.mFinished = finished;
+        mStopwatch.isGameOver(finished);
+    }
+
+    @Override
+    public void playerDialog(Player player, int position, Dialog type, int setPosition) {
+        if (!mFinished) {
+            super.playerDialog(player, position, type, setPosition);
+        } else {
+            Toast.makeText(this, R.string.game_has_ended, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void timeLimitDialog() {
 
         enablePlayerButtons(false);
         displayRecyclerView(false);
-
-        pauseStopwatch();
 
         LayoutInflater inflater = this.getLayoutInflater();
         mDialogView = inflater.inflate(R.layout.create_time_limit, null);
@@ -378,21 +329,22 @@ public class GameActivity extends ScoreKeeperTabActivity
                         if (timeLimitString != null) {
 
                             if (!timeLimitString.equals("00:00:00:0")) {
+                                TimeLimit newTimeLimit = new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString);
+                                game.setmTimeLimit(newTimeLimit);
 
-                                game.setmTimeLimit(new TimeLimit(dataHelper.createTimeLimitCondensed(timeLimitString), timeLimitString));
                                 saveGameToDatabase();
 
-                                mTimeLimit = timeLimitString;
+                                mStopwatch.setTimeLimit(timeLimitString);
+                                mStopwatch.isTimeLimitReached();
 
-                                timeLimitReached();
                                 enablePlayerButtons(true);
                                 displayRecyclerView(true);
                                 dialog.dismiss();
                                 mCardViewStopwatch.setEnabled(true);
-                                mFinished = false;
+                                setFinished(false);
 
                             } else {
-                                mFinished = true;
+                                setFinished(true);
                                 dialog.dismiss();
                             }
                         }
@@ -420,16 +372,15 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void resetGame() {
         game.reset();
+        mStopwatch.reset();
 
         /** if the user resets the game after it has completed, unlock the buttons **/
-        mFinished = false;
+        setFinished(false);
 
         saveStopwatchTime();
         saveGameToDatabase();
         chooseTab(GAME_LAYOUT);
 
-        mStopwatch.setBase(SystemClock.elapsedRealtime());
-        mTimeWhenStopped = 0L;
     }
 
     @Override
@@ -441,7 +392,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                 break;
 
             case R.id.action_reset:
-                pauseStopwatch();
 
                 showAlertDialog(getString(R.string.reset_game_question), getString(R.string.reset_game_message), getString(R.string.reset),
                         new DialogInterface.OnClickListener() {
@@ -494,25 +444,8 @@ public class GameActivity extends ScoreKeeperTabActivity
     protected void onPause() {
         super.onPause();
 
-        pauseStopwatch();
-
+        mStopwatch.pause();
         saveGameToDatabase();
-    }
-
-    private void chronometerClick() {
-        if (game.isChecked(Option.STOPWATCH)) {
-            if (!mPaused) {
-                mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
-                mStopwatch.start();
-                mPausedHandler.removeCallbacks(mPausedRunnable);
-                mStopwatch.setTextColor(getResources().getColor(R.color.start));
-            } else {
-                mPausedHandler.removeCallbacks(mPausedRunnable);
-                mPausedHandler.postDelayed(mPausedRunnable, 0);
-                mTimeWhenStopped = mStopwatch.getBase() - SystemClock.elapsedRealtime();
-                mStopwatch.stop();
-            }
-        }
     }
 
     @Override
@@ -520,10 +453,9 @@ public class GameActivity extends ScoreKeeperTabActivity
         switch (v.getId()) {
             case R.id.stopwatchCardview:
                 if (!mFinished) {
-                    mPaused = !mPaused;
-                    chronometerClick();
+                    mStopwatch.toggle();
                 } else {
-                    Toast.makeText(this, "The game has ended", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.game_has_ended, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -620,9 +552,6 @@ public class GameActivity extends ScoreKeeperTabActivity
     public void onBackPressed() {
 
         if (!mFinished && !isFullScreen()) {
-            if (!mPaused) {
-                pauseStopwatch();
-            }
 
             showAlertDialog(getString(R.string.quit_game), getString(R.string.quit_game_message)
                     , getString(R.string.complete_game), new DialogInterface.OnClickListener() {
@@ -654,7 +583,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
             winnerDialog(mWinnerString);
 
-        } else if (timeLimitReached() && !isFullScreen()) {
+        } else if (mStopwatch.isTimeLimitReached() && !isFullScreen()) {
 
             timeLimitDialog();
 
@@ -666,8 +595,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void winnerDialog(String winner) {
 
-        AlertDialog dialog;
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = createDialogBuilder(null, null);
 
         if (game.numSetsPlayed() == game.numSets()) {
 
@@ -679,17 +607,17 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         }
 
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                onDialogClose();
-
-            }
-        });
-
         builder.setNegativeButton(R.string.cancel, dismissDialogListener);
 
         if (game.numSets() > 1 && game.numSetsPlayed() < game.numSets()) {
+
+            builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    saveStopwatchTime();
+                    saveGameToDatabase();
+                    startActivity(homeIntent);
+                }
+            });
 
             builder.setPositiveButton(R.string.new_set, new DialogInterface.OnClickListener() {
 
@@ -697,10 +625,8 @@ public class GameActivity extends ScoreKeeperTabActivity
 
                     game.startNewSet();
 
-                    mFinished = false;
-                    mPaused = false;
+                    setFinished(false);
 
-                    chronometerClick();
                     enablePlayerButtons(true);
                     mWon = false;
                     saveGameToDatabase();
@@ -720,16 +646,6 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
 
-            builder.setNeutralButton(R.string.complete_later, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                    saveStopwatchTime();
-
-                    saveGameToDatabase();
-                    startActivity(homeIntent);
-                }
-            });
-
         } else {
 
             builder.setPositiveButton(R.string.complete_game, new DialogInterface.OnClickListener() {
@@ -745,15 +661,12 @@ public class GameActivity extends ScoreKeeperTabActivity
                 }
             });
         }
-
         enablePlayerButtons(false);
         displayRecyclerView(false);
 
-        dialog = builder.create();
+        builder.create().show();
 
-        dialog.show();
-
-        mFinished = true;
+        setFinished(true);
         mWon = true;
 
     }
@@ -762,11 +675,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         if (game.isChecked(Option.STOPWATCH)) {
             game.setmLength(mStopwatch.getText().toString());
         }
-    }
-
-    @Override
-    public void onChronometerTick(Stopwatch chronometer) {
-        timeLimitReached();
     }
 
     private void reloadPlayerButtons() {
@@ -787,11 +695,9 @@ public class GameActivity extends ScoreKeeperTabActivity
             reloadPlayerButtons();
         }
 
-        mFinished = true;
-        pauseStopwatch();
+        setFinished(true);
         mWon = true;
         displayRecyclerView(false);
-
         winnerDialog(winner);
 
     }
@@ -872,25 +778,24 @@ public class GameActivity extends ScoreKeeperTabActivity
             try {
 
                 if (game.getmTimeLimit() != null) {
-                    mTimeLimit = game.getmTimeLimit().getmTime();
+                    mStopwatch.setTimeLimit(game.getmTimeLimit().getmTime());
                 }
 
                 if (game.getmLength() == null || game.getmLength().equals("") && game.isChecked(Option.STOPWATCH)) {
                     game.setmLength("00:00:00:0");
 
-                } else if (mTimeWhenStopped != 0L) {
+                } else if (mStopwatch.getTimeWhenStopped() != 0L) {
                     /** when coming back from the app running in the background treat it as unpausing the mStopwatch **/
-                    mStopwatch.setBase(SystemClock.elapsedRealtime() + mTimeWhenStopped);
+                    mStopwatch.setBase(SystemClock.elapsedRealtime() + mStopwatch.getTimeWhenStopped());
 
                 } else {
                     mStopwatch.setBase((-(3600000 + timeHelper.convertToLong(game.getmLength()) - SystemClock.elapsedRealtime())));
                 }
 
-                timeLimitReached();
+                mStopwatch.isTimeLimitReached();
 
                 if (!mFinished) {
                     mStopwatch.start();
-                    mStopwatch.setTextColor(getResources().getColor(R.color.start));
                 }
 
                 saveGameToDatabase();
@@ -959,7 +864,11 @@ public class GameActivity extends ScoreKeeperTabActivity
     }
 
     @Override
-    public void onDialogClose() {
+    public void onDialogDismissed() {
+        if (!mFinished) {
+            mStopwatch.start();
+        }
+
         if (isFullScreen()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 hideSystemWindows();
@@ -967,24 +876,25 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
     }
 
-    private void pauseStopwatch() {
-        if (!mPaused) {
-            mPaused = true;
-            chronometerClick();
-            saveStopwatchTime();
-        }
+    @Override
+    public void onDialogShown() {
+        mStopwatch.pause();
+        super.onDialogShown();
     }
 
     @Override
-    public void playerDialog(Player player, int position, Dialog type, int setPosition) {
-
-        /** pauses stopwatch before opening dialog **/
-        pauseStopwatch();
-
-        super.playerDialog(player, position, type, setPosition);
-
+    public void onStopwatchPause() {
+        saveStopwatchTime();
     }
 
+    @Override
+    public void onTimeLimitReached() {
+        if (!mFinished) {
+            timeLimitDialog();
+        }
 
+        game.setmCompleted(true);
+        setFinished(true);
+    }
 }
 

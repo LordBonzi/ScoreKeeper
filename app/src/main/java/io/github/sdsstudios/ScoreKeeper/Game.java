@@ -51,6 +51,7 @@ public class Game {
         this.mIntEditTextOptions = intEditTextOptions;
         this.mStringEditTextOptions = stringEditTextOptions;
         this.mGameListener = mGameListener;
+        mNumSetsPlayed = 1;
 
     }
 

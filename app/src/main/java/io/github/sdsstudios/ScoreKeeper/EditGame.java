@@ -325,6 +325,10 @@ public class EditGame extends ScoreKeeperTabActivity {
     }
 
     @Override
+    public void onDialogDismissed() {
+    }
+
+    @Override
     public void chooseTab(int layout) {
         if (layout == OPTIONS_LAYOUT) {
             mEditGameContent.setVisibility(VISIBLE);

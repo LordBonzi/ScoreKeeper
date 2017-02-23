@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.1.1</string>
-    <string name="versionCode">118</string>
+    <string name="app_version">v1.1.2 Beta</string>
+    <string name="versionCode">120</string>
     <string name="title">Title</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>
@@ -205,6 +205,7 @@
     <string name="ignore">Ignore</string>
     <string name="reset_time_played">Reset Time</string>
     <string name="delete_player">Delete Player</string>
+    <string name="game_has_ended">The game has ended</string>
 
 </resources>
 

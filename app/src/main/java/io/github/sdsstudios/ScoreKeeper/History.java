@@ -302,26 +302,51 @@ public class History extends ScoreKeeperActivity implements UpdateTabsListener, 
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+            DialogInterface.OnClickListener positiveClickListener;
+
             switch (item.getItemId()) {
                 case R.id.action_delete:
 
-                    gameDBAdapter.open();
-                    mHistoryAdapter.deleteSelectedGames(gameDBAdapter);
-                    gameDBAdapter.close();
+                    positiveClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            gameDBAdapter.open();
+                            mHistoryAdapter.deleteSelectedGames(gameDBAdapter);
+                            gameDBAdapter.close();
 
-                    gamesDeleted();
-                    mode.finish();
+                            gamesDeleted();
+                            mode.finish();
+                        }
+                    };
+
+                    showAlertDialog(getString(R.string.are_you_sure)
+                            , getString(R.string.delete_all_games_mes)
+                            , getString(R.string.delete), positiveClickListener
+                            , getString(R.string.cancel), dismissDialogListener);
+
                     break;
 
                 case R.id.action_delete_all:
-                    gameDBAdapter.open();
-                    gameDBAdapter.deleteAllGames();
-                    gameDBAdapter.close();
 
-                    startActivity(new Intent(getBaseContext(), Home.class));
+                    positiveClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            gameDBAdapter.open();
+                            gameDBAdapter.deleteAllGames();
+                            gameDBAdapter.close();
 
-                    mode.finish();
+                            startActivity(new Intent(getBaseContext(), Home.class));
+
+                            mode.finish();
+                        }
+                    };
+
+                    showAlertDialog(getString(R.string.are_you_sure)
+                            , getString(R.string.delete_all_games_mes)
+                            , getString(R.string.delete_all), positiveClickListener
+                            , getString(R.string.cancel), dismissDialogListener);
+
                     break;
 
                 case R.id.action_select_all:

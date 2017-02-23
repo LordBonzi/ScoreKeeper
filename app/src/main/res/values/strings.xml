@@ -61,7 +61,7 @@
     <string name="cancel">Cancel</string>
     <string name="complete_game">Finish</string>
     <string name="delete_time_limits">Delete Time Limits</string>
-    <string name="delete_all_games_mes">You will not get them back.</string>
+    <string name="delete_all_games_mes">They will be gone forever!</string>
     <string name="players">Players</string>
     <string name="delete_game">Delete Game?</string>
     <string name="must_have_name">The player must have a name!</string>

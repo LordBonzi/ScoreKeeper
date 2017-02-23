@@ -29,6 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
 import io.github.sdsstudios.ScoreKeeper.Adapters.HistoryAdapter;
+import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 
 public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHolder.ClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -128,15 +129,18 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         }
 
         verifyStoragePermissions(this);
+
+        showWhatsNewDialog();
     }
 
-    private void showWhatsNew() {
-        int currentVersionCode = Integer.parseInt(getString(R.string.app_version));
+    private void showWhatsNewDialog() {
+        int currentVersionCode = Integer.parseInt(getString(R.string.versionCode));
 
-        if (sharedPreferences.getInt("version_code", currentVersionCode) < currentVersionCode) {
-
+        if (sharedPreferences.getInt("version_code", 1) < currentVersionCode) {
+            DialogHelper.textViewAlertDialog(this, FileReader.textFromFileToString(FileReader.WHATS_NEW, this), getString(R.string.whats_new));
         }
 
+        sharedPreferences.edit().putInt("version_code", currentVersionCode).apply();
     }
 
     @Override

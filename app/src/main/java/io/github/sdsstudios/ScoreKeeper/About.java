@@ -26,16 +26,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 
+import static io.github.sdsstudios.ScoreKeeper.FileReader.CHANGELOG;
+import static io.github.sdsstudios.ScoreKeeper.FileReader.LICENSE;
+
 public class About extends PreferenceActivity {
-    private String CHANGELOG = "CHANGELOG.txt";
-    private String LICENSE = "LICENSE.txt";
 
     private AppCompatDelegate mDelegate;
     private Intent mHomeIntent;
@@ -131,7 +127,7 @@ public class About extends PreferenceActivity {
         licensePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                DialogHelper.textViewAlertDialog(About.this, textFromFile(LICENSE));
+                DialogHelper.textViewAlertDialog(About.this, FileReader.textFromFileToString(LICENSE, getBaseContext()), getString(R.string.opensourcelicenses));
 
                 return true;
             }
@@ -140,7 +136,7 @@ public class About extends PreferenceActivity {
         changeLogPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                DialogHelper.textViewAlertDialog(About.this, textFromFile(CHANGELOG));
+                DialogHelper.textViewAlertDialog(About.this, FileReader.textFromFileToString(CHANGELOG, getBaseContext()), getString(R.string.changelog));
                 return true;
             }
         });
@@ -219,37 +215,6 @@ public class About extends PreferenceActivity {
 
     }
 
-    public String textFromFile(String type) {
-
-        String fileName = null;
-
-        if (type.equals(CHANGELOG)) {
-            fileName = "CHANGELOG.txt";
-
-        } else if (type.equals(LICENSE)) {
-            fileName = "LICENSE.txt";
-        }
-
-        StringBuilder text = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(getAssets().open(fileName)));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-        } catch (FileNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "File not found!", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-
-        return text.toString();
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

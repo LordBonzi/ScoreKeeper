@@ -21,9 +21,7 @@ import java.util.List;
 
 import io.github.sdsstudios.ScoreKeeper.Game;
 import io.github.sdsstudios.ScoreKeeper.Helper.DataHelper;
-import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 import io.github.sdsstudios.ScoreKeeper.Listeners.GameListener;
-import io.github.sdsstudios.ScoreKeeper.R;
 
 public class GameDBAdapter {
 
@@ -279,10 +277,6 @@ public class GameDBAdapter {
                 }
 
                 db.delete(SQLITE_TABLE, null, null);
-
-                DialogHelper.createAlertDialog(mCtx, mCtx.getString(R.string.upgrade_title), mCtx.getString(R.string.upgrade_message));
-
-
             }
 
             db.execSQL("DROP TABLE IF EXISTS " + SQLITE_TABLE);

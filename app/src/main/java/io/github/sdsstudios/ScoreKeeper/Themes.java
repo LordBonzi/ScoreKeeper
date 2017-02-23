@@ -89,6 +89,7 @@ public class Themes extends PreferenceActivity{
     /**
      * DEFAULT COLORS
      **/
+
     public static int DEFAULT_PRIMARY_COLOR(Context ctx) {
         return ctx.getResources().getColor(R.color.primaryBlue);
     }

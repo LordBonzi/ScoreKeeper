@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -28,8 +26,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.io.File;
 
 import io.github.sdsstudios.ScoreKeeper.Activity.ScoreKeeperActivity;
 import io.github.sdsstudios.ScoreKeeper.Adapters.HistoryAdapter;
@@ -132,20 +128,16 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
         }
 
         verifyStoragePermissions(this);
+    }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            File sdcard = Environment.getExternalStorageDirectory();
-            File file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
-            String changelog_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(changelog_url);
+    private void showWhatsNew() {
+        int currentVersionCode = Integer.parseInt(getString(R.string.app_version));
 
-            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
+        if (sharedPreferences.getInt("version_code", currentVersionCode) < currentVersionCode) {
+
         }
 
     }
-
 
     @Override
     public io.github.sdsstudios.ScoreKeeper.Activity.Activity getActivity() {
@@ -189,28 +181,7 @@ public class Home extends ScoreKeeperActivity implements HistoryAdapter.ViewHold
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
-            File sdcard = Environment.getExternalStorageDirectory();
-            File file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
-            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
-
-            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
-
-        } else {
-
-            File sdcard = Environment.getExternalStorageDirectory();
-            File file = new File(sdcard, "/ScoreKeeper");
-            file.mkdirs();
-            String file_url = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/CHANGELOG.txt";
-            new DownloadFileFromURL("/ScoreKeeper/changelog_scorekeeper.txt").execute(file_url);
-
-            String downloadUrl = "https://raw.githubusercontent.com/SDS-Studios/ScoreKeeper/buggy/LICENSE.txt";
-            new DownloadFileFromURL("/ScoreKeeper/license_scorekeeper.txt").execute(downloadUrl);
-
         }
-
     }
 
     private void createReviewDialog() {

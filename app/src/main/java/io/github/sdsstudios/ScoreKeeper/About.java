@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -28,16 +27,15 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import io.github.sdsstudios.ScoreKeeper.Helper.DialogHelper;
 
 public class About extends PreferenceActivity {
-    private int CHANGELOG = 0;
-    private int LICENSE = 1;
+    private String CHANGELOG = "CHANGELOG.txt";
+    private String LICENSE = "LICENSE.txt";
 
     private AppCompatDelegate mDelegate;
     private Intent mHomeIntent;
@@ -221,22 +219,23 @@ public class About extends PreferenceActivity {
 
     }
 
-    public String textFromFile(int type) {
+    public String textFromFile(String type) {
 
-        File sdcard = Environment.getExternalStorageDirectory();
-        File file = null;
-        if (type == CHANGELOG) {
-            file = new File(sdcard, "/ScoreKeeper/changelog_scorekeeper.txt");
+        String fileName = null;
 
-        } else if (type == LICENSE) {
-            file = new File(sdcard, "/ScoreKeeper/license_scorekeeper.txt");
+        if (type.equals(CHANGELOG)) {
+            fileName = "CHANGELOG.txt";
+
+        } else if (type.equals(LICENSE)) {
+            fileName = "LICENSE.txt";
         }
 
         StringBuilder text = new StringBuilder();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(getAssets().open(fileName)));
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 text.append(line);
                 text.append('\n');
             }

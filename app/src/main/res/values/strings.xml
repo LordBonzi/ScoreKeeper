@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Score Keeper</string>
-    <string name="app_version">v1.1.2 Beta</string>
-    <string name="versionCode">120</string>
+    <string name="app_version">v1.1.3debug</string>
+    <string name="versionCode">121</string>
     <string name="title">Title</string>
     <string name="action_history">History</string>
     <string name="action_settings">Settings</string>

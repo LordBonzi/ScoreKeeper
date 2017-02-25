@@ -39,6 +39,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="14dp"
+        android:src="@mipmap/ic_add_white_48dp"
+        android:visibility="gone" />
+
     <include
         android:id="@+id/include"
         layout="@layout/new_game_footer"

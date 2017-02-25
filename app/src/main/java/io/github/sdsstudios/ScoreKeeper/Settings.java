@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -25,11 +24,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -102,8 +96,6 @@ public class Settings extends PreferenceActivity{
 
         Preference deletePreference = findPreference("prefDeleteAllGames");
         Preference themesPreference = findPreference("prefThemes");
-        Preference exportPreference = findPreference("prefExport");
-        Preference importPreference = findPreference("prefImport");
         Preference deleteAllPresets = findPreference("prefDeleteAllPresets");
         Preference notificationsPreference = findPreference("prefReceiveNotifications");
         Preference createGamesPref = findPreference("prefCreateGames");
@@ -156,69 +148,6 @@ public class Settings extends PreferenceActivity{
                 }
                 return false;
             }
-        });
-
-        exportPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                builder.setTitle(getResources().getString(R.string.export_games));
-
-                builder.setMessage(R.string.export_games_message);
-
-                builder.setPositiveButton(R.string.export, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            exportDatabase();
-                            Toast.makeText(Settings.this, "Successfully exported games to /ScoreKeeper", Toast.LENGTH_SHORT).show();
-                        }catch (Exception e){
-                            Toast.makeText(Settings.this, e.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-
-                mDialog = builder.create();
-                mDialog.show();
-
-                return true;
-            }
-
-        });
-
-        importPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                builder.setTitle(getResources().getString(R.string.import_games));
-
-                builder.setMessage(R.string.import_games_message);
-
-                builder.setPositiveButton(R.string._import, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            importDatabase();
-                            Toast.makeText(Settings.this, "Successfully imported games", Toast.LENGTH_SHORT).show();
-                        }catch (IOException e){
-                            Toast.makeText(Settings.this, "Error. Is the database in /ScoreKeeper folder?", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-
-                mDialog = builder.create();
-                mDialog.show();
-                return true;
-            }
-
         });
 
         deletePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -298,61 +227,6 @@ public class Settings extends PreferenceActivity{
         mDbHelper = new GameDBAdapter(this);
 
         mHomeIntent = new Intent(this, Home.class);
-    }
-
-    private void exportDatabase(){
-        File sd = Environment.getExternalStorageDirectory();
-        String DB_PATH;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
-        } else {
-            DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
-        }
-
-        if (sd.canWrite()) {
-            String currentDBPath = "ScoreKeeper";
-            String backupDBPath = "/ScoreKeeper/ScoreKeeper.db";
-            File currentDB = new File(DB_PATH, currentDBPath);
-            File backupDB = new File(sd, backupDBPath);
-
-            try{
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-
-            }catch (Exception e){
-                e.printStackTrace();
-                Log.e("Settings", e.toString());
-            }
-        }
-    }
-
-    private void importDatabase() throws IOException {
-        File sd = Environment.getExternalStorageDirectory();
-        String DB_PATH;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            DB_PATH = getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
-        }
-        else {
-            DB_PATH =  this.getDatabasePath("ScoreKeeper").toString();
-        }
-
-        if (sd.canWrite()) {
-            String currentDBPath = "ScoreKeeper";
-            String backupDBPath = "/ScoreKeeper/ScoreKeeper.db";
-            File currentDB = new File(sd, backupDBPath);
-            File backupDB = new File(DB_PATH, currentDBPath);
-
-            FileChannel src = new FileInputStream(currentDB).getChannel();
-            FileChannel dst = new FileOutputStream(backupDB).getChannel();
-            dst.transferFrom(src, 0, src.size());
-            src.close();
-            dst.close();
-
-
-        }
     }
 
     private void setSupportActionBar(@Nullable Toolbar toolbar) {

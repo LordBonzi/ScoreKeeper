@@ -32,24 +32,6 @@
     <PreferenceCategory
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="Backup and Restore">
-        <Preference
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:key="prefExport"
-            android:title="@string/export"
-            />
-        <Preference
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:key="prefImport"
-            android:title="@string/_import"
-            />
-        </PreferenceCategory>
-
-    <PreferenceCategory
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:title="DANGER ZONE!">
         <Preference
             android:layout_width="match_parent"

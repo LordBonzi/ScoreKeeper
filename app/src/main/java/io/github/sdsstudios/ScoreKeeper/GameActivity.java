@@ -59,7 +59,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         , ViewPager.OnPageChangeListener, Stopwatch.StopwatchListener {
 
     private static final String STATE_GAMEID = "GAME_ID";
-    private static int GAME_ID;
     private final int PLAYER_1 = 0;
     private final int PLAYER_2 = 1;
     private TypedValue mTypedValue = new TypedValue();
@@ -85,11 +84,20 @@ public class GameActivity extends ScoreKeeperTabActivity
     protected void onCreate(Bundle savedInstanceState) {
         Themes.themeActivity(this, R.layout.activity_main, true);
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-        GAME_ID = extras.getInt("GAME_ID");
 
-        game = dataHelper.getGame(GAME_ID, gameDBAdapter);
-        getSupportActionBar().setTitle(game.getmTitle());
+        if (savedInstanceState != null) {
+            gameID = savedInstanceState.getInt(STATE_GAMEID);
+        } else {
+            Bundle extras = getIntent().getExtras();
+            gameID = extras.getInt("GAME_ID");
+        }
+
+        game = dataHelper.getGame(gameID, gameDBAdapter);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(game.getmTitle());
+        }
+
         game.setGameListener(this);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewHome);
@@ -99,14 +107,12 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         loadGame();
 
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//dd/MM/yyyy
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         String time = sdfDate.format(now);
         game.setmTime(time);
 
-        if (savedInstanceState != null) {
-            GAME_ID = savedInstanceState.getInt(STATE_GAMEID);
-        }
+
 
         saveGameToDatabase();
         getTheme().resolveAttribute(android.R.attr.textColorSecondary, mTypedValue, true);
@@ -136,7 +142,6 @@ public class GameActivity extends ScoreKeeperTabActivity
         }
 
         tabLayout.getTabAt(layout).select();
-
     }
 
     @Override
@@ -157,7 +162,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     private void loadGame() {
 
-        int mScoreDiffToWin = game.getInt(Option.SCORE_DIFF_TO_WIN);
         mScoreInterval = game.getInt(Option.SCORE_INTERVAL);
         mStartingScore = game.getInt(Option.STARTING_SCORE);
         mMaxNumDice = game.getInt(Option.DICE_MAX);
@@ -168,10 +172,6 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         if (mScoreInterval == 0) {
             mScoreInterval = 1;
-        }
-
-        if (mScoreDiffToWin == 0) {
-            mScoreDiffToWin = 1;
         }
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
@@ -205,7 +205,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
         }
 
-        editor.putInt("lastplayedgame", GAME_ID);
+        editor.putInt("lastplayedgame", gameID);
         editor.apply();
 
     }
@@ -433,10 +433,7 @@ public class GameActivity extends ScoreKeeperTabActivity
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-        savedInstanceState.putInt(STATE_GAMEID, GAME_ID);
-
-        // Always call the superclass so it can save the view hierarchy state
+        savedInstanceState.putInt(STATE_GAMEID, gameID);
         super.onSaveInstanceState(savedInstanceState);
     }
 

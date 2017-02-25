@@ -395,6 +395,7 @@ public class EditGame extends ScoreKeeperTabActivity {
                                 chooseTimeLimitInSpinner();
                             }
                         });
+
             }
 
         } catch (ParseException e) {

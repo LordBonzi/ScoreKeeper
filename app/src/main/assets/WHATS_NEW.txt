@@ -1,0 +1,12 @@
+Added:
+- tell the user what's new after updating the app
+- doesn't require internet access. By not downloading
+ the Change Log and Licence from the internet.
+- set the title of the Toolbar when playing a game to the title of the game
+- prompt the user if they are sure when deleting games in History
+
+Changed:
+- renamed "Date and Time" in Game Info to "Last Played"
+
+Removed:
+- Import and Export option because it was clunky

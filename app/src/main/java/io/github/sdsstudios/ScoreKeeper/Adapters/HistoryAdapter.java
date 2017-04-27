@@ -21,6 +21,7 @@ import io.github.sdsstudios.ScoreKeeper.R;
 /**
  * Created by seth on 08/05/16.
  */
+
 public class HistoryAdapter extends DatabaseSelectableAdapter<HistoryAdapter.ViewHolder> {
     public static final int COMPLETED = 1;
     public static final int UNFINISHED = 2;

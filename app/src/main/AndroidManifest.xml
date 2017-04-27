@@ -66,7 +66,7 @@
 
         <activity
             android:name=".PlayersActivity"
-            android:label="@string/players"
+            android:label="@string/select_players"
             android:parentActivityName=".Home"
             android:theme="@style/AppTheme.NoActionBar" />
 
